@@ -1,0 +1,45 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Cygnet.OWAtray.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Server" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="Username" Type="System.String" Scope="User">
+      <Value Profile="(Default)">me</Value>
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">pwd</Value>
+    </Setting>
+    <Setting Name="UpdateInterval" Type="System.String" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="Domain" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mydomain.local</Value>
+    </Setting>
+    <Setting Name="FirstTime" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="Balloon" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="Growl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
+    <Setting Name="Snarl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
+    <Setting Name="ExchangeVersion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2007</Value>
+    </Setting>
+    <Setting Name="NetworkCredentials" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
+    <Setting Name="Bell" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Yes</Value>
+    </Setting>
+    <Setting Name="ApplicationVersion" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>
