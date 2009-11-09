@@ -20,6 +20,7 @@ namespace Cygnet.OWAtray
     using System.Drawing;
     using System.Net;
     using System.Security;
+    using System.Text;
     using System.Timers;
     using System.Windows.Forms;
     using Growl.Connector;
@@ -54,17 +55,16 @@ namespace Cygnet.OWAtray
         private Form frmAbout;
         private Form frmContact;
         private ExchangeService myService;
-        List<ListViewItem> lvitems = new List<ListViewItem>();
-        private System.Threading.Timer _ScreenLogTimer;
-        private System.Threading.TimerCallback _ScreenLogTimerCallback;
+        List<ListViewItem> lvBuffer = new List<ListViewItem>();
         static bool overRideClose = false;
-        private static System.Timers.Timer updateTimer;
         private string _Server;
         private string _User;
         private SecureString _Pwd;
         private string _Domain;
         private string _Interval;
         private int _InboxCount;
+        private bool firstRun = true;
+        private string lastLogEntry;
         // Notifications
         bool isBalloon;
         bool isGrowl;
@@ -119,7 +119,6 @@ namespace Cygnet.OWAtray
             AddLogEntry("--------------------------------------------------", LogType.Info);
             AddLogEntry("Welcome to the " + ThisApp + " v" + appVersionString, LogType.Info);
             AddLogEntry("Configured to communicate with Exchange " + Properties.Settings.Default.ExchangeVersion);
-            AddLogEntry("Ready.");
             notifyIcon1.Text = ThisApp + Environment.NewLine + "Not Connected to Exchange";
 
             // Startup Flag
@@ -160,15 +159,15 @@ namespace Cygnet.OWAtray
             // Snarl
             SnarlConnector.RegisterConfig(this.Handle, ThisApp, WindowsMessage.WM_MDIMAXIMIZE, iconPath);
 
-            // Validate the server certificate
-            ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
+            // Configure Exchange
+            if (ConfigureExchange())
+            {
+                AddLogEntry("Ready.", LogType.Info);
+            }
 
             // Start Timers
-            _ScreenLogTimerCallback = new System.Threading.TimerCallback(_ScreenLogTimer_Elapsed);
-            _ScreenLogTimer = new System.Threading.Timer(_ScreenLogTimerCallback, null, (Convert.ToInt32(ScreenRefresh) * 1000), System.Threading.Timeout.Infinite);
-            updateTimer = new System.Timers.Timer(Convert.ToInt32(txtInterval.Text) * 1000);
-            updateTimer.Elapsed += new ElapsedEventHandler(updateTimer_Elapsed);
-            updateTimer.Stop();
+            timerUpdate.Interval = Convert.ToInt32(txtInterval.Text) * 1000;
+            timerLogging.Enabled = true;
 
             // Window state
             if (Properties.Settings.Default.FirstTime != "Yes")
@@ -178,33 +177,17 @@ namespace Cygnet.OWAtray
         }
 
         /// <summary>
-        /// Handles the Elapsed event of the updateTimer control.
+        /// Configures Exchange.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.Timers.ElapsedEventArgs"/> instance containing the event data.</param>
-        void updateTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            GetUnreadCount();
-        }
-
-        /// <summary>
-        /// Updates the status view by flushing the buffer.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        private void _ScreenLogTimer_Elapsed(object sender)
-        {
-            CycleStatusView();
-            _ScreenLogTimer.Change((Convert.ToInt32(ScreenRefresh) * 1000), System.Threading.Timeout.Infinite);
-        }
-
-        /// <summary>
-        /// Connects to Exchange.
-        /// </summary>
-        private void ConnectToExchange()
+        /// <returns>False if any errors</returns>
+        private bool ConfigureExchange()
         {
             try
             {
-                AddLogEntry("Connecting to Exchange...");
+                // Validate the server certificate
+                ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
+
+                AddLogEntry("Binding to Exchange", LogType.Info);
                 myService = new ExchangeService(Properties.Settings.Default.ExchangeVersion == "2010" ? ExchangeVersion.Exchange2010 : ExchangeVersion.Exchange2007_SP1);
                 Uri myUri = new Uri(txtURL.Text);
                 if (isDomain)
@@ -216,11 +199,13 @@ namespace Cygnet.OWAtray
                     myService.Credentials = new WebCredentials(txtUser.Text, txtPwd.Text, txtDomain.Text);
                 }
                 myService.Url = myUri;
-                AddLogEntry("Connected");
+
+                return true;
             }
             catch (Exception ex)
             {
                 AddLogEntry("Error: " + ex.Message, LogType.Fail);
+                return false;
             }
         }
 
@@ -245,11 +230,12 @@ namespace Cygnet.OWAtray
                 myCount = myFolder.UnreadCount;
                 if (myCount > _InboxCount)
                 {
-                    PopToast("New Mail", "You have " + myCount + " unread email" + (myCount > 1 ? "s " : " ") + "in your inbox");
+                    //PopToast("New Mail", "You have " + myCount + " unread email" + (myCount != 1 ? "s " : " ") + "in your inbox");
+                    PopUnreadEmail(myCount);
                 }
 
                 notifyIcon1.Icon = new Icon((myCount > 0 ? newIcon : trayIcon));
-                notifyIcon1.Text = ThisApp + Environment.NewLine + myCount + " unread email" + (myCount > 1 ? "s " : " ");
+                notifyIcon1.Text = ThisApp + Environment.NewLine + myCount + " unread email" + (myCount != 1 ? "s " : " ");
                 _InboxCount = myCount;
             }
             catch (Exception ex)
@@ -259,6 +245,83 @@ namespace Cygnet.OWAtray
             }
 
             return myCount;
+        }
+
+        /// <summary>
+        /// Pops the unread email.
+        /// </summary>
+        /// <param name="unreadCount">The unread count.</param>
+        private void PopUnreadEmail(int unreadCount)
+        {
+            // Set the offset for the paged search.
+            int offset = 0;
+
+            // Set the page size.
+            const int pageSize = 50;
+
+            // Set the flag that indicates whether to continue iterating through additional pages.
+            bool MoreItems = true;
+
+            // Continue paging while there are more items to page.
+            while (MoreItems)
+            {
+                ItemView view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning);
+                view.SearchFilter = new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false);
+                view.PropertySet = new PropertySet(BasePropertySet.IdOnly);
+                view.PropertySet.Add(ItemSchema.Subject);
+                view.PropertySet.Add(ItemSchema.DateTimeReceived);
+
+                // We want all unread if first run, otherwise just since last poll
+                if (!firstRun)
+                {
+                    DateTime newDate = DateTime.Now.AddSeconds(-(Convert.ToInt32(_Interval) * 2));
+                    view.SearchFilter = new SearchFilter.IsGreaterThan(EmailMessageSchema.DateTimeReceived, newDate);
+                }
+                else
+                {
+                    firstRun = false;
+                }
+
+                view.OrderBy.Add(ItemSchema.DateTimeSent, SortDirection.Descending);
+                FindItemsResults<Item> findResults = myService.FindItems(WellKnownFolderName.Inbox, view);
+
+                // Process each item.
+                int count = 0;
+                bool allDone = false;
+                foreach (Item myItem in findResults.Items)
+                {
+                    if (++count > Convert.ToInt32(Properties.Settings.Default.MaxNotify))
+                    {
+                        if (!allDone)
+                        {
+                            PopToast("Too much mail!", "There are " + (unreadCount - Convert.ToInt32(Properties.Settings.Default.MaxNotify)) + " other new emails");
+                            allDone = true;
+                        }
+                    }
+                    else
+                    {
+                        if (myItem is EmailMessage)
+                        {
+                            EmailMessage myEmail = (EmailMessage)myItem;
+                            PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
+                            myEmail.Load(ps);
+
+                            //string newText = myEmail.Body.ToString().Substring(0, 40);
+                            PopToast("New Mail from " + myEmail.Sender.Name, myEmail.Subject);
+                        }
+                    }
+                }
+
+                // Set the flag to discontinue paging.
+                if (!findResults.MoreAvailable)
+                    MoreItems = false;
+
+                // Update the offset if there are more items to page.
+                if (MoreItems)
+                    offset = offset + pageSize;
+            }
+
+            firstRun = false;
         }
 
         /// <summary>
@@ -296,72 +359,75 @@ namespace Cygnet.OWAtray
             }
         }
 
-        /// <summary>
-        /// Cycles the status view.
-        /// </summary>
-        private void CycleStatusView()
-        {
-            PauseOutput(lvStatus);
-            FlushOutput(lvStatus);
-            ResumeOutput(lvStatus);
-        }
-
-        private delegate void FlushOutputDelegate(ListView lv);
+        private delegate void FlushOutputDelegate();
 
         /// <summary>
         /// Flushes the output.
         /// </summary>
-        /// <param name="lv">The lv.</param>
-        private void FlushOutput(ListView lv)
+        private void FlushOutput()
         {
             if (this.InvokeRequired)
             {
-                this.BeginInvoke(new FlushOutputDelegate(FlushOutput), new object[] { lv });
+                this.BeginInvoke(new FlushOutputDelegate(FlushOutput), new object[] { });
                 return;
             }
-
-            if (lvitems.Count > 0)
+            else
             {
-                if (lv.Items.Count >= Convert.ToInt32(ScreenLines)) lv.Items.Clear();
-                lv.BeginUpdate();
-                lv.Items.AddRange(lvitems.ToArray());
-                lv.EnsureVisible(lv.Items.Count - 1);
-                lv.EndUpdate();
-                lvitems.Clear();
+                if (lvBuffer.Count > 0)
+                {
+                    if (lvStatus.Items.Count >= Convert.ToInt32(ScreenLines))
+                    {
+                        lvStatus.Items.Clear();
+                    }
+
+                    try
+                    {
+                        // Pause output
+                        lvStatus.BeginUpdate();
+
+                        // Add new records - use Add rather than AddRange to avoid bug in .Net that causes NullReferenceException
+                        foreach (ListViewItem lv in lvBuffer)
+                        {
+                            if (lv != null)
+                            {
+                                lvStatus.Items.Add(lv);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // This won't appear on screen but will go to the log file
+                        AddLogEntry("Logging error 1 - " + ex.Message, LogType.Fail);
+                    }
+                    finally
+                    {
+                        if (lvStatus.Items.Count > 0)
+                        {
+                            try
+                            {
+                                // Make the latest addition visible
+                                lvStatus.EnsureVisible(lvStatus.Items.Count - 1);
+
+                                // Update status strip
+                                ListViewItem lv = lvStatus.Items[lvStatus.Items.Count - 1];
+                                slStatus.Text = lv.SubItems[1].Text;
+                            }
+                            catch (Exception ex)
+                            {
+                                // This won't appear on screen but will go to the log file
+                                AddLogEntry("Logging error 2 - " + ex.Message, LogType.Fail);
+                            }
+                        }
+                        // Clear down buffer
+                        lvBuffer.Clear();
+                        // Resume output
+                        lvStatus.EndUpdate();
+                        // Repaint control
+                        lvStatus.Refresh();
+                        this.Refresh();
+                    }
+                }
             }
-        }
-
-        private delegate void PauseOutputDelegate(ListView lv);
-
-        /// <summary>
-        /// Pauses the output.
-        /// </summary>
-        /// <param name="lv">The lv.</param>
-        private void PauseOutput(ListView lv)
-        {
-            if (this.InvokeRequired)
-            {
-                this.BeginInvoke(new PauseOutputDelegate(PauseOutput), new object[] { lv });
-                return;
-            }
-
-            lv.BeginUpdate();
-        }
-
-        private delegate void ResumeOutputDelegate(ListView lv);
-        /// <summary>
-        /// Resumes the output.
-        /// </summary>
-        /// <param name="lv">The lv.</param>
-        private void ResumeOutput(ListView lv)
-        {
-            if (this.InvokeRequired)
-            {
-                this.BeginInvoke(new ResumeOutputDelegate(ResumeOutput), new object[] { lv });
-                return;
-            }
-
-            lv.EndUpdate();
         }
 
         /// <summary>
@@ -391,24 +457,22 @@ namespace Cygnet.OWAtray
         /// <param name="whichLog">The which log.</param>
         private void AddLogEntry(string newEntry, LogType whichLog)
         {
-            switch (whichLog)
+            if (newEntry == lastLogEntry && whichLog == LogType.Fail)
             {
-                case LogType.Success:
-                    lvitems.Add(new ListViewItem(DateTime.Now.ToString(), 0));
-                    break;
-
-                case LogType.Fail:
-                    lvitems.Add(new ListViewItem(DateTime.Now.ToString(), 1));
-                    break;
-
-                case LogType.Info:
-                    lvitems.Add(new ListViewItem(DateTime.Now.ToString(), 2));
-                    break;
             }
-
-            int i = (lvitems.Count - 1);
-            lvitems[i].SubItems.Add(newEntry);
-            slStatus.Text = newEntry;
+            else
+            {
+                try
+                {
+                    lastLogEntry = newEntry;
+                    lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(), Convert.ToInt32(whichLog)));
+                    lvBuffer[lvBuffer.Count - 1].SubItems.Add(newEntry);
+                }
+                catch (Exception)
+                {
+                    // Can't do anything for obvious reasons!
+                }
+            }
         }
 
         /// <summary>
@@ -716,19 +780,16 @@ namespace Cygnet.OWAtray
         /// </summary>
         private void startMonitoring()
         {
-            // Connect to Exchange Web Services
-            ConnectToExchange();
-
-            // Initial check
-            GetUnreadCount();
-
             // Start Timer
-            updateTimer.Interval = Convert.ToInt32(_Interval) * 1000;
-            updateTimer.Start();
+            timerUpdate.Interval = Convert.ToInt32(_Interval) * 1000;
+            timerUpdate.Start();
             AddLogEntry(_Interval + " second timer started", LogType.Info);
 
             // Minimise to tray
             this.WindowState = FormWindowState.Minimized;
+
+            // Initial Check
+            GetUnreadCount();
         }
 
         /// <summary>
@@ -738,7 +799,7 @@ namespace Cygnet.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cmdStop_Click(object sender, EventArgs e)
         {
-            updateTimer.Stop();
+            timerUpdate.Stop();
             AddLogEntry("Timer stopped", LogType.Info);
             notifyIcon1.Text = ThisApp + Environment.NewLine + "Not Connected to Exchange";
         }
@@ -752,7 +813,7 @@ namespace Cygnet.OWAtray
         {
             Properties.Settings.Default.Server = _Server;
             Properties.Settings.Default.Username = _User;
-            Properties.Settings.Default.Password = EncryptString(_Pwd);
+            Properties.Settings.Default.Password = (_Pwd.Length > 0 ? EncryptString(_Pwd) : "");
             Properties.Settings.Default.Domain = _Domain;
             Properties.Settings.Default.UpdateInterval = _Interval;
             Properties.Settings.Default.FirstTime = "No";
@@ -1035,6 +1096,28 @@ namespace Cygnet.OWAtray
                 System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
             }
             return returnValue;
+        }
+
+        /// <summary>
+        /// Handles the Tick event of the timerLogging control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void timerLogging_Tick(object sender, EventArgs e)
+        {
+            // Update logging view
+            FlushOutput();
+        }
+
+        /// <summary>
+        /// Handles the Tick event of the timerUpdate control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void timerUpdate_Tick(object sender, EventArgs e)
+        {
+            // Look for new email
+            GetUnreadCount();
         }
     }
 }

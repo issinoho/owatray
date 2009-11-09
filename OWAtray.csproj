@@ -52,19 +52,19 @@
   <ItemGroup>
     <Reference Include="Growl.Connector, Version=2.0.0.0, Culture=neutral, PublicKeyToken=980c2339411be384, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Scratch\growl\libraries\Growl.Connector.dll</HintPath>
+      <HintPath>..\..\Libraries\Growl\Growl.Connector.dll</HintPath>
     </Reference>
     <Reference Include="Growl.CoreLibrary, Version=2.0.0.0, Culture=neutral, PublicKeyToken=13e59d82e007b064, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Scratch\growl\libraries\Growl.CoreLibrary.dll</HintPath>
+      <HintPath>..\..\Libraries\Growl\Growl.CoreLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Exchange.WebServices, Version=14.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Program Files\Microsoft\Exchange\Web Services\1.0\Microsoft.Exchange.WebServices.dll</HintPath>
     </Reference>
-    <Reference Include="SnarlConnector, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SnarlConnector, Version=1.1.0.0, Culture=neutral, PublicKeyToken=ba7d923d3001e68e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Scratch\snarl\bin\Release\SnarlConnector.dll</HintPath>
+      <HintPath>..\..\Libraries\Snarl\bin\Release\SnarlConnector.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

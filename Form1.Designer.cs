@@ -53,6 +53,7 @@
             this.balloonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.growlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.snarlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playSoundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,7 +82,8 @@
             this.cmdForce = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.playSoundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.timerLogging = new System.Windows.Forms.Timer(this.components);
+            this.timerUpdate = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -134,13 +136,13 @@
             this.openOWAToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(140, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(135, 70);
             // 
             // restoreToolStripMenuItem
             // 
             this.restoreToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("restoreToolStripMenuItem.Image")));
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.restoreToolStripMenuItem.Text = "Restore";
             this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
             // 
@@ -148,7 +150,7 @@
             // 
             this.openOWAToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openOWAToolStripMenuItem.Image")));
             this.openOWAToolStripMenuItem.Name = "openOWAToolStripMenuItem";
-            this.openOWAToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.openOWAToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.openOWAToolStripMenuItem.Text = "Open OWA";
             this.openOWAToolStripMenuItem.Click += new System.EventHandler(this.openOWAToolStripMenuItem_Click);
             // 
@@ -156,7 +158,7 @@
             // 
             this.exitToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem.Image")));
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -179,14 +181,14 @@
             this.exitToolStripMenuItem1});
             this.fileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("fileToolStripMenuItem.Image")));
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // exitToolStripMenuItem1
             // 
             this.exitToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem1.Image")));
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(103, 22);
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
@@ -198,14 +200,14 @@
             this.systemInformationToolStripMenuItem});
             this.toolsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("toolsToolStripMenuItem.Image")));
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // nETVersionsToolStripMenuItem
             // 
             this.nETVersionsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("nETVersionsToolStripMenuItem.Image")));
             this.nETVersionsToolStripMenuItem.Name = "nETVersionsToolStripMenuItem";
-            this.nETVersionsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.nETVersionsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.nETVersionsToolStripMenuItem.Text = ".NET Versions";
             this.nETVersionsToolStripMenuItem.Click += new System.EventHandler(this.nETVersionsToolStripMenuItem_Click);
             // 
@@ -213,7 +215,7 @@
             // 
             this.mDACVersionsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("mDACVersionsToolStripMenuItem.Image")));
             this.mDACVersionsToolStripMenuItem.Name = "mDACVersionsToolStripMenuItem";
-            this.mDACVersionsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.mDACVersionsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.mDACVersionsToolStripMenuItem.Text = "MDAC Versions";
             this.mDACVersionsToolStripMenuItem.Click += new System.EventHandler(this.mDACVersionsToolStripMenuItem_Click);
             // 
@@ -221,7 +223,7 @@
             // 
             this.systemInformationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("systemInformationToolStripMenuItem.Image")));
             this.systemInformationToolStripMenuItem.Name = "systemInformationToolStripMenuItem";
-            this.systemInformationToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.systemInformationToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.systemInformationToolStripMenuItem.Text = "System Information";
             this.systemInformationToolStripMenuItem.Click += new System.EventHandler(this.systemInformationToolStripMenuItem_Click);
             // 
@@ -234,7 +236,7 @@
             this.playSoundToolStripMenuItem});
             this.notificationsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("notificationsToolStripMenuItem.Image")));
             this.notificationsToolStripMenuItem.Name = "notificationsToolStripMenuItem";
-            this.notificationsToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
+            this.notificationsToolStripMenuItem.Size = new System.Drawing.Size(103, 20);
             this.notificationsToolStripMenuItem.Text = "Notifications";
             // 
             // balloonToolStripMenuItem
@@ -244,7 +246,7 @@
             this.balloonToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.balloonToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("balloonToolStripMenuItem.Image")));
             this.balloonToolStripMenuItem.Name = "balloonToolStripMenuItem";
-            this.balloonToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.balloonToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.balloonToolStripMenuItem.Text = "Balloon";
             this.balloonToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.balloonToolStripMenuItem_CheckStateChanged);
             // 
@@ -253,7 +255,7 @@
             this.growlToolStripMenuItem.CheckOnClick = true;
             this.growlToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("growlToolStripMenuItem.Image")));
             this.growlToolStripMenuItem.Name = "growlToolStripMenuItem";
-            this.growlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.growlToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.growlToolStripMenuItem.Text = "Growl";
             this.growlToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.growlToolStripMenuItem_CheckStateChanged);
             // 
@@ -262,9 +264,20 @@
             this.snarlToolStripMenuItem.CheckOnClick = true;
             this.snarlToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("snarlToolStripMenuItem.Image")));
             this.snarlToolStripMenuItem.Name = "snarlToolStripMenuItem";
-            this.snarlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.snarlToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.snarlToolStripMenuItem.Text = "Snarl";
             this.snarlToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.snarlToolStripMenuItem_CheckStateChanged);
+            // 
+            // playSoundToolStripMenuItem
+            // 
+            this.playSoundToolStripMenuItem.Checked = true;
+            this.playSoundToolStripMenuItem.CheckOnClick = true;
+            this.playSoundToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.playSoundToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("playSoundToolStripMenuItem.Image")));
+            this.playSoundToolStripMenuItem.Name = "playSoundToolStripMenuItem";
+            this.playSoundToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.playSoundToolStripMenuItem.Text = "Play Sound";
+            this.playSoundToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.playSoundToolStripMenuItem_CheckStateChanged);
             // 
             // helpToolStripMenuItem
             // 
@@ -273,14 +286,14 @@
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripMenuItem.Image")));
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // supportToolStripMenuItem
             // 
             this.supportToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("supportToolStripMenuItem.Image")));
             this.supportToolStripMenuItem.Name = "supportToolStripMenuItem";
-            this.supportToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.supportToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.supportToolStripMenuItem.Text = "Support";
             this.supportToolStripMenuItem.Click += new System.EventHandler(this.supportToolStripMenuItem_Click);
             // 
@@ -288,7 +301,7 @@
             // 
             this.aboutToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("aboutToolStripMenuItem.Image")));
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -561,16 +574,14 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // playSoundToolStripMenuItem
+            // timerLogging
             // 
-            this.playSoundToolStripMenuItem.Checked = true;
-            this.playSoundToolStripMenuItem.CheckOnClick = true;
-            this.playSoundToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.playSoundToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("playSoundToolStripMenuItem.Image")));
-            this.playSoundToolStripMenuItem.Name = "playSoundToolStripMenuItem";
-            this.playSoundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.playSoundToolStripMenuItem.Text = "Play Sound";
-            this.playSoundToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.playSoundToolStripMenuItem_CheckStateChanged);
+            this.timerLogging.Interval = 500;
+            this.timerLogging.Tick += new System.EventHandler(this.timerLogging_Tick);
+            // 
+            // timerUpdate
+            // 
+            this.timerUpdate.Tick += new System.EventHandler(this.timerUpdate_Tick);
             // 
             // Form1
             // 
@@ -653,6 +664,8 @@
         private System.Windows.Forms.ToolStripMenuItem supportToolStripMenuItem;
         private System.Windows.Forms.CheckBox chkOnDomain;
         private System.Windows.Forms.ToolStripMenuItem playSoundToolStripMenuItem;
+        private System.Windows.Forms.Timer timerLogging;
+        private System.Windows.Forms.Timer timerUpdate;
     }
 }
 
