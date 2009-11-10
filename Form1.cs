@@ -230,8 +230,15 @@ namespace Cygnet.OWAtray
                 myCount = myFolder.UnreadCount;
                 if (myCount > _InboxCount)
                 {
-                    //PopToast("New Mail", "You have " + myCount + " unread email" + (myCount != 1 ? "s " : " ") + "in your inbox");
-                    PopUnreadEmail(myCount);
+                    if (firstRun)
+                    {
+                        PopToast("New Mail", "You have " + myCount + " unread email" + (myCount != 1 ? "s " : " ") + "in your inbox");
+                        firstRun = false;
+                    }
+                    else
+                    {
+                        PopUnreadEmail(myCount);
+                    }
                 }
 
                 notifyIcon1.Icon = new Icon((myCount > 0 ? newIcon : trayIcon));
@@ -271,17 +278,8 @@ namespace Cygnet.OWAtray
                 view.PropertySet.Add(ItemSchema.Subject);
                 view.PropertySet.Add(ItemSchema.DateTimeReceived);
 
-                // We want all unread if first run, otherwise just since last poll
-                if (!firstRun)
-                {
-                    DateTime newDate = DateTime.Now.AddSeconds(-(Convert.ToInt32(_Interval) * 2));
-                    view.SearchFilter = new SearchFilter.IsGreaterThan(EmailMessageSchema.DateTimeReceived, newDate);
-                }
-                else
-                {
-                    firstRun = false;
-                }
-
+                DateTime newDate = DateTime.Now.AddSeconds(-(Convert.ToInt32(_Interval) * 2));
+                view.SearchFilter = new SearchFilter.IsGreaterThan(EmailMessageSchema.DateTimeReceived, newDate);
                 view.OrderBy.Add(ItemSchema.DateTimeSent, SortDirection.Descending);
                 FindItemsResults<Item> findResults = myService.FindItems(WellKnownFolderName.Inbox, view);
 
