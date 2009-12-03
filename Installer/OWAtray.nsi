@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "1.0.3600.36729"
+!define PRODUCT_VERSION "1.0.3624.20514"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray.exe"

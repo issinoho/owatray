@@ -138,6 +138,9 @@ namespace Cygnet.OWAtray
             isDomain = Properties.Settings.Default.NetworkCredentials == "Yes";
             chkOnDomain.Checked = isDomain;
 
+            // Special lockdown option
+            restoreToolStripMenuItem.Enabled = (Properties.Settings.Default.LockDown == "Yes" ? false : true);
+
             // Icon
             iconPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\email.png";
             trayIcon = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\email.ico";

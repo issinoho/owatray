@@ -44,5 +44,8 @@
     <Setting Name="MaxNotify" Type="System.String" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="LockDown" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
