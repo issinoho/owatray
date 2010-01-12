@@ -54,6 +54,9 @@
             this.growlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.snarlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playSoundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.advancedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.overrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.overrideServerURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,6 +87,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timerLogging = new System.Windows.Forms.Timer(this.components);
             this.timerUpdate = new System.Windows.Forms.Timer(this.components);
+            this.txtURLEdit = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -168,6 +172,7 @@
             this.fileToolStripMenuItem,
             this.toolsToolStripMenuItem,
             this.notificationsToolStripMenuItem,
+            this.advancedToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -279,6 +284,34 @@
             this.playSoundToolStripMenuItem.Text = "Play Sound";
             this.playSoundToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.playSoundToolStripMenuItem_CheckStateChanged);
             // 
+            // advancedToolStripMenuItem
+            // 
+            this.advancedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.overrideToolStripMenuItem,
+            this.overrideServerURLToolStripMenuItem});
+            this.advancedToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("advancedToolStripMenuItem.Image")));
+            this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
+            this.advancedToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
+            this.advancedToolStripMenuItem.Text = "Advanced";
+            // 
+            // overrideToolStripMenuItem
+            // 
+            this.overrideToolStripMenuItem.CheckOnClick = true;
+            this.overrideToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideToolStripMenuItem.Image")));
+            this.overrideToolStripMenuItem.Name = "overrideToolStripMenuItem";
+            this.overrideToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.overrideToolStripMenuItem.Text = "Override Certificate";
+            this.overrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideToolStripMenuItem_CheckStateChanged);
+            // 
+            // overrideServerURLToolStripMenuItem
+            // 
+            this.overrideServerURLToolStripMenuItem.CheckOnClick = true;
+            this.overrideServerURLToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideServerURLToolStripMenuItem.Image")));
+            this.overrideServerURLToolStripMenuItem.Name = "overrideServerURLToolStripMenuItem";
+            this.overrideServerURLToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.overrideServerURLToolStripMenuItem.Text = "Override Server URL";
+            this.overrideServerURLToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideServerURLToolStripMenuItem_CheckStateChanged);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -340,6 +373,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.txtURLEdit);
             this.groupBox2.Controls.Add(this.chkOnDomain);
             this.groupBox2.Controls.Add(this.chkRunOnStartup);
             this.groupBox2.Controls.Add(this.groupBox1);
@@ -583,6 +617,13 @@
             // 
             this.timerUpdate.Tick += new System.EventHandler(this.timerUpdate_Tick);
             // 
+            // txtURLEdit
+            // 
+            this.txtURLEdit.Location = new System.Drawing.Point(160, 120);
+            this.txtURLEdit.Name = "txtURLEdit";
+            this.txtURLEdit.Size = new System.Drawing.Size(281, 20);
+            this.txtURLEdit.TabIndex = 28;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -666,6 +707,10 @@
         private System.Windows.Forms.ToolStripMenuItem playSoundToolStripMenuItem;
         private System.Windows.Forms.Timer timerLogging;
         private System.Windows.Forms.Timer timerUpdate;
+        private System.Windows.Forms.ToolStripMenuItem advancedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem overrideToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem overrideServerURLToolStripMenuItem;
+        private System.Windows.Forms.TextBox txtURLEdit;
     }
 }
 

@@ -202,5 +202,41 @@ namespace Cygnet.OWAtray.Properties {
                 this["LockDown"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("No")]
+        public string OverrideCert {
+            get {
+                return ((string)(this["OverrideCert"]));
+            }
+            set {
+                this["OverrideCert"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("No")]
+        public string OverrideURL {
+            get {
+                return ((string)(this["OverrideURL"]));
+            }
+            set {
+                this["OverrideURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ManualURL {
+            get {
+                return ((string)(this["ManualURL"]));
+            }
+            set {
+                this["ManualURL"] = value;
+            }
+        }
     }
 }

@@ -70,6 +70,9 @@ namespace Cygnet.OWAtray
         bool isGrowl;
         bool isSnarl;
         bool isBell;
+        // Overrides
+        bool overrideCert;
+        bool overrideURL;
         private string trayIcon;
         private string newIcon;
         // Growl
@@ -134,6 +137,13 @@ namespace Cygnet.OWAtray
             isBell = Properties.Settings.Default.Bell == "Yes";
             playSoundToolStripMenuItem.Checked = isBell;
 
+            // Overrides
+            overrideCert = Properties.Settings.Default.OverrideCert == "Yes";
+            overrideToolStripMenuItem.Checked = overrideCert;
+            overrideURL = Properties.Settings.Default.OverrideURL == "Yes";
+            overrideServerURLToolStripMenuItem.Checked = overrideURL;
+            drawURL();
+
             // Domain
             isDomain = Properties.Settings.Default.NetworkCredentials == "Yes";
             chkOnDomain.Checked = isDomain;
@@ -187,12 +197,22 @@ namespace Cygnet.OWAtray
         {
             try
             {
+                string thisUri = "";
+
                 // Validate the server certificate
                 ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
 
                 AddLogEntry("Binding to Exchange", LogType.Info);
                 myService = new ExchangeService(Properties.Settings.Default.ExchangeVersion == "2010" ? ExchangeVersion.Exchange2010 : ExchangeVersion.Exchange2007_SP1);
-                Uri myUri = new Uri(txtURL.Text);
+                if (overrideURL)
+                {
+                    thisUri = txtURLEdit.Text;
+                }
+                else
+                {
+                    thisUri = txtURL.Text;
+                }
+                Uri myUri = new Uri(thisUri);
                 if (isDomain)
                 {
                     myService.UseDefaultCredentials = true;
@@ -275,16 +295,25 @@ namespace Cygnet.OWAtray
             // Continue paging while there are more items to page.
             while (MoreItems)
             {
+                // Define filters collection
+                SearchFilter.SearchFilterCollection filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And);
+                filters.Add(new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false));
+                DateTime newDate = DateTime.Now.AddSeconds(-(Convert.ToInt32(_Interval) * 2));
+                filters.Add(new SearchFilter.IsGreaterThan(EmailMessageSchema.DateTimeReceived, newDate));
+
+                //SearchFilter filter = new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false);
+                //view.SearchFilter = new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false);
+                //view.SearchFilter = new SearchFilter.IsGreaterThan(EmailMessageSchema.DateTimeReceived, newDate);
+
+                // Item view
                 ItemView view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning);
-                view.SearchFilter = new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false);
                 view.PropertySet = new PropertySet(BasePropertySet.IdOnly);
                 view.PropertySet.Add(ItemSchema.Subject);
                 view.PropertySet.Add(ItemSchema.DateTimeReceived);
-
-                DateTime newDate = DateTime.Now.AddSeconds(-(Convert.ToInt32(_Interval) * 2));
-                view.SearchFilter = new SearchFilter.IsGreaterThan(EmailMessageSchema.DateTimeReceived, newDate);
                 view.OrderBy.Add(ItemSchema.DateTimeSent, SortDirection.Descending);
-                FindItemsResults<Item> findResults = myService.FindItems(WellKnownFolderName.Inbox, view);
+
+                // Now search
+                FindItemsResults<Item> findResults = myService.FindItems(WellKnownFolderName.Inbox, filters, view);
 
                 // Process each item.
                 int count = 0;
@@ -484,19 +513,25 @@ namespace Cygnet.OWAtray
         /// <param name="chain">The chain.</param>
         /// <param name="sslPolicyErrors">The SSL policy errors.</param>
         /// <returns>Is Certifcate Valid?</returns>
-        private static bool CertificateValidationCallBack(
+        private bool CertificateValidationCallBack(
                  object sender,
                  System.Security.Cryptography.X509Certificates.X509Certificate certificate,
                  System.Security.Cryptography.X509Certificates.X509Chain chain,
                  System.Net.Security.SslPolicyErrors sslPolicyErrors)
             {
+            // If the override has been set then just return true
+            if (overrideCert)
+            {
+                return true;
+            }
+
             // If the certificate is a valid, signed certificate, return true.
             if (sslPolicyErrors == System.Net.Security.SslPolicyErrors.None)
             {
                 return true;
             }
 
-            // If thre are errors in the certificate chain, look at each error to determine the cause.
+            // If there are errors in the certificate chain, look at each error to determine the cause.
             if ((sslPolicyErrors & System.Net.Security.SslPolicyErrors.RemoteCertificateChainErrors) != 0)
             {
                 if (chain != null && chain.ChainStatus != null)
@@ -772,6 +807,7 @@ namespace Cygnet.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cmdStart_Click(object sender, EventArgs e)
         {
+            ConfigureExchange();
             // Start
             startMonitoring();
         }
@@ -823,6 +859,9 @@ namespace Cygnet.OWAtray
             Properties.Settings.Default.Snarl = isSnarl ? "Yes" : "No";
             Properties.Settings.Default.NetworkCredentials = isDomain ? "Yes" : "No";
             Properties.Settings.Default.Bell = isBell ? "Yes" : "No";
+            Properties.Settings.Default.OverrideURL = overrideURL ? "Yes" : "No";
+            Properties.Settings.Default.OverrideCert = overrideCert ? "Yes" : "No";
+            Properties.Settings.Default.ManualURL = txtURLEdit.Text;
             Properties.Settings.Default.Save();
 
             AddLogEntry("Settings saved to file", LogType.Info);
@@ -1119,6 +1158,48 @@ namespace Cygnet.OWAtray
         {
             // Look for new email
             GetUnreadCount();
+        }
+
+        /// <summary>
+        /// Handles the CheckStateChanged event of the overrideToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void overrideToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        {
+            overrideCert = overrideToolStripMenuItem.Checked;
+            AddLogEntry("SSL Certificate override switched " + (overrideCert ? "ON" : "OFF"), LogType.Info);
+        }
+
+        /// <summary>
+        /// Handles the CheckStateChanged event of the overrideServerURLToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void overrideServerURLToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        {
+            overrideURL = overrideServerURLToolStripMenuItem.Checked;
+            AddLogEntry("Server URL override switched " + (overrideURL ? "ON" : "OFF"), LogType.Info);
+
+            drawURL();
+        }
+
+        /// <summary>
+        /// Draws the URL.
+        /// </summary>
+        private void drawURL()
+        {
+            if (overrideURL)
+            {
+                txtURL.Visible = false;
+                txtURLEdit.Visible = true;
+                txtURLEdit.Text = Properties.Settings.Default.ManualURL;
+            }
+            else
+            {
+                txtURL.Visible = true;
+                txtURLEdit.Visible = false;
+            }
         }
     }
 }
