@@ -54,6 +54,7 @@ namespace Cygnet.OWAtray
         private Form frmInfo;
         private Form frmAbout;
         private Form frmContact;
+        private Form frmChangeLog;
         private ExchangeService myService;
         List<ListViewItem> lvBuffer = new List<ListViewItem>();
         static bool overRideClose = false;
@@ -1206,6 +1207,17 @@ namespace Cygnet.OWAtray
                 txtURL.Visible = true;
                 txtURLEdit.Visible = false;
             }
+        }
+
+        /// <summary>
+        /// Handles the Click event of the changeLogToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void changeLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (frmChangeLog == null) frmChangeLog = new ChangeLog(Properties.Settings.Default.RSSFeed);
+            frmChangeLog.ShowDialog();
         }
     }
 }

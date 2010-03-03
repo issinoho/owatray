@@ -56,5 +56,8 @@
     <Setting Name="ManualURL" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="RSSFeed" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.owatray.com/blog/posts.xml</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

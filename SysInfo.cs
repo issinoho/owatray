@@ -302,6 +302,11 @@ namespace Cygnet.OWAtray
             this.Close();        
         }
 
+        /// <summary>
+        /// Handles the Tick event of the timer1 control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void timer1_Tick(object sender, EventArgs e)
         {
             // Stop re-entrancy

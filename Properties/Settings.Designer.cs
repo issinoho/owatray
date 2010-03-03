@@ -238,5 +238,17 @@ namespace Cygnet.OWAtray.Properties {
                 this["ManualURL"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.owatray.com/blog/posts.xml")]
+        public string RSSFeed {
+            get {
+                return ((string)(this["RSSFeed"]));
+            }
+            set {
+                this["RSSFeed"] = value;
+            }
+        }
     }
 }

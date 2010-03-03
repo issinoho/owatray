@@ -64,6 +64,7 @@
             this.lvStatus = new System.Windows.Forms.ListView();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.txtURLEdit = new System.Windows.Forms.TextBox();
             this.chkOnDomain = new System.Windows.Forms.CheckBox();
             this.chkRunOnStartup = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -87,7 +88,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timerLogging = new System.Windows.Forms.Timer(this.components);
             this.timerUpdate = new System.Windows.Forms.Timer(this.components);
-            this.txtURLEdit = new System.Windows.Forms.TextBox();
+            this.changeLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -315,6 +316,7 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.changeLogToolStripMenuItem,
             this.supportToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripMenuItem.Image")));
@@ -326,7 +328,7 @@
             // 
             this.supportToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("supportToolStripMenuItem.Image")));
             this.supportToolStripMenuItem.Name = "supportToolStripMenuItem";
-            this.supportToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.supportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.supportToolStripMenuItem.Text = "Support";
             this.supportToolStripMenuItem.Click += new System.EventHandler(this.supportToolStripMenuItem_Click);
             // 
@@ -334,7 +336,7 @@
             // 
             this.aboutToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("aboutToolStripMenuItem.Image")));
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -398,6 +400,13 @@
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Settings";
+            // 
+            // txtURLEdit
+            // 
+            this.txtURLEdit.Location = new System.Drawing.Point(160, 120);
+            this.txtURLEdit.Name = "txtURLEdit";
+            this.txtURLEdit.Size = new System.Drawing.Size(281, 20);
+            this.txtURLEdit.TabIndex = 28;
             // 
             // chkOnDomain
             // 
@@ -617,12 +626,13 @@
             // 
             this.timerUpdate.Tick += new System.EventHandler(this.timerUpdate_Tick);
             // 
-            // txtURLEdit
+            // changeLogToolStripMenuItem
             // 
-            this.txtURLEdit.Location = new System.Drawing.Point(160, 120);
-            this.txtURLEdit.Name = "txtURLEdit";
-            this.txtURLEdit.Size = new System.Drawing.Size(281, 20);
-            this.txtURLEdit.TabIndex = 28;
+            this.changeLogToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("changeLogToolStripMenuItem.Image")));
+            this.changeLogToolStripMenuItem.Name = "changeLogToolStripMenuItem";
+            this.changeLogToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.changeLogToolStripMenuItem.Text = "Change Log";
+            this.changeLogToolStripMenuItem.Click += new System.EventHandler(this.changeLogToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -711,6 +721,7 @@
         private System.Windows.Forms.ToolStripMenuItem overrideToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem overrideServerURLToolStripMenuItem;
         private System.Windows.Forms.TextBox txtURLEdit;
+        private System.Windows.Forms.ToolStripMenuItem changeLogToolStripMenuItem;
     }
 }
 
