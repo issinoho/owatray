@@ -301,10 +301,6 @@ namespace Cygnet.OWAtray
                 DateTime newDate = DateTime.Now.AddSeconds(-(Convert.ToInt32(_Interval) * 2));
                 filters.Add(new SearchFilter.IsGreaterThan(EmailMessageSchema.DateTimeReceived, newDate));
 
-                //SearchFilter filter = new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false);
-                //view.SearchFilter = new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false);
-                //view.SearchFilter = new SearchFilter.IsGreaterThan(EmailMessageSchema.DateTimeReceived, newDate);
-
                 // Item view
                 ItemView view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning);
                 view.PropertySet = new PropertySet(BasePropertySet.IdOnly);
@@ -332,12 +328,22 @@ namespace Cygnet.OWAtray
                     {
                         if (myItem is EmailMessage)
                         {
-                            EmailMessage myEmail = (EmailMessage)myItem;
-                            PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
-                            myEmail.Load(ps);
+                            string mySender = "unknown";
+                            string mySubject = "subject can't be found";
 
-                            //string newText = myEmail.Body.ToString().Substring(0, 40);
-                            PopToast("New Mail from " + myEmail.Sender.Name, myEmail.Subject);
+                            try
+                            {
+                                EmailMessage myEmail = (EmailMessage)myItem;
+                                PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
+                                myEmail.Load(ps);
+                                mySender = myEmail.Sender.Name;
+                                mySubject = myEmail.Subject;
+                            }
+                            catch (Exception)
+                            {
+                            }
+
+                            PopToast("New Mail from " + mySender, mySubject);
                         }
                     }
                 }
