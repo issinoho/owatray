@@ -250,5 +250,23 @@ namespace Cygnet.OWAtray.Properties {
                 this["RSSFeed"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("300")]
+        public string ApptInterval {
+            get {
+                return ((string)(this["ApptInterval"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public string ApptWindow {
+            get {
+                return ((string)(this["ApptWindow"]));
+            }
+        }
     }
 }

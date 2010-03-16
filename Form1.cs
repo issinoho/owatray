@@ -65,6 +65,7 @@ namespace Cygnet.OWAtray
         private string _Interval;
         private int _InboxCount;
         private bool firstRun = true;
+        private DateTime TimeLastChecked = DateTime.Now;
         private string lastLogEntry;
         // Notifications
         bool isBalloon;
@@ -180,6 +181,7 @@ namespace Cygnet.OWAtray
             }
 
             // Start Timers
+            timerAppt.Interval = Convert.ToInt32(Properties.Settings.Default.ApptInterval) * 1000;
             timerUpdate.Interval = Convert.ToInt32(txtInterval.Text) * 1000;
             timerLogging.Enabled = true;
 
@@ -257,7 +259,7 @@ namespace Cygnet.OWAtray
                     if (firstRun)
                     {
                         PopToast("New Mail", "You have " + myCount + " unread email" + (myCount != 1 ? "s " : " ") + "in your inbox");
-                        firstRun = false;
+                        TimeLastChecked = DateTime.Now.AddSeconds(1);
                     }
                     else
                     {
@@ -275,6 +277,7 @@ namespace Cygnet.OWAtray
                 myCount = 0;
             }
 
+            firstRun = false;
             return myCount;
         }
 
@@ -299,15 +302,14 @@ namespace Cygnet.OWAtray
                 // Define filters collection
                 SearchFilter.SearchFilterCollection filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And);
                 filters.Add(new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false));
-                DateTime newDate = DateTime.Now.AddSeconds(-(Convert.ToInt32(_Interval) * 2));
-                filters.Add(new SearchFilter.IsGreaterThan(EmailMessageSchema.DateTimeReceived, newDate));
+                filters.Add(new SearchFilter.IsGreaterThan(EmailMessageSchema.DateTimeReceived, TimeLastChecked));
 
                 // Item view
                 ItemView view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning);
                 view.PropertySet = new PropertySet(BasePropertySet.IdOnly);
                 view.PropertySet.Add(ItemSchema.Subject);
                 view.PropertySet.Add(ItemSchema.DateTimeReceived);
-                view.OrderBy.Add(ItemSchema.DateTimeSent, SortDirection.Descending);
+                view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
 
                 // Now search
                 FindItemsResults<Item> findResults = myService.FindItems(WellKnownFolderName.Inbox, filters, view);
@@ -315,6 +317,7 @@ namespace Cygnet.OWAtray
                 // Process each item.
                 int count = 0;
                 bool allDone = false;
+                bool isFlagged = false;
                 foreach (Item myItem in findResults.Items)
                 {
                     if (++count > Convert.ToInt32(Properties.Settings.Default.MaxNotify))
@@ -331,6 +334,7 @@ namespace Cygnet.OWAtray
                         {
                             string mySender = "unknown";
                             string mySubject = "subject can't be found";
+                            DateTime myTime = DateTime.Now;
 
                             try
                             {
@@ -339,12 +343,21 @@ namespace Cygnet.OWAtray
                                 myEmail.Load(ps);
                                 mySender = myEmail.Sender.Name;
                                 mySubject = myEmail.Subject;
+                                myTime = myEmail.DateTimeReceived;
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
+                                MessageBox.Show(ex.ToString());
                             }
 
                             PopToast("New Mail from " + mySender, mySubject);
+
+                            // Update flag
+                            if (!isFlagged)
+                            {
+                                TimeLastChecked = myTime.AddSeconds(1);
+                                isFlagged = true;
+                            }
                         }
                     }
                 }
@@ -825,6 +838,7 @@ namespace Cygnet.OWAtray
         private void startMonitoring()
         {
             // Start Timer
+            timerAppt.Start();
             timerUpdate.Interval = Convert.ToInt32(_Interval) * 1000;
             timerUpdate.Start();
             AddLogEntry(_Interval + " second timer started", LogType.Info);
@@ -834,6 +848,7 @@ namespace Cygnet.OWAtray
 
             // Initial Check
             GetUnreadCount();
+            CheckForAppointments();
         }
 
         /// <summary>
@@ -844,8 +859,68 @@ namespace Cygnet.OWAtray
         private void cmdStop_Click(object sender, EventArgs e)
         {
             timerUpdate.Stop();
+            timerAppt.Stop();
             AddLogEntry("Timer stopped", LogType.Info);
             notifyIcon1.Text = ThisApp + Environment.NewLine + "Not Connected to Exchange";
+        }
+
+        /// <summary>
+        /// Checks for appointments.
+        /// </summary>
+        private void CheckForAppointments()
+        {
+            // Interrogate default Calendar
+            CalendarView cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Properties.Settings.Default.ApptWindow)));
+            cView.PropertySet = PropertySet.FirstClassProperties;
+            FindItemsResults<Appointment> findResults = myService.FindAppointments(WellKnownFolderName.Calendar, cView);
+
+            // Process each item.
+            int count = 0;
+            bool allDone = false;
+            foreach (Item myItem in findResults.Items)
+            {
+                if (++count > Convert.ToInt32(Properties.Settings.Default.MaxNotify))
+                {
+                    if (!allDone)
+                    {
+                        PopToast("Too many appointments!", "There are " + (findResults.Items.Count - Convert.ToInt32(Properties.Settings.Default.MaxNotify)) + " others");
+                        allDone = true;
+                    }
+                }
+                else
+                {
+                    if (myItem is Appointment)
+                    {
+                        string myLocation = "unknown";
+                        string mySubject = "subject can't be found";
+                        string myStart = "unknown";
+                        string myTime = "unknown";
+                        int duration = 0;
+
+                        try
+                        {
+                            Appointment myAppt = (Appointment)myItem;
+                            PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
+                            myAppt.Load(ps);
+                            myLocation = myAppt.Location;
+                            mySubject = myAppt.Subject;
+                            TimeSpan span = myAppt.Start.Subtract(DateTime.Now);
+                            duration = (int)Math.Floor(span.TotalMinutes);
+                            myStart = duration.ToString();
+                            myTime = myAppt.Start.ToString("HH:mm");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.ToString());
+                        }
+
+                        if (duration > 0)
+                        {
+                            PopToast("You have an appointment in " + myStart + (duration != 1 ? " mins" : " min"), myTime + " - " + mySubject + " (" + myLocation + ")");
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -1218,6 +1293,17 @@ namespace Cygnet.OWAtray
         {
             if (frmChangeLog == null) frmChangeLog = new ChangeLog(Properties.Settings.Default.RSSFeed);
             frmChangeLog.ShowDialog();
+        }
+
+        /// <summary>
+        /// Handles the Tick event of the timerAppt control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void timerAppt_Tick(object sender, EventArgs e)
+        {
+            // Check for appointments
+            CheckForAppointments();
         }
     }
 }
