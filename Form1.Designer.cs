@@ -57,6 +57,7 @@
             this.advancedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.overrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.overrideServerURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alwaysOpenOWAInIEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -290,7 +291,8 @@
             // 
             this.advancedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.overrideToolStripMenuItem,
-            this.overrideServerURLToolStripMenuItem});
+            this.overrideServerURLToolStripMenuItem,
+            this.alwaysOpenOWAInIEToolStripMenuItem});
             this.advancedToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("advancedToolStripMenuItem.Image")));
             this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
             this.advancedToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
@@ -301,7 +303,7 @@
             this.overrideToolStripMenuItem.CheckOnClick = true;
             this.overrideToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideToolStripMenuItem.Image")));
             this.overrideToolStripMenuItem.Name = "overrideToolStripMenuItem";
-            this.overrideToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.overrideToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.overrideToolStripMenuItem.Text = "Override Certificate";
             this.overrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideToolStripMenuItem_CheckStateChanged);
             // 
@@ -310,9 +312,18 @@
             this.overrideServerURLToolStripMenuItem.CheckOnClick = true;
             this.overrideServerURLToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideServerURLToolStripMenuItem.Image")));
             this.overrideServerURLToolStripMenuItem.Name = "overrideServerURLToolStripMenuItem";
-            this.overrideServerURLToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.overrideServerURLToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.overrideServerURLToolStripMenuItem.Text = "Override Server URL";
             this.overrideServerURLToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideServerURLToolStripMenuItem_CheckStateChanged);
+            // 
+            // alwaysOpenOWAInIEToolStripMenuItem
+            // 
+            this.alwaysOpenOWAInIEToolStripMenuItem.CheckOnClick = true;
+            this.alwaysOpenOWAInIEToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("alwaysOpenOWAInIEToolStripMenuItem.Image")));
+            this.alwaysOpenOWAInIEToolStripMenuItem.Name = "alwaysOpenOWAInIEToolStripMenuItem";
+            this.alwaysOpenOWAInIEToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.alwaysOpenOWAInIEToolStripMenuItem.Text = "Always open OWA in IE";
+            this.alwaysOpenOWAInIEToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged);
             // 
             // helpToolStripMenuItem
             // 
@@ -728,6 +739,7 @@
         private System.Windows.Forms.TextBox txtURLEdit;
         private System.Windows.Forms.ToolStripMenuItem changeLogToolStripMenuItem;
         private System.Windows.Forms.Timer timerAppt;
+        private System.Windows.Forms.ToolStripMenuItem alwaysOpenOWAInIEToolStripMenuItem;
     }
 }
 

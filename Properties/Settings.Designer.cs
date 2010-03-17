@@ -268,5 +268,17 @@ namespace Cygnet.OWAtray.Properties {
                 return ((string)(this["ApptWindow"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("No")]
+        public string AlwaysIE {
+            get {
+                return ((string)(this["AlwaysIE"]));
+            }
+            set {
+                this["AlwaysIE"] = value;
+            }
+        }
     }
 }

@@ -77,6 +77,7 @@ namespace Cygnet.OWAtray
         bool overrideURL;
         private string trayIcon;
         private string newIcon;
+        bool alwaysIE;
         // Growl
         private string iconPath;
         private GrowlConnector growl;
@@ -144,6 +145,8 @@ namespace Cygnet.OWAtray
             overrideToolStripMenuItem.Checked = overrideCert;
             overrideURL = Properties.Settings.Default.OverrideURL == "Yes";
             overrideServerURLToolStripMenuItem.Checked = overrideURL;
+            alwaysIE = Properties.Settings.Default.AlwaysIE == "Yes";
+            alwaysOpenOWAInIEToolStripMenuItem.Checked = alwaysIE;
             drawURL();
 
             // Domain
@@ -944,6 +947,7 @@ namespace Cygnet.OWAtray
             Properties.Settings.Default.OverrideURL = overrideURL ? "Yes" : "No";
             Properties.Settings.Default.OverrideCert = overrideCert ? "Yes" : "No";
             Properties.Settings.Default.ManualURL = txtURLEdit.Text;
+            Properties.Settings.Default.AlwaysIE = alwaysIE ? "Yes" : "No";
             Properties.Settings.Default.Save();
 
             AddLogEntry("Settings saved to file", LogType.Info);
@@ -1007,7 +1011,14 @@ namespace Cygnet.OWAtray
         /// </summary>
         private void activateOWA()
         {
-            System.Diagnostics.Process.Start("https://" + _Server + "/owa");
+            if (alwaysIE)
+            {
+                System.Diagnostics.Process.Start("IEXPLORE.EXE", "https://" + _Server + "/owa");
+            }
+            else
+            {
+                System.Diagnostics.Process.Start("https://" + _Server + "/owa");
+            }
         }
 
         /// <summary>
@@ -1304,6 +1315,17 @@ namespace Cygnet.OWAtray
         {
             // Check for appointments
             CheckForAppointments();
+        }
+
+        /// <summary>
+        /// Handles the CheckStateChanged event of the alwaysOpenOWAInIEToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        {
+            alwaysIE = alwaysOpenOWAInIEToolStripMenuItem.Checked;
+            AddLogEntry("Always use IE switched " + (alwaysIE ? "ON" : "OFF"), LogType.Info);
         }
     }
 }
