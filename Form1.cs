@@ -872,36 +872,36 @@ namespace Cygnet.OWAtray
         /// </summary>
         private void CheckForAppointments()
         {
-            // Interrogate default Calendar
-            CalendarView cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Properties.Settings.Default.ApptWindow)));
-            cView.PropertySet = PropertySet.FirstClassProperties;
-            FindItemsResults<Appointment> findResults = myService.FindAppointments(WellKnownFolderName.Calendar, cView);
-
-            // Process each item.
-            int count = 0;
-            bool allDone = false;
-            foreach (Item myItem in findResults.Items)
+            try
             {
-                if (++count > Convert.ToInt32(Properties.Settings.Default.MaxNotify))
-                {
-                    if (!allDone)
-                    {
-                        PopToast("Too many appointments!", "There are " + (findResults.Items.Count - Convert.ToInt32(Properties.Settings.Default.MaxNotify)) + " others");
-                        allDone = true;
-                    }
-                }
-                else
-                {
-                    if (myItem is Appointment)
-                    {
-                        string myLocation = "unknown";
-                        string mySubject = "subject can't be found";
-                        string myStart = "unknown";
-                        string myTime = "unknown";
-                        int duration = 0;
+                // Interrogate default Calendar
+                CalendarView cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Properties.Settings.Default.ApptWindow)));
+                cView.PropertySet = PropertySet.FirstClassProperties;
+                FindItemsResults<Appointment> findResults = myService.FindAppointments(WellKnownFolderName.Calendar, cView);
 
-                        try
+                // Process each item.
+                int count = 0;
+                bool allDone = false;
+                foreach (Item myItem in findResults.Items)
+                {
+                    if (++count > Convert.ToInt32(Properties.Settings.Default.MaxNotify))
+                    {
+                        if (!allDone)
                         {
+                            PopToast("Too many appointments!", "There are " + (findResults.Items.Count - Convert.ToInt32(Properties.Settings.Default.MaxNotify)) + " others");
+                            allDone = true;
+                        }
+                    }
+                    else
+                    {
+                        if (myItem is Appointment)
+                        {
+                            string myLocation = "unknown";
+                            string mySubject = "subject can't be found";
+                            string myStart = "unknown";
+                            string myTime = "unknown";
+                            int duration = 0;
+
                             Appointment myAppt = (Appointment)myItem;
                             PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
                             myAppt.Load(ps);
@@ -911,18 +911,18 @@ namespace Cygnet.OWAtray
                             duration = (int)Math.Floor(span.TotalMinutes);
                             myStart = duration.ToString();
                             myTime = myAppt.Start.ToString("HH:mm");
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.ToString());
-                        }
 
-                        if (duration > 0)
-                        {
-                            PopToast("You have an appointment in " + myStart + (duration != 1 ? " mins" : " min"), myTime + " - " + mySubject + " (" + myLocation + ")");
+                            if (duration > 0)
+                            {
+                                PopToast("You have an appointment in " + myStart + (duration != 1 ? " mins" : " min"), myTime + " - " + mySubject + " (" + myLocation + ")");
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry(ex.ToString(), LogType.Fail);
             }
         }
 
