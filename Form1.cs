@@ -111,9 +111,14 @@ namespace Cygnet.OWAtray
 
             // Options
             txtServer.Text = Properties.Settings.Default.Server;
+            _Server = txtServer.Text;
             txtUser.Text = Properties.Settings.Default.Username;
+            _User = txtUser.Text;
             txtPwd.Text = ToInsecureString(DecryptString(Properties.Settings.Default.Password));
+            _Pwd = ToSecureString(txtPwd.Text);
             txtDomain.Text = Properties.Settings.Default.Domain;
+            _Domain = txtDomain.Text;
+            UpdateURL();
             txtInterval.Text = Properties.Settings.Default.UpdateInterval;
             _Interval = txtInterval.Text;
             _InboxCount = 0;
@@ -933,24 +938,31 @@ namespace Cygnet.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cmdSave_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Server = _Server;
-            Properties.Settings.Default.Username = _User;
-            Properties.Settings.Default.Password = (_Pwd.Length > 0 ? EncryptString(_Pwd) : "");
-            Properties.Settings.Default.Domain = _Domain;
-            Properties.Settings.Default.UpdateInterval = _Interval;
-            Properties.Settings.Default.FirstTime = "No";
-            Properties.Settings.Default.Balloon = isBalloon ? "Yes" : "No";
-            Properties.Settings.Default.Growl = isGrowl ? "Yes" : "No";
-            Properties.Settings.Default.Snarl = isSnarl ? "Yes" : "No";
-            Properties.Settings.Default.NetworkCredentials = isDomain ? "Yes" : "No";
-            Properties.Settings.Default.Bell = isBell ? "Yes" : "No";
-            Properties.Settings.Default.OverrideURL = overrideURL ? "Yes" : "No";
-            Properties.Settings.Default.OverrideCert = overrideCert ? "Yes" : "No";
-            Properties.Settings.Default.ManualURL = txtURLEdit.Text;
-            Properties.Settings.Default.AlwaysIE = alwaysIE ? "Yes" : "No";
-            Properties.Settings.Default.Save();
+            try
+            {
+                Properties.Settings.Default.Server = _Server;
+                Properties.Settings.Default.Username = _User;
+                Properties.Settings.Default.Password = (_Pwd.Length > 0 ? EncryptString(_Pwd) : "");
+                Properties.Settings.Default.Domain = _Domain;
+                Properties.Settings.Default.UpdateInterval = _Interval;
+                Properties.Settings.Default.FirstTime = "No";
+                Properties.Settings.Default.Balloon = isBalloon ? "Yes" : "No";
+                Properties.Settings.Default.Growl = isGrowl ? "Yes" : "No";
+                Properties.Settings.Default.Snarl = isSnarl ? "Yes" : "No";
+                Properties.Settings.Default.NetworkCredentials = isDomain ? "Yes" : "No";
+                Properties.Settings.Default.Bell = isBell ? "Yes" : "No";
+                Properties.Settings.Default.OverrideURL = overrideURL ? "Yes" : "No";
+                Properties.Settings.Default.OverrideCert = overrideCert ? "Yes" : "No";
+                Properties.Settings.Default.ManualURL = txtURLEdit.Text;
+                Properties.Settings.Default.AlwaysIE = alwaysIE ? "Yes" : "No";
+                Properties.Settings.Default.Save();
 
-            AddLogEntry("Settings saved to file", LogType.Info);
+                AddLogEntry("Settings saved to file", LogType.Info);
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Can't save settings: " + ex.ToString(), LogType.Fail);
+            }
         }
 
         [System.Runtime.InteropServices.DllImport("winmm.DLL", EntryPoint = "PlaySound", SetLastError = true)]
