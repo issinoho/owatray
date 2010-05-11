@@ -352,13 +352,12 @@ namespace Cygnet.OWAtray
                                 mySender = myEmail.Sender.Name;
                                 mySubject = myEmail.Subject;
                                 myTime = myEmail.DateTimeReceived;
+                                PopToast("New Mail from " + mySender, mySubject);
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show(ex.ToString());
+                                AddLogEntry("Error when getting email properties - " + ex.Message, LogType.Fail);
                             }
-
-                            PopToast("New Mail from " + mySender, mySubject);
 
                             // Update flag
                             if (!isFlagged)
