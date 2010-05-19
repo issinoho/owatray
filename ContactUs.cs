@@ -1,27 +1,26 @@
 ﻿//------------------------------------------------------------------
-// Cygnet OWA Tray Monitor
+// DrunkenBakery OWA Tray Monitor
 // ContactUs Form
 //
-// <copyright file="ContactUs.cs" company="Cygnet Solutions Ltd">
-//     Copyright (c) 2009 Cygnet Solutions Ltd. All rights reserved.
+// <copyright file="ContactUs.cs" company="The Drunken Bakery">
+//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
 // </copyright>
 //
 // Form to provide contact information for Cygnet to the user.
 //
-// Author: IRS
-// $Revision: 1.2 $
 //------------------------------------------------------------------
-
-namespace Cygnet.OWAtray
+namespace DrunkenBakery.OWAtray
 {
     using System;
     using System.Windows.Forms;
 
     /// <summary>
-    /// Provides contact information for Cygnet to the user.
+    /// Provides contact information to the user.
     /// </summary>
     public partial class ContactUs : Form
     {
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ContactUs"/> class.
         /// </summary>
@@ -30,6 +29,10 @@ namespace Cygnet.OWAtray
             InitializeComponent();
         }
 
+        #endregion Constructors
+
+        #region Methods
+
         /// <summary>
         /// Handles the Click event of the cmdOK control.
         /// </summary>
@@ -37,17 +40,17 @@ namespace Cygnet.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cmdOK_Click(object sender, EventArgs e)
         {
-            this.Close();        
+            this.Close();
         }
 
         /// <summary>
-        /// Handles the LinkClicked event of the linkCygnet control.
+        /// Handles the LinkClicked event of the linkBakery control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.Windows.Forms.LinkLabelLinkClickedEventArgs"/> instance containing the event data.</param>
-        private void linkCygnet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void linkBakery_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(linkCygnet.Text);
+            System.Diagnostics.Process.Start(linkBakery.Text);
         }
 
         /// <summary>
@@ -59,5 +62,7 @@ namespace Cygnet.OWAtray
         {
             System.Diagnostics.Process.Start(@"mailto:" + linkEmail.Text);
         }
+
+        #endregion Methods
     }
 }

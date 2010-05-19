@@ -1,19 +1,16 @@
 ﻿//------------------------------------------------------------------
-// Cygnet OWA Tray Monitor
+// DrunkenBakery OWA Tray Monitor
 // MDACversions Form
 //
-// <copyright file="MDACversions.cs" company="Cygnet Solutions Ltd">
-//     Copyright (c) 2009 Cygnet Solutions Ltd. All rights reserved.
+// <copyright file="MDACversions.cs" company="The Drunken Bakery">
+//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
 // </copyright>
 //
 // Form to display the currently installed version(s) of MDAC.
 // Uses the registry to get this information.
 //
-// Author: IRS
-// $Revision: 1.1 $
 //------------------------------------------------------------------
-
-namespace Cygnet.OWAtray
+namespace DrunkenBakery.OWAtray
 {
     using System;
     using System.Windows.Forms;
@@ -23,6 +20,8 @@ namespace Cygnet.OWAtray
     /// </summary>
     public partial class MDACversions : Form
     {
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MDACversions"/> class.
         /// </summary>
@@ -39,18 +38,9 @@ namespace Cygnet.OWAtray
             ScrapeRegistry();
         }
 
-        /// <summary>
-        /// Scrapes the registry for .NET keys and lists them
-        /// </summary>
-        private void ScrapeRegistry()
-        {
-            Microsoft.Win32.RegistryKey regKey;
+        #endregion Constructors
 
-            regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\DataAccess\", false);
-            string verVal = (string)regKey.GetValue("Version");
-            string revVal = (string)regKey.GetValue("FullInstallVer");
-            AddEntry(verVal, revVal);
-        }
+        #region Methods
 
         /// <summary>
         /// Adds an entry to the list of versions.
@@ -76,5 +66,20 @@ namespace Cygnet.OWAtray
         {
             this.Close();
         }
+
+        /// <summary>
+        /// Scrapes the registry for .NET keys and lists them
+        /// </summary>
+        private void ScrapeRegistry()
+        {
+            Microsoft.Win32.RegistryKey regKey;
+
+            regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\DataAccess\", false);
+            string verVal = (string)regKey.GetValue("Version");
+            string revVal = (string)regKey.GetValue("FullInstallVer");
+            AddEntry(verVal, revVal);
+        }
+
+        #endregion Methods
     }
 }

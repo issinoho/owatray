@@ -8,7 +8,7 @@
     <ProjectGuid>{6E48388E-5450-4A21-95B2-D09E3CF085B2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cygnet.OWAtray</RootNamespace>
+    <RootNamespace>DrunkenBakery.OWAtray</RootNamespace>
     <AssemblyName>OWAtray</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

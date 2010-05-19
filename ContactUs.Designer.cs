@@ -1,4 +1,4 @@
-﻿namespace Cygnet.OWAtray
+﻿namespace DrunkenBakery.OWAtray
 {
     partial class ContactUs
     {
@@ -40,7 +40,7 @@
             this.linkEmail = new System.Windows.Forms.LinkLabel();
             this.button4 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.linkCygnet = new System.Windows.Forms.LinkLabel();
+            this.linkBakery = new System.Windows.Forms.LinkLabel();
             this.button3 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
@@ -99,7 +99,7 @@
             this.groupBox2.Controls.Add(this.linkEmail);
             this.groupBox2.Controls.Add(this.button4);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.linkCygnet);
+            this.groupBox2.Controls.Add(this.linkBakery);
             this.groupBox2.Controls.Add(this.button3);
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
@@ -141,17 +141,17 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "The Drunken Bakery";
             // 
-            // linkCygnet
+            // linkBakery
             // 
-            this.linkCygnet.AutoSize = true;
-            this.linkCygnet.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkCygnet.Location = new System.Drawing.Point(35, 55);
-            this.linkCygnet.Name = "linkCygnet";
-            this.linkCygnet.Size = new System.Drawing.Size(130, 13);
-            this.linkCygnet.TabIndex = 6;
-            this.linkCygnet.TabStop = true;
-            this.linkCygnet.Text = "http://www.owatray.com";
-            this.linkCygnet.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkCygnet_LinkClicked);
+            this.linkBakery.AutoSize = true;
+            this.linkBakery.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkBakery.Location = new System.Drawing.Point(35, 55);
+            this.linkBakery.Name = "linkBakery";
+            this.linkBakery.Size = new System.Drawing.Size(130, 13);
+            this.linkBakery.TabIndex = 6;
+            this.linkBakery.TabStop = true;
+            this.linkBakery.Text = "http://www.owatray.com";
+            this.linkBakery.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkBakery_LinkClicked);
             // 
             // button3
             // 
@@ -205,7 +205,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.LinkLabel linkCygnet;
+        private System.Windows.Forms.LinkLabel linkBakery;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel linkEmail;

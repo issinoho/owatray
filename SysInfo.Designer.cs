@@ -1,11 +1,24 @@
-﻿namespace Cygnet.OWAtray
+﻿namespace DrunkenBakery.OWAtray
 {
     partial class SysInfo
     {
+        #region Fields
+
+        private System.Windows.Forms.Button cmdOK;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.ImageList imLV;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.TreeView tvCheat;
+        private System.Windows.Forms.TreeView tvOptions;
+
+        #endregion Fields
+
+        #region Methods
 
         /// <summary>
         /// Clean up any resources being used.
@@ -19,8 +32,6 @@
             }
             base.Dispose(disposing);
         }
-
-        #region Windows Form Designer generated code
 
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -90,9 +101,9 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // groupBox1
-            // 
+            //
             this.groupBox1.Controls.Add(this.tvCheat);
             this.groupBox1.Controls.Add(this.tvOptions);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
@@ -101,9 +112,9 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Detected System Settings";
-            // 
+            //
             // tvCheat
-            // 
+            //
             this.tvCheat.ImageIndex = 0;
             this.tvCheat.ImageList = this.imLV;
             this.tvCheat.Location = new System.Drawing.Point(6, 19);
@@ -191,9 +202,9 @@
             this.tvCheat.SelectedImageIndex = 0;
             this.tvCheat.Size = new System.Drawing.Size(315, 134);
             this.tvCheat.TabIndex = 2;
-            // 
+            //
             // imLV
-            // 
+            //
             this.imLV.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imLV.ImageStream")));
             this.imLV.TransparentColor = System.Drawing.Color.Transparent;
             this.imLV.Images.SetKeyName(0, "computer.png");
@@ -220,9 +231,9 @@
             this.imLV.Images.SetKeyName(21, "building.png");
             this.imLV.Images.SetKeyName(22, "server.png");
             this.imLV.Images.SetKeyName(23, "hourglass.png");
-            // 
+            //
             // tvOptions
-            // 
+            //
             this.tvOptions.ImageIndex = 0;
             this.tvOptions.ImageList = this.imLV;
             this.tvOptions.Location = new System.Drawing.Point(6, 19);
@@ -310,9 +321,9 @@
             this.tvOptions.SelectedImageIndex = 0;
             this.tvOptions.Size = new System.Drawing.Size(315, 134);
             this.tvOptions.TabIndex = 1;
-            // 
+            //
             // cmdOK
-            // 
+            //
             this.cmdOK.Location = new System.Drawing.Point(264, 179);
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(75, 23);
@@ -320,13 +331,13 @@
             this.cmdOK.Text = "&OK";
             this.cmdOK.UseVisualStyleBackColor = true;
             this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
-            // 
+            //
             // timer1
-            // 
+            //
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
+            //
             // SysInfo
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(351, 210);
@@ -339,16 +350,8 @@
             this.Text = "System Information";
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
-
         }
 
-        #endregion
-
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button cmdOK;
-        private System.Windows.Forms.ImageList imLV;
-        private System.Windows.Forms.TreeView tvOptions;
-        private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.TreeView tvCheat;
+        #endregion Methods
     }
 }

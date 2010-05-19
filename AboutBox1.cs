@@ -1,30 +1,29 @@
 //------------------------------------------------------------------
-// Cygnet OWA Tray Monitor
+// DrunkenBakery OWA Tray Monitor
 // AboutBox Form
 //
-// <copyright file="AboutBox1.cs" company="Cygnet Solutions Ltd">
-//     Copyright (c) 2009 Cygnet Solutions Ltd. All rights reserved.
+// <copyright file="AboutBox1.cs" company="The Drunken Bakery">
+//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
 // </copyright>
 //
-// Standard Cygnet About box.
+// Standard About box.
 // Uses the Assembly details to populate the various fields.
 // Also reports the name and version of all dependent assemblies.
 //
-// Author: IRS
-// $Revision: 1.1 $
 //------------------------------------------------------------------
-
-namespace Cygnet.OWAtray
+namespace DrunkenBakery.OWAtray
 {
     using System;
     using System.Reflection;
     using System.Windows.Forms;
 
     /// <summary>
-    /// Standard Cygnet About box.
+    /// Standard About box.
     /// </summary>
     partial class AboutBox1 : Form
     {
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AboutBox1"/> class.
         /// </summary>
@@ -48,7 +47,7 @@ namespace Cygnet.OWAtray
                                             System.Environment.NewLine +
                                             "Compiled on .NET " + asm.ImageRuntimeVersion.ToString() +
                                             System.Environment.NewLine +
-                                            "Running on .NET v" + Environment.Version.ToString() + 
+                                            "Running on .NET v" + Environment.Version.ToString() +
                                             System.Environment.NewLine;
 
             // Use Reflection to get a list of depenedent assemblies
@@ -60,46 +59,51 @@ namespace Cygnet.OWAtray
             }
         }
 
-        #region Assembly Attribute Accessors
+        #endregion Constructors
+
+        #region Properties
 
         /// <summary>
-        /// Gets the assembly title.
+        /// Gets the assembly company.
         /// </summary>
-        /// <value>The assembly title.</value>
-        public string AssemblyTitle
+        /// <value>The assembly company.</value>
+        public string AssemblyCompany
         {
             get
             {
-                // Get all Title attributes on this assembly
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+                // Get all Company attributes on this assembly
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
 
-                // If there is at least one Title attribute
-                if (attributes.Length > 0)
+                // If there aren't any Company attributes, return an empty string
+                if (attributes.Length == 0)
                 {
-                    // Select the first one
-                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-
-                    // If it is not an empty string, return it
-                    if (titleAttribute.Title != string.Empty)
-                    {
-                        return titleAttribute.Title;
-                    }
+                    return string.Empty;
                 }
 
-                // If there was no Title attribute, or if the Title attribute was the empty string, return the .exe name
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+                // If there is a Company attribute, return its value
+                return ((AssemblyCompanyAttribute)attributes[0]).Company;
             }
         }
 
         /// <summary>
-        /// Gets the assembly version.
+        /// Gets the assembly copyright.
         /// </summary>
-        /// <value>The assembly version.</value>
-        public string AssemblyVersion
+        /// <value>The assembly copyright.</value>
+        public string AssemblyCopyright
         {
             get
             {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                // Get all Copyright attributes on this assembly
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+
+                // If there aren't any Copyright attributes, return an empty string
+                if (attributes.Length == 0)
+                {
+                    return string.Empty;
+                }
+
+                // If there is a Copyright attribute, return its value
+                return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
             }
         }
 
@@ -148,49 +152,49 @@ namespace Cygnet.OWAtray
         }
 
         /// <summary>
-        /// Gets the assembly copyright.
+        /// Gets the assembly title.
         /// </summary>
-        /// <value>The assembly copyright.</value>
-        public string AssemblyCopyright
+        /// <value>The assembly title.</value>
+        public string AssemblyTitle
         {
             get
             {
-                // Get all Copyright attributes on this assembly
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+                // Get all Title attributes on this assembly
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
 
-                // If there aren't any Copyright attributes, return an empty string
-                if (attributes.Length == 0)
+                // If there is at least one Title attribute
+                if (attributes.Length > 0)
                 {
-                    return string.Empty;
+                    // Select the first one
+                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
+
+                    // If it is not an empty string, return it
+                    if (titleAttribute.Title != string.Empty)
+                    {
+                        return titleAttribute.Title;
+                    }
                 }
 
-                // If there is a Copyright attribute, return its value
-                return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
+                // If there was no Title attribute, or if the Title attribute was the empty string, return the .exe name
+                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
             }
         }
 
         /// <summary>
-        /// Gets the assembly company.
+        /// Gets the assembly version.
         /// </summary>
-        /// <value>The assembly company.</value>
-        public string AssemblyCompany
+        /// <value>The assembly version.</value>
+        public string AssemblyVersion
         {
             get
             {
-                // Get all Company attributes on this assembly
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
-
-                // If there aren't any Company attributes, return an empty string
-                if (attributes.Length == 0)
-                {
-                    return string.Empty;
-                }
-
-                // If there is a Company attribute, return its value
-                return ((AssemblyCompanyAttribute)attributes[0]).Company;
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
         }
-        #endregion
+
+        #endregion Properties
+
+        #region Methods
 
         /// <summary>
         /// Handles the Click event of the okButton control.
@@ -201,5 +205,7 @@ namespace Cygnet.OWAtray
         {
             this.Close();
         }
+
+        #endregion Methods
     }
 }

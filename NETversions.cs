@@ -1,19 +1,16 @@
 ﻿//------------------------------------------------------------------
-// Cygnet OWA Tray Monitor
+// DrunkenBakery OWA Tray Monitor
 // NETversions Form
 //
-// <copyright file="NETversions.cs" company="Cygnet Solutions Ltd">
-//     Copyright (c) 2009 Cygnet Solutions Ltd. All rights reserved.
+// <copyright file="NETversions.cs" company="The Drunken Bakery">
+//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
 // </copyright>
 //
 // Form to display the currently installed .NET versions
-// Uses the registry to access this information. 
+// Uses the registry to access this information.
 //
-// Author: IRS
-// $Revision: 1.1 $
 //------------------------------------------------------------------
-
-namespace Cygnet.OWAtray
+namespace DrunkenBakery.OWAtray
 {
     using System;
     using System.Windows.Forms;
@@ -23,6 +20,8 @@ namespace Cygnet.OWAtray
     /// </summary>
     public partial class NETversions : Form
     {
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NETversions"/> class.
         /// </summary>
@@ -39,22 +38,9 @@ namespace Cygnet.OWAtray
             ScrapeRegistry();
         }
 
-        /// <summary>
-        /// Scrapes the registry for .NET keys and lists them
-        /// </summary>
-        private void ScrapeRegistry()
-        {
-            Microsoft.Win32.RegistryKey regKey;
-            Microsoft.Win32.RegistryKey revKey;
+        #endregion Constructors
 
-            regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\", false);
-            foreach ( string Keyname in regKey.GetSubKeyNames())
-            {
-                revKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\" + Keyname + @"\", false);
-                string revVal = (string)revKey.GetValue("Version");
-                AddEntry(Keyname, revVal);
-            } 
-        }
+        #region Methods
 
         /// <summary>
         /// Adds an entry to the list of versions.
@@ -80,5 +66,24 @@ namespace Cygnet.OWAtray
         {
             this.Close();
         }
+
+        /// <summary>
+        /// Scrapes the registry for .NET keys and lists them
+        /// </summary>
+        private void ScrapeRegistry()
+        {
+            Microsoft.Win32.RegistryKey regKey;
+            Microsoft.Win32.RegistryKey revKey;
+
+            regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\", false);
+            foreach ( string Keyname in regKey.GetSubKeyNames())
+            {
+                revKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\" + Keyname + @"\", false);
+                string revVal = (string)revKey.GetValue("Version");
+                AddEntry(Keyname, revVal);
+            }
+        }
+
+        #endregion Methods
     }
 }
