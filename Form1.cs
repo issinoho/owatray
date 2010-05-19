@@ -80,6 +80,7 @@ namespace DrunkenBakery.OWAtray
         private string trayIcon;
         private string wavFile;
         private string _Domain;
+        private string _ExchangeVersion;
         private int _InboxCount;
         private string _Interval;
         private SecureString _Pwd;
@@ -112,6 +113,17 @@ namespace DrunkenBakery.OWAtray
             InitEventView(lvStatus);
 
             // Options
+            _ExchangeVersion = Properties.Settings.Default.ExchangeVersion;
+            switch (_ExchangeVersion)
+            {
+                case "2007":
+                    exchangeVersionToolStripMenuItem.SelectedIndex = 0;
+                    break;
+
+                case "2010":
+                    exchangeVersionToolStripMenuItem.SelectedIndex = 1;
+                    break;
+            }
             txtServer.Text = Properties.Settings.Default.Server;
             _Server = txtServer.Text;
             txtUser.Text = Properties.Settings.Default.Username;
@@ -131,7 +143,7 @@ namespace DrunkenBakery.OWAtray
             // Logging
             AddLogEntry("--------------------------------------------------", LogType.Info);
             AddLogEntry("Welcome to the " + ThisApp + " v" + appVersionString, LogType.Info);
-            AddLogEntry("Configured to communicate with Exchange " + Properties.Settings.Default.ExchangeVersion);
+            AddLogEntry("Configured to communicate with Exchange " + _ExchangeVersion);
             notifyIcon1.Text = ThisApp + Environment.NewLine + "Not Connected to Exchange";
 
             // Startup Flag
@@ -621,6 +633,7 @@ namespace DrunkenBakery.OWAtray
                 Properties.Settings.Default.OverrideCert = overrideCert ? "Yes" : "No";
                 Properties.Settings.Default.ManualURL = txtURLEdit.Text;
                 Properties.Settings.Default.AlwaysIE = alwaysIE ? "Yes" : "No";
+                Properties.Settings.Default.ExchangeVersion = _ExchangeVersion;
                 Properties.Settings.Default.Save();
 
                 AddLogEntry("Settings saved to file", LogType.Info);
@@ -680,7 +693,7 @@ namespace DrunkenBakery.OWAtray
                 ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
 
                 AddLogEntry("Binding to Exchange", LogType.Info);
-                myService = new ExchangeService(Properties.Settings.Default.ExchangeVersion == "2010" ? ExchangeVersion.Exchange2010 : ExchangeVersion.Exchange2007_SP1);
+                myService = new ExchangeService(_ExchangeVersion == "2010" ? ExchangeVersion.Exchange2010 : ExchangeVersion.Exchange2007_SP1);
                 if (overrideURL)
                 {
                     thisUri = txtURLEdit.Text;
@@ -725,6 +738,27 @@ namespace DrunkenBakery.OWAtray
                 txtURL.Visible = true;
                 txtURLEdit.Visible = false;
             }
+        }
+
+        /// <summary>
+        /// Handles the SelectedIndexChanged event of the exchangeVersionToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void exchangeVersionToolStripMenuItem_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (exchangeVersionToolStripMenuItem.SelectedIndex)
+            {
+                case 0:
+                    _ExchangeVersion = "2007";
+                    break;
+
+                case 1:
+                    _ExchangeVersion = "2010";
+                    break;
+            }
+
+            //AddLogEntry("Exchange Version has changed. Stop & Start to pick up change.", LogType.Info);
         }
 
         /// <summary>
