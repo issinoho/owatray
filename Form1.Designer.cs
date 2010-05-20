@@ -43,6 +43,7 @@
             this.blankToolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.openOWAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openOutlookToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dividerToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.recallLastPopupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetTrayIconToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blankToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
@@ -63,7 +64,8 @@
             this.overrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.overrideServerURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alwaysOpenOWAInIEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exchangeVersionToolStripMenuItem = new System.Windows.Forms.ToolStripComboBox();
+            this.exchangeVersionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.exchange2007ToolStripMenuItem = new System.Windows.Forms.ToolStripComboBox();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -151,12 +153,13 @@
             this.blankToolStripMenuItem1,
             this.openOWAToolStripMenuItem,
             this.openOutlookToolStripMenuItem,
+            this.dividerToolStripMenuItem,
             this.recallLastPopupToolStripMenuItem,
             this.resetTrayIconToolStripMenuItem,
             this.blankToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(168, 148);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(168, 176);
             // 
             // restoreToolStripMenuItem
             // 
@@ -186,6 +189,11 @@
             this.openOutlookToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.openOutlookToolStripMenuItem.Text = "Open Outlook";
             this.openOutlookToolStripMenuItem.Click += new System.EventHandler(this.openOutlookToolStripMenuItem_Click);
+            // 
+            // dividerToolStripMenuItem
+            // 
+            this.dividerToolStripMenuItem.Name = "dividerToolStripMenuItem";
+            this.dividerToolStripMenuItem.Size = new System.Drawing.Size(164, 6);
             // 
             // recallLastPopupToolStripMenuItem
             // 
@@ -223,6 +231,7 @@
             this.toolsToolStripMenuItem,
             this.notificationsToolStripMenuItem,
             this.advancedToolStripMenuItem,
+            this.exchangeVersionToolStripMenuItem1,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -301,7 +310,7 @@
             this.balloonToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.balloonToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("balloonToolStripMenuItem.Image")));
             this.balloonToolStripMenuItem.Name = "balloonToolStripMenuItem";
-            this.balloonToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.balloonToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.balloonToolStripMenuItem.Text = "Balloon";
             this.balloonToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.balloonToolStripMenuItem_CheckStateChanged);
             // 
@@ -310,7 +319,7 @@
             this.growlToolStripMenuItem.CheckOnClick = true;
             this.growlToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("growlToolStripMenuItem.Image")));
             this.growlToolStripMenuItem.Name = "growlToolStripMenuItem";
-            this.growlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.growlToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.growlToolStripMenuItem.Text = "Growl";
             this.growlToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.growlToolStripMenuItem_CheckStateChanged);
             // 
@@ -319,7 +328,7 @@
             this.snarlToolStripMenuItem.CheckOnClick = true;
             this.snarlToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("snarlToolStripMenuItem.Image")));
             this.snarlToolStripMenuItem.Name = "snarlToolStripMenuItem";
-            this.snarlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.snarlToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.snarlToolStripMenuItem.Text = "Snarl";
             this.snarlToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.snarlToolStripMenuItem_CheckStateChanged);
             // 
@@ -330,7 +339,7 @@
             this.playSoundToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.playSoundToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("playSoundToolStripMenuItem.Image")));
             this.playSoundToolStripMenuItem.Name = "playSoundToolStripMenuItem";
-            this.playSoundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.playSoundToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.playSoundToolStripMenuItem.Text = "Play Sound";
             this.playSoundToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.playSoundToolStripMenuItem_CheckStateChanged);
             // 
@@ -339,8 +348,7 @@
             this.advancedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.overrideToolStripMenuItem,
             this.overrideServerURLToolStripMenuItem,
-            this.alwaysOpenOWAInIEToolStripMenuItem,
-            this.exchangeVersionToolStripMenuItem});
+            this.alwaysOpenOWAInIEToolStripMenuItem});
             this.advancedToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("advancedToolStripMenuItem.Image")));
             this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
             this.advancedToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
@@ -351,7 +359,7 @@
             this.overrideToolStripMenuItem.CheckOnClick = true;
             this.overrideToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideToolStripMenuItem.Image")));
             this.overrideToolStripMenuItem.Name = "overrideToolStripMenuItem";
-            this.overrideToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.overrideToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.overrideToolStripMenuItem.Text = "Override Certificate";
             this.overrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideToolStripMenuItem_CheckStateChanged);
             // 
@@ -360,7 +368,7 @@
             this.overrideServerURLToolStripMenuItem.CheckOnClick = true;
             this.overrideServerURLToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideServerURLToolStripMenuItem.Image")));
             this.overrideServerURLToolStripMenuItem.Name = "overrideServerURLToolStripMenuItem";
-            this.overrideServerURLToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.overrideServerURLToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.overrideServerURLToolStripMenuItem.Text = "Override Server URL";
             this.overrideServerURLToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideServerURLToolStripMenuItem_CheckStateChanged);
             // 
@@ -369,19 +377,28 @@
             this.alwaysOpenOWAInIEToolStripMenuItem.CheckOnClick = true;
             this.alwaysOpenOWAInIEToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("alwaysOpenOWAInIEToolStripMenuItem.Image")));
             this.alwaysOpenOWAInIEToolStripMenuItem.Name = "alwaysOpenOWAInIEToolStripMenuItem";
-            this.alwaysOpenOWAInIEToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.alwaysOpenOWAInIEToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.alwaysOpenOWAInIEToolStripMenuItem.Text = "Always open OWA in IE";
             this.alwaysOpenOWAInIEToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged);
             // 
-            // exchangeVersionToolStripMenuItem
+            // exchangeVersionToolStripMenuItem1
             // 
-            this.exchangeVersionToolStripMenuItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.exchangeVersionToolStripMenuItem.Items.AddRange(new object[] {
+            this.exchangeVersionToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exchange2007ToolStripMenuItem});
+            this.exchangeVersionToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("exchangeVersionToolStripMenuItem1.Image")));
+            this.exchangeVersionToolStripMenuItem1.Name = "exchangeVersionToolStripMenuItem1";
+            this.exchangeVersionToolStripMenuItem1.Size = new System.Drawing.Size(127, 20);
+            this.exchangeVersionToolStripMenuItem1.Text = "Exchange Version";
+            // 
+            // exchange2007ToolStripMenuItem
+            // 
+            this.exchange2007ToolStripMenuItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.exchange2007ToolStripMenuItem.Items.AddRange(new object[] {
             "Exchange 2007",
             "Exchange 2010"});
-            this.exchangeVersionToolStripMenuItem.Name = "exchangeVersionToolStripMenuItem";
-            this.exchangeVersionToolStripMenuItem.Size = new System.Drawing.Size(197, 23);
-            this.exchangeVersionToolStripMenuItem.SelectedIndexChanged += new System.EventHandler(this.exchangeVersionToolStripMenuItem_SelectedIndexChanged);
+            this.exchange2007ToolStripMenuItem.Name = "exchange2007ToolStripMenuItem";
+            this.exchange2007ToolStripMenuItem.Size = new System.Drawing.Size(152, 23);
+            this.exchange2007ToolStripMenuItem.SelectedIndexChanged += new System.EventHandler(this.exchange2007ToolStripMenuItem_SelectedIndexChanged);
             // 
             // helpToolStripMenuItem
             // 
@@ -811,7 +828,9 @@
         private System.Windows.Forms.ToolStripMenuItem openOutlookToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator blankToolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator blankToolStripMenuItem;
-        private System.Windows.Forms.ToolStripComboBox exchangeVersionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exchangeVersionToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripComboBox exchange2007ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator dividerToolStripMenuItem;
     }
 }
 

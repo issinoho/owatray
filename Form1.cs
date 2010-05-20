@@ -117,11 +117,11 @@ namespace DrunkenBakery.OWAtray
             switch (_ExchangeVersion)
             {
                 case "2007":
-                    exchangeVersionToolStripMenuItem.SelectedIndex = 0;
+                    exchange2007ToolStripMenuItem.SelectedIndex = 0;
                     break;
 
                 case "2010":
-                    exchangeVersionToolStripMenuItem.SelectedIndex = 1;
+                    exchange2007ToolStripMenuItem.SelectedIndex = 1;
                     break;
             }
             txtServer.Text = Properties.Settings.Default.Server;
@@ -740,14 +740,9 @@ namespace DrunkenBakery.OWAtray
             }
         }
 
-        /// <summary>
-        /// Handles the SelectedIndexChanged event of the exchangeVersionToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void exchangeVersionToolStripMenuItem_SelectedIndexChanged(object sender, EventArgs e)
+        private void exchange2007ToolStripMenuItem_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (exchangeVersionToolStripMenuItem.SelectedIndex)
+            switch (exchange2007ToolStripMenuItem.SelectedIndex)
             {
                 case 0:
                     _ExchangeVersion = "2007";
@@ -757,8 +752,6 @@ namespace DrunkenBakery.OWAtray
                     _ExchangeVersion = "2010";
                     break;
             }
-
-            //AddLogEntry("Exchange Version has changed. Stop & Start to pick up change.", LogType.Info);
         }
 
         /// <summary>
