@@ -280,5 +280,14 @@ namespace DrunkenBakery.OWAtray.Properties {
                 this["AlwaysIE"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("OUTLOOK.EXE")]
+        public string OutlookPath {
+            get {
+                return ((string)(this["OutlookPath"]));
+            }
+        }
     }
 }

@@ -68,5 +68,8 @@
     <Setting Name="AlwaysIE" Type="System.String" Scope="User">
       <Value Profile="(Default)">No</Value>
     </Setting>
+    <Setting Name="OutlookPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">OUTLOOK.EXE</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

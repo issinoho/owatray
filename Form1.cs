@@ -1036,7 +1036,14 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void openOutlookToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("OUTLOOK.EXE");
+            try
+            {
+                System.Diagnostics.Process.Start(Properties.Settings.Default.OutlookPath);
+            }
+            catch(Exception ex)
+            {
+                AddLogEntry(ex.Message, LogType.Fail);
+            }
         }
 
         /// <summary>
