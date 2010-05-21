@@ -939,7 +939,13 @@ namespace DrunkenBakery.OWAtray
                 {
                     notifyIcon1.Icon = new Icon((myCount > 0 ? newIcon : trayIcon));
                 }
-                notifyIcon1.Text = ThisApp + Environment.NewLine + _Server + (isDomain ? "" : @"\" + _User) + Environment.NewLine + myCount + " unread email" + (myCount != 1 ? "s " : " ");
+                string text1 = ThisApp + Environment.NewLine + Environment.NewLine + myCount + " unread email" + (myCount != 1 ? "s " : " ");
+                const int MaxTipLength = 63;
+                int charsLeft = MaxTipLength - text1.Length;
+                string domainText = _Server + (isDomain ? "" : @"\" + _User);
+                if (domainText.Length > charsLeft) domainText = domainText.Substring(0, charsLeft);
+                string finalText = ThisApp + Environment.NewLine + domainText + Environment.NewLine + myCount + " unread email" + (myCount != 1 ? "s " : " ");
+                notifyIcon1.Text = finalText;
                 _InboxCount = myCount;
             }
             catch (Exception ex)
