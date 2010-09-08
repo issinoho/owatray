@@ -24,6 +24,9 @@ namespace DrunkenBakery.OWAtray
     using Microsoft.Exchange.WebServices.Data;
 
     using Snarl;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Security.Principal;
 
     /// <summary>
     /// Main application form which drives all functionality.
@@ -1456,5 +1459,190 @@ namespace DrunkenBakery.OWAtray
         }
 
         #endregion Methods
+
+        /// <summary>
+        /// Handles the Click event of the makeOWADefaultToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void makeOWADefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!IsUserAdministrator())
+            {
+                AddLogEntry("You are not an Admin user. Operation may fail.", LogType.Fail);
+            }
+
+            // Set OWA Url
+            string owaUrl = "https://" + _Server + "/owa";
+            string shellPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Properties.Settings.Default.ShellIntegration);
+            AddLogEntry("Setting OWA url to " + owaUrl, LogType.Info);
+
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "url " + owaUrl;
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
+
+            // Set account name
+            string userAccount = _User;
+            if (!userAccount.Contains("@"))
+            {
+                userAccount = userAccount + "@" + GetSubDomain(_Server);
+            }
+            AddLogEntry("Using user account: " + userAccount, LogType.Info);
+
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "account " + userAccount;
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
+
+            // Configure registry
+            AddLogEntry("Setting up Mail handlers", LogType.Info);
+
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "registry";
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                if (System.Environment.OSVersion.Version.Major >= 6)
+                    RunSvc.Verb = "runas";
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
+
+            AddLogEntry("Mail functions will now be handled by OWA", LogType.Success);
+        }
+
+        /// <summary>
+        /// Retrieves the subdomain from the specified URL.
+        /// </summary>
+        /// <param name="domain">The domain.</param>
+        /// <returns>
+        /// The subdomain if it exist, otherwise null.
+        /// </returns>
+        private static string GetSubDomain(string domain)
+        {
+            string result = "";
+
+            string[] parts = domain.Split('.');
+
+            if (parts.Length > 1)
+            {
+                for (int f = 1; f < parts.Length; ++f)
+                {
+                    result = result + parts[f];
+                    if (f != (parts.Length - 1)) result = result + ".";
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Handles the Click event of the switchOffToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void switchOffToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!IsUserAdministrator())
+            {
+                AddLogEntry("You are not an Admin user. Operation may fail.", LogType.Fail);
+            }
+
+            // Configure registry
+            string shellPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Properties.Settings.Default.ShellIntegration);
+            AddLogEntry("Restoring Mail handlers", LogType.Info);
+
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "restore";
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                if (System.Environment.OSVersion.Version.Major >= 6)
+                    RunSvc.Verb = "runas";
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
+
+            AddLogEntry("Mail handler restored to system default", LogType.Success);
+        }
+
+        /// <summary>
+        /// Determines whether [is user administrator].
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if [is user administrator]; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsUserAdministrator()
+        {
+            //bool value to hold our return value
+            bool isAdmin;
+            try
+            {
+                //get the currently logged in user
+                WindowsIdentity user = WindowsIdentity.GetCurrent();
+                WindowsPrincipal principal = new WindowsPrincipal(user);
+                isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                isAdmin = false;
+                MessageBox.Show(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                isAdmin = false;
+                MessageBox.Show(ex.Message);
+            }
+            return isAdmin;
+        }
     }
 }

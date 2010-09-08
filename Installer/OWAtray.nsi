@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "1.1.3793.21751"
+!define PRODUCT_VERSION "1.1.3903.25680"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray.exe"
@@ -37,8 +37,8 @@
 
 ; MUI end ------
 
-Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "Setup.exe"
+Name "${PRODUCT_NAME}"
+OutFile "OWAtray.exe"
 InstallDir "$PROGRAMFILES\OWAtray"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
@@ -57,6 +57,9 @@ Section "MainSection" SEC01
   File "..\bin\Release\Microsoft.Exchange.WebServices.dll"
   File "..\bin\Release\Interop.IWshRuntimeLibrary.dll"
   File "..\bin\Release\OWAtray.exe"
+  File "..\ShellIntegration\bin\Release\ShellIntegration.exe"
+  File "..\ShellIntegration\bin\Release\ShellIntegration.exe.config"
+  File "..\Mapi\Release\MapiDll.dll"
   CreateDirectory "$SMPROGRAMS\OWAtray"
   CreateShortCut "$SMPROGRAMS\OWAtray\OWAtray.lnk" "$INSTDIR\OWAtray.exe"
   CreateShortCut "$DESKTOP\OWAtray.lnk" "$INSTDIR\OWAtray.exe"
@@ -107,6 +110,9 @@ Section Uninstall
   Delete "$INSTDIR\email.ico"
   Delete "$INSTDIR\comment_rect.ico"
   Delete "$INSTDIR\notify.wav"
+  Delete "$INSTDIR\ShellIntegration.exe"
+  Delete "$INSTDIR\ShellIntegration.exe.config"
+  Delete "$INSTDIR\MapiDll.dll"
 
   Delete "$SMPROGRAMS\OWAtray\Uninstall.lnk"
   Delete "$SMPROGRAMS\OWAtray\Website.lnk"

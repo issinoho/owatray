@@ -100,6 +100,9 @@
             this.timerUpdate = new System.Windows.Forms.Timer(this.components);
             this.timerAppt = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.shellIntegrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.makeOWADefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -159,7 +162,7 @@
             this.blankToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(168, 176);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(168, 154);
             // 
             // restoreToolStripMenuItem
             // 
@@ -232,6 +235,7 @@
             this.notificationsToolStripMenuItem,
             this.advancedToolStripMenuItem,
             this.exchangeVersionToolStripMenuItem1,
+            this.shellIntegrationToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -731,6 +735,32 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // shellIntegrationToolStripMenuItem
+            // 
+            this.shellIntegrationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.makeOWADefaultToolStripMenuItem,
+            this.switchOffToolStripMenuItem});
+            this.shellIntegrationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("shellIntegrationToolStripMenuItem.Image")));
+            this.shellIntegrationToolStripMenuItem.Name = "shellIntegrationToolStripMenuItem";
+            this.shellIntegrationToolStripMenuItem.Size = new System.Drawing.Size(121, 20);
+            this.shellIntegrationToolStripMenuItem.Text = "Shell Integration";
+            // 
+            // makeOWADefaultToolStripMenuItem
+            // 
+            this.makeOWADefaultToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("makeOWADefaultToolStripMenuItem.Image")));
+            this.makeOWADefaultToolStripMenuItem.Name = "makeOWADefaultToolStripMenuItem";
+            this.makeOWADefaultToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.makeOWADefaultToolStripMenuItem.Text = "Make OWA Default";
+            this.makeOWADefaultToolStripMenuItem.Click += new System.EventHandler(this.makeOWADefaultToolStripMenuItem_Click);
+            // 
+            // switchOffToolStripMenuItem
+            // 
+            this.switchOffToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("switchOffToolStripMenuItem.Image")));
+            this.switchOffToolStripMenuItem.Name = "switchOffToolStripMenuItem";
+            this.switchOffToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.switchOffToolStripMenuItem.Text = "Switch Off";
+            this.switchOffToolStripMenuItem.Click += new System.EventHandler(this.switchOffToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -831,6 +861,9 @@
         private System.Windows.Forms.ToolStripMenuItem exchangeVersionToolStripMenuItem1;
         private System.Windows.Forms.ToolStripComboBox exchange2007ToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator dividerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem shellIntegrationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem makeOWADefaultToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem switchOffToolStripMenuItem;
     }
 }
 

@@ -56,7 +56,7 @@
     <Setting Name="ManualURL" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="RSSFeed" Type="System.String" Scope="User">
+    <Setting Name="RSSFeed" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://www.owatray.com/blog/posts.xml</Value>
     </Setting>
     <Setting Name="ApptInterval" Type="System.String" Scope="Application">
@@ -70,6 +70,9 @@
     </Setting>
     <Setting Name="OutlookPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">OUTLOOK.EXE</Value>
+    </Setting>
+    <Setting Name="ShellIntegration" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ShellIntegration.exe</Value>
     </Setting>
   </Settings>
 </SettingsFile>
