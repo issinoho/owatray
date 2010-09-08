@@ -93,7 +93,9 @@ namespace DrunkenBakery.OWAtray
                 Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto\DefaultIcon", "", "\"" + shell + "\",0");
                 Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto\shell\open\command", "", "\"" + shell + "\" mailto %1");
 
-                // Tell windows to use for mailto links
+                // Tell windows to use us for mailto links
+                Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", "", "\"" + shell + "\",0");
+                Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", "", "\"" + shell + "\" mailto %1");
                 Registry.SetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", "Progid", Properties.Settings.Default.MailtoClass);
 
                 // Set up a mail handler
@@ -110,7 +112,12 @@ namespace DrunkenBakery.OWAtray
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", "URL Protocol", "");
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\DefaultIcon", "", "\"" + shell + "\",0");
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\shell\open\command", "", "\"" + shell + "\" mailto %1");
-                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\shell\open\command", "", "\"" + shell + "\" mailto %1");
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\shell\open\command", "", "\"" + shell + "\" owa");
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\DefaultIcon", "", "\"" + shell + "\",0");
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "HideIconsCommand", "\"" + shell + "\" restore");
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "ReinstallCommand", "\"" + shell + "\" registry");
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "ShowIconsCommand", "\"" + shell + "\" registry");
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "IconsVisible", 1, RegistryValueKind.DWord);
 
                 // Register the application
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\RegisteredApplications", "OWA", @"Software\Clients\Mail\OWAMapi\Capabilities");
@@ -143,6 +150,10 @@ namespace DrunkenBakery.OWAtray
             Console.WriteLine("Received command: " + args[0]);
             switch (args[0].ToUpper())
             {
+                case "OWA":
+                    StartOWA();
+                    break;
+
                 case "REGISTRY":
                     SaveCurrentKey();
                     InitRegistry();
@@ -207,6 +218,10 @@ namespace DrunkenBakery.OWAtray
                     Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", "", Properties.Settings.Default.DefaultMail);
                 if (Properties.Settings.Default.DefaultMailUser.Length > 0)
                     Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Clients\Mail", "", Properties.Settings.Default.DefaultMailUser);
+                if (Properties.Settings.Default.DefaultIcon.Length > 0)
+                    Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", "", Properties.Settings.Default.DefaultIcon);
+                if (Properties.Settings.Default.DefaultOpen.Length > 0)
+                    Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", "", Properties.Settings.Default.DefaultOpen);
             }
             catch (Exception ex)
             {
@@ -219,6 +234,9 @@ namespace DrunkenBakery.OWAtray
         /// </summary>
         static void SaveCurrentKey()
         {
+            string bridge = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Properties.Settings.Default.MAPIBridge);
+            string shell = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
             try
             {
                 // Get current mailto and store for use later
@@ -244,6 +262,24 @@ namespace DrunkenBakery.OWAtray
                     Properties.Settings.Default.DefaultMailUser = userMailKey;
                     Properties.Settings.Default.Save();
                 }
+
+                // Get current default icon and store for use later
+                string defIconKey = "\"" + shell + "\",0";
+                string iconKey = Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", "", defIconKey).ToString();
+                if (userMailKey != defIconKey)
+                {
+                    Properties.Settings.Default.DefaultIcon = iconKey;
+                    Properties.Settings.Default.Save();
+                }
+
+                // Get current default cmd path and store for use later
+                string defPathKey = "\"" + shell + "\" mailto %1";
+                string pathKey = Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", "", defPathKey).ToString();
+                if (pathKey != defPathKey)
+                {
+                    Properties.Settings.Default.DefaultOpen = pathKey;
+                    Properties.Settings.Default.Save();
+                }
             }
             catch (Exception ex)
             {
@@ -262,6 +298,16 @@ namespace DrunkenBakery.OWAtray
                 target = target.Substring(7, target.Length - 7);
             }
             string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note&cc=MTQuMC43MDIuMCxlbi1HQiw0Mjk0OTY3Mjk1LEhUTUwsMSww&smime=SSL%3a1%3bVer%3a14.0.639.19&pspid=_1283538372054_961582628&to=" + target;
+            System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
+            Console.WriteLine("Browsing to " + myUrl);
+        }
+
+        /// <summary>
+        /// Starts the OWA.
+        /// </summary>
+        static void StartOWA()
+        {
+            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount;
             System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
             Console.WriteLine("Browsing to " + myUrl);
         }

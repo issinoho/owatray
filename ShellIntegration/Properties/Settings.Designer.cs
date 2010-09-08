@@ -127,5 +127,29 @@ namespace DrunkenBakery.OWAtray.Properties {
                 return ((string)(this["IETitle"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultIcon {
+            get {
+                return ((string)(this["DefaultIcon"]));
+            }
+            set {
+                this["DefaultIcon"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultOpen {
+            get {
+                return ((string)(this["DefaultOpen"]));
+            }
+            set {
+                this["DefaultOpen"] = value;
+            }
+        }
     }
 }

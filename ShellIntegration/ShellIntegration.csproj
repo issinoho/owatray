@@ -12,7 +12,7 @@
     <AssemblyName>ShellIntegration</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ApplicationIcon>files_exec.ico</ApplicationIcon>
+    <ApplicationIcon>owa.ico</ApplicationIcon>
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
@@ -59,14 +59,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="files_exec.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="owa.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
