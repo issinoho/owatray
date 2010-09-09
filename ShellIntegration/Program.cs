@@ -45,14 +45,14 @@ namespace DrunkenBakery.OWAtray
             Clipboard.SetDataObject(d, true);
 
             // Spawn IE
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + @"/?ae=Item&a=New&t=IPM.Note&cc=MTQuMC43MDIuMCxlbi1HQiw0Mjk0OTY3Mjk1LEhUTUwsMSww&smime=SSL%3a1%3bVer%3a14.0.639.19&pspid=_1283538372054_961582628";
+            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + @"/?ae=Item&a=New&t=IPM.Note&cc=MTQuMC43MDIuMCxlbi1HQiw0Mjk0OTY3Mjk1LEhUTUwsMSww&smime=SSL%3a1%3bVer%3a14.0.639.19";
             try
             {
                 Console.WriteLine("Browsing to " + myUrl);
                 System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
 
                 // Wait for it to pop
-                System.Threading.Thread.Sleep(2000);
+                System.Threading.Thread.Sleep(Convert.ToInt32(Properties.Settings.Default.PopupDelay));
 
                 // Find IE window and send keys to it
                 int iHandle = NativeWin32.FindWindow(null, Properties.Settings.Default.IETitle);
@@ -154,6 +154,10 @@ namespace DrunkenBakery.OWAtray
                     StartOWA();
                     break;
 
+                case "SHELL":
+                    ShellOWA();
+                    break;
+
                 case "REGISTRY":
                     SaveCurrentKey();
                     InitRegistry();
@@ -222,6 +226,8 @@ namespace DrunkenBakery.OWAtray
                     Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", "", Properties.Settings.Default.DefaultIcon);
                 if (Properties.Settings.Default.DefaultOpen.Length > 0)
                     Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", "", Properties.Settings.Default.DefaultOpen);
+
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "IconsVisible", 0, RegistryValueKind.DWord);
             }
             catch (Exception ex)
             {
@@ -297,7 +303,7 @@ namespace DrunkenBakery.OWAtray
             {
                 target = target.Substring(7, target.Length - 7);
             }
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note&cc=MTQuMC43MDIuMCxlbi1HQiw0Mjk0OTY3Mjk1LEhUTUwsMSww&smime=SSL%3a1%3bVer%3a14.0.639.19&pspid=_1283538372054_961582628&to=" + target;
+            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note&cc=MTQuMC43MDIuMCxlbi1HQiw0Mjk0OTY3Mjk1LEhUTUwsMSww&smime=SSL%3a1%3bVer%3a14.0.639.19&to=" + target;
             System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
             Console.WriteLine("Browsing to " + myUrl);
         }
@@ -309,6 +315,16 @@ namespace DrunkenBakery.OWAtray
         {
             string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount;
             System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
+            Console.WriteLine("Browsing to " + myUrl);
+        }
+
+        /// <summary>
+        /// Shells the OWA.
+        /// </summary>
+        static void ShellOWA()
+        {
+            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount;
+            System.Diagnostics.Process.Start(myUrl);
             Console.WriteLine("Browsing to " + myUrl);
         }
 

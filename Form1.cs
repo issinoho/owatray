@@ -56,14 +56,10 @@ namespace DrunkenBakery.OWAtray
         private Form frmNET;
         private GrowlConnector growl;
 
-        // Growl
         private string iconPath;
 
-        // Notifications
         bool isBalloon;
         bool isBell;
-
-        // Domain
         bool isDomain;
         bool isGrowl;
         bool isSnarl;
@@ -74,8 +70,6 @@ namespace DrunkenBakery.OWAtray
         private ExchangeService myService;
         private string newIcon;
         private NotificationType newMail;
-
-        // Overrides
         bool overrideCert;
         bool overrideURL;
         bool resetFlag;
@@ -89,6 +83,7 @@ namespace DrunkenBakery.OWAtray
         private SecureString _Pwd;
         private string _Server;
         private string _User;
+        private string shellPath;
 
         #endregion Fields
 
@@ -201,6 +196,9 @@ namespace DrunkenBakery.OWAtray
 
             // Snarl
             SnarlConnector.RegisterConfig(this.Handle, ThisApp, WindowsMessage.WM_MDIMAXIMIZE, iconPath);
+
+            // Configure Shell
+            ConfigureShell();
 
             // Configure Exchange
             if (ConfigureExchange())
@@ -372,14 +370,20 @@ namespace DrunkenBakery.OWAtray
         /// </summary>
         private void activateOWA()
         {
+            ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+            RunSvc.Arguments = "owa";
+            RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+
             if (alwaysIE)
             {
-                System.Diagnostics.Process.Start("IEXPLORE.EXE", "https://" + _Server + "/owa");
+                RunSvc.Arguments = "owa";
             }
             else
             {
-                System.Diagnostics.Process.Start("https://" + _Server + "/owa");
+                RunSvc.Arguments = "shell";
             }
+
+            Process ServiceProcess = Process.Start(RunSvc);
         }
 
         /// <summary>
@@ -413,6 +417,65 @@ namespace DrunkenBakery.OWAtray
                 {
                     // Can't do anything for obvious reasons!
                 }
+            }
+        }
+
+        /// <summary>
+        /// Configures the shell.
+        /// </summary>
+        private void ConfigureShell()
+        {
+            // Path to shell integration module
+            shellPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Properties.Settings.Default.ShellIntegration);
+
+            // Set OWA Url
+            string owaUrl = "https://" + _Server + "/owa";
+            AddLogEntry("Setting OWA url to " + owaUrl, LogType.Info);
+
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "url " + owaUrl;
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
+
+            // Set account name
+            string userAccount = _User;
+            if (!userAccount.Contains("@"))
+            {
+                userAccount = userAccount + "@" + GetSubDomain(_Server);
+            }
+            AddLogEntry("Using user account: " + userAccount, LogType.Info);
+
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "account " + userAccount;
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
             }
         }
 
@@ -1472,57 +1535,6 @@ namespace DrunkenBakery.OWAtray
                 AddLogEntry("You are not an Admin user. Operation may fail.", LogType.Fail);
             }
 
-            // Set OWA Url
-            string owaUrl = "https://" + _Server + "/owa";
-            string shellPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Properties.Settings.Default.ShellIntegration);
-            AddLogEntry("Setting OWA url to " + owaUrl, LogType.Info);
-
-            try
-            {
-                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-                RunSvc.Arguments = "url " + owaUrl;
-                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-                Process ServiceProcess = Process.Start(RunSvc);
-
-                while (!(ServiceProcess.HasExited == true))
-                {
-                    System.Threading.Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry("Error - " + ex.Message, LogType.Fail);
-                return;
-            }
-
-            // Set account name
-            string userAccount = _User;
-            if (!userAccount.Contains("@"))
-            {
-                userAccount = userAccount + "@" + GetSubDomain(_Server);
-            }
-            AddLogEntry("Using user account: " + userAccount, LogType.Info);
-
-            try
-            {
-                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-                RunSvc.Arguments = "account " + userAccount;
-                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-                Process ServiceProcess = Process.Start(RunSvc);
-
-                while (!(ServiceProcess.HasExited == true))
-                {
-                    System.Threading.Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry("Error - " + ex.Message, LogType.Fail);
-                return;
-            }
-
             // Configure registry
             AddLogEntry("Setting up Mail handlers", LogType.Info);
 
@@ -1588,7 +1600,6 @@ namespace DrunkenBakery.OWAtray
             }
 
             // Configure registry
-            string shellPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Properties.Settings.Default.ShellIntegration);
             AddLogEntry("Restoring Mail handlers", LogType.Info);
 
             try

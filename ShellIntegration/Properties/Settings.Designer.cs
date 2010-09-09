@@ -151,5 +151,14 @@ namespace DrunkenBakery.OWAtray.Properties {
                 this["DefaultOpen"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2500")]
+        public string PopupDelay {
+            get {
+                return ((string)(this["PopupDelay"]));
+            }
+        }
     }
 }
