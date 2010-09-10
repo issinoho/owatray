@@ -371,7 +371,6 @@ namespace DrunkenBakery.OWAtray
         private void activateOWA()
         {
             ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-            RunSvc.Arguments = "owa";
             RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
 
             if (alwaysIE)

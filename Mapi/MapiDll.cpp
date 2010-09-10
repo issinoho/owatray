@@ -82,35 +82,38 @@ ULONG FAR PASCAL MAPILogon(ULONG aUIParam, LPTSTR aProfileName,
     HRESULT hr = 0;
     ULONG nSessionId = 0;
 
-    if (!(aFlags & MAPI_UNICODE))
-    {
-        // Need to convert the parameters to Unicode.
+    //if (!(aFlags & MAPI_UNICODE))
+    //{
+    //    // Need to convert the parameters to Unicode.
 
-        char *pUserName = (char *) aProfileName;
-        char *pPassWord = (char *) aPassword;
+    //    char *pUserName = (char *) aProfileName;
+    //    char *pPassWord = (char *) aPassword;
 
-        TCHAR ProfileName[MAX_NAME_LEN] = {0};
-        TCHAR PassWord[MAX_PW_LEN] = {0};
+    //    TCHAR ProfileName[MAX_NAME_LEN] = {0};
+    //    TCHAR PassWord[MAX_PW_LEN] = {0};
 
-        if (pUserName != NULL)
-        {
-            if (!MultiByteToWideChar(CP_ACP, 0, pUserName, -1, ProfileName,
-                                                            MAX_NAME_LEN))
-                return MAPI_E_FAILURE;
-        }
+    //    if (pUserName != NULL)
+    //    {
+    //        if (!MultiByteToWideChar(CP_ACP, 0, pUserName, -1, ProfileName,
+    //                                                        MAX_NAME_LEN))
+    //            return MAPI_E_FAILURE;
+    //    }
 
-        if (pPassWord != NULL)
-        {
-            if (!MultiByteToWideChar(CP_ACP, 0, pPassWord, -1, PassWord,
-                                                            MAX_NAME_LEN))
-                return MAPI_E_FAILURE;
-        }
+    //    if (pPassWord != NULL)
+    //    {
+    //        if (!MultiByteToWideChar(CP_ACP, 0, pPassWord, -1, PassWord,
+    //                                                        MAX_NAME_LEN))
+    //            return MAPI_E_FAILURE;
+    //    }
 
-    }
+    //}
 
 	ofstream File("c:\\temp\\owamapi\\debug.log", ios::app);
 	File<< "\r\nMAPILogon";
 	File.close();
+
+	int myHandle = 1;
+	(*aSession) = (LHANDLE) myHandle;
 
     return SUCCESS_SUCCESS;
 }
@@ -160,6 +163,7 @@ ULONG FAR PASCAL MAPISendMail (LHANDLE lhSession, ULONG ulUIParam, MapiMessage *
 	_mkdir("c:\\temp");
 	_mkdir("c:\\temp\\owamapi");
 	ofstream File("c:\\temp\\owamapi\\debug.log", ios::app);
+	File<< "\r\nMAPISendMail";
 
 	if (lpMessage->nRecipCount > MAX_RECIPS)
         return MAPI_E_TOO_MANY_RECIPIENTS ;
