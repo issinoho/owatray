@@ -702,6 +702,8 @@ namespace DrunkenBakery.OWAtray
                 Properties.Settings.Default.Save();
 
                 AddLogEntry("Settings saved to file", LogType.Info);
+
+                ConfigureShell();
             }
             catch (Exception ex)
             {

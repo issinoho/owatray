@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "1.1.3905.16720"
+!define PRODUCT_VERSION "1.1.3908.20029"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray.exe"
@@ -55,8 +55,8 @@ Section "MainSection" SEC01
   File "..\bin\Release\License.txt"
   File "..\bin\Release\Microsoft.Exchange.WebServices.dll"
   File "..\bin\Release\Interop.IWshRuntimeLibrary.dll"
-  File "..\bin\Release\OWAtray.exe"
-  File "..\ShellIntegration\bin\Release\ShellIntegration.exe"
+  File "..\bin\Release\OWAtray_Secure\OWAtray.exe"
+  File "..\ShellIntegration\bin\Release\ShellIntegration_Secure\ShellIntegration.exe"
   File "..\ShellIntegration\bin\Release\ShellIntegration.exe.config"
   File "..\Mapi\Release\MapiDll.dll"
   CreateDirectory "$SMPROGRAMS\OWAtray"

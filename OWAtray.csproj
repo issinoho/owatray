@@ -243,4 +243,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties Reactor_Enabled="1" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
