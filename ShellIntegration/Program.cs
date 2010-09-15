@@ -151,11 +151,25 @@ namespace DrunkenBakery.OWAtray
             switch (args[0].ToUpper())
             {
                 case "OWA":
-                    StartOWA();
+                    if (args.Length > 1)
+                    {
+                        StartOWA(args[1]);
+                    }
+                    else
+                    {
+                        StartOWA();
+                    }
                     break;
 
                 case "SHELL":
-                    ShellOWA();
+                    if (args.Length > 1)
+                    {
+                        ShellOWA(args[1]);
+                    }
+                    else
+                    {
+                        ShellOWA();
+                    }
                     break;
 
                 case "REGISTRY":
@@ -319,11 +333,33 @@ namespace DrunkenBakery.OWAtray
         }
 
         /// <summary>
+        /// Starts the OWA.
+        /// </summary>
+        /// <param name="Url">The URL.</param>
+        static void StartOWA(string Url)
+        {
+            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/" + Url;
+            System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
+            Console.WriteLine("Browsing to " + myUrl);
+        }
+
+        /// <summary>
         /// Shells the OWA.
         /// </summary>
         static void ShellOWA()
         {
             string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount;
+            System.Diagnostics.Process.Start(myUrl);
+            Console.WriteLine("Browsing to " + myUrl);
+        }
+
+        /// <summary>
+        /// Shells the OWA.
+        /// </summary>
+        /// <param name="Url">The URL.</param>
+        static void ShellOWA(string Url)
+        {
+            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/" + Url;
             System.Diagnostics.Process.Start(myUrl);
             Console.WriteLine("Browsing to " + myUrl);
         }

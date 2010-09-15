@@ -295,5 +295,17 @@ namespace DrunkenBakery.OWAtray.Properties {
                 return ((string)(this["ShellIntegration"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("No")]
+        public string DisableCalendar {
+            get {
+                return ((string)(this["DisableCalendar"]));
+            }
+            set {
+                this["DisableCalendar"] = value;
+            }
+        }
     }
 }

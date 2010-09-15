@@ -66,6 +66,9 @@
             this.alwaysOpenOWAInIEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exchangeVersionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exchange2007ToolStripMenuItem = new System.Windows.Forms.ToolStripComboBox();
+            this.shellIntegrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.makeOWADefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.supportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -100,9 +103,7 @@
             this.timerUpdate = new System.Windows.Forms.Timer(this.components);
             this.timerAppt = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.shellIntegrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.makeOWADefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.switchOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.disableCalendarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -352,7 +353,8 @@
             this.advancedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.overrideToolStripMenuItem,
             this.overrideServerURLToolStripMenuItem,
-            this.alwaysOpenOWAInIEToolStripMenuItem});
+            this.alwaysOpenOWAInIEToolStripMenuItem,
+            this.disableCalendarToolStripMenuItem});
             this.advancedToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("advancedToolStripMenuItem.Image")));
             this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
             this.advancedToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
@@ -403,6 +405,32 @@
             this.exchange2007ToolStripMenuItem.Name = "exchange2007ToolStripMenuItem";
             this.exchange2007ToolStripMenuItem.Size = new System.Drawing.Size(152, 23);
             this.exchange2007ToolStripMenuItem.SelectedIndexChanged += new System.EventHandler(this.exchange2007ToolStripMenuItem_SelectedIndexChanged);
+            // 
+            // shellIntegrationToolStripMenuItem
+            // 
+            this.shellIntegrationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.makeOWADefaultToolStripMenuItem,
+            this.switchOffToolStripMenuItem});
+            this.shellIntegrationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("shellIntegrationToolStripMenuItem.Image")));
+            this.shellIntegrationToolStripMenuItem.Name = "shellIntegrationToolStripMenuItem";
+            this.shellIntegrationToolStripMenuItem.Size = new System.Drawing.Size(121, 20);
+            this.shellIntegrationToolStripMenuItem.Text = "Shell Integration";
+            // 
+            // makeOWADefaultToolStripMenuItem
+            // 
+            this.makeOWADefaultToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("makeOWADefaultToolStripMenuItem.Image")));
+            this.makeOWADefaultToolStripMenuItem.Name = "makeOWADefaultToolStripMenuItem";
+            this.makeOWADefaultToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.makeOWADefaultToolStripMenuItem.Text = "Make OWA Default";
+            this.makeOWADefaultToolStripMenuItem.Click += new System.EventHandler(this.makeOWADefaultToolStripMenuItem_Click);
+            // 
+            // switchOffToolStripMenuItem
+            // 
+            this.switchOffToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("switchOffToolStripMenuItem.Image")));
+            this.switchOffToolStripMenuItem.Name = "switchOffToolStripMenuItem";
+            this.switchOffToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.switchOffToolStripMenuItem.Text = "Switch Off";
+            this.switchOffToolStripMenuItem.Click += new System.EventHandler(this.switchOffToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -735,31 +763,14 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
-            // shellIntegrationToolStripMenuItem
+            // disableCalendarToolStripMenuItem
             // 
-            this.shellIntegrationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.makeOWADefaultToolStripMenuItem,
-            this.switchOffToolStripMenuItem});
-            this.shellIntegrationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("shellIntegrationToolStripMenuItem.Image")));
-            this.shellIntegrationToolStripMenuItem.Name = "shellIntegrationToolStripMenuItem";
-            this.shellIntegrationToolStripMenuItem.Size = new System.Drawing.Size(121, 20);
-            this.shellIntegrationToolStripMenuItem.Text = "Shell Integration";
-            // 
-            // makeOWADefaultToolStripMenuItem
-            // 
-            this.makeOWADefaultToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("makeOWADefaultToolStripMenuItem.Image")));
-            this.makeOWADefaultToolStripMenuItem.Name = "makeOWADefaultToolStripMenuItem";
-            this.makeOWADefaultToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.makeOWADefaultToolStripMenuItem.Text = "Make OWA Default";
-            this.makeOWADefaultToolStripMenuItem.Click += new System.EventHandler(this.makeOWADefaultToolStripMenuItem_Click);
-            // 
-            // switchOffToolStripMenuItem
-            // 
-            this.switchOffToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("switchOffToolStripMenuItem.Image")));
-            this.switchOffToolStripMenuItem.Name = "switchOffToolStripMenuItem";
-            this.switchOffToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
-            this.switchOffToolStripMenuItem.Text = "Switch Off";
-            this.switchOffToolStripMenuItem.Click += new System.EventHandler(this.switchOffToolStripMenuItem_Click);
+            this.disableCalendarToolStripMenuItem.CheckOnClick = true;
+            this.disableCalendarToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("disableCalendarToolStripMenuItem.Image")));
+            this.disableCalendarToolStripMenuItem.Name = "disableCalendarToolStripMenuItem";
+            this.disableCalendarToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.disableCalendarToolStripMenuItem.Text = "Disable Calendar";
+            this.disableCalendarToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.disableCalendarToolStripMenuItem_CheckStateChanged);
             // 
             // Form1
             // 
@@ -864,6 +875,7 @@
         private System.Windows.Forms.ToolStripMenuItem shellIntegrationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem makeOWADefaultToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem switchOffToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem disableCalendarToolStripMenuItem;
     }
 }
 

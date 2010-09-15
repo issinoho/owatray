@@ -14,9 +14,12 @@ namespace DrunkenBakery.OWAtray
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Drawing;
+    using System.IO;
     using System.Net;
     using System.Security;
+    using System.Security.Principal;
     using System.Windows.Forms;
 
     using Growl.Connector;
@@ -24,9 +27,6 @@ namespace DrunkenBakery.OWAtray
     using Microsoft.Exchange.WebServices.Data;
 
     using Snarl;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Security.Principal;
 
     /// <summary>
     /// Main application form which drives all functionality.
@@ -47,6 +47,7 @@ namespace DrunkenBakery.OWAtray
 
         bool alwaysIE;
         private Growl.Connector.Application application;
+        bool calendarOff;
         private bool firstRun = true;
         private Form frmAbout;
         private Form frmChangeLog;
@@ -55,9 +56,7 @@ namespace DrunkenBakery.OWAtray
         private Form frmMDAC;
         private Form frmNET;
         private GrowlConnector growl;
-
         private string iconPath;
-
         bool isBalloon;
         bool isBell;
         bool isDomain;
@@ -66,6 +65,7 @@ namespace DrunkenBakery.OWAtray
         private string lastLogEntry;
         private string lastPopMessage;
         private string lastPopTitle;
+        private string lastPopUrl;
         List<ListViewItem> lvBuffer = new List<ListViewItem>();
         private ExchangeService myService;
         private string newIcon;
@@ -73,6 +73,7 @@ namespace DrunkenBakery.OWAtray
         bool overrideCert;
         bool overrideURL;
         bool resetFlag;
+        private string shellPath;
         private DateTime TimeLastChecked = DateTime.Now;
         private string trayIcon;
         private string wavFile;
@@ -83,7 +84,7 @@ namespace DrunkenBakery.OWAtray
         private SecureString _Pwd;
         private string _Server;
         private string _User;
-        private string shellPath;
+        private string popUrl;
 
         #endregion Fields
 
@@ -164,6 +165,8 @@ namespace DrunkenBakery.OWAtray
             overrideServerURLToolStripMenuItem.Checked = overrideURL;
             alwaysIE = Properties.Settings.Default.AlwaysIE == "Yes";
             alwaysOpenOWAInIEToolStripMenuItem.Checked = alwaysIE;
+            calendarOff = Properties.Settings.Default.DisableCalendar == "Yes";
+            disableCalendarToolStripMenuItem.Checked = calendarOff;
             drawURL();
 
             // Domain
@@ -185,6 +188,8 @@ namespace DrunkenBakery.OWAtray
             notifyIcon1.Icon = new Icon(trayIcon);
             lastPopTitle = "";
             lastPopMessage = "";
+            popUrl = "";
+            lastPopUrl = "";
             resetFlag = false;
 
             // Growl
@@ -281,6 +286,36 @@ namespace DrunkenBakery.OWAtray
         #region Methods
 
         /// <summary>
+        /// Determines whether [is user administrator].
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if [is user administrator]; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsUserAdministrator()
+        {
+            //bool value to hold our return value
+            bool isAdmin;
+            try
+            {
+                //get the currently logged in user
+                WindowsIdentity user = WindowsIdentity.GetCurrent();
+                WindowsPrincipal principal = new WindowsPrincipal(user);
+                isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                isAdmin = false;
+                MessageBox.Show(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                isAdmin = false;
+                MessageBox.Show(ex.Message);
+            }
+            return isAdmin;
+        }
+
+        /// <summary>
         /// Decrypts the string.
         /// </summary>
         /// <param name="encryptedData">The encrypted data.</param>
@@ -313,6 +348,31 @@ namespace DrunkenBakery.OWAtray
                 entropy,
                 System.Security.Cryptography.DataProtectionScope.CurrentUser);
             return Convert.ToBase64String(encryptedData);
+        }
+
+        /// <summary>
+        /// Retrieves the subdomain from the specified URL.
+        /// </summary>
+        /// <param name="domain">The domain.</param>
+        /// <returns>
+        /// The subdomain if it exist, otherwise null.
+        /// </returns>
+        private static string GetSubDomain(string domain)
+        {
+            string result = "";
+
+            string[] parts = domain.Split('.');
+
+            if (parts.Length > 1)
+            {
+                for (int f = 1; f < parts.Length; ++f)
+                {
+                    result = result + parts[f];
+                    if (f != (parts.Length - 1)) result = result + ".";
+                }
+            }
+
+            return result;
         }
 
         [System.Runtime.InteropServices.DllImport("winmm.DLL", EntryPoint = "PlaySound", SetLastError = true)]
@@ -375,11 +435,11 @@ namespace DrunkenBakery.OWAtray
 
             if (alwaysIE)
             {
-                RunSvc.Arguments = "owa";
+                RunSvc.Arguments = "owa" + ((popUrl.Length > 0) ? " " + popUrl : "");
             }
             else
             {
-                RunSvc.Arguments = "shell";
+                RunSvc.Arguments = "shell" + ((popUrl.Length > 0) ? " " + popUrl : "");
             }
 
             Process ServiceProcess = Process.Start(RunSvc);
@@ -416,65 +476,6 @@ namespace DrunkenBakery.OWAtray
                 {
                     // Can't do anything for obvious reasons!
                 }
-            }
-        }
-
-        /// <summary>
-        /// Configures the shell.
-        /// </summary>
-        private void ConfigureShell()
-        {
-            // Path to shell integration module
-            shellPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Properties.Settings.Default.ShellIntegration);
-
-            // Set OWA Url
-            string owaUrl = "https://" + _Server + "/owa";
-            AddLogEntry("Setting OWA url to " + owaUrl, LogType.Info);
-
-            try
-            {
-                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-                RunSvc.Arguments = "url " + owaUrl;
-                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-                Process ServiceProcess = Process.Start(RunSvc);
-
-                while (!(ServiceProcess.HasExited == true))
-                {
-                    System.Threading.Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry("Error - " + ex.Message, LogType.Fail);
-                return;
-            }
-
-            // Set account name
-            string userAccount = _User;
-            if (!userAccount.Contains("@"))
-            {
-                userAccount = userAccount + "@" + GetSubDomain(_Server);
-            }
-            AddLogEntry("Using user account: " + userAccount, LogType.Info);
-
-            try
-            {
-                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-                RunSvc.Arguments = "account " + userAccount;
-                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-                Process ServiceProcess = Process.Start(RunSvc);
-
-                while (!(ServiceProcess.HasExited == true))
-                {
-                    System.Threading.Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry("Error - " + ex.Message, LogType.Fail);
-                return;
             }
         }
 
@@ -621,6 +622,7 @@ namespace DrunkenBakery.OWAtray
 
                             if (duration > 0)
                             {
+                                popUrl = myAppt.WebClientReadFormQueryString;
                                 PopToast("You have an appointment in " + myStart + (duration != 1 ? " mins" : " min"), myTime + " - " + mySubject + " (" + myLocation + ")");
                             }
                         }
@@ -698,6 +700,7 @@ namespace DrunkenBakery.OWAtray
                 Properties.Settings.Default.OverrideCert = overrideCert ? "Yes" : "No";
                 Properties.Settings.Default.ManualURL = txtURLEdit.Text;
                 Properties.Settings.Default.AlwaysIE = alwaysIE ? "Yes" : "No";
+                Properties.Settings.Default.DisableCalendar = calendarOff ? "Yes" : "No";
                 Properties.Settings.Default.ExchangeVersion = _ExchangeVersion;
                 Properties.Settings.Default.Save();
 
@@ -787,6 +790,76 @@ namespace DrunkenBakery.OWAtray
                 AddLogEntry("Error: " + ex.Message, LogType.Fail);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Configures the shell.
+        /// </summary>
+        private void ConfigureShell()
+        {
+            // Path to shell integration module
+            shellPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Properties.Settings.Default.ShellIntegration);
+
+            // Set OWA Url
+            string owaUrl = "https://" + _Server + "/owa";
+            AddLogEntry("Setting OWA url to " + owaUrl, LogType.Info);
+
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "url " + owaUrl;
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
+
+            // Set account name
+            string userAccount = _User;
+            if (!userAccount.Contains("@"))
+            {
+                userAccount = userAccount + "@" + GetSubDomain(_Server);
+            }
+            AddLogEntry("Using user account: " + userAccount, LogType.Info);
+
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "account " + userAccount;
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Handles the CheckStateChanged event of the disableCalendarToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void disableCalendarToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        {
+            calendarOff = disableCalendarToolStripMenuItem.Checked;
+            AddLogEntry("Calendar notifications switched " + (calendarOff ? "OFF" : "ON"), LogType.Info);
         }
 
         /// <summary>
@@ -1048,6 +1121,45 @@ namespace DrunkenBakery.OWAtray
         }
 
         /// <summary>
+        /// Handles the Click event of the makeOWADefaultToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void makeOWADefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!IsUserAdministrator())
+            {
+                AddLogEntry("You are not an Admin user. Operation may fail.", LogType.Fail);
+            }
+
+            // Configure registry
+            AddLogEntry("Setting up Mail handlers", LogType.Info);
+
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "registry";
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                if (System.Environment.OSVersion.Version.Major >= 6)
+                    RunSvc.Verb = "runas";
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
+
+            AddLogEntry("Mail functions will now be handled by OWA", LogType.Success);
+        }
+
+        /// <summary>
         /// Handles the Click event of the mDACVersionsToolStripMenuItem control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -1078,7 +1190,9 @@ namespace DrunkenBakery.OWAtray
         {
             if (Control.MouseButtons == MouseButtons.Left)
             {
+                //AddLogEntry("PopURL - " + notifyIcon1.Tag);
                 activateOWA();
+                popUrl = "";
             }
         }
 
@@ -1173,9 +1287,15 @@ namespace DrunkenBakery.OWAtray
         {
             AddLogEntry(myTitle, LogType.Info);
 
+            // Store for recall
+            lastPopTitle = myTitle;
+            lastPopMessage = myMessage;
+            lastPopUrl = popUrl;
+
             //Balloon
             if (isBalloon)
             {
+                notifyIcon1.Tag = popUrl;
                 notifyIcon1.ShowBalloonTip(5000, myTitle, myMessage, ToolTipIcon.Info);
             }
 
@@ -1197,10 +1317,6 @@ namespace DrunkenBakery.OWAtray
             {
                 PlaySound(wavFile, new System.IntPtr(), PlaySoundFlags.SND_SYNC);
             }
-
-            // Store for recall
-            lastPopTitle = myTitle;
-            lastPopMessage = myMessage;
         }
 
         /// <summary>
@@ -1266,6 +1382,7 @@ namespace DrunkenBakery.OWAtray
                                 mySender = myEmail.Sender.Name;
                                 mySubject = myEmail.Subject;
                                 myTime = myEmail.DateTimeReceived;
+                                popUrl = myEmail.WebClientReadFormQueryString;
                                 PopToast("New Mail from " + mySender, mySubject);
                             }
                             catch (Exception ex)
@@ -1304,6 +1421,7 @@ namespace DrunkenBakery.OWAtray
         {
             if (lastPopMessage.Length > 0)
             {
+                popUrl = lastPopUrl;
                 PopToast(lastPopTitle, lastPopMessage);
             }
         }
@@ -1364,7 +1482,10 @@ namespace DrunkenBakery.OWAtray
 
             // Initial Check
             GetUnreadCount();
-            CheckForAppointments();
+            if (!calendarOff)
+            {
+                CheckForAppointments();
+            }
         }
 
         /// <summary>
@@ -1376,6 +1497,45 @@ namespace DrunkenBakery.OWAtray
         {
             if (frmContact == null) frmContact = new ContactUs();
             frmContact.ShowDialog();
+        }
+
+        /// <summary>
+        /// Handles the Click event of the switchOffToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void switchOffToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!IsUserAdministrator())
+            {
+                AddLogEntry("You are not an Admin user. Operation may fail.", LogType.Fail);
+            }
+
+            // Configure registry
+            AddLogEntry("Restoring Mail handlers", LogType.Info);
+
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "restore";
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                if (System.Environment.OSVersion.Version.Major >= 6)
+                    RunSvc.Verb = "runas";
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
+
+            AddLogEntry("Mail handler restored to system default", LogType.Success);
         }
 
         /// <summary>
@@ -1408,7 +1568,10 @@ namespace DrunkenBakery.OWAtray
         private void timerAppt_Tick(object sender, EventArgs e)
         {
             // Check for appointments
-            CheckForAppointments();
+            if (!calendarOff)
+            {
+                CheckForAppointments();
+            }
         }
 
         /// <summary>
@@ -1523,138 +1686,5 @@ namespace DrunkenBakery.OWAtray
         }
 
         #endregion Methods
-
-        /// <summary>
-        /// Handles the Click event of the makeOWADefaultToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void makeOWADefaultToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!IsUserAdministrator())
-            {
-                AddLogEntry("You are not an Admin user. Operation may fail.", LogType.Fail);
-            }
-
-            // Configure registry
-            AddLogEntry("Setting up Mail handlers", LogType.Info);
-
-            try
-            {
-                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-                RunSvc.Arguments = "registry";
-                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-                if (System.Environment.OSVersion.Version.Major >= 6)
-                    RunSvc.Verb = "runas";
-                Process ServiceProcess = Process.Start(RunSvc);
-
-                while (!(ServiceProcess.HasExited == true))
-                {
-                    System.Threading.Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry("Error - " + ex.Message, LogType.Fail);
-                return;
-            }
-
-            AddLogEntry("Mail functions will now be handled by OWA", LogType.Success);
-        }
-
-        /// <summary>
-        /// Retrieves the subdomain from the specified URL.
-        /// </summary>
-        /// <param name="domain">The domain.</param>
-        /// <returns>
-        /// The subdomain if it exist, otherwise null.
-        /// </returns>
-        private static string GetSubDomain(string domain)
-        {
-            string result = "";
-
-            string[] parts = domain.Split('.');
-
-            if (parts.Length > 1)
-            {
-                for (int f = 1; f < parts.Length; ++f)
-                {
-                    result = result + parts[f];
-                    if (f != (parts.Length - 1)) result = result + ".";
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Handles the Click event of the switchOffToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void switchOffToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!IsUserAdministrator())
-            {
-                AddLogEntry("You are not an Admin user. Operation may fail.", LogType.Fail);
-            }
-
-            // Configure registry
-            AddLogEntry("Restoring Mail handlers", LogType.Info);
-
-            try
-            {
-                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-                RunSvc.Arguments = "restore";
-                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-                if (System.Environment.OSVersion.Version.Major >= 6)
-                    RunSvc.Verb = "runas";
-                Process ServiceProcess = Process.Start(RunSvc);
-
-                while (!(ServiceProcess.HasExited == true))
-                {
-                    System.Threading.Thread.Sleep(100);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry("Error - " + ex.Message, LogType.Fail);
-                return;
-            }
-
-            AddLogEntry("Mail handler restored to system default", LogType.Success);
-        }
-
-        /// <summary>
-        /// Determines whether [is user administrator].
-        /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if [is user administrator]; otherwise, <c>false</c>.
-        /// </returns>
-        public bool IsUserAdministrator()
-        {
-            //bool value to hold our return value
-            bool isAdmin;
-            try
-            {
-                //get the currently logged in user
-                WindowsIdentity user = WindowsIdentity.GetCurrent();
-                WindowsPrincipal principal = new WindowsPrincipal(user);
-                isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                isAdmin = false;
-                MessageBox.Show(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                isAdmin = false;
-                MessageBox.Show(ex.Message);
-            }
-            return isAdmin;
-        }
     }
 }

@@ -74,5 +74,8 @@
     <Setting Name="ShellIntegration" Type="System.String" Scope="Application">
       <Value Profile="(Default)">ShellIntegration.exe</Value>
     </Setting>
+    <Setting Name="DisableCalendar" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
