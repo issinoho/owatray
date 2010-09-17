@@ -64,6 +64,7 @@
             this.overrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.overrideServerURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alwaysOpenOWAInIEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.disableCalendarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exchangeVersionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exchange2007ToolStripMenuItem = new System.Windows.Forms.ToolStripComboBox();
             this.shellIntegrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,7 +104,8 @@
             this.timerUpdate = new System.Windows.Forms.Timer(this.components);
             this.timerAppt = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.disableCalendarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtEmail = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -387,6 +389,15 @@
             this.alwaysOpenOWAInIEToolStripMenuItem.Text = "Always open OWA in IE";
             this.alwaysOpenOWAInIEToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged);
             // 
+            // disableCalendarToolStripMenuItem
+            // 
+            this.disableCalendarToolStripMenuItem.CheckOnClick = true;
+            this.disableCalendarToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("disableCalendarToolStripMenuItem.Image")));
+            this.disableCalendarToolStripMenuItem.Name = "disableCalendarToolStripMenuItem";
+            this.disableCalendarToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.disableCalendarToolStripMenuItem.Text = "Disable Calendar";
+            this.disableCalendarToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.disableCalendarToolStripMenuItem_CheckStateChanged);
+            // 
             // exchangeVersionToolStripMenuItem1
             // 
             this.exchangeVersionToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -502,6 +513,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.txtEmail);
             this.groupBox2.Controls.Add(this.txtURLEdit);
             this.groupBox2.Controls.Add(this.chkOnDomain);
             this.groupBox2.Controls.Add(this.chkRunOnStartup);
@@ -687,7 +700,7 @@
             // 
             this.txtUser.Location = new System.Drawing.Point(159, 39);
             this.txtUser.Name = "txtUser";
-            this.txtUser.Size = new System.Drawing.Size(282, 20);
+            this.txtUser.Size = new System.Drawing.Size(128, 20);
             this.txtUser.TabIndex = 15;
             this.txtUser.TextChanged += new System.EventHandler(this.txtUser_TextChanged);
             // 
@@ -763,14 +776,23 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
-            // disableCalendarToolStripMenuItem
+            // txtEmail
             // 
-            this.disableCalendarToolStripMenuItem.CheckOnClick = true;
-            this.disableCalendarToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("disableCalendarToolStripMenuItem.Image")));
-            this.disableCalendarToolStripMenuItem.Name = "disableCalendarToolStripMenuItem";
-            this.disableCalendarToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.disableCalendarToolStripMenuItem.Text = "Disable Calendar";
-            this.disableCalendarToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.disableCalendarToolStripMenuItem_CheckStateChanged);
+            this.txtEmail.Location = new System.Drawing.Point(313, 40);
+            this.txtEmail.Name = "txtEmail";
+            this.txtEmail.Size = new System.Drawing.Size(128, 20);
+            this.txtEmail.TabIndex = 29;
+            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.Blue;
+            this.label7.Location = new System.Drawing.Point(293, 43);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(18, 13);
+            this.label7.TabIndex = 30;
+            this.label7.Text = "@";
             // 
             // Form1
             // 
@@ -876,6 +898,8 @@
         private System.Windows.Forms.ToolStripMenuItem makeOWADefaultToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem switchOffToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disableCalendarToolStripMenuItem;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtEmail;
     }
 }
 

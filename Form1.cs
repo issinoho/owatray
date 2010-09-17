@@ -84,6 +84,7 @@ namespace DrunkenBakery.OWAtray
         private SecureString _Pwd;
         private string _Server;
         private string _User;
+        private string _Email;
         private string popUrl;
 
         #endregion Fields
@@ -129,6 +130,8 @@ namespace DrunkenBakery.OWAtray
             _User = txtUser.Text;
             txtPwd.Text = ToInsecureString(DecryptString(Properties.Settings.Default.Password));
             _Pwd = ToSecureString(txtPwd.Text);
+            txtEmail.Text = Properties.Settings.Default.EMail;
+            _Email = txtEmail.Text;
             txtDomain.Text = Properties.Settings.Default.Domain;
             _Domain = txtDomain.Text;
             UpdateURL();
@@ -689,6 +692,7 @@ namespace DrunkenBakery.OWAtray
                 Properties.Settings.Default.Username = _User;
                 Properties.Settings.Default.Password = (_Pwd.Length > 0 ? EncryptString(_Pwd) : "");
                 Properties.Settings.Default.Domain = _Domain;
+                Properties.Settings.Default.EMail = _Email;
                 Properties.Settings.Default.UpdateInterval = _Interval;
                 Properties.Settings.Default.FirstTime = "No";
                 Properties.Settings.Default.Balloon = isBalloon ? "Yes" : "No";
@@ -824,7 +828,7 @@ namespace DrunkenBakery.OWAtray
             }
 
             // Set account name
-            string userAccount = _User;
+            string userAccount = _Email.Length > 0 ? _Email : _User;
             if (!userAccount.Contains("@"))
             {
                 userAccount = userAccount + "@" + GetSubDomain(_Server);
@@ -1686,5 +1690,15 @@ namespace DrunkenBakery.OWAtray
         }
 
         #endregion Methods
+
+        /// <summary>
+        /// Handles the TextChanged event of the txtEmail control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void txtEmail_TextChanged(object sender, EventArgs e)
+        {
+            _Email = txtEmail.Text;
+        }
     }
 }
