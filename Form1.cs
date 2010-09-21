@@ -1217,6 +1217,7 @@ namespace DrunkenBakery.OWAtray
             //this.Activate();
             //this.Focus();
 
+            popUrl = "";
             activateOWA();
         }
 
@@ -1244,6 +1245,7 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void openOWAToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            popUrl = "";
             activateOWA();
         }
 
