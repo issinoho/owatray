@@ -607,8 +607,8 @@ namespace DrunkenBakery.OWAtray
                     {
                         if (myItem is Appointment)
                         {
-                            string myLocation = "unknown";
-                            string mySubject = "subject can't be found";
+                            string myLocation = "<No Location>";
+                            string mySubject = "<No Subject>";
                             string myStart = "unknown";
                             string myTime = "unknown";
                             int duration = 0;
@@ -617,7 +617,7 @@ namespace DrunkenBakery.OWAtray
                             PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
                             myAppt.Load(ps);
                             myLocation = myAppt.Location;
-                            mySubject = myAppt.Subject;
+                            mySubject = (myAppt.Subject == null ? "<No Subject>" : myAppt.Subject);
                             TimeSpan span = myAppt.Start.Subtract(DateTime.Now);
                             duration = (int)Math.Floor(span.TotalMinutes);
                             myStart = duration.ToString();
@@ -625,7 +625,7 @@ namespace DrunkenBakery.OWAtray
 
                             if (duration > 0)
                             {
-                                popUrl = myAppt.WebClientReadFormQueryString;
+                                popUrl = (_ExchangeVersion == "2010" ? myAppt.WebClientReadFormQueryString : "");
                                 PopToast("You have an appointment in " + myStart + (duration != 1 ? " mins" : " min"), myTime + " - " + mySubject + " (" + myLocation + ")");
                             }
                         }
@@ -1060,6 +1060,9 @@ namespace DrunkenBakery.OWAtray
                 return 0;
             }
 
+            // Set time for initial run only
+            if (firstRun) TimeLastChecked = DateTime.Now.AddMinutes(-1);
+
             try
             {
                 Folder myFolder = Folder.Bind(myService, WellKnownFolderName.Inbox);
@@ -1068,12 +1071,15 @@ namespace DrunkenBakery.OWAtray
                 {
                     if (firstRun)
                     {
-                        PopToast("New Mail", "You have " + myCount + " unread email" + (myCount != 1 ? "s " : " ") + "in your inbox");
-                        TimeLastChecked = DateTime.Now.AddSeconds(1);
+                        PopToast("New Mail", "You have " + myCount + " unread email" + (myCount != 1 ? "s " : " ") + "in your inbox");                        
                     }
                     else
                     {
-                        PopUnreadEmail(myCount);
+                        int count = PopUnreadEmail(myCount);
+                        if (count != myCount)
+                        {
+                            AddLogEntry("Not all new mail has been notified", LogType.Fail);
+                        }
                     }
 
                     resetFlag = false;
@@ -1291,6 +1297,10 @@ namespace DrunkenBakery.OWAtray
         /// <param name="myMessage">My message.</param>
         private void PopToast(string myTitle, string myMessage)
         {
+            // Belt & Braces
+            if (myTitle.Length == 0) myTitle = "<No Title>";
+            if (myMessage.Length == 0) myMessage = "<No Subject>";
+
             AddLogEntry(myTitle, LogType.Info);
 
             // Store for recall
@@ -1329,8 +1339,11 @@ namespace DrunkenBakery.OWAtray
         /// Pops the unread email.
         /// </summary>
         /// <param name="unreadCount">The unread count.</param>
-        private void PopUnreadEmail(int unreadCount)
+        /// <returns></returns>
+        private int PopUnreadEmail(int unreadCount)
         {
+            int count = 0;
+
             // Set the offset for the paged search.
             int offset = 0;
 
@@ -1359,7 +1372,6 @@ namespace DrunkenBakery.OWAtray
                 FindItemsResults<Item> findResults = myService.FindItems(WellKnownFolderName.Inbox, filters, view);
 
                 // Process each item.
-                int count = 0;
                 bool allDone = false;
                 bool isFlagged = false;
                 foreach (Item myItem in findResults.Items)
@@ -1376,8 +1388,8 @@ namespace DrunkenBakery.OWAtray
                     {
                         if (myItem is EmailMessage)
                         {
-                            string mySender = "unknown";
-                            string mySubject = "subject can't be found";
+                            string mySender = "<No Sender>";
+                            string mySubject = "<No Subject>";
                             DateTime myTime = DateTime.Now;
 
                             try
@@ -1386,9 +1398,9 @@ namespace DrunkenBakery.OWAtray
                                 PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
                                 myEmail.Load(ps);
                                 mySender = myEmail.Sender.Name;
-                                mySubject = myEmail.Subject;
+                                mySubject = (myEmail.Subject == null ? "<No Subject>" : myEmail.Subject);
                                 myTime = myEmail.DateTimeReceived;
-                                popUrl = myEmail.WebClientReadFormQueryString;
+                                popUrl = (_ExchangeVersion == "2010" ? myEmail.WebClientReadFormQueryString : "");
                                 PopToast("New Mail from " + mySender, mySubject);
                             }
                             catch (Exception ex)
@@ -1416,6 +1428,7 @@ namespace DrunkenBakery.OWAtray
             }
 
             firstRun = false;
+            return count;
         }
 
         /// <summary>
@@ -1425,7 +1438,7 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void recallLastPopupToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (lastPopMessage.Length > 0)
+            if (lastPopMessage.Length > 0 && lastPopTitle.Length > 0)
             {
                 popUrl = lastPopUrl;
                 PopToast(lastPopTitle, lastPopMessage);
