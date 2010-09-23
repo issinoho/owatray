@@ -1076,10 +1076,10 @@ namespace DrunkenBakery.OWAtray
                     else
                     {
                         int count = PopUnreadEmail(myCount);
-                        if (count != myCount)
-                        {
-                            AddLogEntry("Not all new mail has been notified", LogType.Fail);
-                        }
+                        //if (count != myCount)
+                        //{
+                        //    AddLogEntry("Not all new mail has been notified", LogType.Fail);
+                        //}
                     }
 
                     resetFlag = false;
