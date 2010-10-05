@@ -123,6 +123,10 @@ namespace DrunkenBakery.OWAtray
                 case "2010":
                     exchange2007ToolStripMenuItem.SelectedIndex = 1;
                     break;
+
+                case "2010SP1":
+                    exchange2007ToolStripMenuItem.SelectedIndex = 2;
+                    break;
             }
             txtServer.Text = Properties.Settings.Default.Server;
             _Server = txtServer.Text;
@@ -625,7 +629,7 @@ namespace DrunkenBakery.OWAtray
 
                             if (duration > 0)
                             {
-                                popUrl = (_ExchangeVersion == "2010" ? myAppt.WebClientReadFormQueryString : "");
+                                popUrl = (_ExchangeVersion == "2007" ? "" : myAppt.WebClientReadFormQueryString);
                                 PopToast("You have an appointment in " + myStart + (duration != 1 ? " mins" : " min"), myTime + " - " + mySubject + " (" + myLocation + ")");
                             }
                         }
@@ -767,7 +771,20 @@ namespace DrunkenBakery.OWAtray
                 ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
 
                 AddLogEntry("Binding to Exchange", LogType.Info);
-                myService = new ExchangeService(_ExchangeVersion == "2010" ? ExchangeVersion.Exchange2010 : ExchangeVersion.Exchange2007_SP1);
+                switch (_ExchangeVersion)
+                {
+                    case "2007":
+                        myService = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
+                        break;
+
+                    case "2010":
+                        myService = new ExchangeService(ExchangeVersion.Exchange2010);
+                        break;
+
+                    case "2010SP1":
+                        myService = new ExchangeService(ExchangeVersion.Exchange2010_SP1);
+                        break;
+                }
                 if (overrideURL)
                 {
                     thisUri = txtURLEdit.Text;
@@ -853,6 +870,28 @@ namespace DrunkenBakery.OWAtray
                 AddLogEntry("Error - " + ex.Message, LogType.Fail);
                 return;
             }
+
+            // Set Exchange Version
+            AddLogEntry("Configuring for Exchange " + _ExchangeVersion, LogType.Info);
+
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "exchange " + _ExchangeVersion;
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
         }
 
         /// <summary>
@@ -894,6 +933,10 @@ namespace DrunkenBakery.OWAtray
 
                 case 1:
                     _ExchangeVersion = "2010";
+                    break;
+
+                case 2:
+                    _ExchangeVersion = "2010SP1";
                     break;
             }
         }
@@ -1400,7 +1443,7 @@ namespace DrunkenBakery.OWAtray
                                 mySender = myEmail.Sender.Name;
                                 mySubject = (myEmail.Subject == null ? "<No Subject>" : myEmail.Subject);
                                 myTime = myEmail.DateTimeReceived;
-                                popUrl = (_ExchangeVersion == "2010" ? myEmail.WebClientReadFormQueryString : "");
+                                popUrl = (_ExchangeVersion == "2007" ? "" : myEmail.WebClientReadFormQueryString);
                                 PopToast("New Mail from " + mySender, mySubject);
                             }
                             catch (Exception ex)

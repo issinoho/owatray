@@ -160,5 +160,37 @@ namespace DrunkenBakery.OWAtray.Properties {
                 return ((string)(this["PopupDelay"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("&cc=MTQuMC43MDIuMCxlbi1HQiw0Mjk0OTY3Mjk1LEhUTUwsMSww&smime=SSL%3a1%3bVer%3a14.0.6" +
+            "39.19")]
+        public string URL2010 {
+            get {
+                return ((string)(this["URL2010"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("&cc=MTQuMS4yMTguMTMsZW4tR0IsNDI5NDk2NzI5NSxIVE1MLDEsMA==&smime=SSL%3a1%3bVer%3a14" +
+            ".1.218.12")]
+        public string URL2010SP1 {
+            get {
+                return ((string)(this["URL2010SP1"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MimeURL {
+            get {
+                return ((string)(this["MimeURL"]));
+            }
+            set {
+                this["MimeURL"] = value;
+            }
+        }
     }
 }

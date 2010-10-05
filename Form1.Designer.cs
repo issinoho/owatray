@@ -78,6 +78,8 @@
             this.lvStatus = new System.Windows.Forms.ListView();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtEmail = new System.Windows.Forms.TextBox();
             this.txtURLEdit = new System.Windows.Forms.TextBox();
             this.chkOnDomain = new System.Windows.Forms.CheckBox();
             this.chkRunOnStartup = new System.Windows.Forms.CheckBox();
@@ -104,8 +106,6 @@
             this.timerUpdate = new System.Windows.Forms.Timer(this.components);
             this.timerAppt = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.txtEmail = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -411,8 +411,9 @@
             // 
             this.exchange2007ToolStripMenuItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.exchange2007ToolStripMenuItem.Items.AddRange(new object[] {
-            "Exchange 2007",
-            "Exchange 2010"});
+            "Exchange 2007 SP1",
+            "Exchange 2010",
+            "Exchange 2010 SP1"});
             this.exchange2007ToolStripMenuItem.Name = "exchange2007ToolStripMenuItem";
             this.exchange2007ToolStripMenuItem.Size = new System.Drawing.Size(152, 23);
             this.exchange2007ToolStripMenuItem.SelectedIndexChanged += new System.EventHandler(this.exchange2007ToolStripMenuItem_SelectedIndexChanged);
@@ -540,6 +541,24 @@
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Settings";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.Blue;
+            this.label7.Location = new System.Drawing.Point(293, 43);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(18, 13);
+            this.label7.TabIndex = 30;
+            this.label7.Text = "@";
+            // 
+            // txtEmail
+            // 
+            this.txtEmail.Location = new System.Drawing.Point(313, 40);
+            this.txtEmail.Name = "txtEmail";
+            this.txtEmail.Size = new System.Drawing.Size(128, 20);
+            this.txtEmail.TabIndex = 29;
+            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
             // 
             // txtURLEdit
             // 
@@ -775,24 +794,6 @@
             // errorProvider1
             // 
             this.errorProvider1.ContainerControl = this;
-            // 
-            // txtEmail
-            // 
-            this.txtEmail.Location = new System.Drawing.Point(313, 40);
-            this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(128, 20);
-            this.txtEmail.TabIndex = 29;
-            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.Blue;
-            this.label7.Location = new System.Drawing.Point(293, 43);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(18, 13);
-            this.label7.TabIndex = 30;
-            this.label7.Text = "@";
             // 
             // Form1
             // 

@@ -45,7 +45,7 @@ namespace DrunkenBakery.OWAtray
             Clipboard.SetDataObject(d, true);
 
             // Spawn IE
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + @"/?ae=Item&a=New&t=IPM.Note&cc=MTQuMC43MDIuMCxlbi1HQiw0Mjk0OTY3Mjk1LEhUTUwsMSww&smime=SSL%3a1%3bVer%3a14.0.639.19";
+            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + @"/?ae=Item&a=New&t=IPM.Note"  + Properties.Settings.Default.MimeURL;
             try
             {
                 Console.WriteLine("Browsing to " + myUrl);
@@ -215,6 +215,25 @@ namespace DrunkenBakery.OWAtray
                     }
                     break;
 
+                case "EXCHANGE":
+                    if (args.Length > 1)
+                    {
+                        if (args[1].ToUpper() == "2010")
+                        {
+                            Properties.Settings.Default.MimeURL = Properties.Settings.Default.URL2010;
+                        }
+                        else if (args[1].ToUpper() == "2010SP1")
+                        {
+                            Properties.Settings.Default.MimeURL = Properties.Settings.Default.URL2010SP1;
+                        }
+                        else
+                        {
+                            Properties.Settings.Default.MimeURL = "";
+                        }
+                        Properties.Settings.Default.Save();
+                    }
+                    break;
+
                 default:
                     Console.WriteLine("Unknown command");
                     break;
@@ -317,7 +336,7 @@ namespace DrunkenBakery.OWAtray
             {
                 target = target.Substring(7, target.Length - 7);
             }
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note&cc=MTQuMC43MDIuMCxlbi1HQiw0Mjk0OTY3Mjk1LEhUTUwsMSww&smime=SSL%3a1%3bVer%3a14.0.639.19&to=" + target;
+            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note" + Properties.Settings.Default.MimeURL + "&to=" + target;
             System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
             Console.WriteLine("Browsing to " + myUrl);
         }
