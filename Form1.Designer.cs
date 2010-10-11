@@ -106,6 +106,7 @@
             this.timerUpdate = new System.Windows.Forms.Timer(this.components);
             this.timerAppt = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.loginAutomaticallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -356,7 +357,8 @@
             this.overrideToolStripMenuItem,
             this.overrideServerURLToolStripMenuItem,
             this.alwaysOpenOWAInIEToolStripMenuItem,
-            this.disableCalendarToolStripMenuItem});
+            this.disableCalendarToolStripMenuItem,
+            this.loginAutomaticallyToolStripMenuItem});
             this.advancedToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("advancedToolStripMenuItem.Image")));
             this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
             this.advancedToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
@@ -795,6 +797,15 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // loginAutomaticallyToolStripMenuItem
+            // 
+            this.loginAutomaticallyToolStripMenuItem.CheckOnClick = true;
+            this.loginAutomaticallyToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loginAutomaticallyToolStripMenuItem.Image")));
+            this.loginAutomaticallyToolStripMenuItem.Name = "loginAutomaticallyToolStripMenuItem";
+            this.loginAutomaticallyToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.loginAutomaticallyToolStripMenuItem.Text = "Login Automatically";
+            this.loginAutomaticallyToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.loginAutomaticallyToolStripMenuItem_CheckStateChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -901,6 +912,7 @@
         private System.Windows.Forms.ToolStripMenuItem disableCalendarToolStripMenuItem;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtEmail;
+        private System.Windows.Forms.ToolStripMenuItem loginAutomaticallyToolStripMenuItem;
     }
 }
 

@@ -192,5 +192,38 @@ namespace DrunkenBakery.OWAtray.Properties {
                 this["MimeURL"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Outlook Web App")]
+        public string LoginTitle {
+            get {
+                return ((string)(this["LoginTitle"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Password {
+            get {
+                return ((string)(this["Password"]));
+            }
+            set {
+                this["Password"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("No")]
+        public string AutoLogin {
+            get {
+                return ((string)(this["AutoLogin"]));
+            }
+            set {
+                this["AutoLogin"] = value;
+            }
+        }
     }
 }

@@ -48,6 +48,7 @@ namespace DrunkenBakery.OWAtray
         bool alwaysIE;
         private Growl.Connector.Application application;
         bool calendarOff;
+        bool autoLogin;
         private bool firstRun = true;
         private Form frmAbout;
         private Form frmChangeLog;
@@ -174,6 +175,8 @@ namespace DrunkenBakery.OWAtray
             alwaysOpenOWAInIEToolStripMenuItem.Checked = alwaysIE;
             calendarOff = Properties.Settings.Default.DisableCalendar == "Yes";
             disableCalendarToolStripMenuItem.Checked = calendarOff;
+            autoLogin = Properties.Settings.Default.AutoLogin == "Yes";
+            loginAutomaticallyToolStripMenuItem.Checked = autoLogin;
             drawURL();
 
             // Domain
@@ -709,6 +712,7 @@ namespace DrunkenBakery.OWAtray
                 Properties.Settings.Default.ManualURL = txtURLEdit.Text;
                 Properties.Settings.Default.AlwaysIE = alwaysIE ? "Yes" : "No";
                 Properties.Settings.Default.DisableCalendar = calendarOff ? "Yes" : "No";
+                Properties.Settings.Default.AutoLogin = autoLogin ? "Yes" : "No";
                 Properties.Settings.Default.ExchangeVersion = _ExchangeVersion;
                 Properties.Settings.Default.Save();
 
@@ -878,6 +882,46 @@ namespace DrunkenBakery.OWAtray
             {
                 ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
                 RunSvc.Arguments = "exchange " + _ExchangeVersion;
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
+
+            // Set Password
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "password " + txtPwd.Text;
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
+
+            // Set Autologin
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "autologin " + (autoLogin ? "Yes" : "No");
                 RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
                 Process ServiceProcess = Process.Start(RunSvc);
 
@@ -1757,6 +1801,17 @@ namespace DrunkenBakery.OWAtray
         private void txtEmail_TextChanged(object sender, EventArgs e)
         {
             _Email = txtEmail.Text;
+        }
+
+        /// <summary>
+        /// Handles the CheckStateChanged event of the loginAutomaticallyToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void loginAutomaticallyToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        {
+            autoLogin = loginAutomaticallyToolStripMenuItem.Checked;
+            AddLogEntry("Automatic Login is switched " + (autoLogin ? "ON" : "OFF"), LogType.Info);
         }
     }
 }

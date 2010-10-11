@@ -50,5 +50,14 @@
     <Setting Name="MimeURL" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="LoginTitle" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Outlook Web App</Value>
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AutoLogin" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

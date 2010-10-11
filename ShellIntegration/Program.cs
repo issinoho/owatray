@@ -13,6 +13,8 @@ namespace DrunkenBakery.OWAtray
 {
     using System;
     using System.IO;
+    using System.Security;
+    using System.Security.Principal;
     using System.Timers;
     using System.Windows.Forms;
     using System.Xml;
@@ -21,6 +23,8 @@ namespace DrunkenBakery.OWAtray
 
     class Program
     {
+        static byte[] entropy = System.Text.Encoding.Unicode.GetBytes("Salt Is Not A Password");
+
         #region Methods
 
         /// <summary>
@@ -172,6 +176,14 @@ namespace DrunkenBakery.OWAtray
                     }
                     break;
 
+                case "AUTOLOGIN":
+                    if (args.Length > 1)
+                    {
+                        Properties.Settings.Default.AutoLogin = args[1];
+                        Properties.Settings.Default.Save();
+                    }
+                    break;
+
                 case "REGISTRY":
                     SaveCurrentKey();
                     InitRegistry();
@@ -215,6 +227,14 @@ namespace DrunkenBakery.OWAtray
                     }
                     break;
 
+                case "PASSWORD":
+                    if (args.Length > 1)
+                    {
+                        Properties.Settings.Default.Password = (args[1].Length > 0 ? EncryptString(ToSecureString(args[1])) : "");
+                        Properties.Settings.Default.Save();
+                    }
+                    break;
+
                 case "EXCHANGE":
                     if (args.Length > 1)
                     {
@@ -240,6 +260,77 @@ namespace DrunkenBakery.OWAtray
             }
 
             Console.WriteLine("Completed.");
+        }
+
+        /// <summary>
+        /// Decrypts the string.
+        /// </summary>
+        /// <param name="encryptedData">The encrypted data.</param>
+        /// <returns></returns>
+        private static SecureString DecryptString(string encryptedData)
+        {
+            try
+            {
+                byte[] decryptedData = System.Security.Cryptography.ProtectedData.Unprotect(
+                    Convert.FromBase64String(encryptedData),
+                    entropy,
+                    System.Security.Cryptography.DataProtectionScope.CurrentUser);
+                return ToSecureString(System.Text.Encoding.Unicode.GetString(decryptedData));
+            }
+            catch
+            {
+                return new SecureString();
+            }
+        }
+
+        /// <summary>
+        /// Encrypts the string.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns></returns>
+        private static string EncryptString(System.Security.SecureString input)
+        {
+            byte[] encryptedData = System.Security.Cryptography.ProtectedData.Protect(
+                System.Text.Encoding.Unicode.GetBytes(ToInsecureString(input)),
+                entropy,
+                System.Security.Cryptography.DataProtectionScope.CurrentUser);
+            return Convert.ToBase64String(encryptedData);
+        }
+
+        /// <summary>
+        /// Toes the insecure string.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns></returns>
+        private static string ToInsecureString(SecureString input)
+        {
+            string returnValue = string.Empty;
+            IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(input);
+            try
+            {
+                returnValue = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ptr);
+            }
+            finally
+            {
+                System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
+            }
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Toes the secure string.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns></returns>
+        private static SecureString ToSecureString(string input)
+        {
+            SecureString secure = new SecureString();
+            foreach (char c in input)
+            {
+                secure.AppendChar(c);
+            }
+            secure.MakeReadOnly();
+            return secure;
         }
 
         /// <summary>
@@ -349,6 +440,8 @@ namespace DrunkenBakery.OWAtray
             string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount;
             System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
             Console.WriteLine("Browsing to " + myUrl);
+
+            AutoLogin();
         }
 
         /// <summary>
@@ -360,6 +453,8 @@ namespace DrunkenBakery.OWAtray
             string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/" + Url;
             System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
             Console.WriteLine("Browsing to " + myUrl);
+
+            AutoLogin();
         }
 
         /// <summary>
@@ -370,6 +465,8 @@ namespace DrunkenBakery.OWAtray
             string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount;
             System.Diagnostics.Process.Start(myUrl);
             Console.WriteLine("Browsing to " + myUrl);
+
+            AutoLogin();
         }
 
         /// <summary>
@@ -381,7 +478,33 @@ namespace DrunkenBakery.OWAtray
             string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/" + Url;
             System.Diagnostics.Process.Start(myUrl);
             Console.WriteLine("Browsing to " + myUrl);
+
+            AutoLogin();
         }
+
+        /// <summary>
+        /// Autoes the login.
+        /// </summary>
+        static void AutoLogin()
+        {
+            if (Properties.Settings.Default.AutoLogin == "Yes")
+            {
+                // Wait for it to pop
+                System.Threading.Thread.Sleep(Convert.ToInt32(Properties.Settings.Default.PopupDelay));
+
+                // Find IE window and send keys to it
+                int iHandle = NativeWin32.FindWindow(null, Properties.Settings.Default.LoginTitle);
+                NativeWin32.SetForegroundWindow(iHandle);
+
+                // Tab stops
+                SendKeys.SendWait(ToInsecureString(DecryptString(Properties.Settings.Default.Password)));
+                System.Threading.Thread.Sleep(200);
+
+                // Then the paste
+                SendKeys.SendWait("{ENTER}");
+            }
+        }
+
 
         #endregion Methods
     }

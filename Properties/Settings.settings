@@ -80,5 +80,8 @@
     <Setting Name="EMail" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="AutoLogin" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
