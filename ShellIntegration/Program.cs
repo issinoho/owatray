@@ -20,6 +20,8 @@ namespace DrunkenBakery.OWAtray
     using System.Xml;
 
     using Microsoft.Win32;
+    using System.Diagnostics;
+    using System.Threading;
 
     class Program
     {
@@ -157,11 +159,11 @@ namespace DrunkenBakery.OWAtray
                 case "OWA":
                     if (args.Length > 1)
                     {
-                        StartOWA(args[1]);
+                        StartOWAinIE(args[1]);
                     }
                     else
                     {
-                        StartOWA();
+                        StartOWAinIE();
                     }
                     break;
 
@@ -180,6 +182,14 @@ namespace DrunkenBakery.OWAtray
                     if (args.Length > 1)
                     {
                         Properties.Settings.Default.AutoLogin = args[1];
+                        Properties.Settings.Default.Save();
+                    }
+                    break;
+
+                case "BROWSER":
+                    if (args.Length > 1)
+                    {
+                        Properties.Settings.Default.Browser = args[1];
                         Properties.Settings.Default.Save();
                     }
                     break;
@@ -428,32 +438,34 @@ namespace DrunkenBakery.OWAtray
                 target = target.Substring(7, target.Length - 7);
             }
             string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note" + Properties.Settings.Default.MimeURL + "&to=" + target;
-            System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
+            if (Properties.Settings.Default.Browser == "Yes")
+            {
+                Process p = Process.Start("IEXPLORE.EXE", myUrl);
+            }
+            else
+            {
+                Process p = Process.Start(myUrl);
+            }
             Console.WriteLine("Browsing to " + myUrl);
         }
 
         /// <summary>
         /// Starts the OWA.
         /// </summary>
-        static void StartOWA()
+        static void StartOWAinIE()
         {
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount;
-            System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
-            Console.WriteLine("Browsing to " + myUrl);
-
-            AutoLogin();
+            StartOWAinIE("");
         }
 
         /// <summary>
         /// Starts the OWA.
         /// </summary>
         /// <param name="Url">The URL.</param>
-        static void StartOWA(string Url)
+        static void StartOWAinIE(string Url)
         {
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/" + Url;
-            System.Diagnostics.Process.Start("IEXPLORE.EXE", myUrl);
+            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + (Url.Length > 0 ? "/" + Url : "");
+            Process p = Process.Start("IEXPLORE.EXE", myUrl);
             Console.WriteLine("Browsing to " + myUrl);
-
             AutoLogin();
         }
 
@@ -462,11 +474,7 @@ namespace DrunkenBakery.OWAtray
         /// </summary>
         static void ShellOWA()
         {
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount;
-            System.Diagnostics.Process.Start(myUrl);
-            Console.WriteLine("Browsing to " + myUrl);
-
-            AutoLogin();
+            ShellOWA("");
         }
 
         /// <summary>
@@ -475,10 +483,9 @@ namespace DrunkenBakery.OWAtray
         /// <param name="Url">The URL.</param>
         static void ShellOWA(string Url)
         {
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/" + Url;
-            System.Diagnostics.Process.Start(myUrl);
+            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + (Url.Length > 0 ? "/" + Url : "");
+            Process p = Process.Start(myUrl);
             Console.WriteLine("Browsing to " + myUrl);
-
             AutoLogin();
         }
 
@@ -489,8 +496,8 @@ namespace DrunkenBakery.OWAtray
         {
             if (Properties.Settings.Default.AutoLogin == "Yes")
             {
-                // Wait for it to pop
-                System.Threading.Thread.Sleep(Convert.ToInt32(Properties.Settings.Default.PopupDelay));
+                // Wait for it to load the page
+                Thread.Sleep(Convert.ToInt32(Properties.Settings.Default.PopupDelay));
 
                 // Find IE window and send keys to it
                 int iHandle = NativeWin32.FindWindow(null, Properties.Settings.Default.LoginTitle);
@@ -498,7 +505,7 @@ namespace DrunkenBakery.OWAtray
 
                 // Tab stops
                 SendKeys.SendWait(ToInsecureString(DecryptString(Properties.Settings.Default.Password)));
-                System.Threading.Thread.Sleep(200);
+                Thread.Sleep(Convert.ToInt32(Properties.Settings.Default.SmallWait));
 
                 // Then the paste
                 SendKeys.SendWait("{ENTER}");

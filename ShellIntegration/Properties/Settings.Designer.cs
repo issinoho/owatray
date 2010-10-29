@@ -225,5 +225,26 @@ namespace DrunkenBakery.OWAtray.Properties {
                 this["AutoLogin"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public string SmallWait {
+            get {
+                return ((string)(this["SmallWait"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("No")]
+        public string Browser {
+            get {
+                return ((string)(this["Browser"]));
+            }
+            set {
+                this["Browser"] = value;
+            }
+        }
     }
 }

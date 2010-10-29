@@ -936,6 +936,26 @@ namespace DrunkenBakery.OWAtray
                 AddLogEntry("Error - " + ex.Message, LogType.Fail);
                 return;
             }
+
+            // Set Browser
+            try
+            {
+                ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
+                RunSvc.Arguments = "browser " + (alwaysIE ? "Yes" : "No");
+                RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+                Process ServiceProcess = Process.Start(RunSvc);
+
+                while (!(ServiceProcess.HasExited == true))
+                {
+                    System.Threading.Thread.Sleep(100);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error - " + ex.Message, LogType.Fail);
+                return;
+            }
         }
 
         /// <summary>
