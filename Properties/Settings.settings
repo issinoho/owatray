@@ -83,5 +83,8 @@
     <Setting Name="AutoLogin" Type="System.String" Scope="User">
       <Value Profile="(Default)">No</Value>
     </Setting>
+    <Setting Name="EmailOverride" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

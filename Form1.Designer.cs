@@ -65,6 +65,7 @@
             this.overrideServerURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alwaysOpenOWAInIEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disableCalendarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loginAutomaticallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exchangeVersionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exchange2007ToolStripMenuItem = new System.Windows.Forms.ToolStripComboBox();
             this.shellIntegrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,7 +79,6 @@
             this.lvStatus = new System.Windows.Forms.ListView();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.txtURLEdit = new System.Windows.Forms.TextBox();
             this.chkOnDomain = new System.Windows.Forms.CheckBox();
@@ -106,7 +106,7 @@
             this.timerUpdate = new System.Windows.Forms.Timer(this.components);
             this.timerAppt = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.loginAutomaticallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chkOverride = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -400,6 +400,15 @@
             this.disableCalendarToolStripMenuItem.Text = "Disable Calendar";
             this.disableCalendarToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.disableCalendarToolStripMenuItem_CheckStateChanged);
             // 
+            // loginAutomaticallyToolStripMenuItem
+            // 
+            this.loginAutomaticallyToolStripMenuItem.CheckOnClick = true;
+            this.loginAutomaticallyToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loginAutomaticallyToolStripMenuItem.Image")));
+            this.loginAutomaticallyToolStripMenuItem.Name = "loginAutomaticallyToolStripMenuItem";
+            this.loginAutomaticallyToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.loginAutomaticallyToolStripMenuItem.Text = "Login Automatically";
+            this.loginAutomaticallyToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.loginAutomaticallyToolStripMenuItem_CheckStateChanged);
+            // 
             // exchangeVersionToolStripMenuItem1
             // 
             this.exchangeVersionToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -516,7 +525,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.chkOverride);
             this.groupBox2.Controls.Add(this.txtEmail);
             this.groupBox2.Controls.Add(this.txtURLEdit);
             this.groupBox2.Controls.Add(this.chkOnDomain);
@@ -543,16 +552,6 @@
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Settings";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.Blue;
-            this.label7.Location = new System.Drawing.Point(293, 43);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(18, 13);
-            this.label7.TabIndex = 30;
-            this.label7.Text = "@";
             // 
             // txtEmail
             // 
@@ -797,14 +796,15 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
-            // loginAutomaticallyToolStripMenuItem
+            // chkOverride
             // 
-            this.loginAutomaticallyToolStripMenuItem.CheckOnClick = true;
-            this.loginAutomaticallyToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loginAutomaticallyToolStripMenuItem.Image")));
-            this.loginAutomaticallyToolStripMenuItem.Name = "loginAutomaticallyToolStripMenuItem";
-            this.loginAutomaticallyToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.loginAutomaticallyToolStripMenuItem.Text = "Login Automatically";
-            this.loginAutomaticallyToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.loginAutomaticallyToolStripMenuItem_CheckStateChanged);
+            this.chkOverride.AutoSize = true;
+            this.chkOverride.Location = new System.Drawing.Point(293, 43);
+            this.chkOverride.Name = "chkOverride";
+            this.chkOverride.Size = new System.Drawing.Size(15, 14);
+            this.chkOverride.TabIndex = 30;
+            this.chkOverride.UseVisualStyleBackColor = true;
+            this.chkOverride.CheckedChanged += new System.EventHandler(this.chkOverride_CheckedChanged);
             // 
             // Form1
             // 
@@ -910,9 +910,9 @@
         private System.Windows.Forms.ToolStripMenuItem makeOWADefaultToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem switchOffToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem disableCalendarToolStripMenuItem;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtEmail;
         private System.Windows.Forms.ToolStripMenuItem loginAutomaticallyToolStripMenuItem;
+        private System.Windows.Forms.CheckBox chkOverride;
     }
 }
 

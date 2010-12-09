@@ -2,7 +2,7 @@
 // DrunkenBakery OWA Tray Monitor
 // Link class
 //
-// <copyright file="ContactUs.cs" company="The Drunken Bakery">
+// <copyright file="Link.cs" company="The Drunken Bakery">
 //     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
 // </copyright>
 //

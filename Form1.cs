@@ -44,7 +44,7 @@ namespace DrunkenBakery.OWAtray
 
         static byte[] entropy = System.Text.Encoding.Unicode.GetBytes("Salt Is Not A Password");
         static bool overRideClose = false;
-
+        private static FlatFile myLog;
         bool alwaysIE;
         private Growl.Connector.Application application;
         bool calendarOff;
@@ -109,6 +109,9 @@ namespace DrunkenBakery.OWAtray
                 Properties.Settings.Default.Upgrade();
                 Properties.Settings.Default.ApplicationVersion = appVersionString;
             }
+
+            // Start Logging
+            InitLogger();
 
             // Initialise Event Views
             InitEventView(lvStatus);
@@ -178,6 +181,10 @@ namespace DrunkenBakery.OWAtray
             autoLogin = Properties.Settings.Default.AutoLogin == "Yes";
             loginAutomaticallyToolStripMenuItem.Checked = autoLogin;
             drawURL();
+
+            // Override email address?
+            chkOverride.Checked = Properties.Settings.Default.EmailOverride == "Yes";
+            if (_Email.Length > 0 && !chkOverride.Checked) chkOverride.Checked = true;
 
             // Domain
             isDomain = Properties.Settings.Default.NetworkCredentials == "Yes";
@@ -481,6 +488,7 @@ namespace DrunkenBakery.OWAtray
                     lastLogEntry = newEntry;
                     lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(), Convert.ToInt32(whichLog)));
                     lvBuffer[lvBuffer.Count - 1].SubItems.Add(newEntry);
+                    myLog.AddEntry(newEntry);
                 }
                 catch (Exception)
                 {
@@ -714,6 +722,7 @@ namespace DrunkenBakery.OWAtray
                 Properties.Settings.Default.DisableCalendar = calendarOff ? "Yes" : "No";
                 Properties.Settings.Default.AutoLogin = autoLogin ? "Yes" : "No";
                 Properties.Settings.Default.ExchangeVersion = _ExchangeVersion;
+                Properties.Settings.Default.EmailOverride = chkOverride.Checked ? "Yes" : "No";
                 Properties.Settings.Default.Save();
 
                 AddLogEntry("Settings saved to file", LogType.Info);
@@ -849,7 +858,7 @@ namespace DrunkenBakery.OWAtray
             }
 
             // Set account name
-            string userAccount = _Email.Length > 0 ? _Email : _User;
+            string userAccount = (chkOverride.Checked && _Email.Length > 0) ? _Email : _User;
             if (!userAccount.Contains("@"))
             {
                 userAccount = userAccount + "@" + GetSubDomain(_Server);
@@ -1104,6 +1113,8 @@ namespace DrunkenBakery.OWAtray
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             this.FormClosed -= new FormClosedEventHandler(Form1_FormClosed);
+            AddLogEntry("Terminating");
+            myLog.Active = false;
         }
 
         /// <summary>
@@ -1360,6 +1371,21 @@ namespace DrunkenBakery.OWAtray
         {
             popUrl = "";
             activateOWA();
+        }
+
+        /// <summary>
+        /// Inits the logger.
+        /// </summary>
+        private static void InitLogger()
+        {
+            myLog = new FlatFile();
+            string path1 = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            myLog.LogFile = Path.Combine(path1, "owatray.log");
+            myLog.DateOn = true;
+            myLog.Verbose = true;
+            myLog.LimitSize = true;
+            myLog.Scavenge = true;
+            myLog.Active = true;
         }
 
         /// <summary>
@@ -1832,6 +1858,16 @@ namespace DrunkenBakery.OWAtray
         {
             autoLogin = loginAutomaticallyToolStripMenuItem.Checked;
             AddLogEntry("Automatic Login is switched " + (autoLogin ? "ON" : "OFF"), LogType.Info);
+        }
+
+        /// <summary>
+        /// Handles the CheckedChanged event of the chkOverride control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void chkOverride_CheckedChanged(object sender, EventArgs e)
+        {
+            txtEmail.Enabled = chkOverride.Checked;
         }
     }
 }

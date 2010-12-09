@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -114,4 +117,70 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BlankLine" xml:space="preserve">
+    <value />
+  </data>
+  <data name="CreateLogFail" xml:space="preserve">
+    <value>Failed to create log file</value>
+  </data>
+  <data name="Dashes" xml:space="preserve">
+    <value>--------------------------------------------------------------------------------</value>
+  </data>
+  <data name="DateOff" xml:space="preserve">
+    <value>*** Date stamping switched off</value>
+  </data>
+  <data name="DateOn" xml:space="preserve">
+    <value>*** Date stamping switched on</value>
+  </data>
+  <data name="DaysOr" xml:space="preserve">
+    <value>days or</value>
+  </data>
+  <data name="DeleteLogFail" xml:space="preserve">
+    <value>Failed to delete log file</value>
+  </data>
+  <data name="LogFile" xml:space="preserve">
+    <value>Log file is</value>
+  </data>
+  <data name="LoggingDisabled" xml:space="preserve">
+    <value>Failed to write log entry, logging disabled</value>
+  </data>
+  <data name="LoggingStarted" xml:space="preserve">
+    <value>*** Logging Started</value>
+  </data>
+  <data name="LoggingStopped" xml:space="preserve">
+    <value>*** Logging Stopped</value>
+  </data>
+  <data name="Mb" xml:space="preserve">
+    <value>Mb)</value>
+  </data>
+  <data name="MbTotal" xml:space="preserve">
+    <value>Mb total size)</value>
+  </data>
+  <data name="NoEventLog" xml:space="preserve">
+    <value>Event Log does not exist!</value>
+  </data>
+  <data name="NoScavenge" xml:space="preserve">
+    <value>*** Log files will NOT be scavenged</value>
+  </data>
+  <data name="NoSizeLimit" xml:space="preserve">
+    <value>*** Log files are NOT size limited</value>
+  </data>
+  <data name="PurgeFail" xml:space="preserve">
+    <value>Failed to purge file</value>
+  </data>
+  <data name="Scavenged" xml:space="preserve">
+    <value>*** Log files will be scavenged (after</value>
+  </data>
+  <data name="ScavengeProblem" xml:space="preserve">
+    <value>Problem when checking for scavenging</value>
+  </data>
+  <data name="SizeLimited" xml:space="preserve">
+    <value>*** Log files are size limited (currently</value>
+  </data>
+  <data name="SizeProblem" xml:space="preserve">
+    <value>Problem when checking size limit</value>
+  </data>
+  <data name="WriteLogFail" xml:space="preserve">
+    <value>Failed to write log entry</value>
+  </data>
 </root>

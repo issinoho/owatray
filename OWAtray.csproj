@@ -60,7 +60,7 @@
     </Reference>
     <Reference Include="Microsoft.Exchange.WebServices, Version=14.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Microsoft.Exchange.WebServices.dll</HintPath>
+      <HintPath>..\..\Program Files\Microsoft\Exchange\Web Services\1.1\Microsoft.Exchange.WebServices.dll</HintPath>
     </Reference>
     <Reference Include="SnarlConnector, Version=1.1.0.0, Culture=neutral, PublicKeyToken=ba7d923d3001e68e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -106,6 +106,7 @@
     <Compile Include="ContactUs.Designer.cs">
       <DependentUpon>ContactUs.cs</DependentUpon>
     </Compile>
+    <Compile Include="FlatFile.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
