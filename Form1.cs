@@ -3,7 +3,7 @@
 // Main Form
 //
 // <copyright file="Form1.cs" company="The Drunken Bakery">
-//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
+//     Copyright (c) 2009-2011 The Drunken Bakery. All rights reserved.
 // </copyright>
 //
 // Monitors Exchange email for OWA users
@@ -21,11 +21,9 @@ namespace DrunkenBakery.OWAtray
     using System.Security;
     using System.Security.Principal;
     using System.Windows.Forms;
-
     using Growl.Connector;
-
     using Microsoft.Exchange.WebServices.Data;
-
+    using Microsoft.Exchange.WebServices.Autodiscover;
     using Snarl;
 
     /// <summary>
@@ -44,49 +42,38 @@ namespace DrunkenBakery.OWAtray
 
         static byte[] entropy = System.Text.Encoding.Unicode.GetBytes("Salt Is Not A Password");
         static bool overRideClose = false;
-        private static FlatFile myLog;
-        bool alwaysIE;
-        private Growl.Connector.Application application;
-        bool calendarOff;
-        bool autoLogin;
-        private bool firstRun = true;
-        private Form frmAbout;
-        private Form frmChangeLog;
-        private Form frmContact;
-        private Form frmInfo;
-        private Form frmMDAC;
-        private Form frmNET;
-        private GrowlConnector growl;
-        private string iconPath;
-        bool isBalloon;
-        bool isBell;
-        bool isDomain;
-        bool isGrowl;
-        bool isSnarl;
-        private string lastLogEntry;
-        private string lastPopMessage;
-        private string lastPopTitle;
-        private string lastPopUrl;
+        static FlatFile myLog;
+        Growl.Connector.Application growlApp;
+        GrowlConnector growl;
+        bool firstRun = true;
+        Form frmAbout;
+        Form frmChangeLog;
+        Form frmContact;
+        Form frmInfo;
+        Form frmMDAC;
+        Form frmNET;
+        string iconPath;
+        string lastLogEntry;
+        string lastPopMessage;
+        string lastPopTitle;
+        string lastPopUrl;
         List<ListViewItem> lvBuffer = new List<ListViewItem>();
-        private ExchangeService myService;
-        private string newIcon;
-        private NotificationType newMail;
-        bool overrideCert;
-        bool overrideURL;
+        ExchangeService myService;
+        string newIcon;
+        NotificationType newMail;
         bool resetFlag;
-        private string shellPath;
-        private DateTime TimeLastChecked = DateTime.Now;
-        private string trayIcon;
-        private string wavFile;
-        private string _Domain;
-        private string _ExchangeVersion;
-        private int _InboxCount;
-        private string _Interval;
-        private SecureString _Pwd;
-        private string _Server;
-        private string _User;
-        private string _Email;
-        private string popUrl;
+        string shellPath;
+        DateTime TimeLastChecked = DateTime.Now;
+        string trayIcon;
+        string wavFile;
+        int inboxCount;
+        string popUrl;
+        ExchangeVersion reportedVersion = ExchangeVersion.Exchange2007_SP1;
+        string reportedEwsUrl = "";
+        string reportedOwaUrl = "";
+        string reportedMailboxServer = "";
+        string reportedUserName = "";
+        bool startingUp;
 
         #endregion Fields
 
@@ -110,42 +97,50 @@ namespace DrunkenBakery.OWAtray
                 Properties.Settings.Default.ApplicationVersion = appVersionString;
             }
 
+            // Interlock for starting up
+            startingUp = true;
+
             // Start Logging
             InitLogger();
 
             // Initialise Event Views
             InitEventView(lvStatus);
 
-            // Options
-            _ExchangeVersion = Properties.Settings.Default.ExchangeVersion;
-            switch (_ExchangeVersion)
+            // Tabs
+            foreach (TabPage _tab in tabMain.TabPages)
             {
-                case "2007":
+                _tab.BackColor = SystemColors.Control;
+            }
+
+            // Options
+            switch (Properties.Settings.Default.ExchangeVersion)
+            {
+                case "Autodetect":
                     exchange2007ToolStripMenuItem.SelectedIndex = 0;
                     break;
 
-                case "2010":
+                case "Exchange2007_SP1":
                     exchange2007ToolStripMenuItem.SelectedIndex = 1;
                     break;
 
-                case "2010SP1":
+                case "Exchange2010":
                     exchange2007ToolStripMenuItem.SelectedIndex = 2;
                     break;
+
+                case "Exchange2010_SP1":
+                    exchange2007ToolStripMenuItem.SelectedIndex = 3;
+                    break;
             }
-            txtServer.Text = Properties.Settings.Default.Server;
-            _Server = txtServer.Text;
-            txtUser.Text = Properties.Settings.Default.Username;
-            _User = txtUser.Text;
-            txtPwd.Text = ToInsecureString(DecryptString(Properties.Settings.Default.Password));
-            _Pwd = ToSecureString(txtPwd.Text);
             txtEmail.Text = Properties.Settings.Default.EMail;
-            _Email = txtEmail.Text;
+            txtServer.Text = Properties.Settings.Default.Server;
+            txtUser.Text = Properties.Settings.Default.Username;
+            txtPwd.Text = ToInsecureString(DecryptString(Properties.Settings.Default.Password));
             txtDomain.Text = Properties.Settings.Default.Domain;
-            _Domain = txtDomain.Text;
+            txtInterval.Text = Properties.Settings.Default.UpdateInterval.ToString();
             UpdateURL();
-            txtInterval.Text = Properties.Settings.Default.UpdateInterval;
-            _Interval = txtInterval.Text;
-            _InboxCount = 0;
+            UpdateOwaUrl();
+            UpdateEmail();
+            inboxCount = 0;
 
             // Form title bar
             this.Text = ThisApp + " freshly baked at " + ThisPublisher;
@@ -153,45 +148,35 @@ namespace DrunkenBakery.OWAtray
             // Logging
             AddLogEntry("--------------------------------------------------", LogType.Info);
             AddLogEntry("Welcome to the " + ThisApp + " v" + appVersionString, LogType.Info);
-            AddLogEntry("Configured to communicate with Exchange " + _ExchangeVersion);
             notifyIcon1.Text = ThisApp + Environment.NewLine + "Not Connected to Exchange";
 
             // Startup Flag
             chkRunOnStartup.Checked = Link.Exists(Environment.SpecialFolder.Startup, ThisApp);
 
             // Notifications
-            isBalloon = Properties.Settings.Default.Balloon == "Yes";
-            balloonToolStripMenuItem.Checked = isBalloon;
-            isGrowl = Properties.Settings.Default.Growl == "Yes";
-            growlToolStripMenuItem.Checked = isGrowl;
-            isSnarl = Properties.Settings.Default.Snarl == "Yes";
-            snarlToolStripMenuItem.Checked = isSnarl;
-            isBell = Properties.Settings.Default.Bell == "Yes";
-            playSoundToolStripMenuItem.Checked = isBell;
+            balloonToolStripMenuItem.Checked = Properties.Settings.Default.Balloon;
+            growlToolStripMenuItem.Checked = Properties.Settings.Default.Growl;
+            snarlToolStripMenuItem.Checked = Properties.Settings.Default.Snarl;
+            playSoundToolStripMenuItem.Checked = Properties.Settings.Default.Bell;
 
             // Overrides
-            overrideCert = Properties.Settings.Default.OverrideCert == "Yes";
-            overrideToolStripMenuItem.Checked = overrideCert;
-            overrideURL = Properties.Settings.Default.OverrideURL == "Yes";
-            overrideServerURLToolStripMenuItem.Checked = overrideURL;
-            alwaysIE = Properties.Settings.Default.AlwaysIE == "Yes";
-            alwaysOpenOWAInIEToolStripMenuItem.Checked = alwaysIE;
-            calendarOff = Properties.Settings.Default.DisableCalendar == "Yes";
-            disableCalendarToolStripMenuItem.Checked = calendarOff;
-            autoLogin = Properties.Settings.Default.AutoLogin == "Yes";
-            loginAutomaticallyToolStripMenuItem.Checked = autoLogin;
+            overrideToolStripMenuItem.Checked = Properties.Settings.Default.OverrideCert;
+            overrideServerURLToolStripMenuItem.Checked = Properties.Settings.Default.OverrideURL;
+            alwaysOpenOWAInIEToolStripMenuItem.Checked = Properties.Settings.Default.AlwaysIE;
+            disableCalendarToolStripMenuItem.Checked = Properties.Settings.Default.DisableCalendar;
+            loginAutomaticallyToolStripMenuItem.Checked = Properties.Settings.Default.AutoLogin;
             drawURL();
 
-            // Override email address?
-            chkOverride.Checked = Properties.Settings.Default.EmailOverride == "Yes";
-            if (_Email.Length > 0 && !chkOverride.Checked) chkOverride.Checked = true;
+            // Autodiscover?
+            chkAutodiscovery.Checked = Properties.Settings.Default.Autodiscovery;
+            SelectAutodiscoveryOptions();
 
             // Domain
-            isDomain = Properties.Settings.Default.NetworkCredentials == "Yes";
-            chkOnDomain.Checked = isDomain;
+            chkOnDomain.Checked = Properties.Settings.Default.NetworkCredentials;
+            SelectDomainOptions();
 
             // Special lockdown option
-            restoreToolStripMenuItem.Enabled = (Properties.Settings.Default.LockDown == "Yes" ? false : true);
+            restoreToolStripMenuItem.Enabled = (Properties.Settings.Default.LockDown ? false : true);
 
             // Icon
             iconPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\email.png";
@@ -203,6 +188,11 @@ namespace DrunkenBakery.OWAtray
 
             // Tray icon (default)
             notifyIcon1.Icon = new Icon(trayIcon);
+
+            // Path to shell integration module
+            shellPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Properties.Settings.Default.ShellIntegration);
+
+            // A few flags
             lastPopTitle = "";
             lastPopMessage = "";
             popUrl = "";
@@ -211,33 +201,33 @@ namespace DrunkenBakery.OWAtray
 
             // Growl
             this.growl = new GrowlConnector();
-            application = new Growl.Connector.Application(ThisApp);
-            application.Icon = iconPath;
+            growlApp = new Growl.Connector.Application(ThisApp);
+            growlApp.Icon = iconPath;
             this.newMail = new NotificationType("NEWMAIL", "New Mail");
-            this.growl.Register(application, new NotificationType[] { newMail });
+            this.growl.Register(growlApp, new NotificationType[] { newMail });
 
             // Snarl
             SnarlConnector.RegisterConfig(this.Handle, ThisApp, WindowsMessage.WM_MDIMAXIMIZE, iconPath);
 
-            // Configure Shell
-            ConfigureShell();
-
-            // Configure Exchange
-            if (ConfigureExchange())
-            {
-                AddLogEntry("Ready.", LogType.Info);
-            }
-
             // Start Timers
-            timerAppt.Interval = Convert.ToInt32(Properties.Settings.Default.ApptInterval) * 1000;
-            timerUpdate.Interval = Convert.ToInt32(txtInterval.Text) * 1000;
+            timerAppt.Interval = Properties.Settings.Default.ApptInterval * 1000;
+            timerUpdate.Interval = Properties.Settings.Default.UpdateInterval * 1000;
             timerLogging.Enabled = true;
 
-            // Window state
-            if (Properties.Settings.Default.FirstTime != "Yes")
+            // Now decide what to do based on whether this is the first run or not
+            if (!Properties.Settings.Default.FirstTime)
             {
-                timer1.Enabled = true;
+                // Set up Exchange
+                if (ConfigureExchange())
+                {
+                    // Start main timer
+                    timer1.Enabled = true;
+                }
             }
+
+            // Release interlock
+            startingUp = false;
+            AddLogEntry("Ready.", LogType.Info);
         }
 
         #endregion Constructors
@@ -301,6 +291,53 @@ namespace DrunkenBakery.OWAtray
         #endregion Delegates
 
         #region Methods
+
+        /// <summary>
+        /// Selects the domain options.
+        /// </summary>
+        private void SelectDomainOptions()
+        {
+            txtDomain.Enabled = !chkOnDomain.Checked;
+            txtPwd.Enabled = !chkOnDomain.Checked;
+            txtUser.Enabled = !chkOnDomain.Checked;
+        }
+
+        /// <summary>
+        /// Selects the autodiscovery options.
+        /// </summary>
+        private void SelectAutodiscoveryOptions()
+        {
+            txtServer.Enabled = !Properties.Settings.Default.Autodiscovery;
+            overrideServerURLToolStripMenuItem.Enabled = !Properties.Settings.Default.Autodiscovery;
+            txtURLEdit.Enabled = !Properties.Settings.Default.Autodiscovery;
+            txtDomain.Enabled = !Properties.Settings.Default.Autodiscovery;
+            overrideAutodiscoveryValidationToolStripMenuItem.Enabled = Properties.Settings.Default.Autodiscovery;
+        }
+
+        /// <summary>
+        /// Updates the owa URL.
+        /// </summary>
+        private void UpdateOwaUrl()
+        {
+            if (Properties.Settings.Default.UseOffice365 && Properties.Settings.Default.Office365Account.Length > 0)
+            {
+                lblOWAUrl.Text = Properties.Settings.Default.Office365OwaUrl.Replace(
+                    Properties.Settings.Default.Office365AccountTemplate,
+                    Properties.Settings.Default.Office365Account);
+            }
+            else if (Properties.Settings.Default.Autodiscovery && reportedOwaUrl.Length > 0)
+            {
+                lblOWAUrl.Text = reportedOwaUrl;
+            }
+            else if (txtServer.Text.Length > 0)
+            {
+                lblOWAUrl.Text = "https://" + txtServer.Text + "/owa/";
+            }
+            else
+            {
+                lblOWAUrl.Text = "unknown";
+            }
+        }
 
         /// <summary>
         /// Determines whether [is user administrator].
@@ -450,7 +487,7 @@ namespace DrunkenBakery.OWAtray
             ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
             RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
 
-            if (alwaysIE)
+            if (Properties.Settings.Default.AlwaysIE)
             {
                 RunSvc.Arguments = "owa" + ((popUrl.Length > 0) ? " " + popUrl : "");
             }
@@ -504,8 +541,11 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            alwaysIE = alwaysOpenOWAInIEToolStripMenuItem.Checked;
-            AddLogEntry("Always use IE switched " + (alwaysIE ? "ON" : "OFF"), LogType.Info);
+            if (startingUp) return;
+
+            Properties.Settings.Default.AlwaysIE = alwaysOpenOWAInIEToolStripMenuItem.Checked;
+            Properties.Settings.Default.Save();
+            AddLogEntry("Always use IE switched " + (Properties.Settings.Default.AlwaysIE ? "ON" : "OFF"), LogType.Info);
         }
 
         /// <summary>
@@ -515,8 +555,11 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void balloonToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            isBalloon = balloonToolStripMenuItem.Checked;
-            AddLogEntry("Balloon notifications switched " + (isBalloon ? "ON" : "OFF"), LogType.Info);
+            if (startingUp) return;
+
+            Properties.Settings.Default.Balloon = balloonToolStripMenuItem.Checked;
+            Properties.Settings.Default.Save();
+            AddLogEntry("Balloon notifications switched " + (Properties.Settings.Default.Balloon ? "ON" : "OFF"), LogType.Info);
         }
 
         /// <summary>
@@ -534,7 +577,7 @@ namespace DrunkenBakery.OWAtray
             System.Net.Security.SslPolicyErrors sslPolicyErrors)
         {
             // If the override has been set then just return true
-            if (overrideCert)
+            if (Properties.Settings.Default.OverrideCert)
             {
                 return true;
             }
@@ -640,7 +683,7 @@ namespace DrunkenBakery.OWAtray
 
                             if (duration > 0)
                             {
-                                popUrl = (_ExchangeVersion == "2007" ? "" : myAppt.WebClientReadFormQueryString);
+                                popUrl = (reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myAppt.WebClientReadFormQueryString);
                                 PopToast("You have an appointment in " + myStart + (duration != 1 ? " mins" : " min"), myTime + " - " + mySubject + " (" + myLocation + ")");
                             }
                         }
@@ -660,10 +703,13 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void chkOnDomain_CheckedChanged(object sender, EventArgs e)
         {
-            isDomain = chkOnDomain.Checked;
-            txtDomain.Enabled = !isDomain;
-            txtPwd.Enabled = !isDomain;
-            txtUser.Enabled = !isDomain;
+            if (startingUp) return;
+
+            Properties.Settings.Default.NetworkCredentials = chkOnDomain.Checked;
+            Properties.Settings.Default.Save();
+
+            // Switch off some options when domain authentication selected
+            SelectDomainOptions();
         }
 
         /// <summary>
@@ -681,57 +727,6 @@ namespace DrunkenBakery.OWAtray
             catch (Exception ex)
             {
                 AddLogEntry(ex.Message, LogType.Fail);
-            }
-        }
-
-        /// <summary>
-        /// Handles the Click event of the cmdForce control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void cmdForce_Click(object sender, EventArgs e)
-        {
-            GetUnreadCount();
-        }
-
-        /// <summary>
-        /// Handles the Click event of the cmdSave control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void cmdSave_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Properties.Settings.Default.Server = _Server;
-                Properties.Settings.Default.Username = _User;
-                Properties.Settings.Default.Password = (_Pwd.Length > 0 ? EncryptString(_Pwd) : "");
-                Properties.Settings.Default.Domain = _Domain;
-                Properties.Settings.Default.EMail = _Email;
-                Properties.Settings.Default.UpdateInterval = _Interval;
-                Properties.Settings.Default.FirstTime = "No";
-                Properties.Settings.Default.Balloon = isBalloon ? "Yes" : "No";
-                Properties.Settings.Default.Growl = isGrowl ? "Yes" : "No";
-                Properties.Settings.Default.Snarl = isSnarl ? "Yes" : "No";
-                Properties.Settings.Default.NetworkCredentials = isDomain ? "Yes" : "No";
-                Properties.Settings.Default.Bell = isBell ? "Yes" : "No";
-                Properties.Settings.Default.OverrideURL = overrideURL ? "Yes" : "No";
-                Properties.Settings.Default.OverrideCert = overrideCert ? "Yes" : "No";
-                Properties.Settings.Default.ManualURL = txtURLEdit.Text;
-                Properties.Settings.Default.AlwaysIE = alwaysIE ? "Yes" : "No";
-                Properties.Settings.Default.DisableCalendar = calendarOff ? "Yes" : "No";
-                Properties.Settings.Default.AutoLogin = autoLogin ? "Yes" : "No";
-                Properties.Settings.Default.ExchangeVersion = _ExchangeVersion;
-                Properties.Settings.Default.EmailOverride = chkOverride.Checked ? "Yes" : "No";
-                Properties.Settings.Default.Save();
-
-                AddLogEntry("Settings saved to file", LogType.Info);
-
-                ConfigureShell();
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry("Can't save settings: " + ex.ToString(), LogType.Fail);
             }
         }
 
@@ -778,51 +773,208 @@ namespace DrunkenBakery.OWAtray
         {
             try
             {
-                string thisUri = "";
+                // Cursor
+                this.Cursor = Cursors.WaitCursor;
 
                 // Validate the server certificate
                 ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
 
-                AddLogEntry("Binding to Exchange", LogType.Info);
-                switch (_ExchangeVersion)
+                AddLogEntry("Binding to Exchange...", LogType.Info);
+                switch (Properties.Settings.Default.ExchangeVersion)
                 {
-                    case "2007":
+                    case "Autodetect":
+                        myService = new ExchangeService();
+                        break;
+
+                    case "Exchange2007_SP1":
                         myService = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
                         break;
 
-                    case "2010":
+                    case "Exchange2010":
                         myService = new ExchangeService(ExchangeVersion.Exchange2010);
                         break;
 
-                    case "2010SP1":
+                    case "Exchange2010_SP1":
                         myService = new ExchangeService(ExchangeVersion.Exchange2010_SP1);
                         break;
                 }
-                if (overrideURL)
-                {
-                    thisUri = txtURLEdit.Text;
-                }
-                else
-                {
-                    thisUri = txtURL.Text;
-                }
-                Uri myUri = new Uri(thisUri);
-                if (isDomain)
+
+                // Credentials
+                if (chkOnDomain.Checked)
                 {
                     myService.UseDefaultCredentials = true;
                 }
                 else
                 {
-                    myService.Credentials = new WebCredentials(txtUser.Text, txtPwd.Text, txtDomain.Text);
+                    if (txtUser.Text.Length == 0 || txtPwd.Text.Length == 0)
+                    {
+                        AddLogEntry("Please supply a valid username and password.", LogType.Fail);
+                        return false;
+                    }
+                    if (txtDomain.Text.Length > 0)
+                    {
+                        myService.Credentials = new WebCredentials(txtUser.Text, txtPwd.Text, txtDomain.Text);
+                    }
+                    else
+                    {
+                        myService.Credentials = new WebCredentials(txtUser.Text, txtPwd.Text);
+                    }
                 }
-                myService.Url = myUri;
 
+                // If autodiscover is on then that overrides the URI
+                if (Properties.Settings.Default.Autodiscovery)
+                {
+                    if (lblEmail.Text.Length == 0)
+                    {
+                        AddLogEntry("Autodiscovery requires an Email address to be specified. Please check settings.", LogType.Fail);
+                        return false;
+                    }
+                    else
+                    {
+                        AddLogEntry("Starting Autodiscovery", LogType.Info);
+                        if (Properties.Settings.Default.OverrideValidation)
+                        {
+                            myService.AutodiscoverUrl(lblEmail.Text, delegate(string url) { return true; });
+                        }
+                        else
+                        {
+                            myService.AutodiscoverUrl(lblEmail.Text);
+                        }
+
+                        // Update server settings
+                        reportedVersion = myService.RequestedServerVersion;
+                        AddLogEntry("Connected to " + reportedVersion.ToString(), LogType.Success);
+
+                        // Probe for autodiscover information
+                        AutodiscoverService autodiscoverService = new AutodiscoverService(myService.RequestedServerVersion);
+
+                        // Credentials
+                        if (chkOnDomain.Checked)
+                        {
+                            autodiscoverService.UseDefaultCredentials = true;
+                        }
+                        else
+                        {
+                            if (txtDomain.Text.Length > 0)
+                            {
+                                autodiscoverService.Credentials = new WebCredentials(txtUser.Text, txtPwd.Text, txtDomain.Text);
+                            }
+                            else
+                            {
+                                autodiscoverService.Credentials = new WebCredentials(txtUser.Text, txtPwd.Text);
+                            }
+                        }
+
+                        // Redirection Callback
+                        if (Properties.Settings.Default.OverrideValidation)
+                        {
+                            autodiscoverService.RedirectionUrlValidationCallback = delegate(string url) { return true; };
+                        }
+
+                        // Is this Internal or External ?
+                        if (autodiscoverService.IsExternal == false)
+                        {
+                            // Internal
+                            AddLogEntry("Endpoint is INSIDE corporate network", LogType.Info);
+
+                            // Probe for values
+                            GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
+                                UserSettingName.InternalWebClientUrls,
+                                UserSettingName.InternalEwsUrl,
+                                UserSettingName.InternalMailboxServer,
+                                UserSettingName.UserDisplayName);
+
+                            // OWA Url
+                            WebClientUrlCollection col = (WebClientUrlCollection)userresponse.Settings[UserSettingName.InternalWebClientUrls];
+                            WebClientUrl owaUrl = col.Urls[0];
+                            reportedOwaUrl = owaUrl.Url;
+                            UpdateOwaUrl();
+                            AddLogEntry("Autodiscovered OWA Url: " + reportedOwaUrl, LogType.Success);
+
+                            // EWS Url
+                            reportedEwsUrl = (string)userresponse.Settings[UserSettingName.InternalEwsUrl];
+                            UpdateURL();
+                            AddLogEntry("Autodiscovered EWS Url: " + reportedEwsUrl, LogType.Success);
+
+                            // Mailbox
+                            reportedMailboxServer = (string)userresponse.Settings[UserSettingName.InternalMailboxServer];
+                            AddLogEntry("Autodiscovered Mailbox Server: " + reportedMailboxServer, LogType.Success);
+
+                            // User Name
+                            reportedUserName = (string)userresponse.Settings[UserSettingName.UserDisplayName];
+                            AddLogEntry("Autodiscovered User Name: " + reportedUserName, LogType.Success);
+                        }
+                        else
+                        {
+                            // External (default)
+                            AddLogEntry("Endpoint is OUTSIDE corporate network", LogType.Info);
+
+                            // Probe for values
+                            GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
+                                UserSettingName.ExternalWebClientUrls,
+                                UserSettingName.ExternalEwsUrl,
+                                UserSettingName.ExternalMailboxServer,
+                                UserSettingName.UserDisplayName);
+
+                            // OWA Url
+                            WebClientUrlCollection owaCollection = (WebClientUrlCollection)userresponse.Settings[UserSettingName.ExternalWebClientUrls];
+                            WebClientUrl owaUrl = owaCollection.Urls[0];
+                            reportedOwaUrl = owaUrl.Url;
+                            UpdateOwaUrl();
+                            AddLogEntry("Autodiscovered OWA Url: " + reportedOwaUrl, LogType.Success);
+
+                            // EWS Url
+                            reportedEwsUrl = (string)userresponse.Settings[UserSettingName.ExternalEwsUrl];
+                            UpdateURL();
+                            AddLogEntry("Autodiscovered EWS Url: " + reportedEwsUrl, LogType.Success);
+
+                            // Mailbox
+                            reportedMailboxServer = (string)userresponse.Settings[UserSettingName.ExternalMailboxServer];
+                            AddLogEntry("Autodiscovered Mailbox Server: " + reportedMailboxServer, LogType.Success);
+
+                            // User Name
+                            reportedUserName = (string)userresponse.Settings[UserSettingName.UserDisplayName];
+                            AddLogEntry("Autodiscovered User Name: " + reportedUserName, LogType.Success);
+                        }
+                    }
+                }
+                else
+                {
+                    if (lblUrl.Text.Length == 0)
+                    {
+                        AddLogEntry("Can't establish a valid URL for Exchange. Please check settings.", LogType.Fail);
+                    }
+                    else
+                    {
+                        Uri myUri = new Uri(lblUrl.Text);
+                        myService.Url = myUri;
+
+                        // Update server settings
+                        reportedVersion = myService.RequestedServerVersion;
+                        AddLogEntry("Connected to " + reportedVersion.ToString(), LogType.Success);
+
+                        // Update properties
+                        reportedMailboxServer = txtServer.Text;
+                        reportedUserName = (chkOnDomain.Checked ? "" : txtUser.Text);
+                    }
+                }
+
+                // Set a flag to indicate that subsequent runs can autostart
+                Properties.Settings.Default.FirstTime = false;
+                Properties.Settings.Default.Save();
+
+                // All clear
                 return true;
             }
             catch (Exception ex)
             {
                 AddLogEntry("Error: " + ex.Message, LogType.Fail);
                 return false;
+            }
+            finally
+            {
+                // Cursor
+                this.Cursor = Cursors.Default;
             }
         }
 
@@ -831,12 +983,11 @@ namespace DrunkenBakery.OWAtray
         /// </summary>
         private void ConfigureShell()
         {
-            // Path to shell integration module
-            shellPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Properties.Settings.Default.ShellIntegration);
+            AddLogEntry("Configuring Shell Integration", LogType.Info);
 
             // Set OWA Url
-            string owaUrl = "https://" + _Server + "/owa";
-            AddLogEntry("Setting OWA url to " + owaUrl, LogType.Info);
+            string owaUrl = lblOWAUrl.Text;
+            //AddLogEntry("Setting OWA url to " + owaUrl, LogType.Info);
 
             try
             {
@@ -858,12 +1009,8 @@ namespace DrunkenBakery.OWAtray
             }
 
             // Set account name
-            string userAccount = (chkOverride.Checked && _Email.Length > 0) ? _Email : _User;
-            if (!userAccount.Contains("@"))
-            {
-                userAccount = userAccount + "@" + GetSubDomain(_Server);
-            }
-            AddLogEntry("Using user account: " + userAccount, LogType.Info);
+            string userAccount = GetEmailAddress();
+            //AddLogEntry("Using user account: " + userAccount, LogType.Info);
 
             try
             {
@@ -885,12 +1032,12 @@ namespace DrunkenBakery.OWAtray
             }
 
             // Set Exchange Version
-            AddLogEntry("Configuring for Exchange " + _ExchangeVersion, LogType.Info);
+            //AddLogEntry("Configuring for Exchange " + reportedVersion.ToString(), LogType.Info);
 
             try
             {
                 ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-                RunSvc.Arguments = "exchange " + _ExchangeVersion;
+                RunSvc.Arguments = "exchange " + reportedVersion.ToString();
                 RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
                 Process ServiceProcess = Process.Start(RunSvc);
 
@@ -930,7 +1077,7 @@ namespace DrunkenBakery.OWAtray
             try
             {
                 ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-                RunSvc.Arguments = "autologin " + (autoLogin ? "Yes" : "No");
+                RunSvc.Arguments = "autologin " + (Properties.Settings.Default.AutoLogin ? "Yes" : "No");
                 RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
                 Process ServiceProcess = Process.Start(RunSvc);
 
@@ -950,7 +1097,7 @@ namespace DrunkenBakery.OWAtray
             try
             {
                 ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-                RunSvc.Arguments = "browser " + (alwaysIE ? "Yes" : "No");
+                RunSvc.Arguments = "browser " + (Properties.Settings.Default.AlwaysIE ? "Yes" : "No");
                 RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
                 Process ServiceProcess = Process.Start(RunSvc);
 
@@ -974,8 +1121,11 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void disableCalendarToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            calendarOff = disableCalendarToolStripMenuItem.Checked;
-            AddLogEntry("Calendar notifications switched " + (calendarOff ? "OFF" : "ON"), LogType.Info);
+            if (startingUp) return;
+
+            Properties.Settings.Default.DisableCalendar = disableCalendarToolStripMenuItem.Checked;
+            Properties.Settings.Default.Save();
+            AddLogEntry("Calendar notifications switched " + (Properties.Settings.Default.DisableCalendar ? "OFF" : "ON"), LogType.Info);
         }
 
         /// <summary>
@@ -983,35 +1133,46 @@ namespace DrunkenBakery.OWAtray
         /// </summary>
         private void drawURL()
         {
-            if (overrideURL)
+            if (Properties.Settings.Default.OverrideURL)
             {
-                txtURL.Visible = false;
+                lblUrl.Visible = false;
                 txtURLEdit.Visible = true;
                 txtURLEdit.Text = Properties.Settings.Default.ManualURL;
             }
             else
             {
-                txtURL.Visible = true;
+                lblUrl.Visible = true;
                 txtURLEdit.Visible = false;
             }
         }
 
+        /// <summary>
+        /// Handles the SelectedIndexChanged event of the exchange2007ToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void exchange2007ToolStripMenuItem_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (exchange2007ToolStripMenuItem.SelectedIndex)
             {
                 case 0:
-                    _ExchangeVersion = "2007";
+                    Properties.Settings.Default.ExchangeVersion = "Autodetect";
                     break;
 
                 case 1:
-                    _ExchangeVersion = "2010";
+                    Properties.Settings.Default.ExchangeVersion = "Exchange2007_SP1";
                     break;
 
                 case 2:
-                    _ExchangeVersion = "2010SP1";
+                    Properties.Settings.Default.ExchangeVersion = "Exchange2010";
+                    break;
+
+                case 3:
+                    Properties.Settings.Default.ExchangeVersion = "Exchange2010_SP1";
                     break;
             }
+
+            Properties.Settings.Default.Save();
         }
 
         /// <summary>
@@ -1085,7 +1246,7 @@ namespace DrunkenBakery.OWAtray
 
                                 // Update status strip
                                 ListViewItem lv = lvStatus.Items[lvStatus.Items.Count - 1];
-                                slStatus.Text = lv.SubItems[1].Text;
+                                slStatus.Text = lv.SubItems[1].Text.Substring(0, (lv.SubItems[1].Text.Length > 120 ? 120 : lv.SubItems[1].Text.Length));
                             }
                             catch (Exception ex)
                             {
@@ -1164,6 +1325,51 @@ namespace DrunkenBakery.OWAtray
         }
 
         /// <summary>
+        /// Times the of newest email.
+        /// </summary>
+        /// <returns></returns>
+        private DateTime TimeOfNewestEmail()
+        {
+            DateTime myTime = DateTime.Now;
+
+            // Define filters collection
+            SearchFilter.SearchFilterCollection filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And);
+            filters.Add(new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false));
+
+            // Item view
+            ItemView view = new ItemView(10, 0, OffsetBasePoint.Beginning);
+            view.PropertySet = new PropertySet(BasePropertySet.IdOnly);
+            view.PropertySet.Add(ItemSchema.DateTimeReceived);
+            view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
+
+            // Now search
+            FindItemsResults<Item> findResults = myService.FindItems(WellKnownFolderName.Inbox, filters, view);
+
+            // Process each item.
+            foreach (Item myItem in findResults.Items)
+            {
+                if (myItem is EmailMessage)
+                {
+                    try
+                    {
+                        EmailMessage myEmail = (EmailMessage)myItem;
+                        PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
+                        myEmail.Load(ps);
+                        myTime = myEmail.DateTimeReceived;
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        AddLogEntry("Error when getting email properties - " + ex.Message, LogType.Fail);
+                    }
+                }
+            }
+
+            //AddLogEntry("Newest email is: " + myTime.ToString());
+            return myTime;
+        }
+
+        /// <summary>
         /// Gets the unread count from the Inbox
         /// </summary>
         /// <returns>Email count</returns>
@@ -1179,25 +1385,22 @@ namespace DrunkenBakery.OWAtray
             }
 
             // Set time for initial run only
-            if (firstRun) TimeLastChecked = DateTime.Now.AddMinutes(-1);
+            if (firstRun) TimeLastChecked = TimeOfNewestEmail().AddSeconds(1);
 
             try
             {
+                // Is there new mail?
                 Folder myFolder = Folder.Bind(myService, WellKnownFolderName.Inbox);
                 myCount = myFolder.UnreadCount;
-                if (myCount > _InboxCount)
+                if (myCount > inboxCount)
                 {
                     if (firstRun)
                     {
-                        PopToast("New Mail", "You have " + myCount + " unread email" + (myCount != 1 ? "s " : " ") + "in your inbox");                        
+                        PopToast("New Mail", "You have " + myCount + " unread email" + (myCount != 1 ? "s " : " ") + "in your inbox");
                     }
                     else
                     {
                         int count = PopUnreadEmail(myCount);
-                        //if (count != myCount)
-                        //{
-                        //    AddLogEntry("Not all new mail has been notified", LogType.Fail);
-                        //}
                     }
 
                     resetFlag = false;
@@ -1210,19 +1413,22 @@ namespace DrunkenBakery.OWAtray
                 string text1 = ThisApp + Environment.NewLine + Environment.NewLine + myCount + " unread email" + (myCount != 1 ? "s " : " ");
                 const int MaxTipLength = 63;
                 int charsLeft = MaxTipLength - text1.Length;
-                string domainText = _Server + (isDomain ? "" : @"\" + _User);
+                string domainText = reportedMailboxServer + @"\" + reportedUserName;
                 if (domainText.Length > charsLeft) domainText = domainText.Substring(0, charsLeft);
                 string finalText = ThisApp + Environment.NewLine + domainText + Environment.NewLine + myCount + " unread email" + (myCount != 1 ? "s " : " ");
                 notifyIcon1.Text = finalText;
-                _InboxCount = myCount;
+                inboxCount = myCount;
             }
             catch (Exception ex)
             {
                 AddLogEntry("Error: " + ex.Message, LogType.Fail);
                 myCount = 0;
             }
+            finally
+            {
+                firstRun = false;
+            }
 
-            firstRun = false;
             return myCount;
         }
 
@@ -1233,8 +1439,11 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void growlToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            isGrowl = growlToolStripMenuItem.Checked;
-            AddLogEntry("Growl notifications switched " + (isGrowl ? "ON" : "OFF"), LogType.Info);
+            if (startingUp) return;
+
+            Properties.Settings.Default.Growl = growlToolStripMenuItem.Checked;
+            Properties.Settings.Default.Save();
+            AddLogEntry("Growl notifications switched " + (Properties.Settings.Default.Growl ? "ON" : "OFF"), LogType.Info);
         }
 
         /// <summary>
@@ -1379,8 +1588,7 @@ namespace DrunkenBakery.OWAtray
         private static void InitLogger()
         {
             myLog = new FlatFile();
-            string path1 = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            myLog.LogFile = Path.Combine(path1, "owatray.log");
+            myLog.LogFile = Path.Combine(System.Windows.Forms.Application.LocalUserAppDataPath, "owatray.log");
             myLog.DateOn = true;
             myLog.Verbose = true;
             myLog.LimitSize = true;
@@ -1395,10 +1603,12 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void overrideServerURLToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            overrideURL = overrideServerURLToolStripMenuItem.Checked;
-            AddLogEntry("Server URL override switched " + (overrideURL ? "ON" : "OFF"), LogType.Info);
+            if (startingUp) return;
 
+            Properties.Settings.Default.OverrideURL = overrideServerURLToolStripMenuItem.Checked;
+            Properties.Settings.Default.Save();
             drawURL();
+            AddLogEntry("Server URL override switched " + (Properties.Settings.Default.OverrideURL ? "ON" : "OFF"), LogType.Info);
         }
 
         /// <summary>
@@ -1408,8 +1618,11 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void overrideToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            overrideCert = overrideToolStripMenuItem.Checked;
-            AddLogEntry("SSL Certificate override switched " + (overrideCert ? "ON" : "OFF"), LogType.Info);
+            if (startingUp) return;
+
+            Properties.Settings.Default.OverrideCert = overrideToolStripMenuItem.Checked;
+            Properties.Settings.Default.Save();
+            AddLogEntry("SSL Certificate override switched " + (Properties.Settings.Default.OverrideCert ? "ON" : "OFF"), LogType.Info);
         }
 
         /// <summary>
@@ -1419,8 +1632,11 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void playSoundToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            isBell = playSoundToolStripMenuItem.Checked;
-            AddLogEntry("Audible notifications switched " + (isBell ? "ON" : "OFF"), LogType.Info);
+            if (startingUp) return;
+
+            Properties.Settings.Default.Bell = playSoundToolStripMenuItem.Checked;
+            Properties.Settings.Default.Save();
+            AddLogEntry("Audible notifications switched " + (Properties.Settings.Default.Bell ? "ON" : "OFF"), LogType.Info);
         }
 
         /// <summary>
@@ -1442,27 +1658,27 @@ namespace DrunkenBakery.OWAtray
             lastPopUrl = popUrl;
 
             //Balloon
-            if (isBalloon)
+            if (Properties.Settings.Default.Balloon)
             {
                 notifyIcon1.Tag = popUrl;
                 notifyIcon1.ShowBalloonTip(5000, myTitle, myMessage, ToolTipIcon.Info);
             }
 
             // Growl
-            if (isGrowl)
+            if (Properties.Settings.Default.Growl)
             {
-                Notification notification = new Notification(this.application.Name, this.newMail.Name, "", myTitle, myMessage);
+                Notification notification = new Notification(this.growlApp.Name, this.newMail.Name, "", myTitle, myMessage);
                 this.growl.Notify(notification);
             }
 
             // Snarl
-            if (isSnarl)
+            if (Properties.Settings.Default.Snarl)
             {
                 SnarlConnector.ShowMessage(myTitle, myMessage, 10, iconPath, this.Handle, (WindowsMessage)REPLY_MSG);
             }
 
             // Audible
-            if (isBell)
+            if (Properties.Settings.Default.Bell)
             {
                 PlaySound(wavFile, new System.IntPtr(), PlaySoundFlags.SND_SYNC);
             }
@@ -1475,13 +1691,14 @@ namespace DrunkenBakery.OWAtray
         /// <returns></returns>
         private int PopUnreadEmail(int unreadCount)
         {
-            int count = 0;
+            //AddLogEntry("Checking for mail after: " + TimeLastChecked.ToString());
 
             // Set the offset for the paged search.
             int offset = 0;
+            int count = 0;
 
             // Set the page size.
-            const int pageSize = 50;
+            int pageSize = Properties.Settings.Default.PageSize;
 
             // Set the flag that indicates whether to continue iterating through additional pages.
             bool MoreItems = true;
@@ -1533,7 +1750,7 @@ namespace DrunkenBakery.OWAtray
                                 mySender = myEmail.Sender.Name;
                                 mySubject = (myEmail.Subject == null ? "<No Subject>" : myEmail.Subject);
                                 myTime = myEmail.DateTimeReceived;
-                                popUrl = (_ExchangeVersion == "2007" ? "" : myEmail.WebClientReadFormQueryString);
+                                popUrl = (reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myEmail.WebClientReadFormQueryString);
                                 PopToast("New Mail from " + mySender, mySubject);
                             }
                             catch (Exception ex)
@@ -1560,7 +1777,6 @@ namespace DrunkenBakery.OWAtray
                     offset = offset + pageSize;
             }
 
-            firstRun = false;
             return count;
         }
 
@@ -1614,8 +1830,11 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void snarlToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            isSnarl = snarlToolStripMenuItem.Checked;
-            AddLogEntry("Snarl notifications switched " + (isSnarl ? "ON" : "OFF"), LogType.Info);
+            if (startingUp) return;
+
+            Properties.Settings.Default.Snarl = snarlToolStripMenuItem.Checked;
+            Properties.Settings.Default.Save();
+            AddLogEntry("Snarl notifications switched " + (Properties.Settings.Default.Snarl ? "ON" : "OFF"), LogType.Info);
         }
 
         /// <summary>
@@ -1625,16 +1844,19 @@ namespace DrunkenBakery.OWAtray
         {
             // Start Timer
             timerAppt.Start();
-            timerUpdate.Interval = Convert.ToInt32(_Interval) * 1000;
+            timerUpdate.Interval = Properties.Settings.Default.UpdateInterval * 1000;
             timerUpdate.Start();
-            AddLogEntry(_Interval + " second timer started", LogType.Info);
+            AddLogEntry(txtInterval.Text + " second timer started", LogType.Info);
 
             // Minimise to tray
             this.WindowState = FormWindowState.Minimized;
 
+            // Configure Shell
+            ConfigureShell();
+
             // Initial Check
             GetUnreadCount();
-            if (!calendarOff)
+            if (!Properties.Settings.Default.DisableCalendar)
             {
                 CheckForAppointments();
             }
@@ -1720,7 +1942,7 @@ namespace DrunkenBakery.OWAtray
         private void timerAppt_Tick(object sender, EventArgs e)
         {
             // Check for appointments
-            if (!calendarOff)
+            if (!Properties.Settings.Default.DisableCalendar)
             {
                 CheckForAppointments();
             }
@@ -1749,24 +1971,14 @@ namespace DrunkenBakery.OWAtray
         }
 
         /// <summary>
-        /// Handles the TextChanged event of the txtDomain control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void txtDomain_TextChanged(object sender, EventArgs e)
-        {
-            _Domain = txtDomain.Text;
-        }
-
-        /// <summary>
         /// Handles the Validated event of the txtInterval control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void txtInterval_Validated(object sender, EventArgs e)
         {
-            _Interval = txtInterval.Text;
-            AddLogEntry("Update interval changed to " + _Interval + " seconds. Restart Timer to activate.", LogType.Info);
+            Properties.Settings.Default.UpdateInterval = Convert.ToInt32(txtInterval.Text);
+            Properties.Settings.Default.Save();
         }
 
         /// <summary>
@@ -1799,55 +2011,52 @@ namespace DrunkenBakery.OWAtray
         }
 
         /// <summary>
-        /// Handles the TextChanged event of the txtPwd control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void txtPwd_TextChanged(object sender, EventArgs e)
-        {
-            _Pwd = ToSecureString(txtPwd.Text);
-        }
-
-        /// <summary>
-        /// Handles the TextChanged event of the txtServer control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void txtServer_TextChanged(object sender, EventArgs e)
-        {
-            _Server = txtServer.Text;
-            UpdateURL();
-        }
-
-        /// <summary>
-        /// Handles the TextChanged event of the txtUser control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void txtUser_TextChanged(object sender, EventArgs e)
-        {
-            _User = txtUser.Text;
-        }
-
-        /// <summary>
         /// Updates the URL.
         /// </summary>
         private void UpdateURL()
         {
-            txtURL.Text = "https://" + txtServer.Text + "/ews/exchange.asmx";
+            if (Properties.Settings.Default.Autodiscovery && reportedEwsUrl.Length > 0)
+            {
+                lblUrl.Text = reportedEwsUrl;
+            }
+            else if (Properties.Settings.Default.OverrideURL && txtURLEdit.Text.Length > 0)
+            {
+                lblUrl.Text = txtURLEdit.Text;
+            }
+            else if (txtServer.Text.Length > 0)
+            {
+                lblUrl.Text = "https://" + txtServer.Text + "/ews/exchange.asmx";
+            }
+            else
+            {
+                lblUrl.Text = "unknown";
+            }
+        }
+
+        /// <summary>
+        /// Gets the email address.
+        /// </summary>
+        /// <returns></returns>
+        private string GetEmailAddress()
+        {
+            string userAccount = (txtEmail.Text.Length > 0) ? txtEmail.Text : txtUser.Text;
+            if (userAccount.Length > 0 && !userAccount.Contains("@"))
+            {
+                userAccount = userAccount + "@" + GetSubDomain(txtServer.Text);
+            }
+
+            return userAccount;
+        }
+
+        /// <summary>
+        /// Updates the email.
+        /// </summary>
+        private void UpdateEmail()
+        {
+            lblEmail.Text = GetEmailAddress();
         }
 
         #endregion Methods
-
-        /// <summary>
-        /// Handles the TextChanged event of the txtEmail control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void txtEmail_TextChanged(object sender, EventArgs e)
-        {
-            _Email = txtEmail.Text;
-        }
 
         /// <summary>
         /// Handles the CheckStateChanged event of the loginAutomaticallyToolStripMenuItem control.
@@ -1856,18 +2065,107 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void loginAutomaticallyToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
-            autoLogin = loginAutomaticallyToolStripMenuItem.Checked;
-            AddLogEntry("Automatic Login is switched " + (autoLogin ? "ON" : "OFF"), LogType.Info);
+            if (startingUp) return;
+
+            Properties.Settings.Default.AutoLogin = loginAutomaticallyToolStripMenuItem.Checked;
+            Properties.Settings.Default.Save();
+            AddLogEntry("Automatic Login is switched " + (Properties.Settings.Default.AutoLogin ? "ON" : "OFF"), LogType.Info);
         }
 
         /// <summary>
-        /// Handles the CheckedChanged event of the chkOverride control.
+        /// Handles the Validated event of the txtDomain control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void chkOverride_CheckedChanged(object sender, EventArgs e)
+        private void txtDomain_Validated(object sender, EventArgs e)
         {
-            txtEmail.Enabled = chkOverride.Checked;
+            Properties.Settings.Default.Domain = txtDomain.Text;
+            Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// Handles the Validated event of the txtPwd control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void txtPwd_Validated(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Password = (txtPwd.Text.Length > 0 ? EncryptString(ToSecureString(txtPwd.Text)) : "");
+            Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// Handles the Validated event of the txtServer control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void txtServer_Validated(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Server = txtServer.Text;
+            Properties.Settings.Default.Save();
+            UpdateURL();
+            UpdateOwaUrl();
+        }
+
+        /// <summary>
+        /// Handles the Validated event of the txtUser control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void txtUser_Validated(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Username = txtUser.Text;
+            Properties.Settings.Default.Save();
+            UpdateEmail();
+        }
+
+        /// <summary>
+        /// Handles the Validated event of the txtEmail control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void txtEmail_Validated(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.EMail = txtEmail.Text;
+            Properties.Settings.Default.Save();
+            UpdateEmail();
+            if (txtUser.Text.Length == 0) txtUser.Text = txtEmail.Text;
+        }
+
+        /// <summary>
+        /// Handles the CheckStateChanged event of the chkAutodiscovery control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void chkAutodiscovery_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (startingUp) return;
+
+            Properties.Settings.Default.Autodiscovery = chkAutodiscovery.Checked;
+            Properties.Settings.Default.Save();
+            AddLogEntry("Autodiscovery is switched " + (chkAutodiscovery.Checked ? "ON" : "OFF"), LogType.Info);
+
+            // Switch off some options when Autodiscovery is checked
+            SelectAutodiscoveryOptions();
+
+            // Re-evaluate settings
+            UpdateURL();
+            UpdateOwaUrl();
+            UpdateEmail();
+        }
+
+        /// <summary>
+        /// Handles the CheckStateChanged event of the overrideAutodiscoveryValidationToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (startingUp) return;
+
+            Properties.Settings.Default.OverrideValidation = overrideAutodiscoveryValidationToolStripMenuItem.Checked;
+            Properties.Settings.Default.Save();
+            AddLogEntry("Autodiscovery Validation override switched " + (Properties.Settings.Default.OverrideValidation ? "ON" : "OFF"), LogType.Info);
         }
     }
 }

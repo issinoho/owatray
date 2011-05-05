@@ -78,53 +78,76 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lvStatus = new System.Windows.Forms.ListView();
             this.button3 = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.txtEmail = new System.Windows.Forms.TextBox();
+            this.lblUrl = new System.Windows.Forms.Label();
             this.txtURLEdit = new System.Windows.Forms.TextBox();
-            this.chkOnDomain = new System.Windows.Forms.CheckBox();
             this.chkRunOnStartup = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.txtInterval = new System.Windows.Forms.TextBox();
-            this.cmdSave = new System.Windows.Forms.Button();
-            this.cmdStop = new System.Windows.Forms.Button();
-            this.cmdStart = new System.Windows.Forms.Button();
             this.txtDomain = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.txtURL = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.txtServer = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtEmail = new System.Windows.Forms.TextBox();
+            this.chkOnDomain = new System.Windows.Forms.CheckBox();
+            this.cmdStop = new System.Windows.Forms.Button();
+            this.cmdStart = new System.Windows.Forms.Button();
             this.txtPwd = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.txtUser = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtServer = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmdForce = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timerLogging = new System.Windows.Forms.Timer(this.components);
             this.timerUpdate = new System.Windows.Forms.Timer(this.components);
             this.timerAppt = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.chkOverride = new System.Windows.Forms.CheckBox();
+            this.tabMain = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.pictureBox14 = new System.Windows.Forms.PictureBox();
+            this.pictureBox15 = new System.Windows.Forms.PictureBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.chkAutodiscovery = new System.Windows.Forms.CheckBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox17 = new System.Windows.Forms.PictureBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.pictureBox16 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.lblOWAUrl = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.lblEmail = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.overrideAutodiscoveryValidationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+            this.tabMain.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.tabPage3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // imLV
             // 
             this.imLV.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imLV.ImageStream")));
             this.imLV.TransparentColor = System.Drawing.Color.Transparent;
-            this.imLV.Images.SetKeyName(0, "tick.png");
-            this.imLV.Images.SetKeyName(1, "error.png");
-            this.imLV.Images.SetKeyName(2, "information.png");
-            this.imLV.Images.SetKeyName(3, "email.ico");
-            this.imLV.Images.SetKeyName(4, "comment_rect.ico");
+            this.imLV.Images.SetKeyName(0, "apply.png");
+            this.imLV.Images.SetKeyName(1, "info.png");
+            this.imLV.Images.SetKeyName(2, "about.png");
             // 
             // statusStrip1
             // 
@@ -358,18 +381,19 @@
             this.overrideServerURLToolStripMenuItem,
             this.alwaysOpenOWAInIEToolStripMenuItem,
             this.disableCalendarToolStripMenuItem,
-            this.loginAutomaticallyToolStripMenuItem});
+            this.loginAutomaticallyToolStripMenuItem,
+            this.overrideAutodiscoveryValidationToolStripMenuItem});
             this.advancedToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("advancedToolStripMenuItem.Image")));
             this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
-            this.advancedToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
-            this.advancedToolStripMenuItem.Text = "Advanced";
+            this.advancedToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
+            this.advancedToolStripMenuItem.Text = "Expert";
             // 
             // overrideToolStripMenuItem
             // 
             this.overrideToolStripMenuItem.CheckOnClick = true;
             this.overrideToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideToolStripMenuItem.Image")));
             this.overrideToolStripMenuItem.Name = "overrideToolStripMenuItem";
-            this.overrideToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.overrideToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.overrideToolStripMenuItem.Text = "Override Certificate";
             this.overrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideToolStripMenuItem_CheckStateChanged);
             // 
@@ -378,7 +402,7 @@
             this.overrideServerURLToolStripMenuItem.CheckOnClick = true;
             this.overrideServerURLToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideServerURLToolStripMenuItem.Image")));
             this.overrideServerURLToolStripMenuItem.Name = "overrideServerURLToolStripMenuItem";
-            this.overrideServerURLToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.overrideServerURLToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.overrideServerURLToolStripMenuItem.Text = "Override Server URL";
             this.overrideServerURLToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideServerURLToolStripMenuItem_CheckStateChanged);
             // 
@@ -387,7 +411,7 @@
             this.alwaysOpenOWAInIEToolStripMenuItem.CheckOnClick = true;
             this.alwaysOpenOWAInIEToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("alwaysOpenOWAInIEToolStripMenuItem.Image")));
             this.alwaysOpenOWAInIEToolStripMenuItem.Name = "alwaysOpenOWAInIEToolStripMenuItem";
-            this.alwaysOpenOWAInIEToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.alwaysOpenOWAInIEToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.alwaysOpenOWAInIEToolStripMenuItem.Text = "Always open OWA in IE";
             this.alwaysOpenOWAInIEToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged);
             // 
@@ -396,7 +420,7 @@
             this.disableCalendarToolStripMenuItem.CheckOnClick = true;
             this.disableCalendarToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("disableCalendarToolStripMenuItem.Image")));
             this.disableCalendarToolStripMenuItem.Name = "disableCalendarToolStripMenuItem";
-            this.disableCalendarToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.disableCalendarToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.disableCalendarToolStripMenuItem.Text = "Disable Calendar";
             this.disableCalendarToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.disableCalendarToolStripMenuItem_CheckStateChanged);
             // 
@@ -405,7 +429,7 @@
             this.loginAutomaticallyToolStripMenuItem.CheckOnClick = true;
             this.loginAutomaticallyToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loginAutomaticallyToolStripMenuItem.Image")));
             this.loginAutomaticallyToolStripMenuItem.Name = "loginAutomaticallyToolStripMenuItem";
-            this.loginAutomaticallyToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.loginAutomaticallyToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.loginAutomaticallyToolStripMenuItem.Text = "Login Automatically";
             this.loginAutomaticallyToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.loginAutomaticallyToolStripMenuItem_CheckStateChanged);
             // 
@@ -494,9 +518,9 @@
             // 
             this.groupBox3.Controls.Add(this.lvStatus);
             this.groupBox3.Controls.Add(this.button3);
-            this.groupBox3.Location = new System.Drawing.Point(12, 180);
+            this.groupBox3.Location = new System.Drawing.Point(12, 199);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(622, 229);
+            this.groupBox3.Size = new System.Drawing.Size(622, 210);
             this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Logging";
@@ -506,7 +530,7 @@
             this.lvStatus.GridLines = true;
             this.lvStatus.Location = new System.Drawing.Point(68, 19);
             this.lvStatus.Name = "lvStatus";
-            this.lvStatus.Size = new System.Drawing.Size(548, 204);
+            this.lvStatus.Size = new System.Drawing.Size(548, 185);
             this.lvStatus.SmallImageList = this.imLV;
             this.lvStatus.TabIndex = 5;
             this.lvStatus.UseCompatibleStateImageBehavior = false;
@@ -523,123 +547,116 @@
             this.button3.TabIndex = 4;
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // lblUrl
             // 
-            this.groupBox2.Controls.Add(this.chkOverride);
-            this.groupBox2.Controls.Add(this.txtEmail);
-            this.groupBox2.Controls.Add(this.txtURLEdit);
-            this.groupBox2.Controls.Add(this.chkOnDomain);
-            this.groupBox2.Controls.Add(this.chkRunOnStartup);
-            this.groupBox2.Controls.Add(this.groupBox1);
-            this.groupBox2.Controls.Add(this.cmdSave);
-            this.groupBox2.Controls.Add(this.cmdStop);
-            this.groupBox2.Controls.Add(this.cmdStart);
-            this.groupBox2.Controls.Add(this.txtDomain);
-            this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.txtURL);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.txtPwd);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.txtUser);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.txtServer);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.cmdForce);
-            this.groupBox2.Controls.Add(this.button2);
-            this.groupBox2.Location = new System.Drawing.Point(12, 27);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(622, 147);
-            this.groupBox2.TabIndex = 12;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Settings";
-            // 
-            // txtEmail
-            // 
-            this.txtEmail.Location = new System.Drawing.Point(313, 40);
-            this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(128, 20);
-            this.txtEmail.TabIndex = 29;
-            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
+            this.lblUrl.AutoSize = true;
+            this.lblUrl.ForeColor = System.Drawing.Color.Black;
+            this.lblUrl.Location = new System.Drawing.Point(115, 61);
+            this.lblUrl.Name = "lblUrl";
+            this.lblUrl.Size = new System.Drawing.Size(50, 13);
+            this.lblUrl.TabIndex = 19;
+            this.lblUrl.Text = "unknown";
             // 
             // txtURLEdit
             // 
-            this.txtURLEdit.Location = new System.Drawing.Point(160, 120);
+            this.txtURLEdit.Location = new System.Drawing.Point(158, 110);
             this.txtURLEdit.Name = "txtURLEdit";
-            this.txtURLEdit.Size = new System.Drawing.Size(281, 20);
+            this.txtURLEdit.Size = new System.Drawing.Size(306, 21);
             this.txtURLEdit.TabIndex = 28;
-            // 
-            // chkOnDomain
-            // 
-            this.chkOnDomain.AutoSize = true;
-            this.chkOnDomain.ForeColor = System.Drawing.Color.Blue;
-            this.chkOnDomain.Location = new System.Drawing.Point(361, 15);
-            this.chkOnDomain.Name = "chkOnDomain";
-            this.chkOnDomain.Size = new System.Drawing.Size(79, 17);
-            this.chkOnDomain.TabIndex = 27;
-            this.chkOnDomain.Text = "On Domain";
-            this.chkOnDomain.UseVisualStyleBackColor = true;
-            this.chkOnDomain.CheckedChanged += new System.EventHandler(this.chkOnDomain_CheckedChanged);
             // 
             // chkRunOnStartup
             // 
             this.chkRunOnStartup.AutoSize = true;
             this.chkRunOnStartup.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkRunOnStartup.ForeColor = System.Drawing.Color.Blue;
-            this.chkRunOnStartup.Location = new System.Drawing.Point(509, 122);
+            this.chkRunOnStartup.Location = new System.Drawing.Point(367, 49);
             this.chkRunOnStartup.Name = "chkRunOnStartup";
-            this.chkRunOnStartup.Size = new System.Drawing.Size(95, 17);
+            this.chkRunOnStartup.Size = new System.Drawing.Size(97, 17);
             this.chkRunOnStartup.TabIndex = 26;
             this.chkRunOnStartup.Text = "Run at Startup";
             this.chkRunOnStartup.UseVisualStyleBackColor = true;
             this.chkRunOnStartup.CheckedChanged += new System.EventHandler(this.chkRunOnStartup_CheckedChanged);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.txtInterval);
-            this.groupBox1.Location = new System.Drawing.Point(456, 71);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(156, 45);
-            this.groupBox1.TabIndex = 25;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Update Interval";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(101, 22);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(47, 13);
-            this.label6.TabIndex = 1;
-            this.label6.Text = "seconds";
-            // 
             // txtInterval
             // 
-            this.txtInterval.Location = new System.Drawing.Point(15, 19);
+            this.txtInterval.Location = new System.Drawing.Point(158, 47);
             this.txtInterval.Name = "txtInterval";
-            this.txtInterval.Size = new System.Drawing.Size(80, 20);
+            this.txtInterval.Size = new System.Drawing.Size(80, 21);
             this.txtInterval.TabIndex = 0;
             this.txtInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtInterval.Validated += new System.EventHandler(this.txtInterval_Validated);
             this.txtInterval.Validating += new System.ComponentModel.CancelEventHandler(this.txtInterval_Validating);
+            this.txtInterval.Validated += new System.EventHandler(this.txtInterval_Validated);
             // 
-            // cmdSave
+            // txtDomain
             // 
-            this.cmdSave.Image = ((System.Drawing.Image)(resources.GetObject("cmdSave.Image")));
-            this.cmdSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cmdSave.Location = new System.Drawing.Point(456, 42);
-            this.cmdSave.Name = "cmdSave";
-            this.cmdSave.Size = new System.Drawing.Size(75, 23);
-            this.cmdSave.TabIndex = 24;
-            this.cmdSave.Text = "Sa&ve";
-            this.cmdSave.UseVisualStyleBackColor = true;
-            this.cmdSave.Click += new System.EventHandler(this.cmdSave_Click);
+            this.txtDomain.Location = new System.Drawing.Point(158, 79);
+            this.txtDomain.Name = "txtDomain";
+            this.txtDomain.Size = new System.Drawing.Size(306, 21);
+            this.txtDomain.TabIndex = 21;
+            this.txtDomain.Validated += new System.EventHandler(this.txtDomain_Validated);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.Blue;
+            this.label5.Location = new System.Drawing.Point(61, 82);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(98, 13);
+            this.label5.TabIndex = 20;
+            this.label5.Text = "Windows Domain : ";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.Blue;
+            this.label4.Location = new System.Drawing.Point(63, 113);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(86, 13);
+            this.label4.TabIndex = 18;
+            this.label4.Text = "Exchange URL : ";
+            // 
+            // txtServer
+            // 
+            this.txtServer.Location = new System.Drawing.Point(158, 17);
+            this.txtServer.Name = "txtServer";
+            this.txtServer.Size = new System.Drawing.Size(306, 21);
+            this.txtServer.TabIndex = 13;
+            this.txtServer.Validated += new System.EventHandler(this.txtServer_Validated);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.Blue;
+            this.label1.Location = new System.Drawing.Point(61, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(91, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Server Address : ";
+            // 
+            // txtEmail
+            // 
+            this.txtEmail.Location = new System.Drawing.Point(150, 35);
+            this.txtEmail.Name = "txtEmail";
+            this.txtEmail.Size = new System.Drawing.Size(315, 21);
+            this.txtEmail.TabIndex = 29;
+            this.txtEmail.Validated += new System.EventHandler(this.txtEmail_Validated);
+            // 
+            // chkOnDomain
+            // 
+            this.chkOnDomain.AutoSize = true;
+            this.chkOnDomain.ForeColor = System.Drawing.Color.Blue;
+            this.chkOnDomain.Location = new System.Drawing.Point(64, 66);
+            this.chkOnDomain.Name = "chkOnDomain";
+            this.chkOnDomain.Size = new System.Drawing.Size(185, 17);
+            this.chkOnDomain.TabIndex = 27;
+            this.chkOnDomain.Text = "Use Windows Domain Credentials";
+            this.chkOnDomain.UseVisualStyleBackColor = true;
+            this.chkOnDomain.CheckedChanged += new System.EventHandler(this.chkOnDomain_CheckedChanged);
             // 
             // cmdStop
             // 
-            this.cmdStop.Image = ((System.Drawing.Image)(resources.GetObject("cmdStop.Image")));
             this.cmdStop.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cmdStop.Location = new System.Drawing.Point(537, 13);
+            this.cmdStop.Location = new System.Drawing.Point(26, 88);
             this.cmdStop.Name = "cmdStop";
             this.cmdStop.Size = new System.Drawing.Size(75, 23);
             this.cmdStop.TabIndex = 23;
@@ -649,9 +666,8 @@
             // 
             // cmdStart
             // 
-            this.cmdStart.Image = ((System.Drawing.Image)(resources.GetObject("cmdStart.Image")));
             this.cmdStart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cmdStart.Location = new System.Drawing.Point(456, 13);
+            this.cmdStart.Location = new System.Drawing.Point(26, 39);
             this.cmdStart.Name = "cmdStart";
             this.cmdStart.Size = new System.Drawing.Size(75, 23);
             this.cmdStart.TabIndex = 22;
@@ -659,121 +675,42 @@
             this.cmdStart.UseVisualStyleBackColor = true;
             this.cmdStart.Click += new System.EventHandler(this.cmdStart_Click);
             // 
-            // txtDomain
-            // 
-            this.txtDomain.Location = new System.Drawing.Point(159, 91);
-            this.txtDomain.Name = "txtDomain";
-            this.txtDomain.Size = new System.Drawing.Size(282, 20);
-            this.txtDomain.TabIndex = 21;
-            this.txtDomain.TextChanged += new System.EventHandler(this.txtDomain_TextChanged);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.Color.Blue;
-            this.label5.Location = new System.Drawing.Point(65, 94);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(52, 13);
-            this.label5.TabIndex = 20;
-            this.label5.Text = "Domain : ";
-            // 
-            // txtURL
-            // 
-            this.txtURL.AutoSize = true;
-            this.txtURL.ForeColor = System.Drawing.Color.Black;
-            this.txtURL.Location = new System.Drawing.Point(156, 123);
-            this.txtURL.Name = "txtURL";
-            this.txtURL.Size = new System.Drawing.Size(89, 13);
-            this.txtURL.TabIndex = 19;
-            this.txtURL.Text = "Exchange URL : ";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.Color.Blue;
-            this.label4.Location = new System.Drawing.Point(65, 123);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(89, 13);
-            this.label4.TabIndex = 18;
-            this.label4.Text = "Exchange URL : ";
-            // 
             // txtPwd
             // 
-            this.txtPwd.Location = new System.Drawing.Point(159, 65);
+            this.txtPwd.Location = new System.Drawing.Point(150, 113);
             this.txtPwd.Name = "txtPwd";
             this.txtPwd.PasswordChar = '*';
-            this.txtPwd.Size = new System.Drawing.Size(282, 20);
+            this.txtPwd.Size = new System.Drawing.Size(315, 21);
             this.txtPwd.TabIndex = 17;
-            this.txtPwd.TextChanged += new System.EventHandler(this.txtPwd_TextChanged);
+            this.txtPwd.Validated += new System.EventHandler(this.txtPwd_Validated);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.Color.Blue;
-            this.label3.Location = new System.Drawing.Point(65, 68);
+            this.label3.Location = new System.Drawing.Point(61, 116);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(62, 13);
+            this.label3.Size = new System.Drawing.Size(63, 13);
             this.label3.TabIndex = 16;
             this.label3.Text = "Password : ";
             // 
             // txtUser
             // 
-            this.txtUser.Location = new System.Drawing.Point(159, 39);
+            this.txtUser.Location = new System.Drawing.Point(150, 87);
             this.txtUser.Name = "txtUser";
-            this.txtUser.Size = new System.Drawing.Size(128, 20);
+            this.txtUser.Size = new System.Drawing.Size(315, 21);
             this.txtUser.TabIndex = 15;
-            this.txtUser.TextChanged += new System.EventHandler(this.txtUser_TextChanged);
+            this.txtUser.Validated += new System.EventHandler(this.txtUser_Validated);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.Color.Blue;
-            this.label2.Location = new System.Drawing.Point(65, 42);
+            this.label2.Location = new System.Drawing.Point(61, 90);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 13);
+            this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 14;
             this.label2.Text = "User : ";
-            // 
-            // txtServer
-            // 
-            this.txtServer.Location = new System.Drawing.Point(159, 13);
-            this.txtServer.Name = "txtServer";
-            this.txtServer.Size = new System.Drawing.Size(196, 20);
-            this.txtServer.TabIndex = 13;
-            this.txtServer.TextChanged += new System.EventHandler(this.txtServer_TextChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.Blue;
-            this.label1.Location = new System.Drawing.Point(65, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(88, 13);
-            this.label1.TabIndex = 12;
-            this.label1.Text = "Server Address : ";
-            // 
-            // cmdForce
-            // 
-            this.cmdForce.Image = ((System.Drawing.Image)(resources.GetObject("cmdForce.Image")));
-            this.cmdForce.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cmdForce.Location = new System.Drawing.Point(537, 42);
-            this.cmdForce.Name = "cmdForce";
-            this.cmdForce.Size = new System.Drawing.Size(75, 23);
-            this.cmdForce.TabIndex = 11;
-            this.cmdForce.Text = "&Force";
-            this.cmdForce.UseVisualStyleBackColor = true;
-            this.cmdForce.Click += new System.EventHandler(this.cmdForce_Click);
-            // 
-            // button2
-            // 
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.ForeColor = System.Drawing.SystemColors.Control;
-            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
-            this.button2.Location = new System.Drawing.Point(16, 28);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(32, 32);
-            this.button2.TabIndex = 3;
-            this.button2.UseVisualStyleBackColor = true;
             // 
             // timer1
             // 
@@ -796,44 +733,293 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
-            // chkOverride
+            // tabMain
             // 
-            this.chkOverride.AutoSize = true;
-            this.chkOverride.Location = new System.Drawing.Point(293, 43);
-            this.chkOverride.Name = "chkOverride";
-            this.chkOverride.Size = new System.Drawing.Size(15, 14);
-            this.chkOverride.TabIndex = 30;
-            this.chkOverride.UseVisualStyleBackColor = true;
-            this.chkOverride.CheckedChanged += new System.EventHandler(this.chkOverride_CheckedChanged);
+            this.tabMain.Controls.Add(this.tabPage1);
+            this.tabMain.Controls.Add(this.tabPage2);
+            this.tabMain.Controls.Add(this.tabPage3);
+            this.tabMain.Location = new System.Drawing.Point(12, 27);
+            this.tabMain.Name = "tabMain";
+            this.tabMain.SelectedIndex = 0;
+            this.tabMain.Size = new System.Drawing.Size(503, 166);
+            this.tabMain.TabIndex = 13;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.pictureBox14);
+            this.tabPage1.Controls.Add(this.chkOnDomain);
+            this.tabPage1.Controls.Add(this.txtEmail);
+            this.tabPage1.Controls.Add(this.pictureBox15);
+            this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Controls.Add(this.chkAutodiscovery);
+            this.tabPage1.Controls.Add(this.pictureBox3);
+            this.tabPage1.Controls.Add(this.txtPwd);
+            this.tabPage1.Controls.Add(this.label3);
+            this.tabPage1.Controls.Add(this.txtUser);
+            this.tabPage1.Controls.Add(this.label2);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(495, 140);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Basic Settings";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox14
+            // 
+            this.pictureBox14.Image = global::DrunkenBakery.OWAtray.Properties.Resources.unlock;
+            this.pictureBox14.Location = new System.Drawing.Point(24, 67);
+            this.pictureBox14.Name = "pictureBox14";
+            this.pictureBox14.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox14.TabIndex = 61;
+            this.pictureBox14.TabStop = false;
+            // 
+            // pictureBox15
+            // 
+            this.pictureBox15.Image = global::DrunkenBakery.OWAtray.Properties.Resources.mail;
+            this.pictureBox15.Location = new System.Drawing.Point(24, 38);
+            this.pictureBox15.Name = "pictureBox15";
+            this.pictureBox15.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox15.TabIndex = 60;
+            this.pictureBox15.TabStop = false;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.Color.Blue;
+            this.label9.Location = new System.Drawing.Point(61, 38);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(83, 13);
+            this.label9.TabIndex = 59;
+            this.label9.Text = "Email Address : ";
+            // 
+            // chkAutodiscovery
+            // 
+            this.chkAutodiscovery.AutoSize = true;
+            this.chkAutodiscovery.ForeColor = System.Drawing.Color.Blue;
+            this.chkAutodiscovery.Location = new System.Drawing.Point(64, 10);
+            this.chkAutodiscovery.Name = "chkAutodiscovery";
+            this.chkAutodiscovery.Size = new System.Drawing.Size(170, 17);
+            this.chkAutodiscovery.TabIndex = 46;
+            this.chkAutodiscovery.Text = "Attempt to use Autodiscovery";
+            this.chkAutodiscovery.UseVisualStyleBackColor = true;
+            this.chkAutodiscovery.CheckStateChanged += new System.EventHandler(this.chkAutodiscovery_CheckStateChanged);
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::DrunkenBakery.OWAtray.Properties.Resources.star;
+            this.pictureBox3.Location = new System.Drawing.Point(24, 10);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox3.TabIndex = 45;
+            this.pictureBox3.TabStop = false;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.txtURLEdit);
+            this.tabPage2.Controls.Add(this.pictureBox2);
+            this.tabPage2.Controls.Add(this.label4);
+            this.tabPage2.Controls.Add(this.pictureBox17);
+            this.tabPage2.Controls.Add(this.chkRunOnStartup);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.txtDomain);
+            this.tabPage2.Controls.Add(this.txtInterval);
+            this.tabPage2.Controls.Add(this.label5);
+            this.tabPage2.Controls.Add(this.label8);
+            this.tabPage2.Controls.Add(this.pictureBox16);
+            this.tabPage2.Controls.Add(this.pictureBox1);
+            this.tabPage2.Controls.Add(this.txtServer);
+            this.tabPage2.Controls.Add(this.label1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(495, 140);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Advanced Settings";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::DrunkenBakery.OWAtray.Properties.Resources.exchange;
+            this.pictureBox2.Location = new System.Drawing.Point(24, 112);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox2.TabIndex = 69;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox17
+            // 
+            this.pictureBox17.Image = global::DrunkenBakery.OWAtray.Properties.Resources.win;
+            this.pictureBox17.Location = new System.Drawing.Point(24, 81);
+            this.pictureBox17.Name = "pictureBox17";
+            this.pictureBox17.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox17.TabIndex = 68;
+            this.pictureBox17.TabStop = false;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.Blue;
+            this.label7.Location = new System.Drawing.Point(246, 50);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(46, 13);
+            this.label7.TabIndex = 67;
+            this.label7.Text = "seconds";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.Color.Blue;
+            this.label8.Location = new System.Drawing.Point(61, 50);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(93, 13);
+            this.label8.TabIndex = 66;
+            this.label8.Text = "Update Interval : ";
+            // 
+            // pictureBox16
+            // 
+            this.pictureBox16.Image = global::DrunkenBakery.OWAtray.Properties.Resources.history;
+            this.pictureBox16.Location = new System.Drawing.Point(24, 50);
+            this.pictureBox16.Name = "pictureBox16";
+            this.pictureBox16.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox16.TabIndex = 65;
+            this.pictureBox16.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::DrunkenBakery.OWAtray.Properties.Resources.computer;
+            this.pictureBox1.Location = new System.Drawing.Point(24, 17);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox1.TabIndex = 46;
+            this.pictureBox1.TabStop = false;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.lblOWAUrl);
+            this.tabPage3.Controls.Add(this.label13);
+            this.tabPage3.Controls.Add(this.lblEmail);
+            this.tabPage3.Controls.Add(this.label6);
+            this.tabPage3.Controls.Add(this.label10);
+            this.tabPage3.Controls.Add(this.lblUrl);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(495, 140);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "URLs";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // lblOWAUrl
+            // 
+            this.lblOWAUrl.AutoSize = true;
+            this.lblOWAUrl.ForeColor = System.Drawing.Color.Black;
+            this.lblOWAUrl.Location = new System.Drawing.Point(115, 82);
+            this.lblOWAUrl.Name = "lblOWAUrl";
+            this.lblOWAUrl.Size = new System.Drawing.Size(50, 13);
+            this.lblOWAUrl.TabIndex = 52;
+            this.lblOWAUrl.Text = "unknown";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.ForeColor = System.Drawing.Color.Blue;
+            this.label13.Location = new System.Drawing.Point(24, 82);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(64, 13);
+            this.label13.TabIndex = 51;
+            this.label13.Text = "OWA URL : ";
+            // 
+            // lblEmail
+            // 
+            this.lblEmail.AutoSize = true;
+            this.lblEmail.ForeColor = System.Drawing.Color.Black;
+            this.lblEmail.Location = new System.Drawing.Point(115, 40);
+            this.lblEmail.Name = "lblEmail";
+            this.lblEmail.Size = new System.Drawing.Size(50, 13);
+            this.lblEmail.TabIndex = 50;
+            this.lblEmail.Text = "unknown";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.Blue;
+            this.label6.Location = new System.Drawing.Point(24, 40);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(83, 13);
+            this.label6.TabIndex = 49;
+            this.label6.Text = "Email Address : ";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.ForeColor = System.Drawing.Color.Blue;
+            this.label10.Location = new System.Drawing.Point(24, 61);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(61, 13);
+            this.label10.TabIndex = 48;
+            this.label10.Text = "EWS URL : ";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.cmdStart);
+            this.groupBox4.Controls.Add(this.cmdStop);
+            this.groupBox4.Location = new System.Drawing.Point(521, 37);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(113, 152);
+            this.groupBox4.TabIndex = 14;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Controls";
+            // 
+            // overrideAutodiscoveryValidationToolStripMenuItem
+            // 
+            this.overrideAutodiscoveryValidationToolStripMenuItem.CheckOnClick = true;
+            this.overrideAutodiscoveryValidationToolStripMenuItem.Image = global::DrunkenBakery.OWAtray.Properties.Resources.apply;
+            this.overrideAutodiscoveryValidationToolStripMenuItem.Name = "overrideAutodiscoveryValidationToolStripMenuItem";
+            this.overrideAutodiscoveryValidationToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.overrideAutodiscoveryValidationToolStripMenuItem.Text = "Override Autodiscovery Validation";
+            this.overrideAutodiscoveryValidationToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(646, 443);
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox4);
+            this.Controls.Add(this.tabMain);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "OWA Tray Monitor";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Move += new System.EventHandler(this.Form1_Move);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+            this.tabMain.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -859,9 +1045,6 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ListView lvStatus;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button cmdForce;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtPwd;
         private System.Windows.Forms.Label label3;
@@ -869,14 +1052,11 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtServer;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label txtURL;
+        private System.Windows.Forms.Label lblUrl;
         private System.Windows.Forms.TextBox txtDomain;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button cmdStart;
         private System.Windows.Forms.Button cmdStop;
-        private System.Windows.Forms.Button cmdSave;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtInterval;
         private System.Windows.Forms.ToolStripMenuItem openOWAToolStripMenuItem;
         private System.Windows.Forms.Timer timer1;
@@ -912,7 +1092,28 @@
         private System.Windows.Forms.ToolStripMenuItem disableCalendarToolStripMenuItem;
         private System.Windows.Forms.TextBox txtEmail;
         private System.Windows.Forms.ToolStripMenuItem loginAutomaticallyToolStripMenuItem;
-        private System.Windows.Forms.CheckBox chkOverride;
+        private System.Windows.Forms.TabControl tabMain;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.CheckBox chkAutodiscovery;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.PictureBox pictureBox14;
+        private System.Windows.Forms.PictureBox pictureBox15;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox17;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.PictureBox pictureBox16;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Label lblOWAUrl;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label lblEmail;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.ToolStripMenuItem overrideAutodiscoveryValidationToolStripMenuItem;
     }
 }
 

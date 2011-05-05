@@ -3,7 +3,7 @@
 // ShellIntegration
 //
 // <copyright file="Program.cs" company="The Drunken Bakery">
-//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
+//     Copyright (c) 2009-2011 The Drunken Bakery. All rights reserved.
 // </copyright>
 //
 // Provides Windows shell integration for OWA
@@ -51,7 +51,7 @@ namespace DrunkenBakery.OWAtray
             Clipboard.SetDataObject(d, true);
 
             // Spawn IE
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + @"/?ae=Item&a=New&t=IPM.Note"  + Properties.Settings.Default.MimeURL;
+            string myUrl = Properties.Settings.Default.OwaUrl + Properties.Settings.Default.UserAccount + @"/?ae=Item&a=New&t=IPM.Note"  + Properties.Settings.Default.MimeURL;
             try
             {
                 Console.WriteLine("Browsing to " + myUrl);
@@ -248,11 +248,11 @@ namespace DrunkenBakery.OWAtray
                 case "EXCHANGE":
                     if (args.Length > 1)
                     {
-                        if (args[1].ToUpper() == "2010")
+                        if (args[1] == "Exchange2010")
                         {
                             Properties.Settings.Default.MimeURL = Properties.Settings.Default.URL2010;
                         }
-                        else if (args[1].ToUpper() == "2010SP1")
+                        else if (args[1].ToUpper() == "Exchange2010_SP1")
                         {
                             Properties.Settings.Default.MimeURL = Properties.Settings.Default.URL2010SP1;
                         }
@@ -437,7 +437,7 @@ namespace DrunkenBakery.OWAtray
             {
                 target = target.Substring(7, target.Length - 7);
             }
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note" + Properties.Settings.Default.MimeURL + "&to=" + target;
+            string myUrl = Properties.Settings.Default.OwaUrl + Properties.Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note" + Properties.Settings.Default.MimeURL + "&to=" + target;
             if (Properties.Settings.Default.Browser == "Yes")
             {
                 Process p = Process.Start("IEXPLORE.EXE", myUrl);
@@ -463,7 +463,7 @@ namespace DrunkenBakery.OWAtray
         /// <param name="Url">The URL.</param>
         static void StartOWAinIE(string Url)
         {
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + (Url.Length > 0 ? "/" + Url : "");
+            string myUrl = Properties.Settings.Default.OwaUrl + Properties.Settings.Default.UserAccount + (Url.Length > 0 ? "/" + Url : "");
             Process p = Process.Start("IEXPLORE.EXE", myUrl);
             Console.WriteLine("Browsing to " + myUrl);
             AutoLogin();
@@ -483,7 +483,7 @@ namespace DrunkenBakery.OWAtray
         /// <param name="Url">The URL.</param>
         static void ShellOWA(string Url)
         {
-            string myUrl = Properties.Settings.Default.OwaUrl + "/" + Properties.Settings.Default.UserAccount + (Url.Length > 0 ? "/" + Url : "");
+            string myUrl = Properties.Settings.Default.OwaUrl + Properties.Settings.Default.UserAccount + (Url.Length > 0 ? "/" + Url : "");
             Process p = Process.Start(myUrl);
             Console.WriteLine("Browsing to " + myUrl);
             AutoLogin();
