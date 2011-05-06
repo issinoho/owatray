@@ -77,7 +77,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lvStatus = new System.Windows.Forms.ListView();
-            this.button3 = new System.Windows.Forms.Button();
             this.lblUrl = new System.Windows.Forms.Label();
             this.txtURLEdit = new System.Windows.Forms.TextBox();
             this.chkRunOnStartup = new System.Windows.Forms.CheckBox();
@@ -123,6 +122,7 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.overrideAutodiscoveryValidationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.office365LoginOverrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -140,6 +140,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.SuspendLayout();
             // 
             // imLV
@@ -519,8 +520,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.pictureBox4);
             this.groupBox3.Controls.Add(this.lvStatus);
-            this.groupBox3.Controls.Add(this.button3);
             this.groupBox3.Location = new System.Drawing.Point(12, 199);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(622, 210);
@@ -538,17 +539,6 @@
             this.lvStatus.TabIndex = 5;
             this.lvStatus.UseCompatibleStateImageBehavior = false;
             this.lvStatus.View = System.Windows.Forms.View.Details;
-            // 
-            // button3
-            // 
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.ForeColor = System.Drawing.SystemColors.Control;
-            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
-            this.button3.Location = new System.Drawing.Point(16, 34);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(32, 32);
-            this.button3.TabIndex = 4;
-            this.button3.UseVisualStyleBackColor = true;
             // 
             // lblUrl
             // 
@@ -991,6 +981,15 @@
             this.office365LoginOverrideToolStripMenuItem.Text = "Office365 Login Override";
             this.office365LoginOverrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.office365LoginOverrideToolStripMenuItem_CheckStateChanged);
             // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Image = global::DrunkenBakery.OWAtray.Properties.Resources.bookmark;
+            this.pictureBox4.Location = new System.Drawing.Point(22, 30);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox4.TabIndex = 62;
+            this.pictureBox4.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1032,6 +1031,7 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1056,7 +1056,6 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ListView lvStatus;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtPwd;
         private System.Windows.Forms.Label label3;
@@ -1127,6 +1126,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ToolStripMenuItem overrideAutodiscoveryValidationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem office365LoginOverrideToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pictureBox4;
     }
 }
 
