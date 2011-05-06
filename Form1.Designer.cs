@@ -122,6 +122,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.overrideAutodiscoveryValidationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.office365LoginOverrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -382,7 +383,8 @@
             this.alwaysOpenOWAInIEToolStripMenuItem,
             this.disableCalendarToolStripMenuItem,
             this.loginAutomaticallyToolStripMenuItem,
-            this.overrideAutodiscoveryValidationToolStripMenuItem});
+            this.overrideAutodiscoveryValidationToolStripMenuItem,
+            this.office365LoginOverrideToolStripMenuItem});
             this.advancedToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("advancedToolStripMenuItem.Image")));
             this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
             this.advancedToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
@@ -446,6 +448,7 @@
             // 
             this.exchange2007ToolStripMenuItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.exchange2007ToolStripMenuItem.Items.AddRange(new object[] {
+            "Autodetect",
             "Exchange 2007 SP1",
             "Exchange 2010",
             "Exchange 2010 SP1"});
@@ -561,7 +564,7 @@
             // 
             this.txtURLEdit.Location = new System.Drawing.Point(158, 110);
             this.txtURLEdit.Name = "txtURLEdit";
-            this.txtURLEdit.Size = new System.Drawing.Size(306, 21);
+            this.txtURLEdit.Size = new System.Drawing.Size(362, 21);
             this.txtURLEdit.TabIndex = 28;
             // 
             // chkRunOnStartup
@@ -569,7 +572,7 @@
             this.chkRunOnStartup.AutoSize = true;
             this.chkRunOnStartup.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkRunOnStartup.ForeColor = System.Drawing.Color.Blue;
-            this.chkRunOnStartup.Location = new System.Drawing.Point(367, 49);
+            this.chkRunOnStartup.Location = new System.Drawing.Point(423, 50);
             this.chkRunOnStartup.Name = "chkRunOnStartup";
             this.chkRunOnStartup.Size = new System.Drawing.Size(97, 17);
             this.chkRunOnStartup.TabIndex = 26;
@@ -591,7 +594,7 @@
             // 
             this.txtDomain.Location = new System.Drawing.Point(158, 79);
             this.txtDomain.Name = "txtDomain";
-            this.txtDomain.Size = new System.Drawing.Size(306, 21);
+            this.txtDomain.Size = new System.Drawing.Size(362, 21);
             this.txtDomain.TabIndex = 21;
             this.txtDomain.Validated += new System.EventHandler(this.txtDomain_Validated);
             // 
@@ -619,7 +622,7 @@
             // 
             this.txtServer.Location = new System.Drawing.Point(158, 17);
             this.txtServer.Name = "txtServer";
-            this.txtServer.Size = new System.Drawing.Size(306, 21);
+            this.txtServer.Size = new System.Drawing.Size(362, 21);
             this.txtServer.TabIndex = 13;
             this.txtServer.Validated += new System.EventHandler(this.txtServer_Validated);
             // 
@@ -637,7 +640,7 @@
             // 
             this.txtEmail.Location = new System.Drawing.Point(150, 35);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(315, 21);
+            this.txtEmail.Size = new System.Drawing.Size(366, 21);
             this.txtEmail.TabIndex = 29;
             this.txtEmail.Validated += new System.EventHandler(this.txtEmail_Validated);
             // 
@@ -656,9 +659,9 @@
             // cmdStop
             // 
             this.cmdStop.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cmdStop.Location = new System.Drawing.Point(26, 88);
+            this.cmdStop.Location = new System.Drawing.Point(6, 51);
             this.cmdStop.Name = "cmdStop";
-            this.cmdStop.Size = new System.Drawing.Size(75, 23);
+            this.cmdStop.Size = new System.Drawing.Size(57, 23);
             this.cmdStop.TabIndex = 23;
             this.cmdStop.Text = "Sto&p";
             this.cmdStop.UseVisualStyleBackColor = true;
@@ -667,9 +670,9 @@
             // cmdStart
             // 
             this.cmdStart.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cmdStart.Location = new System.Drawing.Point(26, 39);
+            this.cmdStart.Location = new System.Drawing.Point(6, 22);
             this.cmdStart.Name = "cmdStart";
-            this.cmdStart.Size = new System.Drawing.Size(75, 23);
+            this.cmdStart.Size = new System.Drawing.Size(57, 23);
             this.cmdStart.TabIndex = 22;
             this.cmdStart.Text = "&Start";
             this.cmdStart.UseVisualStyleBackColor = true;
@@ -680,7 +683,7 @@
             this.txtPwd.Location = new System.Drawing.Point(150, 113);
             this.txtPwd.Name = "txtPwd";
             this.txtPwd.PasswordChar = '*';
-            this.txtPwd.Size = new System.Drawing.Size(315, 21);
+            this.txtPwd.Size = new System.Drawing.Size(366, 21);
             this.txtPwd.TabIndex = 17;
             this.txtPwd.Validated += new System.EventHandler(this.txtPwd_Validated);
             // 
@@ -698,7 +701,7 @@
             // 
             this.txtUser.Location = new System.Drawing.Point(150, 87);
             this.txtUser.Name = "txtUser";
-            this.txtUser.Size = new System.Drawing.Size(315, 21);
+            this.txtUser.Size = new System.Drawing.Size(366, 21);
             this.txtUser.TabIndex = 15;
             this.txtUser.Validated += new System.EventHandler(this.txtUser_Validated);
             // 
@@ -738,10 +741,10 @@
             this.tabMain.Controls.Add(this.tabPage1);
             this.tabMain.Controls.Add(this.tabPage2);
             this.tabMain.Controls.Add(this.tabPage3);
-            this.tabMain.Location = new System.Drawing.Point(12, 27);
+            this.tabMain.Location = new System.Drawing.Point(80, 27);
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
-            this.tabMain.Size = new System.Drawing.Size(503, 166);
+            this.tabMain.Size = new System.Drawing.Size(548, 166);
             this.tabMain.TabIndex = 13;
             // 
             // tabPage1
@@ -760,7 +763,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(495, 140);
+            this.tabPage1.Size = new System.Drawing.Size(540, 140);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basic Settings";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -833,7 +836,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(495, 140);
+            this.tabPage2.Size = new System.Drawing.Size(540, 140);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Advanced Settings";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -963,9 +966,9 @@
             // 
             this.groupBox4.Controls.Add(this.cmdStart);
             this.groupBox4.Controls.Add(this.cmdStop);
-            this.groupBox4.Location = new System.Drawing.Point(521, 37);
+            this.groupBox4.Location = new System.Drawing.Point(4, 27);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(113, 152);
+            this.groupBox4.Size = new System.Drawing.Size(70, 166);
             this.groupBox4.TabIndex = 14;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Controls";
@@ -979,15 +982,24 @@
             this.overrideAutodiscoveryValidationToolStripMenuItem.Text = "Override Autodiscovery Validation";
             this.overrideAutodiscoveryValidationToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged);
             // 
+            // office365LoginOverrideToolStripMenuItem
+            // 
+            this.office365LoginOverrideToolStripMenuItem.CheckOnClick = true;
+            this.office365LoginOverrideToolStripMenuItem.Image = global::DrunkenBakery.OWAtray.Properties.Resources.unlock;
+            this.office365LoginOverrideToolStripMenuItem.Name = "office365LoginOverrideToolStripMenuItem";
+            this.office365LoginOverrideToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.office365LoginOverrideToolStripMenuItem.Text = "Office365 Login Override";
+            this.office365LoginOverrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.office365LoginOverrideToolStripMenuItem_CheckStateChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(646, 443);
-            this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.tabMain);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.groupBox4);
+            this.Controls.Add(this.tabMain);
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -1114,6 +1126,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ToolStripMenuItem overrideAutodiscoveryValidationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem office365LoginOverrideToolStripMenuItem;
     }
 }
 

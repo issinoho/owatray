@@ -252,7 +252,7 @@ namespace DrunkenBakery.OWAtray
                         {
                             Properties.Settings.Default.MimeURL = Properties.Settings.Default.URL2010;
                         }
-                        else if (args[1].ToUpper() == "Exchange2010_SP1")
+                        else if (args[1] == "Exchange2010_SP1")
                         {
                             Properties.Settings.Default.MimeURL = Properties.Settings.Default.URL2010SP1;
                         }

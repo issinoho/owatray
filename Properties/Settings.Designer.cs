@@ -400,18 +400,6 @@ namespace DrunkenBakery.OWAtray.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Office365Account {
-            get {
-                return ((string)(this["Office365Account"]));
-            }
-            set {
-                this["Office365Account"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool UseOffice365 {
             get {

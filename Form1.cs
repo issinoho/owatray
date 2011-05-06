@@ -74,6 +74,7 @@ namespace DrunkenBakery.OWAtray
         string reportedMailboxServer = "";
         string reportedUserName = "";
         bool startingUp;
+        string Office365Account;
 
         #endregion Fields
 
@@ -103,6 +104,11 @@ namespace DrunkenBakery.OWAtray
             // Start Logging
             InitLogger();
 
+            // Logging
+            AddLogEntry("--------------------------------------------------", LogType.Info);
+            AddLogEntry("Welcome to the " + ThisApp + " v" + appVersionString, LogType.Info);
+            notifyIcon1.Text = ThisApp + Environment.NewLine + "Not Connected to Exchange";
+
             // Initialise Event Views
             InitEventView(lvStatus);
 
@@ -113,6 +119,7 @@ namespace DrunkenBakery.OWAtray
             }
 
             // Options
+            exchange2007ToolStripMenuItem.SelectedIndex = 0;
             switch (Properties.Settings.Default.ExchangeVersion)
             {
                 case "Autodetect":
@@ -131,6 +138,7 @@ namespace DrunkenBakery.OWAtray
                     exchange2007ToolStripMenuItem.SelectedIndex = 3;
                     break;
             }
+
             txtEmail.Text = Properties.Settings.Default.EMail;
             txtServer.Text = Properties.Settings.Default.Server;
             txtUser.Text = Properties.Settings.Default.Username;
@@ -144,11 +152,6 @@ namespace DrunkenBakery.OWAtray
 
             // Form title bar
             this.Text = ThisApp + " freshly baked at " + ThisPublisher;
-
-            // Logging
-            AddLogEntry("--------------------------------------------------", LogType.Info);
-            AddLogEntry("Welcome to the " + ThisApp + " v" + appVersionString, LogType.Info);
-            notifyIcon1.Text = ThisApp + Environment.NewLine + "Not Connected to Exchange";
 
             // Startup Flag
             chkRunOnStartup.Checked = Link.Exists(Environment.SpecialFolder.Startup, ThisApp);
@@ -165,7 +168,10 @@ namespace DrunkenBakery.OWAtray
             alwaysOpenOWAInIEToolStripMenuItem.Checked = Properties.Settings.Default.AlwaysIE;
             disableCalendarToolStripMenuItem.Checked = Properties.Settings.Default.DisableCalendar;
             loginAutomaticallyToolStripMenuItem.Checked = Properties.Settings.Default.AutoLogin;
-            drawURL();
+            office365LoginOverrideToolStripMenuItem.Checked = Properties.Settings.Default.UseOffice365;
+            overrideAutodiscoveryValidationToolStripMenuItem.Checked = Properties.Settings.Default.Autodiscovery;
+            UpdateEWSField();
+            UpdateOffice365Field();
 
             // Autodiscover?
             chkAutodiscovery.Checked = Properties.Settings.Default.Autodiscovery;
@@ -293,6 +299,14 @@ namespace DrunkenBakery.OWAtray
         #region Methods
 
         /// <summary>
+        /// Updates the EWS field.
+        /// </summary>
+        private void UpdateEWSField()
+        {
+            txtURLEdit.Enabled = Properties.Settings.Default.OverrideURL;
+        }
+
+        /// <summary>
         /// Selects the domain options.
         /// </summary>
         private void SelectDomainOptions()
@@ -319,11 +333,11 @@ namespace DrunkenBakery.OWAtray
         /// </summary>
         private void UpdateOwaUrl()
         {
-            if (Properties.Settings.Default.UseOffice365 && Properties.Settings.Default.Office365Account.Length > 0)
+            if (Properties.Settings.Default.UseOffice365 && Office365Account.Length > 0)
             {
                 lblOWAUrl.Text = Properties.Settings.Default.Office365OwaUrl.Replace(
                     Properties.Settings.Default.Office365AccountTemplate,
-                    Properties.Settings.Default.Office365Account);
+                    Office365Account);
             }
             else if (Properties.Settings.Default.Autodiscovery && reportedOwaUrl.Length > 0)
             {
@@ -336,6 +350,12 @@ namespace DrunkenBakery.OWAtray
             else
             {
                 lblOWAUrl.Text = "unknown";
+            }
+
+            if (!startingUp)
+            {
+                // Update shell parameters
+                ConfigureShell();
             }
         }
 
@@ -546,6 +566,8 @@ namespace DrunkenBakery.OWAtray
             Properties.Settings.Default.AlwaysIE = alwaysOpenOWAInIEToolStripMenuItem.Checked;
             Properties.Settings.Default.Save();
             AddLogEntry("Always use IE switched " + (Properties.Settings.Default.AlwaysIE ? "ON" : "OFF"), LogType.Info);
+
+            ConfigureShell();
         }
 
         /// <summary>
@@ -737,9 +759,11 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cmdStart_Click(object sender, EventArgs e)
         {
-            ConfigureExchange();
-            // Start
-            startMonitoring();
+            if (ConfigureExchange())
+            {
+                // Start
+                startMonitoring();
+            }
         }
 
         /// <summary>
@@ -983,7 +1007,7 @@ namespace DrunkenBakery.OWAtray
         /// </summary>
         private void ConfigureShell()
         {
-            AddLogEntry("Configuring Shell Integration", LogType.Info);
+            //AddLogEntry("Configuring Shell Integration", LogType.Info);
 
             // Set OWA Url
             string owaUrl = lblOWAUrl.Text;
@@ -1129,30 +1153,14 @@ namespace DrunkenBakery.OWAtray
         }
 
         /// <summary>
-        /// Draws the URL.
-        /// </summary>
-        private void drawURL()
-        {
-            if (Properties.Settings.Default.OverrideURL)
-            {
-                lblUrl.Visible = false;
-                txtURLEdit.Visible = true;
-                txtURLEdit.Text = Properties.Settings.Default.ManualURL;
-            }
-            else
-            {
-                lblUrl.Visible = true;
-                txtURLEdit.Visible = false;
-            }
-        }
-
-        /// <summary>
         /// Handles the SelectedIndexChanged event of the exchange2007ToolStripMenuItem control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void exchange2007ToolStripMenuItem_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (startingUp) return;
+
             switch (exchange2007ToolStripMenuItem.SelectedIndex)
             {
                 case 0:
@@ -1464,6 +1472,9 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void makeOWADefaultToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Update shell parameters
+            ConfigureShell();
+
             if (!IsUserAdministrator())
             {
                 AddLogEntry("You are not an Admin user. Operation may fail.", LogType.Fail);
@@ -1607,7 +1618,7 @@ namespace DrunkenBakery.OWAtray
 
             Properties.Settings.Default.OverrideURL = overrideServerURLToolStripMenuItem.Checked;
             Properties.Settings.Default.Save();
-            drawURL();
+            UpdateEWSField();
             AddLogEntry("Server URL override switched " + (Properties.Settings.Default.OverrideURL ? "ON" : "OFF"), LogType.Info);
         }
 
@@ -2070,6 +2081,8 @@ namespace DrunkenBakery.OWAtray
             Properties.Settings.Default.AutoLogin = loginAutomaticallyToolStripMenuItem.Checked;
             Properties.Settings.Default.Save();
             AddLogEntry("Automatic Login is switched " + (Properties.Settings.Default.AutoLogin ? "ON" : "OFF"), LogType.Info);
+
+            ConfigureShell();
         }
 
         /// <summary>
@@ -2129,7 +2142,12 @@ namespace DrunkenBakery.OWAtray
             Properties.Settings.Default.EMail = txtEmail.Text;
             Properties.Settings.Default.Save();
             UpdateEmail();
-            if (txtUser.Text.Length == 0) txtUser.Text = txtEmail.Text;
+            if (txtUser.Text.Length == 0)
+            {
+                txtUser.Text = txtEmail.Text;
+                Properties.Settings.Default.Username = txtUser.Text;
+                Properties.Settings.Default.Save();
+            }
         }
 
         /// <summary>
@@ -2166,6 +2184,45 @@ namespace DrunkenBakery.OWAtray
             Properties.Settings.Default.OverrideValidation = overrideAutodiscoveryValidationToolStripMenuItem.Checked;
             Properties.Settings.Default.Save();
             AddLogEntry("Autodiscovery Validation override switched " + (Properties.Settings.Default.OverrideValidation ? "ON" : "OFF"), LogType.Info);
+        }
+
+        /// <summary>
+        /// Updates the office365 field.
+        /// </summary>
+        private void UpdateOffice365Field()
+        {
+            Office365Account = StripOffice365Account(Properties.Settings.Default.EMail);
+            loginAutomaticallyToolStripMenuItem.Enabled = !Properties.Settings.Default.UseOffice365;
+        }
+
+        /// <summary>
+        /// Strips the office365 account.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns></returns>
+        private string StripOffice365Account(string email)
+        {
+            string sub = "";
+            int start = email.IndexOf("@");
+            int end = email.IndexOf(".");
+            if (end > start) sub = email.Substring((start + 1), (end - start - 1));
+            return sub;
+        }
+
+        /// <summary>
+        /// Handles the CheckStateChanged event of the office365LoginOverrideToolStripMenuItem control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void office365LoginOverrideToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (startingUp) return;
+
+            Properties.Settings.Default.UseOffice365 = office365LoginOverrideToolStripMenuItem.Checked;
+            Properties.Settings.Default.Save();
+            UpdateOffice365Field();
+            UpdateOwaUrl();
+            AddLogEntry("Office365 login override " + (Properties.Settings.Default.UseOffice365 ? "ON" : "OFF"), LogType.Info);
         }
     }
 }
