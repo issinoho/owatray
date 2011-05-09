@@ -173,13 +173,13 @@ namespace DrunkenBakery.OWAtray
             UpdateEWSField();
             UpdateOffice365Field();
 
-            // Autodiscover?
-            chkAutodiscovery.Checked = Properties.Settings.Default.Autodiscovery;
-            SelectAutodiscoveryOptions();
-
             // Domain
             chkOnDomain.Checked = Properties.Settings.Default.NetworkCredentials;
             SelectDomainOptions();
+
+            // Autodiscover?
+            chkAutodiscovery.Checked = Properties.Settings.Default.Autodiscovery;
+            SelectAutodiscoveryOptions();
 
             // Special lockdown option
             restoreToolStripMenuItem.Enabled = (Properties.Settings.Default.LockDown ? false : true);
@@ -2065,6 +2065,11 @@ namespace DrunkenBakery.OWAtray
         private void UpdateEmail()
         {
             lblEmail.Text = GetEmailAddress();
+
+            if (!startingUp)
+            {
+                ConfigureShell();
+            }
         }
 
         #endregion Methods

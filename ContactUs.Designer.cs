@@ -59,7 +59,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Image = global::DrunkenBakery.OWAtray.Properties.Resources.Clipboard01;
             this.pictureBox1.Location = new System.Drawing.Point(9, 16);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(312, 198);

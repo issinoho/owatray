@@ -228,6 +228,7 @@
     <Content Include="notify.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Clipboard01.png" />
     <None Include="Resources\apply.png" />
     <None Include="Resources\wizard.png" />
     <None Include="Resources\win.png" />

@@ -111,6 +111,13 @@ namespace DrunkenBakery.OWAtray.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Clipboard01 {
+            get {
+                object obj = ResourceManager.GetObject("Clipboard01", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap computer {
             get {
                 object obj = ResourceManager.GetObject("computer", resourceCulture);
