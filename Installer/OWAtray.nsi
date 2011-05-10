@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "2.0.4146.28665"
+!define PRODUCT_VERSION "2.0.4147.29272"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray.exe"
@@ -46,24 +46,24 @@ ShowUnInstDetails show
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
-  File "..\bin\Release\email.png"
-  File "..\bin\Release\email.ico"
-  File "..\bin\Release\notify.wav"
-  File "..\bin\Release\comment_rect.ico"
-  File "..\bin\Release\Growl.Connector.dll"
-  File "..\bin\Release\Growl.CoreLibrary.dll"
-  File "..\bin\Release\License.txt"
-  File "..\bin\Release\Microsoft.Exchange.WebServices.dll"
-  File "..\bin\Release\Interop.IWshRuntimeLibrary.dll"
-  File "..\bin\Release\OWAtray_Secure\OWAtray.exe"
+  File "..\bin\x86\Release\email.png"
+  File "..\bin\x86\Release\email.ico"
+  File "..\bin\x86\Release\notify.wav"
+  File "..\bin\x86\Release\comment_rect.ico"
+  File "..\bin\x86\Release\Growl.Connector.dll"
+  File "..\bin\x86\Release\Growl.CoreLibrary.dll"
+  File "..\bin\x86\Release\License.txt"
+  File "..\bin\x86\Release\Microsoft.Exchange.WebServices.dll"
+  File "..\bin\x86\Release\Interop.IWshRuntimeLibrary.dll"
+  File "..\bin\x86\Release\OWAtray_Secure\OWAtray.exe"
   File "..\ShellIntegration\bin\Release\ShellIntegration_Secure\ShellIntegration.exe"
   File "..\ShellIntegration\bin\Release\ShellIntegration.exe.config"
   File "..\Mapi\Release\MapiDll.dll"
   CreateDirectory "$SMPROGRAMS\OWAtray"
   CreateShortCut "$SMPROGRAMS\OWAtray\OWAtray.lnk" "$INSTDIR\OWAtray.exe"
   CreateShortCut "$DESKTOP\OWAtray.lnk" "$INSTDIR\OWAtray.exe"
-  File "..\bin\Release\OWAtray.exe.config"
-  File "..\bin\Release\SnarlConnector.dll"
+  File "..\bin\x86\Release\OWAtray.exe.config"
+  File "..\bin\x86\Release\SnarlConnector.dll"
 SectionEnd
 
 Section -AdditionalIcons

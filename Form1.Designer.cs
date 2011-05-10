@@ -66,6 +66,8 @@
             this.alwaysOpenOWAInIEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disableCalendarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loginAutomaticallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.overrideAutodiscoveryValidationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.office365LoginOverrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exchangeVersionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exchange2007ToolStripMenuItem = new System.Windows.Forms.ToolStripComboBox();
             this.shellIntegrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,6 +78,7 @@
             this.supportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.lvStatus = new System.Windows.Forms.ListView();
             this.lblUrl = new System.Windows.Forms.Label();
             this.txtURLEdit = new System.Windows.Forms.TextBox();
@@ -120,13 +123,11 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.overrideAutodiscoveryValidationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.office365LoginOverrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.tabMain.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -140,7 +141,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.SuspendLayout();
             // 
             // imLV
@@ -436,6 +436,24 @@
             this.loginAutomaticallyToolStripMenuItem.Text = "Login Automatically";
             this.loginAutomaticallyToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.loginAutomaticallyToolStripMenuItem_CheckStateChanged);
             // 
+            // overrideAutodiscoveryValidationToolStripMenuItem
+            // 
+            this.overrideAutodiscoveryValidationToolStripMenuItem.CheckOnClick = true;
+            this.overrideAutodiscoveryValidationToolStripMenuItem.Image = global::DrunkenBakery.OWAtray.Properties.Resources.apply;
+            this.overrideAutodiscoveryValidationToolStripMenuItem.Name = "overrideAutodiscoveryValidationToolStripMenuItem";
+            this.overrideAutodiscoveryValidationToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.overrideAutodiscoveryValidationToolStripMenuItem.Text = "Override Autodiscovery Validation";
+            this.overrideAutodiscoveryValidationToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged);
+            // 
+            // office365LoginOverrideToolStripMenuItem
+            // 
+            this.office365LoginOverrideToolStripMenuItem.CheckOnClick = true;
+            this.office365LoginOverrideToolStripMenuItem.Image = global::DrunkenBakery.OWAtray.Properties.Resources.unlock;
+            this.office365LoginOverrideToolStripMenuItem.Name = "office365LoginOverrideToolStripMenuItem";
+            this.office365LoginOverrideToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.office365LoginOverrideToolStripMenuItem.Text = "Office365 Login Override";
+            this.office365LoginOverrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.office365LoginOverrideToolStripMenuItem_CheckStateChanged);
+            // 
             // exchangeVersionToolStripMenuItem1
             // 
             this.exchangeVersionToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -529,6 +547,15 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Logging";
             // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Image = global::DrunkenBakery.OWAtray.Properties.Resources.bookmark;
+            this.pictureBox4.Location = new System.Drawing.Point(22, 30);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox4.TabIndex = 62;
+            this.pictureBox4.TabStop = false;
+            // 
             // lvStatus
             // 
             this.lvStatus.GridLines = true;
@@ -564,7 +591,7 @@
             this.chkRunOnStartup.ForeColor = System.Drawing.Color.Blue;
             this.chkRunOnStartup.Location = new System.Drawing.Point(423, 50);
             this.chkRunOnStartup.Name = "chkRunOnStartup";
-            this.chkRunOnStartup.Size = new System.Drawing.Size(97, 17);
+            this.chkRunOnStartup.Size = new System.Drawing.Size(95, 17);
             this.chkRunOnStartup.TabIndex = 26;
             this.chkRunOnStartup.Text = "Run at Startup";
             this.chkRunOnStartup.UseVisualStyleBackColor = true;
@@ -897,7 +924,7 @@
             this.tabPage3.Controls.Add(this.lblUrl);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(495, 140);
+            this.tabPage3.Size = new System.Drawing.Size(540, 140);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "URLs";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -963,33 +990,6 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Controls";
             // 
-            // overrideAutodiscoveryValidationToolStripMenuItem
-            // 
-            this.overrideAutodiscoveryValidationToolStripMenuItem.CheckOnClick = true;
-            this.overrideAutodiscoveryValidationToolStripMenuItem.Image = global::DrunkenBakery.OWAtray.Properties.Resources.apply;
-            this.overrideAutodiscoveryValidationToolStripMenuItem.Name = "overrideAutodiscoveryValidationToolStripMenuItem";
-            this.overrideAutodiscoveryValidationToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.overrideAutodiscoveryValidationToolStripMenuItem.Text = "Override Autodiscovery Validation";
-            this.overrideAutodiscoveryValidationToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged);
-            // 
-            // office365LoginOverrideToolStripMenuItem
-            // 
-            this.office365LoginOverrideToolStripMenuItem.CheckOnClick = true;
-            this.office365LoginOverrideToolStripMenuItem.Image = global::DrunkenBakery.OWAtray.Properties.Resources.unlock;
-            this.office365LoginOverrideToolStripMenuItem.Name = "office365LoginOverrideToolStripMenuItem";
-            this.office365LoginOverrideToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.office365LoginOverrideToolStripMenuItem.Text = "Office365 Login Override";
-            this.office365LoginOverrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.office365LoginOverrideToolStripMenuItem_CheckStateChanged);
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = global::DrunkenBakery.OWAtray.Properties.Resources.bookmark;
-            this.pictureBox4.Location = new System.Drawing.Point(22, 30);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(16, 16);
-            this.pictureBox4.TabIndex = 62;
-            this.pictureBox4.TabStop = false;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1015,6 +1015,7 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.tabMain.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -1031,7 +1032,6 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
