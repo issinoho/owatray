@@ -448,7 +448,7 @@
             // office365LoginOverrideToolStripMenuItem
             // 
             this.office365LoginOverrideToolStripMenuItem.CheckOnClick = true;
-            this.office365LoginOverrideToolStripMenuItem.Image = global::DrunkenBakery.OWAtray.Properties.Resources.unlock;
+            this.office365LoginOverrideToolStripMenuItem.Image = global::DrunkenBakery.OWAtray.Properties.Resources.office;
             this.office365LoginOverrideToolStripMenuItem.Name = "office365LoginOverrideToolStripMenuItem";
             this.office365LoginOverrideToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.office365LoginOverrideToolStripMenuItem.Text = "Office365 Login Override";
