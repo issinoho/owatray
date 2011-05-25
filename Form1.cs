@@ -1350,15 +1350,15 @@ namespace DrunkenBakery.OWAtray
             view.PropertySet.Add(ItemSchema.DateTimeReceived);
             view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
 
-            // Now search
-            FindItemsResults<Item> findResults = myService.FindItems(WellKnownFolderName.Inbox, filters, view);
-
-            // Process each item.
-            foreach (Item myItem in findResults.Items)
+            try
             {
-                if (myItem is EmailMessage)
+                // Now search
+                FindItemsResults<Item> findResults = myService.FindItems(WellKnownFolderName.Inbox, filters, view);
+
+                // Process each item.
+                foreach (Item myItem in findResults.Items)
                 {
-                    try
+                    if (myItem is EmailMessage)
                     {
                         EmailMessage myEmail = (EmailMessage)myItem;
                         PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
@@ -1366,11 +1366,11 @@ namespace DrunkenBakery.OWAtray
                         myTime = myEmail.DateTimeReceived;
                         break;
                     }
-                    catch (Exception ex)
-                    {
-                        AddLogEntry("Error when getting email properties - " + ex.Message, LogType.Fail);
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry("Error when getting email properties - " + ex.Message, LogType.Fail);
             }
 
             //AddLogEntry("Newest email is: " + myTime.ToString());
