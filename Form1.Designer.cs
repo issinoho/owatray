@@ -62,7 +62,6 @@
             this.playSoundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.advancedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.overrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.overrideServerURLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alwaysOpenOWAInIEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disableCalendarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loginAutomaticallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,7 +81,6 @@
             this.lvStatus = new System.Windows.Forms.ListView();
             this.lblUrl = new System.Windows.Forms.Label();
             this.txtURLEdit = new System.Windows.Forms.TextBox();
-            this.chkRunOnStartup = new System.Windows.Forms.CheckBox();
             this.txtInterval = new System.Windows.Forms.TextBox();
             this.txtDomain = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -104,15 +102,20 @@
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.chkRunOnStartup = new System.Windows.Forms.CheckBox();
             this.pictureBox14 = new System.Windows.Forms.PictureBox();
             this.pictureBox15 = new System.Windows.Forms.PictureBox();
             this.label9 = new System.Windows.Forms.Label();
             this.chkAutodiscovery = new System.Windows.Forms.CheckBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.cbOverrideOWA = new System.Windows.Forms.CheckBox();
+            this.txtOWAEdit = new System.Windows.Forms.TextBox();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.cbOverrideEWS = new System.Windows.Forms.CheckBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox17 = new System.Windows.Forms.PictureBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.pictureBox16 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -135,6 +138,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).BeginInit();
@@ -380,7 +384,6 @@
             // 
             this.advancedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.overrideToolStripMenuItem,
-            this.overrideServerURLToolStripMenuItem,
             this.alwaysOpenOWAInIEToolStripMenuItem,
             this.disableCalendarToolStripMenuItem,
             this.loginAutomaticallyToolStripMenuItem,
@@ -399,15 +402,6 @@
             this.overrideToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.overrideToolStripMenuItem.Text = "Override Certificate";
             this.overrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideToolStripMenuItem_CheckStateChanged);
-            // 
-            // overrideServerURLToolStripMenuItem
-            // 
-            this.overrideServerURLToolStripMenuItem.CheckOnClick = true;
-            this.overrideServerURLToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideServerURLToolStripMenuItem.Image")));
-            this.overrideServerURLToolStripMenuItem.Name = "overrideServerURLToolStripMenuItem";
-            this.overrideServerURLToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.overrideServerURLToolStripMenuItem.Text = "Override Server URL";
-            this.overrideServerURLToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideServerURLToolStripMenuItem_CheckStateChanged);
             // 
             // alwaysOpenOWAInIEToolStripMenuItem
             // 
@@ -583,19 +577,7 @@
             this.txtURLEdit.Name = "txtURLEdit";
             this.txtURLEdit.Size = new System.Drawing.Size(362, 21);
             this.txtURLEdit.TabIndex = 28;
-            // 
-            // chkRunOnStartup
-            // 
-            this.chkRunOnStartup.AutoSize = true;
-            this.chkRunOnStartup.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkRunOnStartup.ForeColor = System.Drawing.Color.Blue;
-            this.chkRunOnStartup.Location = new System.Drawing.Point(423, 50);
-            this.chkRunOnStartup.Name = "chkRunOnStartup";
-            this.chkRunOnStartup.Size = new System.Drawing.Size(95, 17);
-            this.chkRunOnStartup.TabIndex = 26;
-            this.chkRunOnStartup.Text = "Run at Startup";
-            this.chkRunOnStartup.UseVisualStyleBackColor = true;
-            this.chkRunOnStartup.CheckedChanged += new System.EventHandler(this.chkRunOnStartup_CheckedChanged);
+            this.txtURLEdit.Validated += new System.EventHandler(this.txtURLEdit_Validated);
             // 
             // txtInterval
             // 
@@ -609,9 +591,9 @@
             // 
             // txtDomain
             // 
-            this.txtDomain.Location = new System.Drawing.Point(158, 79);
+            this.txtDomain.Location = new System.Drawing.Point(386, 47);
             this.txtDomain.Name = "txtDomain";
-            this.txtDomain.Size = new System.Drawing.Size(362, 21);
+            this.txtDomain.Size = new System.Drawing.Size(134, 21);
             this.txtDomain.TabIndex = 21;
             this.txtDomain.Validated += new System.EventHandler(this.txtDomain_Validated);
             // 
@@ -619,7 +601,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.Blue;
-            this.label5.Location = new System.Drawing.Point(61, 82);
+            this.label5.Location = new System.Drawing.Point(282, 50);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(98, 13);
             this.label5.TabIndex = 20;
@@ -631,9 +613,9 @@
             this.label4.ForeColor = System.Drawing.Color.Blue;
             this.label4.Location = new System.Drawing.Point(63, 113);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(86, 13);
+            this.label4.Size = new System.Drawing.Size(61, 13);
             this.label4.TabIndex = 18;
-            this.label4.Text = "Exchange URL : ";
+            this.label4.Text = "EWS URL : ";
             // 
             // txtServer
             // 
@@ -766,6 +748,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.chkRunOnStartup);
             this.tabPage1.Controls.Add(this.pictureBox14);
             this.tabPage1.Controls.Add(this.chkOnDomain);
             this.tabPage1.Controls.Add(this.txtEmail);
@@ -784,6 +767,19 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basic Settings";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // chkRunOnStartup
+            // 
+            this.chkRunOnStartup.AutoSize = true;
+            this.chkRunOnStartup.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkRunOnStartup.ForeColor = System.Drawing.Color.Blue;
+            this.chkRunOnStartup.Location = new System.Drawing.Point(419, 64);
+            this.chkRunOnStartup.Name = "chkRunOnStartup";
+            this.chkRunOnStartup.Size = new System.Drawing.Size(97, 17);
+            this.chkRunOnStartup.TabIndex = 62;
+            this.chkRunOnStartup.Text = "Run at Startup";
+            this.chkRunOnStartup.UseVisualStyleBackColor = true;
+            this.chkRunOnStartup.CheckedChanged += new System.EventHandler(this.chkRunOnStartup_CheckedChanged);
             // 
             // pictureBox14
             // 
@@ -823,7 +819,7 @@
             this.chkAutodiscovery.TabIndex = 46;
             this.chkAutodiscovery.Text = "Attempt to use Autodiscovery";
             this.chkAutodiscovery.UseVisualStyleBackColor = true;
-            this.chkAutodiscovery.CheckStateChanged += new System.EventHandler(this.chkAutodiscovery_CheckStateChanged);
+            this.chkAutodiscovery.CheckedChanged += new System.EventHandler(this.chkAutodiscovery_CheckedChanged);
             // 
             // pictureBox3
             // 
@@ -836,12 +832,15 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.cbOverrideOWA);
+            this.tabPage2.Controls.Add(this.txtOWAEdit);
+            this.tabPage2.Controls.Add(this.pictureBox5);
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.cbOverrideEWS);
             this.tabPage2.Controls.Add(this.txtURLEdit);
             this.tabPage2.Controls.Add(this.pictureBox2);
             this.tabPage2.Controls.Add(this.label4);
             this.tabPage2.Controls.Add(this.pictureBox17);
-            this.tabPage2.Controls.Add(this.chkRunOnStartup);
-            this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.txtDomain);
             this.tabPage2.Controls.Add(this.txtInterval);
             this.tabPage2.Controls.Add(this.label5);
@@ -858,6 +857,53 @@
             this.tabPage2.Text = "Advanced Settings";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // cbOverrideOWA
+            // 
+            this.cbOverrideOWA.AutoSize = true;
+            this.cbOverrideOWA.Location = new System.Drawing.Point(46, 82);
+            this.cbOverrideOWA.Name = "cbOverrideOWA";
+            this.cbOverrideOWA.Size = new System.Drawing.Size(15, 14);
+            this.cbOverrideOWA.TabIndex = 74;
+            this.cbOverrideOWA.UseVisualStyleBackColor = true;
+            this.cbOverrideOWA.CheckedChanged += new System.EventHandler(this.cbOverrideOWA_CheckedChanged);
+            // 
+            // txtOWAEdit
+            // 
+            this.txtOWAEdit.Location = new System.Drawing.Point(158, 79);
+            this.txtOWAEdit.Name = "txtOWAEdit";
+            this.txtOWAEdit.Size = new System.Drawing.Size(362, 21);
+            this.txtOWAEdit.TabIndex = 72;
+            this.txtOWAEdit.Validated += new System.EventHandler(this.txtOWAEdit_Validated);
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.Image = global::DrunkenBakery.OWAtray.Properties.Resources.exchange;
+            this.pictureBox5.Location = new System.Drawing.Point(24, 80);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(16, 16);
+            this.pictureBox5.TabIndex = 73;
+            this.pictureBox5.TabStop = false;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.Blue;
+            this.label7.Location = new System.Drawing.Point(63, 82);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(64, 13);
+            this.label7.TabIndex = 71;
+            this.label7.Text = "OWA URL : ";
+            // 
+            // cbOverrideEWS
+            // 
+            this.cbOverrideEWS.AutoSize = true;
+            this.cbOverrideEWS.Location = new System.Drawing.Point(46, 114);
+            this.cbOverrideEWS.Name = "cbOverrideEWS";
+            this.cbOverrideEWS.Size = new System.Drawing.Size(15, 14);
+            this.cbOverrideEWS.TabIndex = 70;
+            this.cbOverrideEWS.UseVisualStyleBackColor = true;
+            this.cbOverrideEWS.CheckedChanged += new System.EventHandler(this.cbOverrideEWS_CheckedChanged);
+            // 
             // pictureBox2
             // 
             this.pictureBox2.Image = global::DrunkenBakery.OWAtray.Properties.Resources.exchange;
@@ -870,21 +916,11 @@
             // pictureBox17
             // 
             this.pictureBox17.Image = global::DrunkenBakery.OWAtray.Properties.Resources.win;
-            this.pictureBox17.Location = new System.Drawing.Point(24, 81);
+            this.pictureBox17.Location = new System.Drawing.Point(260, 50);
             this.pictureBox17.Name = "pictureBox17";
             this.pictureBox17.Size = new System.Drawing.Size(16, 16);
             this.pictureBox17.TabIndex = 68;
             this.pictureBox17.TabStop = false;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.Blue;
-            this.label7.Location = new System.Drawing.Point(246, 50);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(46, 13);
-            this.label7.TabIndex = 67;
-            this.label7.Text = "seconds";
             // 
             // label8
             // 
@@ -1025,6 +1061,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).EndInit();
@@ -1075,7 +1112,6 @@
         private System.Windows.Forms.ToolStripMenuItem balloonToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem growlToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem snarlToolStripMenuItem;
-        private System.Windows.Forms.CheckBox chkRunOnStartup;
         private System.Windows.Forms.ToolStripMenuItem supportToolStripMenuItem;
         private System.Windows.Forms.CheckBox chkOnDomain;
         private System.Windows.Forms.ToolStripMenuItem playSoundToolStripMenuItem;
@@ -1083,7 +1119,6 @@
         private System.Windows.Forms.Timer timerUpdate;
         private System.Windows.Forms.ToolStripMenuItem advancedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem overrideToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem overrideServerURLToolStripMenuItem;
         private System.Windows.Forms.TextBox txtURLEdit;
         private System.Windows.Forms.ToolStripMenuItem changeLogToolStripMenuItem;
         private System.Windows.Forms.Timer timerAppt;
@@ -1114,7 +1149,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox17;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.PictureBox pictureBox16;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -1127,6 +1161,12 @@
         private System.Windows.Forms.ToolStripMenuItem overrideAutodiscoveryValidationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem office365LoginOverrideToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.CheckBox cbOverrideEWS;
+        private System.Windows.Forms.CheckBox chkRunOnStartup;
+        private System.Windows.Forms.CheckBox cbOverrideOWA;
+        private System.Windows.Forms.TextBox txtOWAEdit;
+        private System.Windows.Forms.PictureBox pictureBox5;
+        private System.Windows.Forms.Label label7;
     }
 }
 

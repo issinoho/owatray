@@ -145,6 +145,8 @@ namespace DrunkenBakery.OWAtray
             txtPwd.Text = ToInsecureString(DecryptString(Properties.Settings.Default.Password));
             txtDomain.Text = Properties.Settings.Default.Domain;
             txtInterval.Text = Properties.Settings.Default.UpdateInterval.ToString();
+            txtURLEdit.Text = Properties.Settings.Default.ManualURL;
+            txtOWAEdit.Text = Properties.Settings.Default.ManualOWAUrl;
             UpdateURL();
             UpdateOwaUrl();
             UpdateEmail();
@@ -164,7 +166,8 @@ namespace DrunkenBakery.OWAtray
 
             // Overrides
             overrideToolStripMenuItem.Checked = Properties.Settings.Default.OverrideCert;
-            overrideServerURLToolStripMenuItem.Checked = Properties.Settings.Default.OverrideURL;
+            cbOverrideEWS.Checked = Properties.Settings.Default.OverrideURL;
+            cbOverrideOWA.Checked = Properties.Settings.Default.OverrideOWAUrl;
             alwaysOpenOWAInIEToolStripMenuItem.Checked = Properties.Settings.Default.AlwaysIE;
             disableCalendarToolStripMenuItem.Checked = Properties.Settings.Default.DisableCalendar;
             loginAutomaticallyToolStripMenuItem.Checked = Properties.Settings.Default.AutoLogin;
@@ -322,8 +325,10 @@ namespace DrunkenBakery.OWAtray
         private void SelectAutodiscoveryOptions()
         {
             txtServer.Enabled = !Properties.Settings.Default.Autodiscovery;
-            overrideServerURLToolStripMenuItem.Enabled = !Properties.Settings.Default.Autodiscovery;
+            cbOverrideEWS.Enabled = !Properties.Settings.Default.Autodiscovery;
+            cbOverrideOWA.Enabled = !Properties.Settings.Default.Autodiscovery;
             txtURLEdit.Enabled = !Properties.Settings.Default.Autodiscovery;
+            txtOWAEdit.Enabled = !Properties.Settings.Default.Autodiscovery;
             txtDomain.Enabled = !Properties.Settings.Default.Autodiscovery;
             overrideAutodiscoveryValidationToolStripMenuItem.Enabled = Properties.Settings.Default.Autodiscovery;
         }
@@ -342,6 +347,10 @@ namespace DrunkenBakery.OWAtray
             else if (Properties.Settings.Default.Autodiscovery && reportedOwaUrl.Length > 0)
             {
                 lblOWAUrl.Text = reportedOwaUrl;
+            }
+            else if (Properties.Settings.Default.OverrideOWAUrl && txtOWAEdit.Text.Length > 0)
+            {
+                lblOWAUrl.Text = txtOWAEdit.Text;
             }
             else if (txtServer.Text.Length > 0)
             {
@@ -1608,21 +1617,6 @@ namespace DrunkenBakery.OWAtray
         }
 
         /// <summary>
-        /// Handles the CheckStateChanged event of the overrideServerURLToolStripMenuItem control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void overrideServerURLToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
-        {
-            if (startingUp) return;
-
-            Properties.Settings.Default.OverrideURL = overrideServerURLToolStripMenuItem.Checked;
-            Properties.Settings.Default.Save();
-            UpdateEWSField();
-            AddLogEntry("Server URL override switched " + (Properties.Settings.Default.OverrideURL ? "ON" : "OFF"), LogType.Info);
-        }
-
-        /// <summary>
         /// Handles the CheckStateChanged event of the overrideToolStripMenuItem control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -2156,28 +2150,6 @@ namespace DrunkenBakery.OWAtray
         }
 
         /// <summary>
-        /// Handles the CheckStateChanged event of the chkAutodiscovery control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void chkAutodiscovery_CheckStateChanged(object sender, EventArgs e)
-        {
-            if (startingUp) return;
-
-            Properties.Settings.Default.Autodiscovery = chkAutodiscovery.Checked;
-            Properties.Settings.Default.Save();
-            AddLogEntry("Autodiscovery is switched " + (chkAutodiscovery.Checked ? "ON" : "OFF"), LogType.Info);
-
-            // Switch off some options when Autodiscovery is checked
-            SelectAutodiscoveryOptions();
-
-            // Re-evaluate settings
-            UpdateURL();
-            UpdateOwaUrl();
-            UpdateEmail();
-        }
-
-        /// <summary>
         /// Handles the CheckStateChanged event of the overrideAutodiscoveryValidationToolStripMenuItem control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -2228,6 +2200,82 @@ namespace DrunkenBakery.OWAtray
             UpdateOffice365Field();
             UpdateOwaUrl();
             AddLogEntry("Office365 login override " + (Properties.Settings.Default.UseOffice365 ? "ON" : "OFF"), LogType.Info);
+        }
+
+        /// <summary>
+        /// Handles the Validated event of the txtURLEdit control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void txtURLEdit_Validated(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ManualURL = txtURLEdit.Text;
+            Properties.Settings.Default.Save();
+            UpdateURL();
+        }
+
+        /// <summary>
+        /// Handles the CheckedChanged event of the cbOverrideEWS control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void cbOverrideEWS_CheckedChanged(object sender, EventArgs e)
+        {
+            if (startingUp) return;
+
+            Properties.Settings.Default.OverrideURL = cbOverrideEWS.Checked;
+            Properties.Settings.Default.Save();
+            UpdateEWSField();
+            AddLogEntry("EWS URL override switched " + (Properties.Settings.Default.OverrideURL ? "ON" : "OFF"), LogType.Info);
+        }
+
+        /// <summary>
+        /// Handles the CheckedChanged event of the chkAutodiscovery control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void chkAutodiscovery_CheckedChanged(object sender, EventArgs e)
+        {
+            if (startingUp) return;
+
+            Properties.Settings.Default.Autodiscovery = chkAutodiscovery.Checked;
+            Properties.Settings.Default.Save();
+            AddLogEntry("Autodiscovery is switched " + (chkAutodiscovery.Checked ? "ON" : "OFF"), LogType.Info);
+
+            // Switch off some options when Autodiscovery is checked
+            SelectAutodiscoveryOptions();
+
+            // Re-evaluate settings
+            UpdateURL();
+            UpdateOwaUrl();
+            UpdateEmail();
+        }
+
+        /// <summary>
+        /// Handles the CheckedChanged event of the cbOverrideOWA control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void cbOverrideOWA_CheckedChanged(object sender, EventArgs e)
+        {
+            if (startingUp) return;
+
+            Properties.Settings.Default.OverrideOWAUrl = cbOverrideOWA.Checked;
+            Properties.Settings.Default.Save();
+            UpdateOwaUrl();
+            AddLogEntry("OWA URL override switched " + (Properties.Settings.Default.OverrideOWAUrl ? "ON" : "OFF"), LogType.Info);
+        }
+
+        /// <summary>
+        /// Handles the Validated event of the txtOWAEdit control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void txtOWAEdit_Validated(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ManualOWAUrl = txtOWAEdit.Text;
+            Properties.Settings.Default.Save();
+            UpdateOwaUrl();
         }
     }
 }

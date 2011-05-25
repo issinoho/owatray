@@ -418,5 +418,29 @@ namespace DrunkenBakery.OWAtray.Properties {
                 return ((string)(this["Office365AccountTemplate"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OverrideOWAUrl {
+            get {
+                return ((bool)(this["OverrideOWAUrl"]));
+            }
+            set {
+                this["OverrideOWAUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ManualOWAUrl {
+            get {
+                return ((string)(this["ManualOWAUrl"]));
+            }
+            set {
+                this["ManualOWAUrl"] = value;
+            }
+        }
     }
 }
