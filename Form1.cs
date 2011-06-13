@@ -74,7 +74,7 @@ namespace DrunkenBakery.OWAtray
         string reportedMailboxServer = "";
         string reportedUserName = "";
         bool startingUp;
-        string Office365Account;
+        string Office365Account = "";
 
         #endregion Fields
 
@@ -147,10 +147,6 @@ namespace DrunkenBakery.OWAtray
             txtInterval.Text = Properties.Settings.Default.UpdateInterval.ToString();
             txtURLEdit.Text = Properties.Settings.Default.ManualURL;
             txtOWAEdit.Text = Properties.Settings.Default.ManualOWAUrl;
-            UpdateURL();
-            UpdateOwaUrl();
-            UpdateEmail();
-            inboxCount = 0;
 
             // Form title bar
             this.Text = ThisApp + " freshly baked at " + ThisPublisher;
@@ -173,8 +169,6 @@ namespace DrunkenBakery.OWAtray
             loginAutomaticallyToolStripMenuItem.Checked = Properties.Settings.Default.AutoLogin;
             office365LoginOverrideToolStripMenuItem.Checked = Properties.Settings.Default.UseOffice365;
             overrideAutodiscoveryValidationToolStripMenuItem.Checked = Properties.Settings.Default.Autodiscovery;
-            UpdateEWSField();
-            UpdateOffice365Field();
 
             // Domain
             chkOnDomain.Checked = Properties.Settings.Default.NetworkCredentials;
@@ -207,6 +201,14 @@ namespace DrunkenBakery.OWAtray
             popUrl = "";
             lastPopUrl = "";
             resetFlag = false;
+            inboxCount = 0;
+
+            // URLs
+            UpdateURL();
+			UpdateEWSField();
+            UpdateOwaUrl();
+            UpdateEmail();
+			UpdateOffice365Field();
 
             // Growl
             this.growl = new GrowlConnector();
@@ -338,6 +340,8 @@ namespace DrunkenBakery.OWAtray
         /// </summary>
         private void UpdateOwaUrl()
         {
+			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
+
             if (Properties.Settings.Default.UseOffice365 && Office365Account.Length > 0)
             {
                 lblOWAUrl.Text = Properties.Settings.Default.Office365OwaUrl.Replace(
@@ -2181,8 +2185,12 @@ namespace DrunkenBakery.OWAtray
         {
             string sub = "";
             int start = email.IndexOf("@");
-            int end = email.IndexOf(".");
-            if (end > start) sub = email.Substring((start + 1), (end - start - 1));
+            if (start > 0)
+            {
+                string body = email.Substring(start + 1);
+                int end = body.IndexOf(".");
+                if (end > 0) sub = body.Substring(0, end);
+            }
             return sub;
         }
 
