@@ -866,6 +866,7 @@
 			this.cbOverrideOWA.TabIndex = 6;
 			this.cbOverrideOWA.UseVisualStyleBackColor = true;
 			this.cbOverrideOWA.CheckedChanged += new System.EventHandler(this.cbOverrideOWA_CheckedChanged);
+			this.cbOverrideOWA.EnabledChanged += new System.EventHandler(this.cbOverrideOWA_EnabledChanged);
 			// 
 			// txtOWAEdit
 			// 
@@ -903,6 +904,7 @@
 			this.cbOverrideEWS.TabIndex = 9;
 			this.cbOverrideEWS.UseVisualStyleBackColor = true;
 			this.cbOverrideEWS.CheckedChanged += new System.EventHandler(this.cbOverrideEWS_CheckedChanged);
+			this.cbOverrideEWS.EnabledChanged += new System.EventHandler(this.cbOverrideEWS_EnabledChanged);
 			// 
 			// pictureBox2
 			// 

@@ -162,13 +162,15 @@ namespace DrunkenBakery.OWAtray
 
             // Overrides
             overrideToolStripMenuItem.Checked = Properties.Settings.Default.OverrideCert;
-            cbOverrideEWS.Checked = Properties.Settings.Default.OverrideURL;
-            cbOverrideOWA.Checked = Properties.Settings.Default.OverrideOWAUrl;
             alwaysOpenOWAInIEToolStripMenuItem.Checked = Properties.Settings.Default.AlwaysIE;
             disableCalendarToolStripMenuItem.Checked = Properties.Settings.Default.DisableCalendar;
             loginAutomaticallyToolStripMenuItem.Checked = Properties.Settings.Default.AutoLogin;
             office365LoginOverrideToolStripMenuItem.Checked = Properties.Settings.Default.UseOffice365;
             overrideAutodiscoveryValidationToolStripMenuItem.Checked = Properties.Settings.Default.Autodiscovery;
+			cbOverrideEWS.Checked = Properties.Settings.Default.OverrideURL;
+			txtURLEdit.Enabled = cbOverrideEWS.Checked;
+			cbOverrideOWA.Checked = Properties.Settings.Default.OverrideOWAUrl;
+			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
 
             // Domain
             chkOnDomain.Checked = Properties.Settings.Default.NetworkCredentials;
@@ -178,7 +180,13 @@ namespace DrunkenBakery.OWAtray
             chkAutodiscovery.Checked = Properties.Settings.Default.Autodiscovery;
             SelectAutodiscoveryOptions();
 
-            // Special lockdown option
+			// URLs
+			UpdateURL();
+			UpdateOwaUrl();
+			UpdateEmail();
+			UpdateOffice365Field();
+
+			// Special lockdown option
             restoreToolStripMenuItem.Enabled = (Properties.Settings.Default.LockDown ? false : true);
 
             // Icon
@@ -202,13 +210,6 @@ namespace DrunkenBakery.OWAtray
             lastPopUrl = "";
             resetFlag = false;
             inboxCount = 0;
-
-            // URLs
-            UpdateURL();
-			UpdateEWSField();
-            UpdateOwaUrl();
-            UpdateEmail();
-			UpdateOffice365Field();
 
             // Growl
             this.growl = new GrowlConnector();
@@ -304,14 +305,6 @@ namespace DrunkenBakery.OWAtray
         #region Methods
 
         /// <summary>
-        /// Updates the EWS field.
-        /// </summary>
-        private void UpdateEWSField()
-        {
-            txtURLEdit.Enabled = Properties.Settings.Default.OverrideURL;
-        }
-
-        /// <summary>
         /// Selects the domain options.
         /// </summary>
         private void SelectDomainOptions()
@@ -329,8 +322,6 @@ namespace DrunkenBakery.OWAtray
             txtServer.Enabled = !Properties.Settings.Default.Autodiscovery;
             cbOverrideEWS.Enabled = !Properties.Settings.Default.Autodiscovery;
             cbOverrideOWA.Enabled = !Properties.Settings.Default.Autodiscovery;
-            txtURLEdit.Enabled = !Properties.Settings.Default.Autodiscovery;
-            txtOWAEdit.Enabled = !Properties.Settings.Default.Autodiscovery;
             txtDomain.Enabled = !Properties.Settings.Default.Autodiscovery;
             overrideAutodiscoveryValidationToolStripMenuItem.Enabled = Properties.Settings.Default.Autodiscovery;
         }
@@ -340,8 +331,6 @@ namespace DrunkenBakery.OWAtray
         /// </summary>
         private void UpdateOwaUrl()
         {
-			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
-
             if (Properties.Settings.Default.UseOffice365 && Office365Account.Length > 0)
             {
                 lblOWAUrl.Text = Properties.Settings.Default.Office365OwaUrl.Replace(
@@ -530,6 +519,8 @@ namespace DrunkenBakery.OWAtray
             }
 
             Process ServiceProcess = Process.Start(RunSvc);
+
+			if (office365LoginOverrideToolStripMenuItem.CheckState == CheckState.Checked) office365LoginOverrideToolStripMenuItem.CheckState = CheckState.Unchecked;
         }
 
         /// <summary>
@@ -2231,9 +2222,11 @@ namespace DrunkenBakery.OWAtray
         {
             if (startingUp) return;
 
-            Properties.Settings.Default.OverrideURL = cbOverrideEWS.Checked;
+			txtURLEdit.Enabled = cbOverrideEWS.Checked;
+
+			Properties.Settings.Default.OverrideURL = cbOverrideEWS.Checked;
             Properties.Settings.Default.Save();
-            UpdateEWSField();
+            UpdateURL();
             AddLogEntry("EWS URL override switched " + (Properties.Settings.Default.OverrideURL ? "ON" : "OFF"), LogType.Info);
         }
 
@@ -2268,7 +2261,9 @@ namespace DrunkenBakery.OWAtray
         {
             if (startingUp) return;
 
-            Properties.Settings.Default.OverrideOWAUrl = cbOverrideOWA.Checked;
+			txtURLEdit.Enabled = Properties.Settings.Default.OverrideURL;
+
+			Properties.Settings.Default.OverrideOWAUrl = cbOverrideOWA.Checked;
             Properties.Settings.Default.Save();
             UpdateOwaUrl();
             AddLogEntry("OWA URL override switched " + (Properties.Settings.Default.OverrideOWAUrl ? "ON" : "OFF"), LogType.Info);
@@ -2285,5 +2280,40 @@ namespace DrunkenBakery.OWAtray
             Properties.Settings.Default.Save();
             UpdateOwaUrl();
         }
+
+		/// <summary>
+		/// Handles the EnabledChanged event of the cbOverrideEWS control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+		private void cbOverrideEWS_EnabledChanged(object sender, EventArgs e)
+		{
+			if (!cbOverrideEWS.Enabled)
+			{
+				txtURLEdit.Enabled = false;
+			}
+			else
+			{
+				if (cbOverrideEWS.Checked)
+				{
+					txtURLEdit.Enabled = true;
+				}
+			}
+		}
+
+		private void cbOverrideOWA_EnabledChanged(object sender, EventArgs e)
+		{
+			if (!cbOverrideOWA.Enabled)
+			{
+				txtOWAEdit.Enabled = false;
+			}
+			else
+			{
+				if (cbOverrideOWA.Checked)
+				{
+					txtOWAEdit.Enabled = true;
+				}
+			}
+		}
     }
 }
