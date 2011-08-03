@@ -74,7 +74,6 @@ namespace DrunkenBakery.OWAtray
         string reportedMailboxServer = "";
         string reportedUserName = "";
         bool startingUp;
-        string Office365Account = "";
 
         #endregion Fields
 
@@ -160,21 +159,19 @@ namespace DrunkenBakery.OWAtray
             snarlToolStripMenuItem.Checked = Properties.Settings.Default.Snarl;
             playSoundToolStripMenuItem.Checked = Properties.Settings.Default.Bell;
 
-            // Overrides
-            overrideToolStripMenuItem.Checked = Properties.Settings.Default.OverrideCert;
-            alwaysOpenOWAInIEToolStripMenuItem.Checked = Properties.Settings.Default.AlwaysIE;
-            disableCalendarToolStripMenuItem.Checked = Properties.Settings.Default.DisableCalendar;
-            loginAutomaticallyToolStripMenuItem.Checked = Properties.Settings.Default.AutoLogin;
-            office365LoginOverrideToolStripMenuItem.Checked = Properties.Settings.Default.UseOffice365;
-            overrideAutodiscoveryValidationToolStripMenuItem.Checked = Properties.Settings.Default.Autodiscovery;
+            // Checkboxes
 			cbOverrideEWS.Checked = Properties.Settings.Default.OverrideURL;
 			txtURLEdit.Enabled = cbOverrideEWS.Checked;
 			cbOverrideOWA.Checked = Properties.Settings.Default.OverrideOWAUrl;
 			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
 
-            // Domain
-            chkOnDomain.Checked = Properties.Settings.Default.NetworkCredentials;
-            SelectDomainOptions();
+			// Menu Items
+			overrideToolStripMenuItem.Checked = Properties.Settings.Default.OverrideCert;
+			alwaysOpenOWAInIEToolStripMenuItem.Checked = Properties.Settings.Default.AlwaysIE;
+			disableCalendarToolStripMenuItem.Checked = Properties.Settings.Default.DisableCalendar;
+			loginAutomaticallyToolStripMenuItem.Checked = Properties.Settings.Default.AutoLogin;
+			office365LoginOverrideToolStripMenuItem.Checked = Properties.Settings.Default.UseOffice365;
+			overrideAutodiscoveryValidationToolStripMenuItem.Checked = Properties.Settings.Default.OverrideValidation;
 
             // Autodiscover?
             chkAutodiscovery.Checked = Properties.Settings.Default.Autodiscovery;
@@ -184,7 +181,10 @@ namespace DrunkenBakery.OWAtray
 			UpdateURL();
 			UpdateOwaUrl();
 			UpdateEmail();
-			UpdateOffice365Field();
+
+			// Domain
+			chkOnDomain.Checked = Properties.Settings.Default.NetworkCredentials;
+			SelectDomainOptions();
 
 			// Special lockdown option
             restoreToolStripMenuItem.Enabled = (Properties.Settings.Default.LockDown ? false : true);
@@ -331,12 +331,10 @@ namespace DrunkenBakery.OWAtray
         /// </summary>
         private void UpdateOwaUrl()
         {
-            if (Properties.Settings.Default.UseOffice365 && Office365Account.Length > 0)
+            if (Properties.Settings.Default.UseOffice365)
             {
-                lblOWAUrl.Text = Properties.Settings.Default.Office365OwaUrl.Replace(
-                    Properties.Settings.Default.Office365AccountTemplate,
-                    Office365Account);
-            }
+				lblOWAUrl.Text = Properties.Settings.Default.Office365OwaUrl + StripEmailDomain(lblEmail.Text);
+			}
             else if (Properties.Settings.Default.Autodiscovery && reportedOwaUrl.Length > 0)
             {
                 lblOWAUrl.Text = reportedOwaUrl;
@@ -360,6 +358,19 @@ namespace DrunkenBakery.OWAtray
                 ConfigureShell();
             }
         }
+
+		/// <summary>
+		/// Returns the email domain only
+		/// </summary>
+		/// <param name="email">The email.</param>
+		/// <returns></returns>
+		private string StripEmailDomain(string email)
+		{
+			string sub = "";
+			int start = email.IndexOf("@");
+			if (start > 0) sub = email.Substring(start + 1);
+			return sub;
+		}
 
         /// <summary>
         /// Determines whether [is user administrator].
@@ -2159,33 +2170,6 @@ namespace DrunkenBakery.OWAtray
         }
 
         /// <summary>
-        /// Updates the office365 field.
-        /// </summary>
-        private void UpdateOffice365Field()
-        {
-            Office365Account = StripOffice365Account(Properties.Settings.Default.EMail);
-            loginAutomaticallyToolStripMenuItem.Enabled = !Properties.Settings.Default.UseOffice365;
-        }
-
-        /// <summary>
-        /// Strips the office365 account.
-        /// </summary>
-        /// <param name="email">The email.</param>
-        /// <returns></returns>
-        private string StripOffice365Account(string email)
-        {
-            string sub = "";
-            int start = email.IndexOf("@");
-            if (start > 0)
-            {
-                string body = email.Substring(start + 1);
-                int end = body.IndexOf(".");
-                if (end > 0) sub = body.Substring(0, end);
-            }
-            return sub;
-        }
-
-        /// <summary>
         /// Handles the CheckStateChanged event of the office365LoginOverrideToolStripMenuItem control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -2196,10 +2180,9 @@ namespace DrunkenBakery.OWAtray
 
             Properties.Settings.Default.UseOffice365 = office365LoginOverrideToolStripMenuItem.Checked;
             Properties.Settings.Default.Save();
-            UpdateOffice365Field();
             UpdateOwaUrl();
             AddLogEntry("Office365 login override " + (Properties.Settings.Default.UseOffice365 ? "ON" : "OFF"), LogType.Info);
-        }
+		}
 
         /// <summary>
         /// Handles the Validated event of the txtURLEdit control.
@@ -2261,7 +2244,7 @@ namespace DrunkenBakery.OWAtray
         {
             if (startingUp) return;
 
-			txtURLEdit.Enabled = Properties.Settings.Default.OverrideURL;
+			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
 
 			Properties.Settings.Default.OverrideOWAUrl = cbOverrideOWA.Checked;
             Properties.Settings.Default.Save();

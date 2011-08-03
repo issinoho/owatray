@@ -99,13 +99,10 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="Office365OwaUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">https://www.outlook.com/owa/[youraccount].onmicrosoft.com/</Value>
+      <Value Profile="(Default)">https://www.outlook.com/owa/</Value>
     </Setting>
     <Setting Name="UseOffice365" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="Office365AccountTemplate" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">[youraccount]</Value>
     </Setting>
     <Setting Name="OverrideOWAUrl" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
