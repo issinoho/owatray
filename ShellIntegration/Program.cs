@@ -230,11 +230,8 @@ namespace DrunkenBakery.OWAtray
                     break;
 
                 case "ACCOUNT":
-                    if (args.Length > 1)
-                    {
-                        Properties.Settings.Default.UserAccount = args[1];
-                        Properties.Settings.Default.Save();
-                    }
+                    Properties.Settings.Default.UserAccount = args.Length > 1 ? args[1] : "";
+                    Properties.Settings.Default.Save();
                     break;
 
                 case "PASSWORD":

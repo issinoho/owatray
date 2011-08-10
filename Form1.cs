@@ -845,20 +845,27 @@ namespace DrunkenBakery.OWAtray
                 }
                 else
                 {
-                    if (txtUser.Text.Length == 0 || txtPwd.Text.Length == 0)
+					if (txtUser.Text.Length == 0 && txtEmail.Text.Length == 0)
+					{
+						AddLogEntry("Please supply a valid email address or username.", LogType.Fail);
+						return false;
+					}
+
+					if (txtPwd.Text.Length == 0)
+					{
+						AddLogEntry("Please supply a valid password.", LogType.Fail);
+						return false;
+					}
+
+					if (txtDomain.Text.Length > 0)
                     {
-                        AddLogEntry("Please supply a valid username and password.", LogType.Fail);
-                        return false;
-                    }
-                    if (txtDomain.Text.Length > 0)
-                    {
-                        myService.Credentials = new WebCredentials(txtUser.Text, txtPwd.Text, txtDomain.Text);
+						myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text, txtDomain.Text);
                     }
                     else
                     {
-                        myService.Credentials = new WebCredentials(txtUser.Text, txtPwd.Text);
+						myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text);
                     }
-                }
+				}
 
                 // If autodiscover is on then that overrides the URI
                 if (Properties.Settings.Default.Autodiscovery)
@@ -894,15 +901,15 @@ namespace DrunkenBakery.OWAtray
                         }
                         else
                         {
-                            if (txtDomain.Text.Length > 0)
-                            {
-                                autodiscoverService.Credentials = new WebCredentials(txtUser.Text, txtPwd.Text, txtDomain.Text);
-                            }
-                            else
-                            {
-                                autodiscoverService.Credentials = new WebCredentials(txtUser.Text, txtPwd.Text);
-                            }
-                        }
+							if (txtDomain.Text.Length > 0)
+							{
+								autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text, txtDomain.Text);
+							}
+							else
+							{
+								autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text);
+							}
+						}
 
                         // Redirection Callback
                         if (Properties.Settings.Default.OverrideValidation)
@@ -994,7 +1001,7 @@ namespace DrunkenBakery.OWAtray
 
                         // Update properties
                         reportedMailboxServer = txtServer.Text;
-                        reportedUserName = (chkOnDomain.Checked ? "" : txtUser.Text);
+						reportedUserName = (chkOnDomain.Checked ? "" : (txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text));
                     }
                 }
 
@@ -1048,7 +1055,8 @@ namespace DrunkenBakery.OWAtray
             }
 
             // Set account name
-            string userAccount = GetEmailAddress();
+            //string userAccount = GetEmailAddress();
+			string userAccount = "";
             //AddLogEntry("Using user account: " + userAccount, LogType.Info);
 
             try
@@ -2147,12 +2155,6 @@ namespace DrunkenBakery.OWAtray
             Properties.Settings.Default.EMail = txtEmail.Text;
             Properties.Settings.Default.Save();
             UpdateEmail();
-            if (txtUser.Text.Length == 0)
-            {
-                txtUser.Text = txtEmail.Text;
-                Properties.Settings.Default.Username = txtUser.Text;
-                Properties.Settings.Default.Save();
-            }
         }
 
         /// <summary>
