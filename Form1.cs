@@ -730,6 +730,7 @@ namespace DrunkenBakery.OWAtray
             catch (Exception ex)
             {
                 AddLogEntry(ex.ToString(), LogType.Fail);
+				stopMonitoring();
             }
         }
 
@@ -788,11 +789,19 @@ namespace DrunkenBakery.OWAtray
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void cmdStop_Click(object sender, EventArgs e)
         {
-            timerUpdate.Stop();
-            timerAppt.Stop();
-            AddLogEntry("Timer stopped", LogType.Info);
-            notifyIcon1.Text = ThisApp + Environment.NewLine + "Not Connected to Exchange";
+			stopMonitoring();
         }
+
+		/// <summary>
+		/// Stops the monitoring.
+		/// </summary>
+		private void stopMonitoring()
+		{
+			timerUpdate.Stop();
+			timerAppt.Stop();
+			AddLogEntry("Timer stopped", LogType.Info);
+			notifyIcon1.Text = ThisApp + Environment.NewLine + "Not Connected to Exchange";
+		}
 
         /// <summary>
         /// Handles the Click event of the cmdUnread control.
@@ -1415,12 +1424,12 @@ namespace DrunkenBakery.OWAtray
                 return 0;
             }
 
-            // Set time for initial run only
-            if (firstRun) TimeLastChecked = TimeOfNewestEmail().AddSeconds(1);
-
             try
             {
-                // Is there new mail?
+				// Set time for initial run only
+				if (firstRun) TimeLastChecked = TimeOfNewestEmail().AddSeconds(1);
+
+				// Is there new mail?
                 Folder myFolder = Folder.Bind(myService, WellKnownFolderName.Inbox);
                 myCount = myFolder.UnreadCount;
                 if (myCount > inboxCount)
@@ -1454,6 +1463,7 @@ namespace DrunkenBakery.OWAtray
             {
                 AddLogEntry("Error: " + ex.Message, LogType.Fail);
                 myCount = 0;
+				stopMonitoring();
             }
             finally
             {
