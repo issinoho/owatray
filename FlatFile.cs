@@ -42,7 +42,6 @@ namespace DrunkenBakery.OWAtray
         private int pScavengeSize;
         private bool pVerbose;
         private Queue qInQueue = new Queue();
-        private ResourceManager rm;
         private Object thisLock = new Object();
 
         #endregion Fields
@@ -62,7 +61,6 @@ namespace DrunkenBakery.OWAtray
             pScavengeDays = 14;
             pScavengeSize = 10;
             pPrecise = false;
-            rm = new ResourceManager("DrunkenBakery.OWAtray.Properties.Resources", Assembly.GetExecutingAssembly());
         }
 
         /// <summary>
@@ -78,7 +76,6 @@ namespace DrunkenBakery.OWAtray
             pScavenge = true;
             pScavengeDays = 14;
             pScavengeSize = 10;
-            rm = new ResourceManager("DrunkenBakery.OWAtray.Properties.Resources", Assembly.GetExecutingAssembly());
         }
 
         #endregion Constructors
@@ -103,18 +100,18 @@ namespace DrunkenBakery.OWAtray
 
                     if (pVerbose)
                     {
-                        AddEntry(rm.GetString("BlankLine"));
-                        AddEntry(rm.GetString("Dashes"));
-                        AddEntry(rm.GetString("LoggingStarted"));
+                        AddEntry("");
+						AddEntry("--------------------------------------------------------------------------------");
+						AddEntry("*** Logging Started");
                     }
                 }
                 else
                 {
                     if (pVerbose)
                     {
-                        AddEntry(rm.GetString("LoggingStopped"));
-                        AddEntry(rm.GetString("Dashes"));
-                        AddEntry(rm.GetString("BlankLine"));
+						AddEntry("*** Logging Stopped");
+						AddEntry("--------------------------------------------------------------------------------");
+                        AddEntry("");
                     }
 
                     pActive = value;
@@ -140,11 +137,11 @@ namespace DrunkenBakery.OWAtray
                 {
                     if (pDateOn)
                     {
-                        AddEntry(rm.GetString("DateOn"));
+						AddEntry("*** Date stamping switched on");
                     }
                     else
                     {
-                        AddEntry(rm.GetString("DateOff"));
+						AddEntry("*** Date stamping switched off");
                     }
                 }
             }
@@ -168,11 +165,11 @@ namespace DrunkenBakery.OWAtray
                 {
                     if (pLimitSize)
                     {
-                        AddEntry(rm.GetString("SizeLimited") + pMaxSize + rm.GetString("Mb"));
+                        AddEntry("*** Log files are size limited (currently " + pMaxSize + "Mb)");
                     }
                     else
                     {
-                        AddEntry(rm.GetString("NoSizeLimit"));
+						AddEntry("*** Log files are NOT size limited");
                     }
                 }
             }
@@ -194,7 +191,7 @@ namespace DrunkenBakery.OWAtray
 
                 if (pVerbose)
                 {
-                    AddEntry(rm.GetString("LogFile") + pLogFile);
+					AddEntry("Log file is " + pLogFile);
                 }
             }
         }
@@ -249,11 +246,11 @@ namespace DrunkenBakery.OWAtray
                 {
                     if (pScavenge)
                     {
-                        AddEntry(rm.GetString("Scavenged") + pScavengeDays + rm.GetString("DaysOr") + pScavengeSize + rm.GetString("MbTotal"));
+						AddEntry("*** Log files will be scavenged (after " + pScavengeDays + " days or " + pScavengeSize + "Mb total size)");
                     }
                     else
                     {
-                        AddEntry(rm.GetString("NoScavenge"));
+						AddEntry("*** Log files will NOT be scavenged");
                     }
                 }
             }
