@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "2.0.4246.34872"
+!define PRODUCT_VERSION "2.0.4252.24219"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray.exe"
@@ -64,6 +64,10 @@ Section "MainSection" SEC01
   CreateShortCut "$DESKTOP\OWAtray.lnk" "$INSTDIR\OWAtray.exe"
   File "..\bin\x86\Release\OWAtray.exe.config"
   File "..\bin\x86\Release\SnarlConnector.dll"
+  
+  CreateDirectory "$INSTDIR\de"
+  SetOutPath "$INSTDIR\de"
+  File "..\bin\x86\Release\de\OWAtray.resources_Secure\OWAtray.resources.dll"
 SectionEnd
 
 Section -AdditionalIcons
@@ -112,6 +116,7 @@ Section Uninstall
   Delete "$INSTDIR\ShellIntegration.exe"
   Delete "$INSTDIR\ShellIntegration.exe.config"
   Delete "$INSTDIR\MapiDll.dll"
+  Delete "$INSTDIR\de\OWAtray.resources.dll"
 
   Delete "$SMPROGRAMS\OWAtray\Uninstall.lnk"
   Delete "$SMPROGRAMS\OWAtray\Website.lnk"
@@ -119,6 +124,7 @@ Section Uninstall
   Delete "$SMPROGRAMS\OWAtray\OWAtray.lnk"
 
   RMDir "$SMPROGRAMS\OWAtray"
+  RMDir "$INSTDIR\de"
   RMDir "$INSTDIR"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"

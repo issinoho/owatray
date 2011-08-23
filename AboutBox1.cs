@@ -37,21 +37,21 @@ namespace DrunkenBakery.OWAtray
             // Change assembly information settings for your application through either:
             // - Project->Properties->Application->Assembly Information
             // - AssemblyInfo.cs
-            this.Text = String.Format("About {0}", this.AssemblyTitle);
+            this.Text = String.Format(OWAtray.About, this.AssemblyTitle);
             this.labelProductName.Text = this.AssemblyProduct + " - " + this.AssemblyTitle;
-            this.labelVersion.Text = String.Format("Version {0}", this.AssemblyVersion);
+            this.labelVersion.Text = String.Format(OWAtray.Version, this.AssemblyVersion);
             this.labelCopyright.Text = this.AssemblyCopyright;
             this.labelCompanyName.Text = this.AssemblyCompany;
             this.textBoxDescription.Text = this.AssemblyDescription +
                                             System.Environment.NewLine +
                                             System.Environment.NewLine +
-                                            "Compiled on .NET " + asm.ImageRuntimeVersion.ToString() +
+                                            OWAtray.Compiled_on_NET + " " + asm.ImageRuntimeVersion.ToString() +
                                             System.Environment.NewLine +
-                                            "Running on .NET v" + Environment.Version.ToString() +
+                                            OWAtray.Running_on_NET + " " + Environment.Version.ToString() +
                                             System.Environment.NewLine;
 
             // Use Reflection to get a list of depenedent assemblies
-            this.textBoxDescription.AppendText(System.Environment.NewLine + "Dependent Assemblies:");
+            this.textBoxDescription.AppendText(System.Environment.NewLine + OWAtray.Dependent_Assemblies);
             AssemblyName[] refs = asm.GetReferencedAssemblies();
             foreach (AssemblyName myRef in refs)
             {

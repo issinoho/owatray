@@ -41,7 +41,7 @@ namespace DrunkenBakery.OWAtray
             tvCheat.Visible = true;
 
             // Please wait...
-            TreeNode newNode = new TreeNode("Gathering data, please wait...");
+            TreeNode newNode = new TreeNode(OWAtray.Gathering_data_please_wait);
             newNode.ImageIndex = 23;
             newNode.SelectedImageIndex = 23;
             tvCheat.Nodes.Add(newNode);
@@ -66,33 +66,33 @@ namespace DrunkenBakery.OWAtray
             tvOptions.Nodes.Clear();
 
             // Top level branches
-            newNode = new TreeNode("Operating System");
+            newNode = new TreeNode(OWAtray.Operating_System);
             newNode.ImageIndex = 10;
             newNode.SelectedImageIndex = 10;
             tvOptions.Nodes.Add(newNode);
             // OS children
             GetOS(newNode);
 
-            newNode = new TreeNode("Computer");
+            newNode = new TreeNode(OWAtray.Computer);
             newNode.ImageIndex = 0;
             newNode.SelectedImageIndex = 0;
             tvOptions.Nodes.Add(newNode);
             // Computer children
             GetComputer(newNode);
 
-            newNode = new TreeNode("Owner");
+            newNode = new TreeNode(OWAtray.Owner);
             newNode.ImageIndex = 12;
             newNode.SelectedImageIndex = 12;
             tvOptions.Nodes.Add(newNode);
             GetOwner(newNode);
 
-            newNode = new TreeNode("Network");
+            newNode = new TreeNode(OWAtray.Network);
             newNode.ImageIndex = 11;
             newNode.SelectedImageIndex = 11;
             tvOptions.Nodes.Add(newNode);
             GetNetwork(newNode);
 
-            newNode = new TreeNode("Storage");
+            newNode = new TreeNode(OWAtray.Storage);
             newNode.ImageIndex = 6;
             newNode.SelectedImageIndex = 6;
             tvOptions.Nodes.Add(newNode);
@@ -144,7 +144,7 @@ namespace DrunkenBakery.OWAtray
                 foreach (ManagementObject mo in queryCollection1)
                 {
                     TreeNode childNode;
-                    childNode = new TreeNode("CPU " + count++ + ": " + Regex.Replace(mo["Name"].ToString(), @"^\s+|\s+$", "") + " (" + mo["AddressWidth"].ToString() + " bit)");
+                    childNode = new TreeNode("CPU " + count++ + ": " + Regex.Replace(mo["Name"].ToString(), @"^\s+|\s+$", "") + " (" + mo["AddressWidth"].ToString() + " " + OWAtray.bit);
                     childNode.ImageIndex = 17;
                     childNode.SelectedImageIndex = 17;
                     newNode.Nodes.Add(childNode);
@@ -294,7 +294,7 @@ namespace DrunkenBakery.OWAtray
                     TreeNode childNode;
                     UInt64 FreeSpace = System.Convert.ToUInt64(mo["FreeSpace"]);
                     UInt64 Size = System.Convert.ToUInt64(mo["Size"]);
-                    childNode = new TreeNode(mo["Name"].ToString() + ": " + (Size / 1073741824) + " Gb (" + (FreeSpace / 1073741824) + " Gb free)");
+                    childNode = new TreeNode(mo["Name"].ToString() + ": " + (Size / 1073741824) + " " + OWAtray.Gb + (FreeSpace / 1073741824) + " " + OWAtray.Gb_free);
                     childNode.ImageIndex = 15;
                     childNode.SelectedImageIndex = 15;
                     newNode.Nodes.Add(childNode);

@@ -111,7 +111,7 @@
             this.groupBox1.Size = new System.Drawing.Size(327, 159);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Detected System Settings";
+            this.groupBox1.Text = OWAtray.Detected_System_Settings;
             //
             // tvCheat
             //
@@ -328,7 +328,7 @@
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(75, 23);
             this.cmdOK.TabIndex = 1;
-            this.cmdOK.Text = "&OK";
+            this.cmdOK.Text = OWAtray.OK;
             this.cmdOK.UseVisualStyleBackColor = true;
             this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
             //
@@ -347,7 +347,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SysInfo";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "System Information";
+            this.Text = OWAtray.System_Information;
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
         }

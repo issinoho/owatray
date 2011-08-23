@@ -162,7 +162,7 @@ namespace DrunkenBakery.OWAtray
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(75, 23);
             this.OkButton.TabIndex = 24;
-            this.OkButton.Text = "&OK";
+            this.OkButton.Text = OWAtray.OK;
             this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // AboutBox1
@@ -179,7 +179,7 @@ namespace DrunkenBakery.OWAtray
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "About OWA Tray Monitor";
+            this.Text = OWAtray.About_OWA_Tray_Monitor;
             this.tableLayoutPanel.ResumeLayout(false);
             this.tableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();

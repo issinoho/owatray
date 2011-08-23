@@ -54,7 +54,7 @@
             this.groupBox1.Size = new System.Drawing.Size(327, 159);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Installed MDAC Versions";
+            this.groupBox1.Text = OWAtray.Installed_MDAC_Versions;
             //
             // lvStatus
             //
@@ -79,7 +79,7 @@
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(75, 23);
             this.cmdOK.TabIndex = 1;
-            this.cmdOK.Text = "&OK";
+            this.cmdOK.Text = OWAtray.OK;
             this.cmdOK.UseVisualStyleBackColor = true;
             this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
             //
@@ -94,7 +94,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MDACversions";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "MDAC Inspector";
+            this.Text = OWAtray.MDAC_Inspector;
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
         }

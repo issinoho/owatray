@@ -151,6 +151,11 @@
     <Compile Include="NETversions.designer.cs">
       <DependentUpon>NETversions.cs</DependentUpon>
     </Compile>
+    <Compile Include="OWAtray.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OWAtray.resx</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBox1.resx">
@@ -170,6 +175,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="NETversions.resx">
       <DependentUpon>NETversions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OWAtray.de.resx" />
+    <EmbeddedResource Include="OWAtray.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OWAtray.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
