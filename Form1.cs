@@ -732,6 +732,7 @@ namespace DrunkenBakery.OWAtray
 			{
 				AddLogEntry(ex.ToString(), LogType.Fail);
 				stopMonitoring();
+				StartRetryTimer();
 			}
 		}
 
@@ -802,6 +803,11 @@ namespace DrunkenBakery.OWAtray
 			timerAppt.Stop();
 			AddLogEntry(OWAtray.Timer_stopped, LogType.Info);
 			notifyIcon1.Text = ThisApp + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
+		}
+
+		private void StartRetryTimer()
+		{
+			RetryTimer.Start();
 		}
 
 		/// <summary>
@@ -1465,6 +1471,7 @@ namespace DrunkenBakery.OWAtray
 				AddLogEntry(OWAtray.Error + ex.Message, LogType.Fail);
 				myCount = 0;
 				stopMonitoring();
+				StartRetryTimer();
 			}
 			finally
 			{
@@ -2297,6 +2304,11 @@ namespace DrunkenBakery.OWAtray
 			}
 		}
 
+		/// <summary>
+		/// Handles the EnabledChanged event of the cbOverrideOWA control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void cbOverrideOWA_EnabledChanged(object sender, EventArgs e)
 		{
 			if (!cbOverrideOWA.Enabled)
@@ -2309,6 +2321,22 @@ namespace DrunkenBakery.OWAtray
 				{
 					txtOWAEdit.Enabled = true;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Handles the Tick event of the RetryTimer control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+		private void RetryTimer_Tick(object sender, EventArgs e)
+		{
+			RetryTimer.Stop();
+
+			if (ConfigureExchange())
+			{
+				// Start
+				startMonitoring();
 			}
 		}
 	}

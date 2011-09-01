@@ -126,6 +126,7 @@
 			this.label6 = new System.Windows.Forms.Label();
 			this.label10 = new System.Windows.Forms.Label();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
+			this.RetryTimer = new System.Windows.Forms.Timer(this.components);
 			this.statusStrip1.SuspendLayout();
 			this.contextMenuStrip1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -1028,6 +1029,11 @@
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Controls";
 			// 
+			// RetryTimer
+			// 
+			this.RetryTimer.Interval = 300000;
+			this.RetryTimer.Tick += new System.EventHandler(this.RetryTimer_Tick);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1169,6 +1175,7 @@
 		private System.Windows.Forms.TextBox txtOWAEdit;
 		private System.Windows.Forms.PictureBox pictureBox5;
 		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Timer RetryTimer;
 	}
 }
 
