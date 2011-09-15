@@ -176,7 +176,9 @@
     <EmbeddedResource Include="NETversions.resx">
       <DependentUpon>NETversions.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="OWAtray.ca.resx" />
     <EmbeddedResource Include="OWAtray.de.resx" />
+    <EmbeddedResource Include="OWAtray.es.resx" />
     <EmbeddedResource Include="OWAtray.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OWAtray.Designer.cs</LastGenOutput>

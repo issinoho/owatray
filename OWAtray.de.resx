@@ -498,9 +498,6 @@
   <data name="Make_OWA_Default" xml:space="preserve">
     <value>Machen Sie OWA Standard</value>
   </data>
-  <data name="Autodetect" xml:space="preserve">
-    <value>Autodetect</value>
-  </data>
   <data name="Date_stamping_switched_off" xml:space="preserve">
     <value>*** Datumsstempel ausgeschaltet</value>
   </data>

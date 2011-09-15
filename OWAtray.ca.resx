@@ -1,0 +1,540 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Dependent_Assemblies" xml:space="preserve">
+    <value>Ensamblats depenents</value>
+  </data>
+  <data name="No_Title" xml:space="preserve">
+    <value>&lt;Sense títol&gt;</value>
+  </data>
+  <data name="Audible_notifications_switched" xml:space="preserve">
+    <value>Notifiacions sonores habilitades</value>
+  </data>
+  <data name="Logging" xml:space="preserve">
+    <value>Registre d'activitat</value>
+  </data>
+  <data name="Welcome_to_the" xml:space="preserve">
+    <value>Benvingut a</value>
+  </data>
+  <data name="About_OWA_Tray_Monitor" xml:space="preserve">
+    <value>Quant a OWA Tray Monitor</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Propietari</value>
+  </data>
+  <data name="Attempt_to_use_Autodiscovery" xml:space="preserve">
+    <value>Intentar utilitzar servir descobriment automàtic</value>
+  </data>
+  <data name="Detected_System_Settings" xml:space="preserve">
+    <value>Configuració del sistema detectada</value>
+  </data>
+  <data name="Installed_NET_Versions" xml:space="preserve">
+    <value>Versions de .NET instal·lades</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Usuari:</value>
+  </data>
+  <data name="Installed_MDAC_Versions" xml:space="preserve">
+    <value>Versions MDAC instal·lades</value>
+  </data>
+  <data name="You_have_an_appointment_in" xml:space="preserve">
+    <value>Té una cita el</value>
+  </data>
+  <data name="Log_files_are_NOT_size" xml:space="preserve">
+    <value>*** Els fitxers de log NO estàn limitats per tamany</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Temps</value>
+  </data>
+  <data name="Basic_Settings" xml:space="preserve">
+    <value>Configuració bàsica</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Ajuda</value>
+  </data>
+  <data name="Email_Address" xml:space="preserve">
+    <value>Adreça de e-mail:</value>
+  </data>
+  <data name="Autodiscovered_EWS_Url" xml:space="preserve">
+    <value>Url de descobriment automàtic d'EWS:</value>
+  </data>
+  <data name="SSL_Certificate_override" xml:space="preserve">
+    <value>Sobreescriptura de certificat SSL</value>
+  </data>
+  <data name="Gb_free" xml:space="preserve">
+    <value>Gb lliures)</value>
+  </data>
+  <data name="Contact_Details" xml:space="preserve">
+    <value>Detalls de contacte</value>
+  </data>
+  <data name="Windows_Domain" xml:space="preserve">
+    <value>Domini Windows:</value>
+  </data>
+  <data name="MDAC_Inspector" xml:space="preserve">
+    <value>Inspector MDAC</value>
+  </data>
+  <data name="NET_Versions" xml:space="preserve">
+    <value>Versions .NET</value>
+  </data>
+  <data name="Logging_Stopped" xml:space="preserve">
+    <value>*** Registre d'activitat aturat</value>
+  </data>
+  <data name="Autodiscovery_Validation" xml:space="preserve">
+    <value>Sobreescriptura de validació de descobriment automàtic</value>
+  </data>
+  <data name="Always_use_IE_switched" xml:space="preserve">
+    <value>Sempre usar IE habilitat</value>
+  </data>
+  <data name="Recall_Last_Popup" xml:space="preserve">
+    <value>Recordar últim popup</value>
+  </data>
+  <data name="Open_Outlook" xml:space="preserve">
+    <value>Obrir Outlook</value>
+  </data>
+  <data name="second_timer_started" xml:space="preserve">
+    <value>segons de temporitzador, iniciat.</value>
+  </data>
+  <data name="Setting_up_Mail_handlers" xml:space="preserve">
+    <value>Configurant gestors d'e-mail</value>
+  </data>
+  <data name="Autodiscovery_requires_an_Email" xml:space="preserve">
+    <value>El descobriment automàtic requereix una adreça de e-mail. Si us plau, revisi la configuració.</value>
+  </data>
+  <data name="New_Mail" xml:space="preserve">
+    <value>Nou e-mail</value>
+  </data>
+  <data name="Autodiscovered_Mailbox_Server" xml:space="preserve">
+    <value>Bústia de correu de descobriment automàtic</value>
+  </data>
+  <data name="not" xml:space="preserve">
+    <value>no</value>
+  </data>
+  <data name="Automatic_Login_is_switched" xml:space="preserve">
+    <value>Login automàtic habilitat</value>
+  </data>
+  <data name="Major_Version" xml:space="preserve">
+    <value>Versió major</value>
+  </data>
+  <data name="Server_Address" xml:space="preserve">
+    <value>Adreça de servidor:</value>
+  </data>
+  <data name="New_Mail_from" xml:space="preserve">
+    <value>Nou e-mail de</value>
+  </data>
+  <data name="Please_supply_valid_password" xml:space="preserve">
+    <value>Si us plau, introdueixi una contrasenya vàlida</value>
+  </data>
+  <data name="Snarl" xml:space="preserve">
+    <value>Grunyir</value>
+  </data>
+  <data name="Mb_total_size" xml:space="preserve">
+    <value>Mb tamany total)</value>
+  </data>
+  <data name="Binding_to_Exchange" xml:space="preserve">
+    <value>Connectant a Exchange...</value>
+  </data>
+  <data name="Endpoint_is_INSIDE_corporate" xml:space="preserve">
+    <value>Punt de connexió INTERN a la xarxa corporativa</value>
+  </data>
+  <data name="MDAC_Versions" xml:space="preserve">
+    <value>Versions MDAC</value>
+  </data>
+  <data name="in_your_inbox" xml:space="preserve">
+    <value>en la seva bústia de entrada</value>
+  </data>
+  <data name="Mail_handler_restored_to_system" xml:space="preserve">
+    <value>Gestor de e-mail restaurat al valor per defecte</value>
+  </data>
+  <data name="Use_Windows_Domain_Credentials" xml:space="preserve">
+    <value>Fer servir credencials de domini de Windows</value>
+  </data>
+  <data name="Make_OWA_Default" xml:space="preserve">
+    <value>Fer servir OWA per defecte</value>
+  </data>
+  <data name="Event_Details" xml:space="preserve">
+    <value>Detalls de l'event</value>
+  </data>
+  <data name="Must_be_numeric_value_between" xml:space="preserve">
+    <value>Ha de ser un número entre 1 i</value>
+  </data>
+  <data name="Disable_Calendar" xml:space="preserve">
+    <value>Inhabilitar calendari</value>
+  </data>
+  <data name="Can_establish_valid_URL_for" xml:space="preserve">
+    <value>No s'ha pogut establir la URL d'Exchange. Si us plau, revisi la configuració.</value>
+  </data>
+  <data name="Shell_Integration" xml:space="preserve">
+    <value>Integració amb línia de comandes.</value>
+  </data>
+  <data name="There_are" xml:space="preserve">
+    <value>Hi ha</value>
+  </data>
+  <data name="Timer_stopped" xml:space="preserve">
+    <value>Temporitzador aturat</value>
+  </data>
+  <data name="OWAtray_will" xml:space="preserve">
+    <value>OWAtray</value>
+  </data>
+  <data name="Always_open_OWA_in_IE" xml:space="preserve">
+    <value>Obrir sempre OWA amb IE</value>
+  </data>
+  <data name="Network" xml:space="preserve">
+    <value>Xarxa</value>
+  </data>
+  <data name="Revision" xml:space="preserve">
+    <value>Revisió</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Opcions</value>
+  </data>
+  <data name="Support_Information" xml:space="preserve">
+    <value>Informació de suport</value>
+  </data>
+  <data name="Snarl_notifications_switched" xml:space="preserve">
+    <value>Notificacions de grunyit habilitades</value>
+  </data>
+  <data name="Terminating" xml:space="preserve">
+    <value>Tancant</value>
+  </data>
+  <data name="Growl" xml:space="preserve">
+    <value>Grunyit</value>
+  </data>
+  <data name="No_Location" xml:space="preserve">
+    <value>&lt;Sensa ubicació&gt;</value>
+  </data>
+  <data name="EWS_URL_override_switched" xml:space="preserve">
+    <value>Sobreescriptura de URL d'EWS habilitada</value>
+  </data>
+  <data name="You_have" xml:space="preserve">
+    <value>Té</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Parar</value>
+  </data>
+  <data name="Change_Log" xml:space="preserve">
+    <value>Registre de modificacions</value>
+  </data>
+  <data name="OWA_URL_override_switched" xml:space="preserve">
+    <value>Sobreescriptura de URL de OWA habilitada</value>
+  </data>
+  <data name="Compiled_on_NET" xml:space="preserve">
+    <value>Compilat amb .NET</value>
+  </data>
+  <data name="Logging_error" xml:space="preserve">
+    <value>Registre d'errors 1:</value>
+  </data>
+  <data name="Calendar_notifications_switched" xml:space="preserve">
+    <value>Notificacions de calendari habilitades</value>
+  </data>
+  <data name="Autodetect" xml:space="preserve">
+    <value>Autodetecció</value>
+  </data>
+  <data name="Log_files_are_size_limited" xml:space="preserve">
+    <value>*** Els fitxers de log estàn limitats per tamany</value>
+  </data>
+  <data name="NET_Inspector" xml:space="preserve">
+    <value>Inspector .NET</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="Log_files_will_NOT_be" xml:space="preserve">
+    <value>*** Els fitxers de log NO seràn netejats</value>
+  </data>
+  <data name="Override_Autodiscovery" xml:space="preserve">
+    <value>Sobreescriure validació de descobriment automàtic</value>
+  </data>
+  <data name="Error_when_getting_email" xml:space="preserve">
+    <value>Error en obtenint propietats de l'e-mail</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Contrasenya:</value>
+  </data>
+  <data name="Office_login_override" xml:space="preserve">
+    <value>Sobreescriptura de login de Office 365</value>
+  </data>
+  <data name="other_new_emails" xml:space="preserve">
+    <value>altres e-mails nous</value>
+  </data>
+  <data name="mins" xml:space="preserve">
+    <value>minuts</value>
+  </data>
+  <data name="Mail_functions_will_now_be" xml:space="preserve">
+    <value>Les funcions de correu seràn transferides a OWA</value>
+  </data>
+  <data name="Override_Certificate" xml:space="preserve">
+    <value>Sobreescriure certificat</value>
+  </data>
+  <data name="Support" xml:space="preserve">
+    <value>Suport</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Notificacions</value>
+  </data>
+  <data name="No_Sender" xml:space="preserve">
+    <value>&lt;Sense remitent&gt;</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Iniciar</value>
+  </data>
+  <data name="Storage" xml:space="preserve">
+    <value>Emmagatzematge</value>
+  </data>
+  <data name="No_Subject" xml:space="preserve">
+    <value>&lt;Sense títol&gt;</value>
+  </data>
+  <data name="Starting_Autodiscovery" xml:space="preserve">
+    <value>Iniciant descobriment automàtic</value>
+  </data>
+  <data name="Exchange_Version" xml:space="preserve">
+    <value>Versió d'Exchange</value>
+  </data>
+  <data name="autostart_with_Windows" xml:space="preserve">
+    <value>iniciar automàticament amb Windows</value>
+  </data>
+  <data name="Growl_notifications_switched" xml:space="preserve">
+    <value>Notificacions de grunyit habilitades</value>
+  </data>
+  <data name="Logging_error1" xml:space="preserve">
+    <value>Registre d'errors 2:</value>
+  </data>
+  <data name="Date_stamping_switched_off" xml:space="preserve">
+    <value>*** Marcat de data inhabilitat</value>
+  </data>
+  <data name="Logging_Started" xml:space="preserve">
+    <value>*** Registre d'activitat iniciat</value>
+  </data>
+  <data name="unread_email" xml:space="preserve">
+    <value>e-mail sense llegir</value>
+  </data>
+  <data name="unknown" xml:space="preserve">
+    <value>desconegut</value>
+  </data>
+  <data name="Balloon" xml:space="preserve">
+    <value>Globus</value>
+  </data>
+  <data name="Switch_Off" xml:space="preserve">
+    <value>Apagar</value>
+  </data>
+  <data name="Please_supply_valid_email" xml:space="preserve">
+    <value>Si us plau, introdueixi una adreça o nom d'usuari vàlids.</value>
+  </data>
+  <data name="Log_files_will_be_scavenged" xml:space="preserve">
+    <value>*** Els fitxers de log seràn netejats (després de</value>
+  </data>
+  <data name="days_or" xml:space="preserve">
+    <value>dies o</value>
+  </data>
+  <data name="Connected_to" xml:space="preserve">
+    <value>Connectat a</value>
+  </data>
+  <data name="Autodiscovered_User_Name" xml:space="preserve">
+    <value>Nom d'usuari de descobriment automàtic</value>
+  </data>
+  <data name="Run_at_Startup" xml:space="preserve">
+    <value>Executar a l'inici</value>
+  </data>
+  <data name="Operating_System" xml:space="preserve">
+    <value>Sistema operatiu</value>
+  </data>
+  <data name="Log_file_is" xml:space="preserve">
+    <value>El fitxer de log té</value>
+  </data>
+  <data name="Running_on_NET" xml:space="preserve">
+    <value>Executant sobre .NET v</value>
+  </data>
+  <data name="Tools" xml:space="preserve">
+    <value>Eines</value>
+  </data>
+  <data name="System_Information" xml:space="preserve">
+    <value>Informació del sistema</value>
+  </data>
+  <data name="Autodiscovered_OWA_Url" xml:space="preserve">
+    <value>Url de descobriment automàtic</value>
+  </data>
+  <data name="Computer" xml:space="preserve">
+    <value>Equip</value>
+  </data>
+  <data name="Advanced_Settings" xml:space="preserve">
+    <value>Configuració avançada</value>
+  </data>
+  <data name="Open_OWA" xml:space="preserve">
+    <value>Obrir OWA</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Sortir</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Preparat.</value>
+  </data>
+  <data name="Reset_Tray_Icon" xml:space="preserve">
+    <value>Reiniciar icona de safata</value>
+  </data>
+  <data name="Balloon_notifications_switched" xml:space="preserve">
+    <value>Notificacions de globus habilitades</value>
+  </data>
+  <data name="Too_many_appointments" xml:space="preserve">
+    <value>Massa cites!</value>
+  </data>
+  <data name="About1" xml:space="preserve">
+    <value>Quant a</value>
+  </data>
+  <data name="Login_Automatically" xml:space="preserve">
+    <value>Login automàtic</value>
+  </data>
+  <data name="Date_stamping_switched_on" xml:space="preserve">
+    <value>*** Marcat de data habilitat</value>
+  </data>
+  <data name="Gathering_data_please_wait" xml:space="preserve">
+    <value>Recollint informació. Si us plau, esperi...</value>
+  </data>
+  <data name="Autodiscovery_is_switched" xml:space="preserve">
+    <value>Descobriment automàtic habilitat</value>
+  </data>
+  <data name="Not_Connected_to_Exchange" xml:space="preserve">
+    <value>Desconnectat d'Exchange</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>Quant a {0}</value>
+  </data>
+  <data name="Endpoint_is_OUTSIDE_corporate" xml:space="preserve">
+    <value>Punt de connexió EXTERN a la xarxa corporativa</value>
+  </data>
+  <data name="You_are_not_an_Admin_user" xml:space="preserve">
+    <value>Vosté no és un administrador. L'operació pot fallar.</value>
+  </data>
+  <data name="Too_much_mail" xml:space="preserve">
+    <value>Massa e-mail!</value>
+  </data>
+  <data name="Play_Sound" xml:space="preserve">
+    <value>Reproduir so</value>
+  </data>
+  <data name="Restoring_Mail_handlers" xml:space="preserve">
+    <value>Restaurant gestors de correu</value>
+  </data>
+  <data name="Update_Interval" xml:space="preserve">
+    <value>Interval d'actualització</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versió {0}</value>
+  </data>
+  <data name="others" xml:space="preserve">
+    <value>altres</value>
+  </data>
+</root>
