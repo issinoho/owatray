@@ -27,7 +27,15 @@ namespace DrunkenBakery.OWAtray
         public ContactUs()
         {
             InitializeComponent();
-        }
+
+			// Flags
+			lvX.Items.Add(new ListViewItem("Catalan", 0));
+			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
+			lvX.Items.Add(new ListViewItem("German", 1));
+			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Google Translate");
+			lvX.Items.Add(new ListViewItem("Spanish", 2));
+			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
+		}
 
         #endregion Constructors
 

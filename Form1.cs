@@ -22,10 +22,9 @@ namespace DrunkenBakery.OWAtray
 	using System.Security.Principal;
 	using System.Windows.Forms;
 	using Growl.Connector;
-	using Microsoft.Exchange.WebServices.Data;
 	using Microsoft.Exchange.WebServices.Autodiscover;
+	using Microsoft.Exchange.WebServices.Data;
 	using Snarl;
-	using System.Threading;
 
 	/// <summary>
 	/// Main application form which drives all functionality.
