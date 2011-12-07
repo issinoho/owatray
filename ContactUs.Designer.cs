@@ -55,7 +55,7 @@
 			this.groupBox1.Size = new System.Drawing.Size(327, 220);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Translations";
+			this.groupBox1.Text = OWAtray.Translations;
 			// 
 			// lvX
 			// 
@@ -73,12 +73,12 @@
 			// 
 			// Language
 			// 
-			this.Language.Text = "Language";
+			this.Language.Text = OWAtray.Language;
 			this.Language.Width = 118;
 			// 
 			// Author
 			// 
-			this.Author.Text = "Author";
+			this.Author.Text = OWAtray.Author;
 			this.Author.Width = 190;
 			// 
 			// imLarge
@@ -112,7 +112,7 @@
 			this.groupBox2.Size = new System.Drawing.Size(327, 85);
 			this.groupBox2.TabIndex = 2;
 			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Contact Details";
+			this.groupBox2.Text = OWAtray.Contact_Details;
 			// 
 			// linkEmail
 			// 
@@ -192,7 +192,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "ContactUs";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Support Information";
+			this.Text = OWAtray.Support_Information;
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();

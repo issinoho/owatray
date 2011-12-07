@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Dependent_Assemblies" xml:space="preserve">
     <value>Dependent Assemblies:</value>
@@ -129,9 +129,6 @@
   <data name="Logging" xml:space="preserve">
     <value>Logging</value>
   </data>
-  <data name="Welcome_to_the" xml:space="preserve">
-    <value>Welcome to the</value>
-  </data>
   <data name="About_OWA_Tray_Monitor" xml:space="preserve">
     <value>About OWA Tray Monitor</value>
   </data>
@@ -144,17 +141,20 @@
   <data name="Detected_System_Settings" xml:space="preserve">
     <value>Detected System Settings</value>
   </data>
-  <data name="Installed_NET_Versions" xml:space="preserve">
-    <value>Installed .NET Versions</value>
+  <data name="mins" xml:space="preserve">
+    <value>mins</value>
   </data>
-  <data name="User" xml:space="preserve">
-    <value>User :</value>
+  <data name="Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="About1" xml:space="preserve">
+    <value>About</value>
   </data>
   <data name="Installed_MDAC_Versions" xml:space="preserve">
     <value>Installed MDAC Versions</value>
   </data>
-  <data name="You_have_an_appointment_in" xml:space="preserve">
-    <value>You have an appointment in</value>
+  <data name="Override_Certificate" xml:space="preserve">
+    <value>Override Certificate</value>
   </data>
   <data name="Log_files_are_NOT_size" xml:space="preserve">
     <value>*** Log files are NOT size limited</value>
@@ -165,17 +165,20 @@
   <data name="Basic_Settings" xml:space="preserve">
     <value>Basic Settings</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="Terminating" xml:space="preserve">
+    <value>Terminating</value>
   </data>
   <data name="Email_Address" xml:space="preserve">
     <value>Email Address :</value>
   </data>
+  <data name="Catalan" xml:space="preserve">
+    <value>Catalan</value>
+  </data>
   <data name="Autodiscovered_EWS_Url" xml:space="preserve">
     <value>Autodiscovered EWS Url:</value>
   </data>
-  <data name="SSL_Certificate_override" xml:space="preserve">
-    <value>SSL Certificate override switched</value>
+  <data name="NET_Inspector" xml:space="preserve">
+    <value>.NET Inspector</value>
   </data>
   <data name="Gb_free" xml:space="preserve">
     <value>Gb free)</value>
@@ -192,17 +195,23 @@
   <data name="NET_Versions" xml:space="preserve">
     <value>.NET Versions</value>
   </data>
+  <data name="OFF" xml:space="preserve">
+    <value>OFF</value>
+  </data>
   <data name="Logging_Stopped" xml:space="preserve">
     <value>*** Logging Stopped</value>
   </data>
   <data name="Autodiscovery_Validation" xml:space="preserve">
     <value>Autodiscovery Validation override switched</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
   <data name="Always_use_IE_switched" xml:space="preserve">
     <value>Always use IE switched</value>
   </data>
-  <data name="Recall_Last_Popup" xml:space="preserve">
-    <value>Recall Last Popup</value>
+  <data name="Growl" xml:space="preserve">
+    <value>Growl</value>
   </data>
   <data name="Open_Outlook" xml:space="preserve">
     <value>Open Outlook</value>
@@ -213,14 +222,14 @@
   <data name="Setting_up_Mail_handlers" xml:space="preserve">
     <value>Setting up Mail handlers</value>
   </data>
-  <data name="Autodiscovery_requires_an_Email" xml:space="preserve">
-    <value>Autodiscovery requires an Email address to be specified. Please check settings.</value>
+  <data name="No_Location" xml:space="preserve">
+    <value>&lt;No Location&gt;</value>
   </data>
   <data name="New_Mail" xml:space="preserve">
     <value>New Mail</value>
   </data>
-  <data name="OFF" xml:space="preserve">
-    <value>OFF</value>
+  <data name="Autodiscovery_requires_an_Email" xml:space="preserve">
+    <value>Autodiscovery requires an Email address to be specified. Please check settings.</value>
   </data>
   <data name="Autodiscovered_Mailbox_Server" xml:space="preserve">
     <value>Autodiscovered Mailbox Server:</value>
@@ -228,8 +237,8 @@
   <data name="not" xml:space="preserve">
     <value>not</value>
   </data>
-  <data name="Automatic_Login_is_switched" xml:space="preserve">
-    <value>Automatic Login is switched</value>
+  <data name="German" xml:space="preserve">
+    <value>German</value>
   </data>
   <data name="Major_Version" xml:space="preserve">
     <value>Major Version</value>
@@ -240,14 +249,14 @@
   <data name="New_Mail_from" xml:space="preserve">
     <value>New Mail from</value>
   </data>
-  <data name="Please_supply_valid_password" xml:space="preserve">
-    <value>Please supply a valid password.</value>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
   </data>
   <data name="Snarl" xml:space="preserve">
     <value>Snarl</value>
   </data>
-  <data name="Mb_total_size" xml:space="preserve">
-    <value>Mb total size)</value>
+  <data name="Automatic_Login_is_switched" xml:space="preserve">
+    <value>Automatic Login is switched</value>
   </data>
   <data name="Binding_to_Exchange" xml:space="preserve">
     <value>Binding to Exchange...</value>
@@ -258,8 +267,8 @@
   <data name="MDAC_Versions" xml:space="preserve">
     <value>MDAC Versions</value>
   </data>
-  <data name="in_your_inbox" xml:space="preserve">
-    <value>in your inbox</value>
+  <data name="Logging_error1" xml:space="preserve">
+    <value>Logging error 2:</value>
   </data>
   <data name="Mail_handler_restored_to_system" xml:space="preserve">
     <value>Mail handler restored to system default</value>
@@ -285,9 +294,6 @@
   <data name="Controls" xml:space="preserve">
     <value>Controls</value>
   </data>
-  <data name="Can_establish_valid_URL_for" xml:space="preserve">
-    <value>Can't establish a valid URL for Exchange. Please check settings.</value>
-  </data>
   <data name="Shell_Integration" xml:space="preserve">
     <value>Shell Integration</value>
   </data>
@@ -297,11 +303,8 @@
   <data name="Timer_stopped" xml:space="preserve">
     <value>Timer stopped</value>
   </data>
-  <data name="OWAtray_will" xml:space="preserve">
-    <value>OWAtray will</value>
-  </data>
-  <data name="Always_open_OWA_in_IE" xml:space="preserve">
-    <value>Always open OWA in IE</value>
+  <data name="Welcome_to_the" xml:space="preserve">
+    <value>Welcome to the</value>
   </data>
   <data name="Network" xml:space="preserve">
     <value>Network</value>
@@ -309,8 +312,8 @@
   <data name="Revision" xml:space="preserve">
     <value>Revision</value>
   </data>
-  <data name="Options" xml:space="preserve">
-    <value>Options</value>
+  <data name="SSL_Certificate_override" xml:space="preserve">
+    <value>SSL Certificate override switched</value>
   </data>
   <data name="Support_Information" xml:space="preserve">
     <value>Support Information</value>
@@ -318,17 +321,26 @@
   <data name="Snarl_notifications_switched" xml:space="preserve">
     <value>Snarl notifications switched</value>
   </data>
-  <data name="Terminating" xml:space="preserve">
-    <value>Terminating</value>
+  <data name="Date_stamping_switched_off" xml:space="preserve">
+    <value>*** Date stamping switched off</value>
   </data>
-  <data name="Growl" xml:space="preserve">
-    <value>Growl</value>
+  <data name="Please_supply_valid_password" xml:space="preserve">
+    <value>Please supply a valid password.</value>
   </data>
-  <data name="No_Location" xml:space="preserve">
-    <value>&lt;No Location&gt;</value>
+  <data name="User" xml:space="preserve">
+    <value>User :</value>
+  </data>
+  <data name="in_your_inbox" xml:space="preserve">
+    <value>in your inbox</value>
   </data>
   <data name="EWS_URL_override_switched" xml:space="preserve">
     <value>EWS URL override switched</value>
+  </data>
+  <data name="Mb" xml:space="preserve">
+    <value>Mb)</value>
+  </data>
+  <data name="Recall_Last_Popup" xml:space="preserve">
+    <value>Recall Last Popup</value>
   </data>
   <data name="You_have" xml:space="preserve">
     <value>You have</value>
@@ -348,26 +360,20 @@
   <data name="Logging_error" xml:space="preserve">
     <value>Logging error 1:</value>
   </data>
-  <data name="Calendar_notifications_switched" xml:space="preserve">
-    <value>Calendar notifications switched</value>
-  </data>
   <data name="Autodetect" xml:space="preserve">
     <value>Autodetect</value>
   </data>
-  <data name="Log_files_are_size_limited" xml:space="preserve">
-    <value>*** Log files are size limited (currently</value>
-  </data>
-  <data name="NET_Inspector" xml:space="preserve">
-    <value>.NET Inspector</value>
+  <data name="min" xml:space="preserve">
+    <value>min</value>
   </data>
   <data name="File" xml:space="preserve">
     <value>File</value>
   </data>
-  <data name="Error" xml:space="preserve">
-    <value>Error:</value>
+  <data name="Installed_NET_Versions" xml:space="preserve">
+    <value>Installed .NET Versions</value>
   </data>
-  <data name="min" xml:space="preserve">
-    <value>min</value>
+  <data name="Mb_total_size" xml:space="preserve">
+    <value>Mb total size)</value>
   </data>
   <data name="Log_files_will_NOT_be" xml:space="preserve">
     <value>*** Log files will NOT be scavenged</value>
@@ -375,8 +381,8 @@
   <data name="Override_Autodiscovery" xml:space="preserve">
     <value>Override Autodiscovery Validation</value>
   </data>
-  <data name="Error_when_getting_email" xml:space="preserve">
-    <value>Error when getting email properties:</value>
+  <data name="Can_establish_valid_URL_for" xml:space="preserve">
+    <value>Can't establish a valid URL for Exchange. Please check settings.</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Password :</value>
@@ -384,17 +390,20 @@
   <data name="Office_login_override" xml:space="preserve">
     <value>Office365 login override</value>
   </data>
+  <data name="You_have_an_appointment_in" xml:space="preserve">
+    <value>You have an appointment in</value>
+  </data>
   <data name="other_new_emails" xml:space="preserve">
     <value>other new emails</value>
   </data>
-  <data name="mins" xml:space="preserve">
-    <value>mins</value>
+  <data name="Restoring_Mail_handlers" xml:space="preserve">
+    <value>Restoring Mail handlers</value>
   </data>
   <data name="Mail_functions_will_now_be" xml:space="preserve">
     <value>Mail functions will now be handled by OWA</value>
   </data>
-  <data name="Override_Certificate" xml:space="preserve">
-    <value>Override Certificate</value>
+  <data name="OWAtray_will" xml:space="preserve">
+    <value>OWAtray will</value>
   </data>
   <data name="Support" xml:space="preserve">
     <value>Support</value>
@@ -426,20 +435,23 @@
   <data name="Growl_notifications_switched" xml:space="preserve">
     <value>Growl notifications switched</value>
   </data>
-  <data name="Logging_error1" xml:space="preserve">
-    <value>Logging error 2:</value>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
   </data>
-  <data name="Date_stamping_switched_off" xml:space="preserve">
-    <value>*** Date stamping switched off</value>
+  <data name="Translations" xml:space="preserve">
+    <value>Translations</value>
   </data>
   <data name="Logging_Started" xml:space="preserve">
     <value>*** Logging Started</value>
   </data>
-  <data name="unread_email" xml:space="preserve">
-    <value>unread email</value>
+  <data name="Calendar_notifications_switched" xml:space="preserve">
+    <value>Calendar notifications switched</value>
   </data>
   <data name="unknown" xml:space="preserve">
     <value>unknown</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Author</value>
   </data>
   <data name="Balloon" xml:space="preserve">
     <value>Balloon</value>
@@ -489,26 +501,26 @@
   <data name="Computer" xml:space="preserve">
     <value>Computer</value>
   </data>
-  <data name="Advanced_Settings" xml:space="preserve">
-    <value>Advanced Settings</value>
-  </data>
   <data name="Open_OWA" xml:space="preserve">
     <value>Open OWA</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error:</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
   </data>
-  <data name="Mb" xml:space="preserve">
-    <value>Mb)</value>
+  <data name="Log_files_are_size_limited" xml:space="preserve">
+    <value>*** Log files are size limited (currently</value>
   </data>
   <data name="Ready" xml:space="preserve">
     <value>Ready.</value>
   </data>
-  <data name="OK" xml:space="preserve">
-    <value>OK</value>
+  <data name="Advanced_Settings" xml:space="preserve">
+    <value>Advanced Settings</value>
   </data>
-  <data name="Reset_Tray_Icon" xml:space="preserve">
-    <value>Reset Tray Icon</value>
+  <data name="Always_open_OWA_in_IE" xml:space="preserve">
+    <value>Always open OWA in IE</value>
   </data>
   <data name="Balloon_notifications_switched" xml:space="preserve">
     <value>Balloon notifications switched</value>
@@ -519,14 +531,17 @@
   <data name="Gb" xml:space="preserve">
     <value>Gb (</value>
   </data>
-  <data name="About1" xml:space="preserve">
-    <value>About</value>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
   </data>
   <data name="Login_Automatically" xml:space="preserve">
     <value>Login Automatically</value>
   </data>
   <data name="Date_stamping_switched_on" xml:space="preserve">
     <value>*** Date stamping switched on</value>
+  </data>
+  <data name="Reset_Tray_Icon" xml:space="preserve">
+    <value>Reset Tray Icon</value>
   </data>
   <data name="Gathering_data_please_wait" xml:space="preserve">
     <value>Gathering data, please wait...</value>
@@ -546,14 +561,17 @@
   <data name="You_are_not_an_Admin_user" xml:space="preserve">
     <value>You are not an Admin user. Operation may fail.</value>
   </data>
+  <data name="unread_email" xml:space="preserve">
+    <value>unread email</value>
+  </data>
   <data name="Too_much_mail" xml:space="preserve">
     <value>Too much mail!</value>
   </data>
   <data name="Play_Sound" xml:space="preserve">
     <value>Play Sound</value>
   </data>
-  <data name="Restoring_Mail_handlers" xml:space="preserve">
-    <value>Restoring Mail handlers</value>
+  <data name="Error_when_getting_email" xml:space="preserve">
+    <value>Error when getting email properties:</value>
   </data>
   <data name="Update_Interval" xml:space="preserve">
     <value>Update Interval :</value>

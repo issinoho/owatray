@@ -540,7 +540,7 @@
 			this.groupBox3.Size = new System.Drawing.Size(622, 210);
 			this.groupBox3.TabIndex = 3;
 			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = "Logging";
+			this.groupBox3.Text = OWAtray.Logging;
 			// 
 			// pictureBox4
 			// 
@@ -570,7 +570,7 @@
 			this.lblUrl.Name = "lblUrl";
 			this.lblUrl.Size = new System.Drawing.Size(50, 13);
 			this.lblUrl.TabIndex = 3;
-			this.lblUrl.Text = "unknown";
+			this.lblUrl.Text = OWAtray.unknown;
 			// 
 			// txtURLEdit
 			// 
@@ -606,7 +606,7 @@
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(95, 13);
 			this.label5.TabIndex = 4;
-			this.label5.Text = "Windows Domain :";
+			this.label5.Text = OWAtray.Windows_Domain;
 			// 
 			// label4
 			// 
@@ -634,7 +634,7 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(88, 13);
 			this.label1.TabIndex = 0;
-			this.label1.Text = "Server Address :";
+			this.label1.Text = OWAtray.Server_Address;
 			// 
 			// txtEmail
 			// 
@@ -695,7 +695,7 @@
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(60, 13);
 			this.label3.TabIndex = 7;
-			this.label3.Text = "Password :";
+			this.label3.Text = OWAtray.Password;
 			// 
 			// txtUser
 			// 
@@ -713,7 +713,7 @@
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(36, 13);
 			this.label2.TabIndex = 5;
-			this.label2.Text = "User :";
+			this.label2.Text = OWAtray.User;
 			// 
 			// timer1
 			// 
@@ -808,7 +808,7 @@
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(80, 13);
 			this.label9.TabIndex = 1;
-			this.label9.Text = "Email Address :";
+			this.label9.Text = OWAtray.Email_Address;
 			// 
 			// chkAutodiscovery
 			// 
@@ -933,7 +933,7 @@
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(90, 13);
 			this.label8.TabIndex = 2;
-			this.label8.Text = "Update Interval :";
+			this.label8.Text = OWAtray.Update_Interval;
 			// 
 			// pictureBox16
 			// 
@@ -976,7 +976,7 @@
 			this.lblOWAUrl.Name = "lblOWAUrl";
 			this.lblOWAUrl.Size = new System.Drawing.Size(50, 13);
 			this.lblOWAUrl.TabIndex = 5;
-			this.lblOWAUrl.Text = "unknown";
+			this.lblOWAUrl.Text = OWAtray.unknown;
 			// 
 			// label13
 			// 
@@ -1006,7 +1006,7 @@
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(80, 13);
 			this.label6.TabIndex = 0;
-			this.label6.Text = "Email Address :";
+			this.label6.Text = OWAtray.Email_Address;
 			// 
 			// label10
 			// 
@@ -1027,7 +1027,7 @@
 			this.groupBox4.Size = new System.Drawing.Size(70, 166);
 			this.groupBox4.TabIndex = 1;
 			this.groupBox4.TabStop = false;
-			this.groupBox4.Text = "Controls";
+			this.groupBox4.Text = OWAtray.Controls;
 			// 
 			// RetryTimer
 			// 
