@@ -543,4 +543,22 @@
   <data name="Expert" xml:space="preserve">
     <value>Experto</value>
   </data>
+  <data name="Spanish" xml:space="preserve">
+    <value>Español</value>
+  </data>
+  <data name="Catalan" xml:space="preserve">
+    <value>Catalán</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Lengua</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Alemán</value>
+  </data>
+  <data name="Translations" xml:space="preserve">
+    <value>Traducciones</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Autor</value>
+  </data>
 </root>

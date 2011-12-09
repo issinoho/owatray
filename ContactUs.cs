@@ -32,7 +32,7 @@ namespace DrunkenBakery.OWAtray
 			lvX.Items.Add(new ListViewItem(OWAtray.Catalan, 0));
 			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
 			lvX.Items.Add(new ListViewItem(OWAtray.German, 1));
-			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Google Translate");
+			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Christian Treudler");
 			lvX.Items.Add(new ListViewItem(OWAtray.Spanish, 2));
 			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
 		}

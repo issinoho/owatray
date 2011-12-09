@@ -537,4 +537,22 @@
   <data name="others" xml:space="preserve">
     <value>altres</value>
   </data>
+  <data name="Spanish" xml:space="preserve">
+    <value>Espanyol</value>
+  </data>
+  <data name="Catalan" xml:space="preserve">
+    <value>Català</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Llengua</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Alemany</value>
+  </data>
+  <data name="Translations" xml:space="preserve">
+    <value>Traduccions</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Autor</value>
+  </data>
 </root>

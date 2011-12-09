@@ -121,43 +121,40 @@
     <value>in Ihrem Posteingang</value>
   </data>
   <data name="Audible_notifications_switched" xml:space="preserve">
-    <value>Audible Benachrichtigungen eingeschaltet</value>
+    <value>Akustische Benachrichtigungen</value>
   </data>
   <data name="Support" xml:space="preserve">
-    <value>Unterstützung</value>
+    <value>Hilfe</value>
   </data>
   <data name="Setting_up_Mail_handlers" xml:space="preserve">
-    <value>Einrichten E-Mail-Handler</value>
+    <value>E-Mail-Handler einrichten</value>
   </data>
   <data name="No_Title" xml:space="preserve">
     <value>&lt;Leer&gt;</value>
   </data>
   <data name="Balloon_notifications_switched" xml:space="preserve">
-    <value>Balloon-Benachrichtigungen eingeschaltet</value>
+    <value>Balloon-Benachrichtigungen</value>
   </data>
   <data name="Gb_free" xml:space="preserve">
-    <value>GB frei)</value>
+    <value>Gb frei)</value>
   </data>
   <data name="MDAC_Versions" xml:space="preserve">
     <value>MDAC-Versionen</value>
   </data>
   <data name="Mail_handler_restored_to_system" xml:space="preserve">
-    <value>E-Mail-Handler, um System-Standard wieder hergestellt</value>
+    <value>E-Mail-Handler auf den System-Standard wiederhergestellt</value>
   </data>
   <data name="Too_many_appointments" xml:space="preserve">
     <value>Zu viele Termine!</value>
   </data>
   <data name="Autodiscovery_Validation" xml:space="preserve">
-    <value>Autodiscovery Validation überschreiben eingeschaltet</value>
-  </data>
-  <data name="Start" xml:space="preserve">
-    <value>Starten</value>
+    <value>Autodiscovery Validation überschreiben</value>
   </data>
   <data name="Login_Automatically" xml:space="preserve">
     <value>Automatisch Einloggen</value>
   </data>
   <data name="New_Mail_from" xml:space="preserve">
-    <value>Neue E-Mail aus</value>
+    <value>Neue E-Mail von</value>
   </data>
   <data name="ON" xml:space="preserve">
     <value>Ein</value>
@@ -169,13 +166,13 @@
     <value>Logging-Fehler 1:</value>
   </data>
   <data name="autostart_with_Windows" xml:space="preserve">
-    <value>Autostart mit Windows</value>
+    <value>startet mit Windows</value>
   </data>
   <data name="unread_email" xml:space="preserve">
     <value>ungelesene E-Mail</value>
   </data>
   <data name="Endpoint_is_INSIDE_corporate" xml:space="preserve">
-    <value>Endpoint ist INSIDE Firmennetzwerk</value>
+    <value>Endpoint ist INNERHALB des Firmennetzwerkes</value>
   </data>
   <data name="Mb_total_size" xml:space="preserve">
     <value>Mb Gesamtgröße)</value>
@@ -187,31 +184,31 @@
     <value>Eine Verbindung zu Exchange...</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Ausfahrt</value>
+    <value>Beenden</value>
   </data>
   <data name="Play_Sound" xml:space="preserve">
     <value>Klang abspielen</value>
   </data>
   <data name="Snarl_notifications_switched" xml:space="preserve">
-    <value>Snarl Benachrichtigungen eingeschaltet</value>
+    <value>Snarl Benachrichtigungen</value>
   </data>
   <data name="Date_stamping_switched_on" xml:space="preserve">
     <value>*** Datumsstempel eingeschaltet</value>
   </data>
   <data name="Open_OWA" xml:space="preserve">
-    <value>Öffnen OWA</value>
+    <value>OWA öffnen</value>
   </data>
   <data name="Logging_Stopped" xml:space="preserve">
-    <value>*** Beenden Sie die Aufnahme</value>
+    <value>*** Logging beendet</value>
   </data>
   <data name="Endpoint_is_OUTSIDE_corporate" xml:space="preserve">
-    <value>Endpoint ist AUSSERHALB Firmennetzwerk</value>
+    <value>Endpoint ist AUßERHALB des Firmennetzwerkes</value>
   </data>
   <data name="other_new_emails" xml:space="preserve">
     <value>andere neue E-Mails</value>
   </data>
   <data name="Attempt_to_use_Autodiscovery" xml:space="preserve">
-    <value>Versuchen Sie die Verwendung der automatischen</value>
+    <value>Versuchen Autodiscovery zu verwenden</value>
   </data>
   <data name="Override_Autodiscovery" xml:space="preserve">
     <value>Abbrechen Autodiscovery Validation</value>
@@ -232,7 +229,7 @@
     <value>Shell-Integration</value>
   </data>
   <data name="OWA_URL_override_switched" xml:space="preserve">
-    <value>OWA URL überschreiben eingeschaltet</value>
+    <value>OWA URL überschreiben</value>
   </data>
   <data name="Controls" xml:space="preserve">
     <value>Steuerung</value>
@@ -241,7 +238,7 @@
     <value>&lt;Keine Betreff&gt;</value>
   </data>
   <data name="Please_supply_valid_password" xml:space="preserve">
-    <value>Bitte geben Sie ein gültiges Passwort.</value>
+    <value>Bitte geben Sie ein gültiges Passwort ein.</value>
   </data>
   <data name="mins" xml:space="preserve">
     <value>minuten</value>
@@ -250,7 +247,7 @@
     <value>Immer IE eingeschaltet</value>
   </data>
   <data name="Starting_Autodiscovery" xml:space="preserve">
-    <value>Ab Autodiscovery</value>
+    <value>Beginne Autodiscovery</value>
   </data>
   <data name="EWS_URL_override_switched" xml:space="preserve">
     <value>EWS URL überschreiben eingeschaltet</value>
@@ -265,7 +262,7 @@
     <value>MDAC Inspektor</value>
   </data>
   <data name="Log_files_are_size_limited" xml:space="preserve">
-    <value>*** Log-Dateien werden Größe begrenzt (derzeit</value>
+    <value>*** Log-Dateien sind Größen begrenzt (derzeit</value>
   </data>
   <data name="Office_login_override" xml:space="preserve">
     <value>Office365 login überschreiben</value>
@@ -277,25 +274,25 @@
     <value>Datei</value>
   </data>
   <data name="Recall_Last_Popup" xml:space="preserve">
-    <value>Abrufen Letzte Popup</value>
+    <value>Letztes Popup aufrufen</value>
   </data>
   <data name="Error_when_getting_email" xml:space="preserve">
-    <value>Fehler beim Ein E-Mail-Eigenschaften:</value>
+    <value>Fehler beim lesen der E-Mail-Eigenschaften:</value>
   </data>
   <data name="SSL_Certificate_override" xml:space="preserve">
-    <value>SSL-Zertifikat überschreiben eingeschaltet</value>
+    <value>SSL-Zertifikat überschreiben</value>
   </data>
   <data name="Detected_System_Settings" xml:space="preserve">
     <value>System-Einstellungen</value>
   </data>
   <data name="Installed_MDAC_Versions" xml:space="preserve">
-    <value>Installiert MDAC-Versionen</value>
+    <value>Installierte MDAC-Versionen</value>
   </data>
   <data name="NET_Versions" xml:space="preserve">
     <value>.NET-Versionen</value>
   </data>
   <data name="Growl_notifications_switched" xml:space="preserve">
-    <value>Growl-Benachrichtigungen eingeschaltet</value>
+    <value>Growl-Benachrichtigungen</value>
   </data>
   <data name="Update_Interval" xml:space="preserve">
     <value>Update-Intervall:</value>
@@ -313,22 +310,22 @@
     <value>Optionen</value>
   </data>
   <data name="Compiled_on_NET" xml:space="preserve">
-    <value>Erstellt am: .NET</value>
+    <value>Erstellt auf .NET</value>
   </data>
   <data name="min" xml:space="preserve">
     <value>minute</value>
   </data>
   <data name="Change_Log" xml:space="preserve">
-    <value>Änderungen</value>
+    <value>Änderunsprotokoll</value>
   </data>
   <data name="Terminating" xml:space="preserve">
     <value>Beenden</value>
   </data>
   <data name="Too_much_mail" xml:space="preserve">
-    <value>Zu viel mail!</value>
+    <value>Zu viele mails!</value>
   </data>
   <data name="Log_files_will_NOT_be" xml:space="preserve">
-    <value>*** Log-Dateien werden nicht abgefangen werden</value>
+    <value>*** Log-Dateien werden nicht abgeschnitten</value>
   </data>
   <data name="Log_file_is" xml:space="preserve">
     <value>Log-Datei</value>
@@ -343,13 +340,13 @@
     <value>verbunden mit</value>
   </data>
   <data name="Log_files_will_be_scavenged" xml:space="preserve">
-    <value>*** Log-Dateien werden abgefangen (nach werden</value>
+    <value>*** Log-Dateien werden abgeschnitten (nach</value>
   </data>
   <data name="Log_files_are_NOT_size" xml:space="preserve">
-    <value>*** Log-Dateien sind NICHT Größe begrenzt</value>
+    <value>*** Log-Dateien sind NICHT Größen begrenzt</value>
   </data>
   <data name="Mail_functions_will_now_be" xml:space="preserve">
-    <value>Mail-Funktionen wird nun durch OWA behandelt werden</value>
+    <value>Mail-Funktionen werden nun durch OWA behandelt</value>
   </data>
   <data name="Balloon" xml:space="preserve">
     <value>Ballon</value>
@@ -364,7 +361,7 @@
     <value>Neue E-Mail</value>
   </data>
   <data name="Run_at_Startup" xml:space="preserve">
-    <value>Run beim Start</value>
+    <value>Beim Start ausführen</value>
   </data>
   <data name="days_or" xml:space="preserve">
     <value>Tage oder</value>
@@ -373,16 +370,16 @@
     <value>Sie sind kein Administrator. Der Betrieb kann fehlschlagen.</value>
   </data>
   <data name="Disable_Calendar" xml:space="preserve">
-    <value>Deaktivieren Kalender</value>
+    <value>Kalender deaktivieren</value>
   </data>
   <data name="There_are" xml:space="preserve">
     <value>Es gibt</value>
   </data>
   <data name="Please_supply_valid_email" xml:space="preserve">
-    <value>Bitte geben Sie eine gültige E-Mail-Adresse oder Benutzername.</value>
+    <value>Bitte geben Sie eine gültige E-Mail-Adresse oder Benutzername ein.</value>
   </data>
   <data name="Reset_Tray_Icon" xml:space="preserve">
-    <value>Zurücksetzen Tray Icon</value>
+    <value>Tray Icon zurücksetzen</value>
   </data>
   <data name="About1" xml:space="preserve">
     <value>Über</value>
@@ -394,7 +391,7 @@
     <value>Fehler:</value>
   </data>
   <data name="Use_Windows_Domain_Credentials" xml:space="preserve">
-    <value>Verwenden Sie den Windows Domain Credentials</value>
+    <value>Windows Domain Anmeldung verwenden</value>
   </data>
   <data name="Override_Certificate" xml:space="preserve">
     <value>Override-Zertifikat</value>
@@ -412,10 +409,10 @@
     <value>Autodiscovered Benutzername:</value>
   </data>
   <data name="Always_open_OWA_in_IE" xml:space="preserve">
-    <value>Immer offen OWA in IE</value>
+    <value>OWA immer im IE öffnen</value>
   </data>
   <data name="Installed_NET_Versions" xml:space="preserve">
-    <value>Installiert. NET-Versionen</value>
+    <value>Installierte. NET-Versionen</value>
   </data>
   <data name="OFF" xml:space="preserve">
     <value>Aus</value>
@@ -433,13 +430,13 @@
     <value>.NET Inspektor</value>
   </data>
   <data name="Gathering_data_please_wait" xml:space="preserve">
-    <value>Das Sammeln von Daten, bitte warten...</value>
+    <value>Daten werden gesammelt, bitte warten...</value>
   </data>
   <data name="second_timer_started" xml:space="preserve">
     <value>Sekunden-Timer gestartet</value>
   </data>
   <data name="Storage" xml:space="preserve">
-    <value>Lagerung</value>
+    <value>Speicher</value>
   </data>
   <data name="Dependent_Assemblies" xml:space="preserve">
     <value>Abhängigen Assemblys:</value>
@@ -454,10 +451,10 @@
     <value>Über {0}</value>
   </data>
   <data name="Calendar_notifications_switched" xml:space="preserve">
-    <value>Kalender-Benachrichtigungen eingeschaltet</value>
+    <value>Kalender-Benachrichtigungen</value>
   </data>
   <data name="Autodiscovery_requires_an_Email" xml:space="preserve">
-    <value>Autodiscovery erfordert eine Email-Adresse angegeben werden. Bitte überprüfen Sie die Einstellungen.</value>
+    <value>Autodiscovery benötigt eine Email-Adresse. Bitte überprüfen Sie die Einstellungen.</value>
   </data>
   <data name="Stop" xml:space="preserve">
     <value>Stopp</value>
@@ -484,19 +481,19 @@
     <value>Betriebssystem</value>
   </data>
   <data name="Switch_Off" xml:space="preserve">
-    <value>Abschrecken</value>
+    <value>Ausschalten</value>
   </data>
   <data name="Expert" xml:space="preserve">
     <value>Experte</value>
   </data>
   <data name="Open_Outlook" xml:space="preserve">
-    <value>Öffnen Sie Outlook</value>
+    <value>Outlook öffnen</value>
   </data>
   <data name="Server_Address" xml:space="preserve">
     <value>Server-Adresse:</value>
   </data>
   <data name="Make_OWA_Default" xml:space="preserve">
-    <value>Machen Sie OWA Standard</value>
+    <value>OWA als Standard</value>
   </data>
   <data name="Date_stamping_switched_off" xml:space="preserve">
     <value>*** Datumsstempel ausgeschaltet</value>
@@ -505,6 +502,36 @@
     <value>unbekannt</value>
   </data>
   <data name="Not_Connected_to_Exchange" xml:space="preserve">
-    <value>Nicht auf Exchange Connected</value>
+    <value>Nicht zu Exchange verbunden</value>
+  </data>
+  <data name="Spanish" xml:space="preserve">
+    <value>Spanisch</value>
+  </data>
+  <data name="Catalan" xml:space="preserve">
+    <value>Katalanisch</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="Event_Details" xml:space="preserve">
+    <value>Ereignis-Details</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Benutzer :</value>
+  </data>
+  <data name="Translations" xml:space="preserve">
+    <value>Übersetzungen</value>
+  </data>
+  <data name="Logging_Started" xml:space="preserve">
+    <value>*** Logging gestartet</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="Ready" xml:space="preserve">
+    <value>Fertig.</value>
   </data>
 </root>
