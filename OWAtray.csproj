@@ -35,6 +35,8 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\owatray\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -79,15 +81,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Growl.Connector, Version=2.0.0.0, Culture=neutral, PublicKeyToken=980c2339411be384, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\Growl\Growl.Connector.dll</HintPath>
+      <HintPath>packages\Growl.0.6\lib\Growl.Connector.dll</HintPath>
     </Reference>
     <Reference Include="Growl.CoreLibrary, Version=2.0.0.0, Culture=neutral, PublicKeyToken=13e59d82e007b064, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\Growl\Growl.CoreLibrary.dll</HintPath>
+      <HintPath>packages\Growl.0.6\lib\Growl.CoreLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Exchange.WebServices">
-      <HintPath>..\..\Program Files (x86)\Microsoft\Exchange\Web Services\1.1\Microsoft.Exchange.WebServices.dll</HintPath>
+    <Reference Include="Microsoft.Exchange.WebServices, Version=14.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\ExchangeWebServices.1.1\lib\Microsoft.Exchange.WebServices.dll</HintPath>
     </Reference>
     <Reference Include="SnarlConnector, Version=1.1.0.0, Culture=neutral, PublicKeyToken=ba7d923d3001e68e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -138,6 +138,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GrowlHelper.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="MDACversions.cs">
       <SubType>Form</SubType>
@@ -198,6 +199,7 @@
     </Compile>
     <None Include="app.config" />
     <None Include="Cygnet.snk" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -311,4 +313,5 @@
       <UserProperties Reactor_Enabled="1" />
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>
