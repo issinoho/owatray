@@ -152,10 +152,25 @@
     <Compile Include="NETversions.designer.cs">
       <DependentUpon>NETversions.cs</DependentUpon>
     </Compile>
+    <Compile Include="OWAtray.ca.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OWAtray.ca.resx</DependentUpon>
+    </Compile>
+    <Compile Include="OWAtray.de.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OWAtray.de.resx</DependentUpon>
+    </Compile>
     <Compile Include="OWAtray.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>OWAtray.resx</DependentUpon>
+    </Compile>
+    <Compile Include="OWAtray.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OWAtray.es.resx</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -177,9 +192,18 @@
     <EmbeddedResource Include="NETversions.resx">
       <DependentUpon>NETversions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OWAtray.ca.resx" />
-    <EmbeddedResource Include="OWAtray.de.resx" />
-    <EmbeddedResource Include="OWAtray.es.resx" />
+    <EmbeddedResource Include="OWAtray.ca.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OWAtray.ca.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OWAtray.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OWAtray.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OWAtray.es.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OWAtray.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="OWAtray.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OWAtray.Designer.cs</LastGenOutput>
@@ -264,6 +288,8 @@
     <Content Include="notify.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\web_app.png" />
+    <None Include="Resources\find.png" />
     <None Include="Resources\office.png" />
     <None Include="Resources\Clipboard01.png" />
     <None Include="Resources\apply.png" />

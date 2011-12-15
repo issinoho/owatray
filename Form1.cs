@@ -172,7 +172,8 @@ namespace DrunkenBakery.OWAtray
 			loginAutomaticallyToolStripMenuItem.Checked = Properties.Settings.Default.AutoLogin;
 			office365LoginOverrideToolStripMenuItem.Checked = Properties.Settings.Default.UseOffice365;
 			overrideAutodiscoveryValidationToolStripMenuItem.Checked = Properties.Settings.Default.OverrideValidation;
-
+			useDefaultWebProxyToolStripMenuItem.Checked = Properties.Settings.Default.UseWebProxy;
+			
 			// Autodiscover?
 			chkAutodiscovery.Checked = Properties.Settings.Default.Autodiscovery;
 			SelectAutodiscoveryOptions();
@@ -832,6 +833,12 @@ namespace DrunkenBakery.OWAtray
 
 				// Validate the server certificate
 				ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
+
+				// Set up proxy if needed
+				if (Properties.Settings.Default.UseWebProxy)
+				{
+					WebRequest.DefaultWebProxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
+				}
 
 				AddLogEntry(OWAtray.Binding_to_Exchange, LogType.Info);
 				switch (Properties.Settings.Default.ExchangeVersion)
@@ -2337,6 +2344,36 @@ namespace DrunkenBakery.OWAtray
 				// Start
 				startMonitoring();
 			}
+		}
+
+		/// <summary>
+		/// Handles the Click event of the showLogFileToolStripMenuItem control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+		private void showLogFileToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				System.Diagnostics.Process.Start(myLog.LogFile);
+			}
+			catch (Exception ex)
+			{
+				AddLogEntry(ex.Message, LogType.Fail);
+			}
+		}
+
+		/// <summary>
+		/// Handles the Click event of the useDefaultWebProxyToolStripMenuItem control.
+		/// </summary>
+		/// <param name="sender">The source of the event.</param>
+		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+		private void useDefaultWebProxyToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (startingUp) return;
+
+			Properties.Settings.Default.UseWebProxy = useDefaultWebProxyToolStripMenuItem.Checked;
+			Properties.Settings.Default.Save();
 		}
 	}
 }

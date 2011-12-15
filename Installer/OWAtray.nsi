@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "2.0.4360.20074"
+!define PRODUCT_VERSION "2.0.4366.21606"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray.exe"
@@ -65,9 +65,15 @@ Section "MainSection" SEC01
   File "..\bin\x86\Release\OWAtray.exe.config"
   File "..\bin\x86\Release\SnarlConnector.dll"
   
+  CreateDirectory "$INSTDIR\ca"
+  SetOutPath "$INSTDIR\ca"
+  File "..\bin\x86\Release\ca\OWAtray.resources_Secure\OWAtray.resources.dll"
   CreateDirectory "$INSTDIR\de"
   SetOutPath "$INSTDIR\de"
   File "..\bin\x86\Release\de\OWAtray.resources_Secure\OWAtray.resources.dll"
+  CreateDirectory "$INSTDIR\es"
+  SetOutPath "$INSTDIR\es"
+  File "..\bin\x86\Release\es\OWAtray.resources_Secure\OWAtray.resources.dll"
 SectionEnd
 
 Section -AdditionalIcons
