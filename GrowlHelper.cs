@@ -1,23 +1,38 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+//------------------------------------------------------------------
+// DrunkenBakery OWA Tray Monitor
+// GrowlHelper
+//
+// <copyright file="GrowlHelper.cs" company="The Drunken Bakery">
+//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
+// </copyright>
+//
+// Helper class for Growl
+//
+//------------------------------------------------------------------
 using Growl.Connector;
-using Growl.CoreLibrary;
 
 namespace DrunkenBakery.OWAtray
 {
-    class GrowlHelper
-    {
-        public static void simpleGrowl(string title, string message = "")
-        {
-            GrowlConnector simpleGrowl = new GrowlConnector();
-            Growl.Connector.Application thisApp = new Growl.Connector.Application(System.Windows.Forms.Application.ProductName);
-            NotificationType simpleGrowlType = new NotificationType("SIMPLEGROWL");
-            simpleGrowl.Register(thisApp, new NotificationType[] { simpleGrowlType });
-            Notification myGrowl = new Notification(System.Windows.Forms.Application.ProductName, "SIMPLEGROWL", title, title, message);
-            simpleGrowl.Notify(myGrowl);
-        }
-    }
+	public class GrowlHelper
+	{
+		private static string _application;
+		private static string _notificationTitle;
+		private static GrowlConnector _simpleGrowl;
+
+		public static void RegisterGrowl(string application, string iconPath, string notificationTitle, string notificationText)
+		{
+			_application = application;
+			_notificationTitle = notificationTitle;
+			_simpleGrowl = new GrowlConnector();
+			var thisApp = new Growl.Connector.Application(application) {Icon = iconPath};
+			var simpleGrowlType = new NotificationType(notificationTitle, notificationText);			
+			_simpleGrowl.Register(thisApp, new NotificationType[] { simpleGrowlType });
+		}
+
+		public static void PopGrowl(string title, string message = "")
+		{
+			var myGrowl = new Notification(_application, _notificationTitle, title, title, message);
+			_simpleGrowl.Notify(myGrowl);
+		}
+	}
 }

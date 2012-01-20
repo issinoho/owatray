@@ -72,7 +72,7 @@
       <Value Profile="(Default)">OUTLOOK.EXE</Value>
     </Setting>
     <Setting Name="ShellIntegration" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">ShellIntegration.exe</Value>
+      <Value Profile="(Default)">DrunkenBakery.OWAtray.ShellIntegration.exe</Value>
     </Setting>
     <Setting Name="DisableCalendar" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -112,6 +112,9 @@
     </Setting>
     <Setting Name="UseWebProxy" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ScreenLines" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1000</Value>
     </Setting>
   </Settings>
 </SettingsFile>

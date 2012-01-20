@@ -289,7 +289,7 @@ namespace DrunkenBakery.OWAtray.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ShellIntegration.exe")]
+        [global::System.Configuration.DefaultSettingValueAttribute("DrunkenBakery.OWAtray.ShellIntegration.exe")]
         public string ShellIntegration {
             get {
                 return ((string)(this["ShellIntegration"]));
@@ -443,6 +443,15 @@ namespace DrunkenBakery.OWAtray.Properties {
             }
             set {
                 this["UseWebProxy"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int ScreenLines {
+            get {
+                return ((int)(this["ScreenLines"]));
             }
         }
     }

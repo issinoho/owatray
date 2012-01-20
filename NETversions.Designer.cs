@@ -1,6 +1,6 @@
 ﻿namespace DrunkenBakery.OWAtray
 {
-    partial class NETversions
+    partial class NeTversions
     {
         #region Fields
 
@@ -38,7 +38,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NETversions));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NeTversions));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lvStatus = new System.Windows.Forms.ListView();
             this.imLV = new System.Windows.Forms.ImageList(this.components);
@@ -92,7 +92,7 @@
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "NETversions";
+            this.Name = "NeTversions";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = OWAtray.NET_Inspector;
             this.groupBox1.ResumeLayout(false);

@@ -11,319 +11,220 @@
 // Dummy line - ignore
 //
 //------------------------------------------------------------------
+
+using System.Linq;
+
 namespace DrunkenBakery.OWAtray
 {
-    using System;
-    using System.Management;
-    using System.Text.RegularExpressions;
-    using System.Windows.Forms;
+	using System;
+	using System.Management;
+	using System.Text.RegularExpressions;
+	using System.Windows.Forms;
 
-    /// <summary>
-    /// Reports on System Information
-    /// </summary>
-    public partial class SysInfo : Form
-    {
-        #region Constructors
+	public partial class SysInfo : Form
+	{
+		public SysInfo()
+		{
+			InitializeComponent();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SysInfo"/> class.
-        /// </summary>
-        public SysInfo()
-        {
-            InitializeComponent();
+			// Empty trees
+			tvOptions.Nodes.Clear();
+			tvCheat.Nodes.Clear();
 
-            // Empty trees
-            tvOptions.Nodes.Clear();
-            tvCheat.Nodes.Clear();
+			// Make the dummy one visible while we build the real tree
+			tvOptions.Visible = false;
+			tvCheat.Visible = true;
 
-            // Make the dummy one visible while we build the real tree
-            tvOptions.Visible = false;
-            tvCheat.Visible = true;
+			// Please wait...
+			var newNode = new TreeNode(OWAtray.Gathering_data_please_wait) {ImageIndex = 23, SelectedImageIndex = 23};
+			tvCheat.Nodes.Add(newNode);
 
-            // Please wait...
-            TreeNode newNode = new TreeNode(OWAtray.Gathering_data_please_wait);
-            newNode.ImageIndex = 23;
-            newNode.SelectedImageIndex = 23;
-            tvCheat.Nodes.Add(newNode);
+			// Wait and then gather data
+			timer1.Enabled = true;
+		}
 
-            // Wait and then gather data
-            timer1.Enabled = true;
-        }
+		private void BuildTree()
+		{
+			// Empty tree
+			this.SuspendLayout();
+			tvOptions.Nodes.Clear();
 
-        #endregion Constructors
+			// Top level branches
+			var newNode = new TreeNode(OWAtray.Operating_System) {ImageIndex = 10, SelectedImageIndex = 10};
+			tvOptions.Nodes.Add(newNode);
+			GetOs(newNode);
 
-        #region Methods
+			newNode = new TreeNode(OWAtray.Computer) {ImageIndex = 0, SelectedImageIndex = 0};
+			tvOptions.Nodes.Add(newNode);
+			GetComputer(newNode);
 
-        /// <summary>
-        /// Builds the tree.
-        /// </summary>
-        private void BuildTree()
-        {
-            TreeNode newNode;
+			newNode = new TreeNode(OWAtray.Owner) {ImageIndex = 12, SelectedImageIndex = 12};
+			tvOptions.Nodes.Add(newNode);
+			GetOwner(newNode);
 
-            // Empty tree
-            this.SuspendLayout();
-            tvOptions.Nodes.Clear();
+			newNode = new TreeNode(OWAtray.Network) {ImageIndex = 11, SelectedImageIndex = 11};
+			tvOptions.Nodes.Add(newNode);
+			GetNetwork(newNode);
 
-            // Top level branches
-            newNode = new TreeNode(OWAtray.Operating_System);
-            newNode.ImageIndex = 10;
-            newNode.SelectedImageIndex = 10;
-            tvOptions.Nodes.Add(newNode);
-            // OS children
-            GetOS(newNode);
+			newNode = new TreeNode(OWAtray.Storage) {ImageIndex = 6, SelectedImageIndex = 6};
+			tvOptions.Nodes.Add(newNode);
+			GetStorage(newNode);
 
-            newNode = new TreeNode(OWAtray.Computer);
-            newNode.ImageIndex = 0;
-            newNode.SelectedImageIndex = 0;
-            tvOptions.Nodes.Add(newNode);
-            // Computer children
-            GetComputer(newNode);
+			this.ResumeLayout();
+		}
 
-            newNode = new TreeNode(OWAtray.Owner);
-            newNode.ImageIndex = 12;
-            newNode.SelectedImageIndex = 12;
-            tvOptions.Nodes.Add(newNode);
-            GetOwner(newNode);
+		private void cmdOK_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
 
-            newNode = new TreeNode(OWAtray.Network);
-            newNode.ImageIndex = 11;
-            newNode.SelectedImageIndex = 11;
-            tvOptions.Nodes.Add(newNode);
-            GetNetwork(newNode);
+		private static void GetComputer(TreeNode newNode)
+		{
+			try
+			{
+				// Manufacturer details
+				var query1 = new ManagementObjectSearcher("SELECT * FROM Win32_ComputerSystem");
+				var queryCollection1 = query1.Get();
+				foreach (ManagementObject mo in queryCollection1)
+				{
+					var childNode = new TreeNode(mo["Manufacturer"].ToString());
+					childNode.ImageIndex = 14;
+					childNode.SelectedImageIndex = 14;
+					newNode.Nodes.Add(childNode);
+					childNode = new TreeNode(mo["Model"].ToString()) {ImageIndex = 13, SelectedImageIndex = 13};
+					newNode.Nodes.Add(childNode);
+				}
 
-            newNode = new TreeNode(OWAtray.Storage);
-            newNode.ImageIndex = 6;
-            newNode.SelectedImageIndex = 6;
-            tvOptions.Nodes.Add(newNode);
-            GetStorage(newNode);
+				// Processor details
+				query1 = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
+				queryCollection1 = query1.Get();
+				var count = 1;
+				foreach (var childNode in from ManagementObject mo in queryCollection1 select new TreeNode("CPU " + count++ + ": " + Regex.Replace(mo["Name"].ToString(), @"^\s+|\s+$", "") + " (" +
+				            mo["AddressWidth"].ToString() + " " + OWAtray.bit)
+							{ImageIndex = 17, SelectedImageIndex = 17})
+				{
+					newNode.Nodes.Add(childNode);
+				}
 
-            this.ResumeLayout();
-        }
+				// Memory
+				query1 = new ManagementObjectSearcher("SELECT * FROM Win32_PhysicalMemory");
+				queryCollection1 = query1.Get();
+				var totalCapacity = queryCollection1.Cast<ManagementObject>().Aggregate<ManagementObject, ulong>(0, (current, mo) => current + System.Convert.ToUInt64(mo["Capacity"]));
+				var memNode = new TreeNode("Memory: " + (totalCapacity/1073741824) + " Gb")
+								{ImageIndex = 19, SelectedImageIndex = 19};
+				newNode.Nodes.Add(memNode);
+			}
+			catch (Exception)
+			{
+			}
+		}
 
-        /// <summary>
-        /// Handles the Click event of the cmdOK control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void cmdOK_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+		private static void GetNetwork(TreeNode newNode)
+		{
+			try
+			{
+				// Domain stuff
+				var query1 = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
+				var queryCollection1 = query1.Get();
+				foreach (var childNode in from ManagementObject mo in queryCollection1 select new TreeNode(mo["CSName"].ToString()))
+				{
+					childNode.ImageIndex = 22;
+					childNode.SelectedImageIndex = 22;
+					newNode.Nodes.Add(childNode);
+				}
 
-        /// <summary>
-        /// Gets the computer details.
-        /// </summary>
-        /// <param name="newNode">The new node.</param>
-        private void GetComputer(TreeNode newNode)
-        {
-            try
-            {
-                ManagementObjectSearcher query1;
-                ManagementObjectCollection queryCollection1;
+				// Domain stuff
+				query1 = new ManagementObjectSearcher("SELECT * FROM Win32_ComputerSystem");
+				queryCollection1 = query1.Get();
+				foreach (ManagementObject mo in queryCollection1)
+				{
+					var childNode = new TreeNode(mo["UserName"].ToString()) {ImageIndex = 2, SelectedImageIndex = 2};
+					newNode.Nodes.Add(childNode);
+					childNode = new TreeNode(mo["Domain"].ToString()) {ImageIndex = 21, SelectedImageIndex = 21};
+					newNode.Nodes.Add(childNode);
+				}
 
-                // Manufacturer details
-                query1 = new ManagementObjectSearcher("SELECT * FROM Win32_ComputerSystem");
-                queryCollection1 = query1.Get();
-                foreach (ManagementObject mo in queryCollection1)
-                {
-                    TreeNode childNode;
-                    childNode = new TreeNode(mo["Manufacturer"].ToString());
-                    childNode.ImageIndex = 14;
-                    childNode.SelectedImageIndex = 14;
-                    newNode.Nodes.Add(childNode);
-                    childNode = new TreeNode(mo["Model"].ToString());
-                    childNode.ImageIndex = 13;
-                    childNode.SelectedImageIndex = 13;
-                    newNode.Nodes.Add(childNode);
-                }
-                // Processor details
-                query1 = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
-                queryCollection1 = query1.Get();
-                int count = 1;
-                foreach (ManagementObject mo in queryCollection1)
-                {
-                    TreeNode childNode;
-                    childNode = new TreeNode("CPU " + count++ + ": " + Regex.Replace(mo["Name"].ToString(), @"^\s+|\s+$", "") + " (" + mo["AddressWidth"].ToString() + " " + OWAtray.bit);
-                    childNode.ImageIndex = 17;
-                    childNode.SelectedImageIndex = 17;
-                    newNode.Nodes.Add(childNode);
-                }
-                // Memory
-                UInt64 totalCapacity = 0;
-                query1 = new ManagementObjectSearcher("SELECT * FROM Win32_PhysicalMemory");
-                queryCollection1 = query1.Get();
-                foreach (ManagementObject mo in queryCollection1)
-                {
-                    totalCapacity += System.Convert.ToUInt64(mo["Capacity"]);
-                }
-                TreeNode memNode;
-                memNode = new TreeNode("Memory: " + (totalCapacity / 1073741824) + " Gb");
-                memNode.ImageIndex = 19;
-                memNode.SelectedImageIndex = 19;
-                newNode.Nodes.Add(memNode);
-            }
-            catch (Exception)
-            {
-            }
-        }
+				// IP Address
+				var myHost = System.Net.Dns.GetHostName();
+				var myIp = System.Net.Dns.GetHostEntry(myHost).AddressList[0].ToString();
+				var ipNode = new TreeNode(myIp) {ImageIndex = 20, SelectedImageIndex = 20};
+				newNode.Nodes.Add(ipNode);
+			}
+			catch (Exception)
+			{
+			}
+		}
 
-        /// <summary>
-        /// Gets the network information.
-        /// </summary>
-        /// <param name="newNode">The new node.</param>
-        private void GetNetwork(TreeNode newNode)
-        {
-            try
-            {
-                ManagementObjectSearcher query1;
-                ManagementObjectCollection queryCollection1;
+		private static void GetOs(TreeNode newNode)
+		{
+			try
+			{
+				var query1 = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
+				var queryCollection1 = query1.Get();
+				foreach( ManagementObject mo in queryCollection1 )
+				{
+					var childNode = new TreeNode(mo["Caption"].ToString()) {ImageIndex = 7, SelectedImageIndex = 7};
+					newNode.Nodes.Add(childNode);
+					childNode = new TreeNode(mo["CSDVersion"].ToString()) {ImageIndex = 8, SelectedImageIndex = 8};
+					newNode.Nodes.Add(childNode);
+				}
+			}
+			catch(Exception)
+			{
+			}
+		}
 
-                // Domain stuff
-                query1 = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
-                queryCollection1 = query1.Get();
-                foreach (ManagementObject mo in queryCollection1)
-                {
-                    TreeNode childNode;
-                    childNode = new TreeNode(mo["CSName"].ToString());
-                    childNode.ImageIndex = 22;
-                    childNode.SelectedImageIndex = 22;
-                    newNode.Nodes.Add(childNode);
-                }
-                // Domain stuff
-                query1 = new ManagementObjectSearcher("SELECT * FROM Win32_ComputerSystem");
-                queryCollection1 = query1.Get();
-                foreach (ManagementObject mo in queryCollection1)
-                {
-                    TreeNode childNode;
-                    childNode = new TreeNode(mo["UserName"].ToString());
-                    childNode.ImageIndex = 2;
-                    childNode.SelectedImageIndex = 2;
-                    newNode.Nodes.Add(childNode);
-                    childNode = new TreeNode(mo["Domain"].ToString());
-                    childNode.ImageIndex = 21;
-                    childNode.SelectedImageIndex = 21;
-                    newNode.Nodes.Add(childNode);
-                }
-                // IP Address
-                string myHost = System.Net.Dns.GetHostName();
-                string myIP = System.Net.Dns.GetHostEntry(myHost).AddressList[0].ToString();
-                TreeNode ipNode;
-                ipNode = new TreeNode(myIP);
-                ipNode.ImageIndex = 20;
-                ipNode.SelectedImageIndex = 20;
-                newNode.Nodes.Add(ipNode);
-            }
-            catch (Exception)
-            {
-            }
-        }
+		private static void GetOwner(TreeNode newNode)
+		{
+			try
+			{
+				var query1 = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
+				var queryCollection1 = query1.Get();
+				foreach (ManagementObject mo in queryCollection1)
+				{
+					var childNode = new TreeNode(mo["RegisteredUser"].ToString()) {ImageIndex = 3, SelectedImageIndex = 3};
+					newNode.Nodes.Add(childNode);
+					childNode = new TreeNode(mo["Organization"].ToString()) {ImageIndex = 4, SelectedImageIndex = 4};
+					newNode.Nodes.Add(childNode);
+					childNode = new TreeNode(mo["SerialNumber"].ToString()) {ImageIndex = 5, SelectedImageIndex = 5};
+					newNode.Nodes.Add(childNode);
+				}
+			}
+			catch (Exception)
+			{
+			}
+		}
 
-        /// <summary>
-        /// Gets the OS details.
-        /// </summary>
-        /// <param name="newNode">The new node.</param>
-        private void GetOS(TreeNode newNode)
-        {
-            try
-            {
-                ManagementObjectSearcher query1 = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
-                ManagementObjectCollection queryCollection1 = query1.Get();
-                foreach( ManagementObject mo in queryCollection1 )
-                {
-                    TreeNode childNode;
-                    childNode = new TreeNode(mo["Caption"].ToString());
-                    childNode.ImageIndex = 7;
-                    childNode.SelectedImageIndex = 7;
-                    newNode.Nodes.Add(childNode);
-                    childNode = new TreeNode(mo["CSDVersion"].ToString());
-                    childNode.ImageIndex = 8;
-                    childNode.SelectedImageIndex = 8;
-                    newNode.Nodes.Add(childNode);
-                }
-            }
-            catch(Exception)
-            {
-            }
-        }
+		private static void GetStorage(TreeNode newNode)
+		{
+			try
+			{
+				var query1 = new ManagementObjectSearcher("select FreeSpace,Size,Name from Win32_LogicalDisk where DriveType=3");
+				var queryCollection1 = query1.Get();
+				foreach (var childNode in from ManagementObject mo in queryCollection1 let freeSpace = System.Convert.ToUInt64(mo["FreeSpace"]) let size = System.Convert.ToUInt64(mo["Size"]) select new TreeNode(mo["Name"].ToString() + ": " + (size/1073741824) + " " + OWAtray.Gb +
+							(freeSpace/1073741824) + " " + OWAtray.Gb_free)
+							{ImageIndex = 15, SelectedImageIndex = 15})
+				{
+					newNode.Nodes.Add(childNode);
+				}
+			}
+			catch (Exception)
+			{
+			}
+		}
 
-        /// <summary>
-        /// Gets the owner information.
-        /// </summary>
-        /// <param name="newNode">The new node.</param>
-        private void GetOwner(TreeNode newNode)
-        {
-            try
-            {
-                ManagementObjectSearcher query1 = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
-                ManagementObjectCollection queryCollection1 = query1.Get();
-                foreach (ManagementObject mo in queryCollection1)
-                {
-                    TreeNode childNode;
-                    childNode = new TreeNode(mo["RegisteredUser"].ToString());
-                    childNode.ImageIndex = 3;
-                    childNode.SelectedImageIndex = 3;
-                    newNode.Nodes.Add(childNode);
-                    childNode = new TreeNode(mo["Organization"].ToString());
-                    childNode.ImageIndex = 4;
-                    childNode.SelectedImageIndex = 4;
-                    newNode.Nodes.Add(childNode);
-                    childNode = new TreeNode(mo["SerialNumber"].ToString());
-                    childNode.ImageIndex = 5;
-                    childNode.SelectedImageIndex = 5;
-                    newNode.Nodes.Add(childNode);
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+			// Stop re-entrancy
+			timer1.Enabled = false;
 
-        /// <summary>
-        /// Gets the storage information.
-        /// </summary>
-        /// <param name="newNode">The new node.</param>
-        private void GetStorage(TreeNode newNode)
-        {
-            try
-            {
-                ManagementObjectSearcher query1 = new ManagementObjectSearcher("select FreeSpace,Size,Name from Win32_LogicalDisk where DriveType=3");
-                ManagementObjectCollection queryCollection1 = query1.Get();
-                foreach (ManagementObject mo in queryCollection1)
-                {
-                    TreeNode childNode;
-                    UInt64 FreeSpace = System.Convert.ToUInt64(mo["FreeSpace"]);
-                    UInt64 Size = System.Convert.ToUInt64(mo["Size"]);
-                    childNode = new TreeNode(mo["Name"].ToString() + ": " + (Size / 1073741824) + " " + OWAtray.Gb + (FreeSpace / 1073741824) + " " + OWAtray.Gb_free);
-                    childNode.ImageIndex = 15;
-                    childNode.SelectedImageIndex = 15;
-                    newNode.Nodes.Add(childNode);
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
+			// Tree
+			BuildTree();
+			tvOptions.SelectedNode = tvOptions.Nodes[0];
 
-        /// <summary>
-        /// Handles the Tick event of the timer1 control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            // Stop re-entrancy
-            timer1.Enabled = false;
-
-            // Tree
-            BuildTree();
-            tvOptions.SelectedNode = tvOptions.Nodes[0];
-
-            // Now switch the trees
-            tvCheat.Visible = false;
-            tvOptions.Visible = true;
-        }
-
-        #endregion Methods
-    }
+			// Now switch the trees
+			tvCheat.Visible = false;
+			tvOptions.Visible = true;
+		}
+	}
 }

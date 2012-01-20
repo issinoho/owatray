@@ -511,6 +511,15 @@ namespace DrunkenBakery.OWAtray {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  freshly baked at .
+        /// </summary>
+        internal static string Form1_WindowDressing__freshly_baked_at_ {
+            get {
+                return ResourceManager.GetString("Form1_WindowDressing__freshly_baked_at_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gathering data, please wait....
         /// </summary>
         internal static string Gathering_data_please_wait {

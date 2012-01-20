@@ -13,199 +13,43 @@
 //------------------------------------------------------------------
 namespace DrunkenBakery.OWAtray
 {
-    using System;
-    using System.Reflection;
-    using System.Windows.Forms;
+	using System;
+	using System.Windows.Forms;
 
-    /// <summary>
-    /// Standard About box.
-    /// </summary>
-    partial class AboutBox1 : Form
-    {
-        #region Constructors
+	partial class AboutBox1 : Form
+	{
+		public AboutBox1()
+		{
+			this.InitializeComponent();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AboutBox1"/> class.
-        /// </summary>
-        public AboutBox1()
-        {
-            this.InitializeComponent();
+			Text = String.Format("About {0}", AssemblyHelpers.AssemblyTitle);
+			labelProductName.Text = string.Format("{0} - {1}", AssemblyHelpers.AssemblyProduct, AssemblyHelpers.AssemblyTitle);
+			labelVersion.Text = String.Format("Version {0}", AssemblyHelpers.AssemblyVersion);
+			labelCopyright.Text = AssemblyHelpers.AssemblyCopyright;
+			labelCompanyName.Text = AssemblyHelpers.AssemblyCompany;
+			textBoxDescription.Text = AssemblyHelpers.AssemblyDescription +
+									  Environment.NewLine +
+									  Environment.NewLine +
+									  OWAtray.Compiled_on_NET + AssemblyHelpers.DotNetRuntimeVersion +
+									  Environment.NewLine +
+									  OWAtray.Running_on_NET + Environment.Version +
+									  Environment.NewLine;
 
-            Assembly asm = Assembly.GetExecutingAssembly();
+			foreach (var myRef in AssemblyHelpers.DependentAssemblies())
+			{
+				textBoxDescription.AppendText(Environment.NewLine + myRef);
+			}
+		}
 
-            // Initialize the AboutBox to display the product information from the assembly information.
-            // Change assembly information settings for your application through either:
-            // - Project->Properties->Application->Assembly Information
-            // - AssemblyInfo.cs
-            this.Text = String.Format(OWAtray.About, this.AssemblyTitle);
-            this.labelProductName.Text = this.AssemblyProduct + " - " + this.AssemblyTitle;
-            this.labelVersion.Text = String.Format(OWAtray.Version, this.AssemblyVersion);
-            this.labelCopyright.Text = this.AssemblyCopyright;
-            this.labelCompanyName.Text = this.AssemblyCompany;
-            this.textBoxDescription.Text = this.AssemblyDescription +
-                                            System.Environment.NewLine +
-                                            System.Environment.NewLine +
-                                            OWAtray.Compiled_on_NET + " " + asm.ImageRuntimeVersion.ToString() +
-                                            System.Environment.NewLine +
-                                            OWAtray.Running_on_NET + " " + Environment.Version.ToString() +
-                                            System.Environment.NewLine;
+		public override sealed string Text
+		{
+			get { return base.Text; }
+			set { base.Text = value; }
+		}
 
-            // Use Reflection to get a list of depenedent assemblies
-            this.textBoxDescription.AppendText(System.Environment.NewLine + OWAtray.Dependent_Assemblies);
-            AssemblyName[] refs = asm.GetReferencedAssemblies();
-            foreach (AssemblyName myRef in refs)
-            {
-                this.textBoxDescription.AppendText(System.Environment.NewLine + myRef.Name + " v" + myRef.Version.ToString());
-            }
-        }
-
-        #endregion Constructors
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the assembly company.
-        /// </summary>
-        /// <value>The assembly company.</value>
-        public string AssemblyCompany
-        {
-            get
-            {
-                // Get all Company attributes on this assembly
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
-
-                // If there aren't any Company attributes, return an empty string
-                if (attributes.Length == 0)
-                {
-                    return string.Empty;
-                }
-
-                // If there is a Company attribute, return its value
-                return ((AssemblyCompanyAttribute)attributes[0]).Company;
-            }
-        }
-
-        /// <summary>
-        /// Gets the assembly copyright.
-        /// </summary>
-        /// <value>The assembly copyright.</value>
-        public string AssemblyCopyright
-        {
-            get
-            {
-                // Get all Copyright attributes on this assembly
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-
-                // If there aren't any Copyright attributes, return an empty string
-                if (attributes.Length == 0)
-                {
-                    return string.Empty;
-                }
-
-                // If there is a Copyright attribute, return its value
-                return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
-            }
-        }
-
-        /// <summary>
-        /// Gets the assembly description.
-        /// </summary>
-        /// <value>The assembly description.</value>
-        public string AssemblyDescription
-        {
-            get
-            {
-                // Get all Description attributes on this assembly
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
-
-                // If there aren't any Description attributes, return an empty string
-                if (attributes.Length == 0)
-                {
-                    return string.Empty;
-                }
-
-                // If there is a Description attribute, return its value
-                return ((AssemblyDescriptionAttribute)attributes[0]).Description;
-            }
-        }
-
-        /// <summary>
-        /// Gets the assembly product.
-        /// </summary>
-        /// <value>The assembly product.</value>
-        public string AssemblyProduct
-        {
-            get
-            {
-                // Get all Product attributes on this assembly
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
-
-                // If there aren't any Product attributes, return an empty string
-                if (attributes.Length == 0)
-                {
-                    return string.Empty;
-                }
-
-                // If there is a Product attribute, return its value
-                return ((AssemblyProductAttribute)attributes[0]).Product;
-            }
-        }
-
-        /// <summary>
-        /// Gets the assembly title.
-        /// </summary>
-        /// <value>The assembly title.</value>
-        public string AssemblyTitle
-        {
-            get
-            {
-                // Get all Title attributes on this assembly
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-
-                // If there is at least one Title attribute
-                if (attributes.Length > 0)
-                {
-                    // Select the first one
-                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-
-                    // If it is not an empty string, return it
-                    if (titleAttribute.Title != string.Empty)
-                    {
-                        return titleAttribute.Title;
-                    }
-                }
-
-                // If there was no Title attribute, or if the Title attribute was the empty string, return the .exe name
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
-            }
-        }
-
-        /// <summary>
-        /// Gets the assembly version.
-        /// </summary>
-        /// <value>The assembly version.</value>
-        public string AssemblyVersion
-        {
-            get
-            {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            }
-        }
-
-        #endregion Properties
-
-        #region Methods
-
-        /// <summary>
-        /// Handles the Click event of the okButton control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void OkButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        #endregion Methods
-    }
+		private void OkButton_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+	}
 }

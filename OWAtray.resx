@@ -585,4 +585,7 @@
   <data name="Expert" xml:space="preserve">
     <value>Expert</value>
   </data>
+	<data name="Form1_WindowDressing__freshly_baked_at_">
+		<value xml:space="preserve"> freshly baked at </value>
+	</data>
 </root>

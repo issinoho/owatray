@@ -1,6 +1,6 @@
 ﻿namespace DrunkenBakery.OWAtray
 {
-    partial class MDACversions
+    partial class MdaCversions
     {
         #region Fields
 
@@ -38,7 +38,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MDACversions));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MdaCversions));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lvStatus = new System.Windows.Forms.ListView();
             this.imLV = new System.Windows.Forms.ImageList(this.components);
@@ -92,7 +92,7 @@
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "MDACversions";
+            this.Name = "MdaCversions";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = OWAtray.MDAC_Inspector;
             this.groupBox1.ResumeLayout(false);

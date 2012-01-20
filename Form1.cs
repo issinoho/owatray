@@ -10,116 +10,99 @@
 // Main application form which drives all functionality.
 //
 //------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Security;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Principal;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using DrunkenBakery.OWAtray.Properties;
+using Microsoft.Exchange.WebServices.Autodiscover;
+using Microsoft.Exchange.WebServices.Data;
+using Snarl;
+
 namespace DrunkenBakery.OWAtray
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics;
-	using System.Drawing;
-	using System.IO;
-	using System.Net;
-	using System.Security;
-	using System.Security.Principal;
-	using System.Windows.Forms;
-	using Growl.Connector;
-	using Microsoft.Exchange.WebServices.Autodiscover;
-	using Microsoft.Exchange.WebServices.Data;
-	using Snarl;
-
-	/// <summary>
-	/// Main application form which drives all functionality.
-	/// </summary>
 	public partial class Form1 : Form
 	{
-		#region Fields
+		[Flags]
+		public enum PlaySoundFlags
+		{
+			SndSync = 0x0000,
+			SndAsync = 0x0001,
+			SndNodefault = 0x0002,
+			SndLoop = 0x0008,
+			SndNostop = 0x0010,
+			SndNowait = 0x00002000,
+			SndFilename = 0x00020000,
+			SndResource = 0x00040004
+		}
 
-		const int MaxInterval = 3600;
-		const Int32 REPLY_MSG = 0x400 + 100;
-		const int ScreenLines = 1000;
-		const int ScreenRefresh = 1;
-		const string ThisApp = "OWA Tray Monitor";
-		const string ThisPublisher = "The Drunken Bakery";
+		private const int MaxInterval = 3600;
+		private const Int32 ReplyMsg = 0x400 + 100;
 
-		static byte[] entropy = System.Text.Encoding.Unicode.GetBytes("Salt Is Not A Password");
-		static bool overRideClose = false;
-		static FlatFile myLog;
-		Growl.Connector.Application growlApp;
-		GrowlConnector growl;
-		bool firstRun = true;
-		Form frmAbout;
-		Form frmChangeLog;
-		Form frmContact;
-		Form frmInfo;
-		Form frmMDAC;
-		Form frmNET;
-		string iconPath;
-		string lastLogEntry;
-		string lastPopMessage;
-		string lastPopTitle;
-		string lastPopUrl;
-		List<ListViewItem> lvBuffer = new List<ListViewItem>();
-		ExchangeService myService;
-		string newIcon;
-		NotificationType newMail;
-		bool resetFlag;
-		string shellPath;
-		DateTime TimeLastChecked = DateTime.Now;
-		string trayIcon;
-		string wavFile;
-		int inboxCount;
-		string popUrl;
-		ExchangeVersion reportedVersion = ExchangeVersion.Exchange2007_SP1;
-		string reportedEwsUrl = "";
-		string reportedOwaUrl = "";
-		string reportedMailboxServer = "";
-		string reportedUserName = "";
-		bool startingUp;
+		private static readonly byte[] Entropy = Encoding.Unicode.GetBytes("Salt Is Not A Password");
+		private static bool _overRideClose;
+		private readonly string _iconPath;
+		private readonly List<ListViewItem> _lvBuffer = new List<ListViewItem>();
+		private readonly string _newIcon;
+		private readonly string _shellPath;
+		private readonly bool _startingUp;
+		private readonly string _trayIcon;
+		private readonly string _wavFile;
+		private DateTime _timeLastChecked = DateTime.Now;
+		private bool _firstRun = true;
+		private Form _frmAbout;
+		private Form _frmChangeLog;
+		private Form _frmContact;
+		private Form _frmInfo;
+		private Form _frmMdac;
+		private Form _frmNet;
+		private int _inboxCount;
+		private string _lastPopMessage;
+		private string _lastPopTitle;
+		private string _lastPopUrl;
+		private ExchangeService _myService;
+		private string _popUrl;
+		private string _reportedEwsUrl = "";
+		private string _reportedMailboxServer = "";
+		private string _reportedOwaUrl = "";
+		private string _reportedUserName = "";
+		private ExchangeVersion _reportedVersion = ExchangeVersion.Exchange2007_SP1;
+		private bool _resetFlag;
 
-		#endregion Fields
-
-		#region Constructors
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Form1"/> class.
-		/// </summary>
 		public Form1()
 		{
 			InitializeComponent();
 
-			// Upgrade settings from older version
-			System.Reflection.Assembly a = System.Reflection.Assembly.GetExecutingAssembly();
-			Version appVersion = a.GetName().Version;
-			string appVersionString = appVersion.ToString();
-
-			if (Properties.Settings.Default.ApplicationVersion != appVersion.ToString())
-			{
-				Properties.Settings.Default.Upgrade();
-				Properties.Settings.Default.ApplicationVersion = appVersionString;
-			}
-
 			// Interlock for starting up
-			startingUp = true;
+			_startingUp = true;
+
+			// Set up look & feel
+			WindowDressing();
 
 			// Start Logging
-			InitLogger();
+			Logger.Execute();
 
-			// Logging
-			AddLogEntry("--------------------------------------------------", LogType.Info);
-			AddLogEntry(OWAtray.Welcome_to_the + " " + ThisApp + " v" + appVersionString, LogType.Info);
-			notifyIcon1.Text = ThisApp + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
-
-			// Initialise Event Views
-			InitEventView(lvStatus);
-
-			// Tabs
-			foreach (TabPage _tab in tabMain.TabPages)
-			{
-				_tab.BackColor = SystemColors.Control;
-			}
+			// Welcome message
+			AddLogEntry(string.Format("{0} {1} v{2}", OWAtray.Welcome_to_the, AssemblyHelpers.AssemblyTitle,
+			                          AssemblyHelpers.UpgradeSettings()));
 
 			// Options
 			exchange2007ToolStripMenuItem.SelectedIndex = 0;
-			switch (Properties.Settings.Default.ExchangeVersion)
+			switch (Settings.Default.ExchangeVersion)
 			{
 				case "Autodetect":
 					exchange2007ToolStripMenuItem.SelectedIndex = 0;
@@ -138,97 +121,92 @@ namespace DrunkenBakery.OWAtray
 					break;
 			}
 
-			txtEmail.Text = Properties.Settings.Default.EMail;
-			txtServer.Text = Properties.Settings.Default.Server;
-			txtUser.Text = Properties.Settings.Default.Username;
-			txtPwd.Text = ToInsecureString(DecryptString(Properties.Settings.Default.Password));
-			txtDomain.Text = Properties.Settings.Default.Domain;
-			txtInterval.Text = Properties.Settings.Default.UpdateInterval.ToString();
-			txtURLEdit.Text = Properties.Settings.Default.ManualURL;
-			txtOWAEdit.Text = Properties.Settings.Default.ManualOWAUrl;
-
-			// Form title bar
-			this.Text = ThisApp + " freshly baked at " + ThisPublisher;
+			txtEmail.Text = Settings.Default.EMail;
+			txtServer.Text = Settings.Default.Server;
+			txtUser.Text = Settings.Default.Username;
+			txtPwd.Text = Settings.Default.Password.Decrypt();
+			txtDomain.Text = Settings.Default.Domain;
+			txtInterval.Text = Settings.Default.UpdateInterval.ToString(CultureInfo.InvariantCulture);
+			txtURLEdit.Text = Settings.Default.ManualURL;
+			txtOWAEdit.Text = Settings.Default.ManualOWAUrl;
 
 			// Startup Flag
-			chkRunOnStartup.Checked = Link.Exists(Environment.SpecialFolder.Startup, ThisApp);
+			chkRunOnStartup.Checked = WindowsShortcut.Exists(Environment.SpecialFolder.Startup,
+																				  AssemblyHelpers.AssemblyTitle);
 
 			// Notifications
-			balloonToolStripMenuItem.Checked = Properties.Settings.Default.Balloon;
-			growlToolStripMenuItem.Checked = Properties.Settings.Default.Growl;
-			snarlToolStripMenuItem.Checked = Properties.Settings.Default.Snarl;
-			playSoundToolStripMenuItem.Checked = Properties.Settings.Default.Bell;
+			balloonToolStripMenuItem.Checked = Settings.Default.Balloon;
+			growlToolStripMenuItem.Checked = Settings.Default.Growl;
+			snarlToolStripMenuItem.Checked = Settings.Default.Snarl;
+			playSoundToolStripMenuItem.Checked = Settings.Default.Bell;
 
 			// Checkboxes
-			cbOverrideEWS.Checked = Properties.Settings.Default.OverrideURL;
+			cbOverrideEWS.Checked = Settings.Default.OverrideURL;
 			txtURLEdit.Enabled = cbOverrideEWS.Checked;
-			cbOverrideOWA.Checked = Properties.Settings.Default.OverrideOWAUrl;
+			cbOverrideOWA.Checked = Settings.Default.OverrideOWAUrl;
 			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
 
 			// Menu Items
-			overrideToolStripMenuItem.Checked = Properties.Settings.Default.OverrideCert;
-			alwaysOpenOWAInIEToolStripMenuItem.Checked = Properties.Settings.Default.AlwaysIE;
-			disableCalendarToolStripMenuItem.Checked = Properties.Settings.Default.DisableCalendar;
-			loginAutomaticallyToolStripMenuItem.Checked = Properties.Settings.Default.AutoLogin;
-			office365LoginOverrideToolStripMenuItem.Checked = Properties.Settings.Default.UseOffice365;
-			overrideAutodiscoveryValidationToolStripMenuItem.Checked = Properties.Settings.Default.OverrideValidation;
-			useDefaultWebProxyToolStripMenuItem.Checked = Properties.Settings.Default.UseWebProxy;
-			
+			overrideToolStripMenuItem.Checked = Settings.Default.OverrideCert;
+			alwaysOpenOWAInIEToolStripMenuItem.Checked = Settings.Default.AlwaysIE;
+			disableCalendarToolStripMenuItem.Checked = Settings.Default.DisableCalendar;
+			loginAutomaticallyToolStripMenuItem.Checked = Settings.Default.AutoLogin;
+			office365LoginOverrideToolStripMenuItem.Checked = Settings.Default.UseOffice365;
+			overrideAutodiscoveryValidationToolStripMenuItem.Checked = Settings.Default.OverrideValidation;
+			useDefaultWebProxyToolStripMenuItem.Checked = Settings.Default.UseWebProxy;
+
 			// Autodiscover?
-			chkAutodiscovery.Checked = Properties.Settings.Default.Autodiscovery;
+			chkAutodiscovery.Checked = Settings.Default.Autodiscovery;
 			SelectAutodiscoveryOptions();
 
 			// URLs
-			UpdateURL();
+			UpdateUrl();
 			UpdateOwaUrl();
 			UpdateEmail();
 
 			// Domain
-			chkOnDomain.Checked = Properties.Settings.Default.NetworkCredentials;
+			chkOnDomain.Checked = Settings.Default.NetworkCredentials;
 			SelectDomainOptions();
 
 			// Special lockdown option
-			restoreToolStripMenuItem.Enabled = (Properties.Settings.Default.LockDown ? false : true);
+			restoreToolStripMenuItem.Enabled = (!Settings.Default.LockDown);
 
 			// Icon
-			iconPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\email.png";
-			trayIcon = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\email.ico";
-			newIcon = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\comment_rect.ico";
+			_iconPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\email.png";
+			_trayIcon = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\email.ico";
+			_newIcon = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\alert.ico";
 
 			// Sound file
-			wavFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\notify.wav";
+			_wavFile = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\notify.wav";
 
 			// Tray icon (default)
-			notifyIcon1.Icon = new Icon(trayIcon);
+			notifyIcon1.Icon = new Icon(_trayIcon);
 
 			// Path to shell integration module
-			shellPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Properties.Settings.Default.ShellIntegration);
+			_shellPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+			                         Settings.Default.ShellIntegration);
 
 			// A few flags
-			lastPopTitle = "";
-			lastPopMessage = "";
-			popUrl = "";
-			lastPopUrl = "";
-			resetFlag = false;
-			inboxCount = 0;
+			_lastPopTitle = "";
+			_lastPopMessage = "";
+			_popUrl = "";
+			_lastPopUrl = "";
+			_resetFlag = false;
+			_inboxCount = 0;
 
 			// Growl
-			this.growl = new GrowlConnector();
-			growlApp = new Growl.Connector.Application(ThisApp);
-			growlApp.Icon = iconPath;
-			this.newMail = new NotificationType("NEWMAIL", "New Mail");
-			this.growl.Register(growlApp, new NotificationType[] { newMail });
+			GrowlHelper.RegisterGrowl(AssemblyHelpers.AssemblyTitle, _iconPath, "NEWMAIL", "New Mail");
 
 			// Snarl
-			SnarlConnector.RegisterConfig(this.Handle, ThisApp, WindowsMessage.WM_MDIMAXIMIZE, iconPath);
+			SnarlConnector.RegisterConfig(Handle, AssemblyHelpers.AssemblyTitle, WindowsMessage.WM_MDIMAXIMIZE, _iconPath);
 
 			// Start Timers
-			timerAppt.Interval = Properties.Settings.Default.ApptInterval * 1000;
-			timerUpdate.Interval = Properties.Settings.Default.UpdateInterval * 1000;
+			timerAppt.Interval = Settings.Default.ApptInterval*1000;
+			timerUpdate.Interval = Settings.Default.UpdateInterval*1000;
 			timerLogging.Enabled = true;
 
 			// Now decide what to do based on whether this is the first run or not
-			if (!Properties.Settings.Default.FirstTime)
+			if (!Settings.Default.FirstTime)
 			{
 				// Set up Exchange
 				if (ConfigureExchange())
@@ -239,75 +217,19 @@ namespace DrunkenBakery.OWAtray
 			}
 
 			// Release interlock
-			startingUp = false;
-			AddLogEntry(OWAtray.Ready, LogType.Info);
+			_startingUp = false;
+			AddLogEntry(OWAtray.Ready);
 		}
 
-		#endregion Constructors
-
-		#region Enumerations
-
-		/// <summary>
-		/// Flags to control sound playback
-		/// </summary>
-		[System.Flags]
-		public enum PlaySoundFlags : int
+		private void WindowDressing()
 		{
-			/// <summary>
-			/// Sound attribute
-			/// </summary>
-			SND_SYNC = 0x0000,
-			/// <summary>
-			/// Sound attribute
-			/// </summary>
-			SND_ASYNC = 0x0001,
-			/// <summary>
-			/// Sound attribute
-			/// </summary>
-			SND_NODEFAULT = 0x0002,
-			/// <summary>
-			/// Sound attribute
-			/// </summary>
-			SND_LOOP = 0x0008,
-			/// <summary>
-			/// Sound attribute
-			/// </summary>
-			SND_NOSTOP = 0x0010,
-			/// <summary>
-			/// Sound attribute
-			/// </summary>
-			SND_NOWAIT = 0x00002000,
-			/// <summary>
-			/// Sound attribute
-			/// </summary>
-			SND_FILENAME = 0x00020000,
-			/// <summary>
-			/// Sound attribute
-			/// </summary>
-			SND_RESOURCE = 0x00040004
+			Text = AssemblyHelpers.AssemblyTitle + OWAtray.Form1_WindowDressing__freshly_baked_at_ +
+			       AssemblyHelpers.AssemblyCompany;
+			notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
+			foreach (TabPage tab in tabMain.TabPages) tab.BackColor = SystemColors.Control;
+			InitEventView(lvStatus);
 		}
 
-		/// <summary>
-		/// Severity of logging entry
-		/// </summary>
-		private enum LogType
-		{
-			Success, Fail, Info
-		}
-
-		#endregion Enumerations
-
-		#region Delegates
-
-		private delegate void FlushOutputDelegate();
-
-		#endregion Delegates
-
-		#region Methods
-
-		/// <summary>
-		/// Selects the domain options.
-		/// </summary>
 		private void SelectDomainOptions()
 		{
 			txtDomain.Enabled = !chkOnDomain.Checked;
@@ -315,80 +237,66 @@ namespace DrunkenBakery.OWAtray
 			txtUser.Enabled = !chkOnDomain.Checked;
 		}
 
-		/// <summary>
-		/// Selects the autodiscovery options.
-		/// </summary>
 		private void SelectAutodiscoveryOptions()
 		{
-			txtServer.Enabled = !Properties.Settings.Default.Autodiscovery;
-			cbOverrideEWS.Enabled = !Properties.Settings.Default.Autodiscovery;
-			cbOverrideOWA.Enabled = !Properties.Settings.Default.Autodiscovery;
-			txtDomain.Enabled = !Properties.Settings.Default.Autodiscovery;
-			overrideAutodiscoveryValidationToolStripMenuItem.Enabled = Properties.Settings.Default.Autodiscovery;
+			txtServer.Enabled = !Settings.Default.Autodiscovery;
+			cbOverrideEWS.Enabled = !Settings.Default.Autodiscovery;
+			cbOverrideOWA.Enabled = !Settings.Default.Autodiscovery;
+			txtDomain.Enabled = !Settings.Default.Autodiscovery;
+			overrideAutodiscoveryValidationToolStripMenuItem.Enabled = Settings.Default.Autodiscovery;
 		}
 
-		/// <summary>
-		/// Updates the owa URL.
-		/// </summary>
 		private void UpdateOwaUrl()
 		{
-			if (Properties.Settings.Default.UseOffice365)
+			if (Settings.Default.UseOffice365)
 			{
-				lblOWAUrl.Text = Properties.Settings.Default.Office365OwaUrl + StripEmailDomain(lblEmail.Text);
+				lblOWAUrl.Text = Settings.Default.Office365OwaUrl + StripEmailDomain(lblEmail.Text);
 			}
-			else if (Properties.Settings.Default.Autodiscovery && reportedOwaUrl.Length > 0)
+			else if (Settings.Default.Autodiscovery && _reportedOwaUrl.Length > 0)
 			{
-				lblOWAUrl.Text = reportedOwaUrl;
+				lblOWAUrl.Text = _reportedOwaUrl;
 			}
-			else if (Properties.Settings.Default.OverrideOWAUrl && txtOWAEdit.Text.Length > 0)
+			else if (Settings.Default.OverrideOWAUrl && txtOWAEdit.Text.Length > 0)
 			{
 				lblOWAUrl.Text = txtOWAEdit.Text;
 			}
 			else if (txtServer.Text.Length > 0)
 			{
-				lblOWAUrl.Text = "https://" + txtServer.Text + "/owa/";
+				lblOWAUrl.Text = string.Format("{0}{1}{2}", "https://", txtServer.Text, "/owa/");
 			}
 			else
 			{
 				lblOWAUrl.Text = OWAtray.unknown;
 			}
 
-			if (!startingUp)
+			if (!_startingUp)
 			{
 				// Update shell parameters
 				ConfigureShell();
 			}
 		}
 
-		/// <summary>
-		/// Returns the email domain only
-		/// </summary>
-		/// <param name="email">The email.</param>
-		/// <returns></returns>
-		private string StripEmailDomain(string email)
+		private static string StripEmailDomain(string email)
 		{
-			string sub = "";
-			int start = email.IndexOf("@");
+			var sub = "";
+			var start = email.IndexOf("@", System.StringComparison.Ordinal);
 			if (start > 0) sub = email.Substring(start + 1);
 			return sub;
 		}
 
-		/// <summary>
-		/// Determines whether [is user administrator].
-		/// </summary>
-		/// <returns>
-		/// 	<c>true</c> if [is user administrator]; otherwise, <c>false</c>.
-		/// </returns>
 		public bool IsUserAdministrator()
 		{
 			//bool value to hold our return value
-			bool isAdmin;
+			var isAdmin = false;
 			try
 			{
 				//get the currently logged in user
-				WindowsIdentity user = WindowsIdentity.GetCurrent();
-				WindowsPrincipal principal = new WindowsPrincipal(user);
-				isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+				var user = WindowsIdentity.GetCurrent();
+				if (user != null)
+				{
+					var principal = new WindowsPrincipal(user);
+					isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+				}
 			}
 			catch (UnauthorizedAccessException ex)
 			{
@@ -403,57 +311,15 @@ namespace DrunkenBakery.OWAtray
 			return isAdmin;
 		}
 
-		/// <summary>
-		/// Decrypts the string.
-		/// </summary>
-		/// <param name="encryptedData">The encrypted data.</param>
-		/// <returns></returns>
-		private static SecureString DecryptString(string encryptedData)
-		{
-			try
-			{
-				byte[] decryptedData = System.Security.Cryptography.ProtectedData.Unprotect(
-					Convert.FromBase64String(encryptedData),
-					entropy,
-					System.Security.Cryptography.DataProtectionScope.CurrentUser);
-				return ToSecureString(System.Text.Encoding.Unicode.GetString(decryptedData));
-			}
-			catch
-			{
-				return new SecureString();
-			}
-		}
-
-		/// <summary>
-		/// Encrypts the string.
-		/// </summary>
-		/// <param name="input">The input.</param>
-		/// <returns></returns>
-		private static string EncryptString(System.Security.SecureString input)
-		{
-			byte[] encryptedData = System.Security.Cryptography.ProtectedData.Protect(
-				System.Text.Encoding.Unicode.GetBytes(ToInsecureString(input)),
-				entropy,
-				System.Security.Cryptography.DataProtectionScope.CurrentUser);
-			return Convert.ToBase64String(encryptedData);
-		}
-
-		/// <summary>
-		/// Retrieves the subdomain from the specified URL.
-		/// </summary>
-		/// <param name="domain">The domain.</param>
-		/// <returns>
-		/// The subdomain if it exist, otherwise null.
-		/// </returns>
 		private static string GetSubDomain(string domain)
 		{
-			string result = "";
+			var result = "";
 
-			string[] parts = domain.Split('.');
+			var parts = domain.Split('.');
 
 			if (parts.Length > 1)
 			{
-				for (int f = 1; f < parts.Length; ++f)
+				for (var f = 1; f < parts.Length; ++f)
 				{
 					result = result + parts[f];
 					if (f != (parts.Length - 1)) result = result + ".";
@@ -463,185 +329,110 @@ namespace DrunkenBakery.OWAtray
 			return result;
 		}
 
-		[System.Runtime.InteropServices.DllImport("winmm.DLL", EntryPoint = "PlaySound", SetLastError = true)]
-		private static extern bool PlaySound(string szSound, System.IntPtr hMod, PlaySoundFlags flags);
+		[DllImport("winmm.DLL", EntryPoint = "PlaySound", SetLastError = true)]
+		private static extern bool PlaySound(string szSound, IntPtr hMod, PlaySoundFlags flags);
 
-		/// <summary>
-		/// Toes the insecure string.
-		/// </summary>
-		/// <param name="input">The input.</param>
-		/// <returns></returns>
-		private static string ToInsecureString(SecureString input)
-		{
-			string returnValue = string.Empty;
-			IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(input);
-			try
-			{
-				returnValue = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ptr);
-			}
-			finally
-			{
-				System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
-			}
-			return returnValue;
-		}
 
-		/// <summary>
-		/// Toes the secure string.
-		/// </summary>
-		/// <param name="input">The input.</param>
-		/// <returns></returns>
-		private static SecureString ToSecureString(string input)
-		{
-			SecureString secure = new SecureString();
-			foreach (char c in input)
-			{
-				secure.AppendChar(c);
-			}
-			secure.MakeReadOnly();
-			return secure;
-		}
-
-		/// <summary>
-		/// Handles the Click event of the aboutToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (frmAbout == null) frmAbout = new AboutBox1();
-			frmAbout.ShowDialog();
+			if (_frmAbout == null) _frmAbout = new AboutBox1();
+			_frmAbout.ShowDialog();
 		}
 
-		/// <summary>
-		/// Activates the OWA.
-		/// </summary>
-		private void activateOWA()
+		private void ActivateOwa()
 		{
-			ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-			RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
+			var runSvc = new ProcessStartInfo(_shellPath) {WindowStyle = ProcessWindowStyle.Hidden};
 
-			if (Properties.Settings.Default.AlwaysIE)
+			if (Settings.Default.AlwaysIE)
 			{
-				RunSvc.Arguments = "owa" + ((popUrl.Length > 0) ? " " + popUrl : "");
+				runSvc.Arguments = "owa" + ((_popUrl.Length > 0) ? " " + _popUrl : "");
 			}
 			else
 			{
-				RunSvc.Arguments = "shell" + ((popUrl.Length > 0) ? " " + popUrl : "");
+				runSvc.Arguments = "shell" + ((_popUrl.Length > 0) ? " " + _popUrl : "");
 			}
 
-			Process ServiceProcess = Process.Start(RunSvc);
+			var serviceProcess = Process.Start(runSvc);
 
-			if (office365LoginOverrideToolStripMenuItem.CheckState == CheckState.Checked) office365LoginOverrideToolStripMenuItem.CheckState = CheckState.Unchecked;
+			if (office365LoginOverrideToolStripMenuItem.CheckState == CheckState.Checked)
+				office365LoginOverrideToolStripMenuItem.CheckState = CheckState.Unchecked;
 		}
 
-		/// <summary>
-		/// Adds the log entry.
-		/// </summary>
-		/// <param name="newEntry">The new entry.</param>
-		private void AddLogEntry(string newEntry)
+		private void AddLogEntry(string newEntry, Severity severity = Severity.Info)
 		{
-			AddLogEntry(newEntry, LogType.Success);
-		}
-
-		/// <summary>
-		/// Adds the log entry.
-		/// </summary>
-		/// <param name="newEntry">The new entry.</param>
-		/// <param name="whichLog">The which log.</param>
-		private void AddLogEntry(string newEntry, LogType whichLog)
-		{
-			if (newEntry == lastLogEntry && whichLog == LogType.Fail)
+			try
+			{
+				_lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(CultureInfo.InvariantCulture), Convert.ToInt32(severity)));
+				_lvBuffer[_lvBuffer.Count - 1].SubItems.Add(newEntry);
+				if (severity == Severity.Fail)
+					Logger.Error(GetType(), newEntry);
+				else
+					Logger.Info(GetType(), newEntry);
+			}
+			catch (Exception)
 			{
 			}
-			else
-			{
-				try
-				{
-					lastLogEntry = newEntry;
-					lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(), Convert.ToInt32(whichLog)));
-					lvBuffer[lvBuffer.Count - 1].SubItems.Add(newEntry);
-					myLog.AddEntry(newEntry);
-				}
-				catch (Exception)
-				{
-					// Can't do anything for obvious reasons!
-				}
-			}
 		}
 
-		/// <summary>
-		/// Handles the CheckStateChanged event of the alwaysOpenOWAInIEToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.AlwaysIE = alwaysOpenOWAInIEToolStripMenuItem.Checked;
-			Properties.Settings.Default.Save();
-			AddLogEntry(OWAtray.Always_use_IE_switched + " " + (Properties.Settings.Default.AlwaysIE ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			Settings.Default.AlwaysIE = alwaysOpenOWAInIEToolStripMenuItem.Checked;
+			Settings.Default.Save();
+			AddLogEntry(OWAtray.Always_use_IE_switched + " " + (Settings.Default.AlwaysIE ? OWAtray.ON : OWAtray.OFF));
 
 			ConfigureShell();
 		}
 
-		/// <summary>
-		/// Handles the CheckStateChanged event of the balloonToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void balloonToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.Balloon = balloonToolStripMenuItem.Checked;
-			Properties.Settings.Default.Save();
-			AddLogEntry(OWAtray.Balloon_notifications_switched + " " + (Properties.Settings.Default.Balloon ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			Settings.Default.Balloon = balloonToolStripMenuItem.Checked;
+			Settings.Default.Save();
+			AddLogEntry(OWAtray.Balloon_notifications_switched + " " + (Settings.Default.Balloon ? OWAtray.ON : OWAtray.OFF));
 		}
 
-		/// <summary>
-		/// Certificates the validation call back.
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="certificate">The certificate.</param>
-		/// <param name="chain">The chain.</param>
-		/// <param name="sslPolicyErrors">The SSL policy errors.</param>
-		/// <returns>Is Certifcate Valid?</returns>
-		private bool CertificateValidationCallBack(
+		private static bool CertificateValidationCallBack(
 			object sender,
-			System.Security.Cryptography.X509Certificates.X509Certificate certificate,
-			System.Security.Cryptography.X509Certificates.X509Chain chain,
-			System.Net.Security.SslPolicyErrors sslPolicyErrors)
+			X509Certificate certificate,
+			X509Chain chain,
+			SslPolicyErrors sslPolicyErrors)
 		{
 			// If the override has been set then just return true
-			if (Properties.Settings.Default.OverrideCert)
+			if (Settings.Default.OverrideCert)
 			{
 				return true;
 			}
 
 			// If the certificate is a valid, signed certificate, return true.
-			if (sslPolicyErrors == System.Net.Security.SslPolicyErrors.None)
+			if (sslPolicyErrors == SslPolicyErrors.None)
 			{
 				return true;
 			}
 
 			// If there are errors in the certificate chain, look at each error to determine the cause.
-			if ((sslPolicyErrors & System.Net.Security.SslPolicyErrors.RemoteCertificateChainErrors) != 0)
+			if ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateChainErrors) == 0)
 			{
-				if (chain != null && chain.ChainStatus != null)
+				// In all other cases, return false.
+				return false;
+			}
+			else
+			{
+				if (chain != null)
 				{
-					foreach (System.Security.Cryptography.X509Certificates.X509ChainStatus status in chain.ChainStatus)
+					foreach (var status in chain.ChainStatus)
 					{
 						if ((certificate.Subject == certificate.Issuer) &&
-						   (status.Status == System.Security.Cryptography.X509Certificates.X509ChainStatusFlags.UntrustedRoot))
+						    (status.Status == X509ChainStatusFlags.UntrustedRoot))
 						{
 							// Self-signed certificates with an untrusted root are valid.
 							continue;
 						}
 						else
 						{
-							if (status.Status != System.Security.Cryptography.X509Certificates.X509ChainStatusFlags.NoError)
+							if (status.Status != X509ChainStatusFlags.NoError)
 							{
 								// If there are any other errors in the certificate chain, the certificate is invalid,
 								// so the method returns false.
@@ -656,73 +447,59 @@ namespace DrunkenBakery.OWAtray
 				// for default Exchange server installations, so return true.
 				return true;
 			}
-			else
-			{
-				// In all other cases, return false.
-				return false;
-			}
 		}
 
-		/// <summary>
-		/// Handles the Click event of the changeLogToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void changeLogToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (frmChangeLog == null) frmChangeLog = new ChangeLog(Properties.Settings.Default.RSSFeed);
-			frmChangeLog.ShowDialog();
+			if (_frmChangeLog == null) _frmChangeLog = new ChangeLog(Settings.Default.RSSFeed);
+			_frmChangeLog.ShowDialog();
 		}
 
-		/// <summary>
-		/// Checks for appointments.
-		/// </summary>
 		private void CheckForAppointments()
 		{
 			try
 			{
 				// Interrogate default Calendar
-				CalendarView cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Properties.Settings.Default.ApptWindow)));
-				cView.PropertySet = PropertySet.FirstClassProperties;
-				FindItemsResults<Appointment> findResults = myService.FindAppointments(WellKnownFolderName.Calendar, cView);
+				var cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Settings.Default.ApptWindow)))
+				            	{PropertySet = PropertySet.FirstClassProperties};
+				var findResults = _myService.FindAppointments(WellKnownFolderName.Calendar, cView);
 
 				// Process each item.
-				int count = 0;
-				bool allDone = false;
-				foreach (Item myItem in findResults.Items)
+				var count = 0;
+				var allDone = false;
+				foreach (var myItem in findResults.Items)
 				{
-					if (++count > Convert.ToInt32(Properties.Settings.Default.MaxNotify))
+					if (++count > Convert.ToInt32(Settings.Default.MaxNotify))
 					{
 						if (!allDone)
 						{
-							PopToast(OWAtray.Too_many_appointments, OWAtray.There_are + " " + (findResults.Items.Count - Convert.ToInt32(Properties.Settings.Default.MaxNotify)) + " " + OWAtray.others);
+							PopToast(OWAtray.Too_many_appointments,
+							         OWAtray.There_are + " " + (findResults.Items.Count - Convert.ToInt32(Settings.Default.MaxNotify)) + " " +
+							         OWAtray.others);
 							allDone = true;
 						}
 					}
 					else
 					{
-						if (myItem is Appointment)
+						if (myItem != null)
 						{
-							string myLocation = OWAtray.No_Location;
-							string mySubject = OWAtray.No_Subject;
-							string myStart = OWAtray.unknown;
-							string myTime = OWAtray.unknown;
-							int duration = 0;
-
-							Appointment myAppt = (Appointment)myItem;
-							PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
+							var duration = 0;
+							var myAppt = (Appointment) myItem;
+							var ps = new PropertySet(BasePropertySet.FirstClassProperties);
 							myAppt.Load(ps);
-							myLocation = myAppt.Location;
-							mySubject = (myAppt.Subject == null ? OWAtray.No_Subject : myAppt.Subject);
-							TimeSpan span = myAppt.Start.Subtract(DateTime.Now);
-							duration = (int)Math.Floor(span.TotalMinutes);
-							myStart = duration.ToString();
-							myTime = myAppt.Start.ToString("HH:mm");
+							var myLocation = myAppt.Location;
+							var mySubject = (myAppt.Subject ?? OWAtray.No_Subject);
+							var span = myAppt.Start.Subtract(DateTime.Now);
+							duration = (int) Math.Floor(span.TotalMinutes);
+							var myStart = duration.ToString(CultureInfo.InvariantCulture);
+							var myTime = myAppt.Start.ToString("HH:mm");
 
 							if (duration > 0)
 							{
-								popUrl = (reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myAppt.WebClientReadFormQueryString);
-								PopToast(OWAtray.You_have_an_appointment_in + " " + myStart + " " + (duration != 1 ? OWAtray.mins : OWAtray.min), myTime + " - " + mySubject + " (" + myLocation + ")");
+								_popUrl = (_reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myAppt.WebClientReadFormQueryString);
+								PopToast(
+									OWAtray.You_have_an_appointment_in + " " + myStart + " " + (duration != 1 ? OWAtray.mins : OWAtray.min),
+									myTime + " - " + mySubject + " (" + myLocation + ")");
 							}
 						}
 					}
@@ -730,79 +507,63 @@ namespace DrunkenBakery.OWAtray
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(ex.ToString(), LogType.Fail);
+				AddLogEntry(ex.ToString(), Severity.Fail);
 				stopMonitoring();
 				StartRetryTimer();
 			}
 		}
 
-		/// <summary>
-		/// Handles the CheckedChanged event of the chkOnDomain control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void chkOnDomain_CheckedChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.NetworkCredentials = chkOnDomain.Checked;
-			Properties.Settings.Default.Save();
+			Settings.Default.NetworkCredentials = chkOnDomain.Checked;
+			Settings.Default.Save();
 
 			// Switch off some options when domain authentication selected
 			SelectDomainOptions();
 		}
 
-		/// <summary>
-		/// Handles the CheckedChanged event of the chkRunOnStartup control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void chkRunOnStartup_CheckedChanged(object sender, EventArgs e)
+		{
+			RunAtStartup(chkRunOnStartup.Checked); 
+		}
+
+		private void RunAtStartup(bool switchOn)
 		{
 			try
 			{
-				Link.Update(Environment.SpecialFolder.Startup, System.Windows.Forms.Application.ExecutablePath, ThisApp, chkRunOnStartup.Checked);
-				AddLogEntry(OWAtray.OWAtray_will + (chkRunOnStartup.Checked ? " " : " " + OWAtray.not + " ") + OWAtray.autostart_with_Windows, LogType.Info);
+				WindowsShortcut.Update(Environment.SpecialFolder.Startup, Application.ExecutablePath, AssemblyHelpers.AssemblyTitle,
+									   switchOn);
+				AddLogEntry(
+					OWAtray.OWAtray_will + (switchOn ? " " : " " + OWAtray.not + " ") + OWAtray.autostart_with_Windows);
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(ex.Message, LogType.Fail);
+				AddLogEntry(ex.Message, Severity.Fail);
 			}
 		}
 
-		/// <summary>
-		/// Handles the Click event of the cmdStart control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void cmdStart_Click(object sender, EventArgs e)
 		{
 			if (ConfigureExchange())
 			{
 				// Start
-				startMonitoring();
+				StartMonitoring();
 			}
 		}
 
-		/// <summary>
-		/// Handles the Click event of the cmdStop control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void cmdStop_Click(object sender, EventArgs e)
 		{
 			stopMonitoring();
 		}
 
-		/// <summary>
-		/// Stops the monitoring.
-		/// </summary>
 		private void stopMonitoring()
 		{
 			timerUpdate.Stop();
 			timerAppt.Stop();
-			AddLogEntry(OWAtray.Timer_stopped, LogType.Info);
-			notifyIcon1.Text = ThisApp + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
+			AddLogEntry(OWAtray.Timer_stopped);
+			notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
 		}
 
 		private void StartRetryTimer()
@@ -810,111 +571,98 @@ namespace DrunkenBakery.OWAtray
 			RetryTimer.Start();
 		}
 
-		/// <summary>
-		/// Handles the Click event of the cmdUnread control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-		private void cmdUnread_Click(object sender, EventArgs e)
-		{
-			GetUnreadCount();
-		}
-
-		/// <summary>
-		/// Configures Exchange.
-		/// </summary>
-		/// <returns>False if any errors</returns>
 		private bool ConfigureExchange()
 		{
 			try
 			{
 				// Cursor
-				this.Cursor = Cursors.WaitCursor;
+				Cursor = Cursors.WaitCursor;
 
 				// Validate the server certificate
 				ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
 
 				// Set up proxy if needed
-				if (Properties.Settings.Default.UseWebProxy)
+				if (Settings.Default.UseWebProxy)
 				{
-					WebRequest.DefaultWebProxy.Credentials = System.Net.CredentialCache.DefaultCredentials;
+					WebRequest.DefaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
 				}
 
-				AddLogEntry(OWAtray.Binding_to_Exchange, LogType.Info);
-				switch (Properties.Settings.Default.ExchangeVersion)
+				AddLogEntry(OWAtray.Binding_to_Exchange);
+				switch (Settings.Default.ExchangeVersion)
 				{
 					case "Autodetect":
-						myService = new ExchangeService();
+						_myService = new ExchangeService();
 						break;
 
 					case "Exchange2007_SP1":
-						myService = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
+						_myService = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
 						break;
 
 					case "Exchange2010":
-						myService = new ExchangeService(ExchangeVersion.Exchange2010);
+						_myService = new ExchangeService(ExchangeVersion.Exchange2010);
 						break;
 
 					case "Exchange2010_SP1":
-						myService = new ExchangeService(ExchangeVersion.Exchange2010_SP1);
+						_myService = new ExchangeService(ExchangeVersion.Exchange2010_SP1);
 						break;
 				}
 
 				// Credentials
 				if (chkOnDomain.Checked)
 				{
-					myService.UseDefaultCredentials = true;
+					_myService.UseDefaultCredentials = true;
 				}
 				else
 				{
 					if (txtUser.Text.Length == 0 && txtEmail.Text.Length == 0)
 					{
-						AddLogEntry(OWAtray.Please_supply_valid_email, LogType.Fail);
+						AddLogEntry(OWAtray.Please_supply_valid_email, Severity.Fail);
 						return false;
 					}
 
 					if (txtPwd.Text.Length == 0)
 					{
-						AddLogEntry(OWAtray.Please_supply_valid_password, LogType.Fail);
+						AddLogEntry(OWAtray.Please_supply_valid_password, Severity.Fail);
 						return false;
 					}
 
 					if (txtDomain.Text.Length > 0)
 					{
-						myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text, txtDomain.Text);
+						_myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text,
+						                                           txtDomain.Text);
 					}
 					else
 					{
-						myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text);
+						_myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text);
 					}
 				}
 
 				// If autodiscover is on then that overrides the URI
-				if (Properties.Settings.Default.Autodiscovery)
+				if (Settings.Default.Autodiscovery)
 				{
 					if (lblEmail.Text.Length == 0)
 					{
-						AddLogEntry(OWAtray.Autodiscovery_requires_an_Email, LogType.Fail);
+						AddLogEntry(OWAtray.Autodiscovery_requires_an_Email, Severity.Fail);
 						return false;
 					}
 					else
 					{
-						AddLogEntry(OWAtray.Starting_Autodiscovery, LogType.Info);
-						if (Properties.Settings.Default.OverrideValidation)
+						AddLogEntry(OWAtray.Starting_Autodiscovery);
+						if (Settings.Default.OverrideValidation)
 						{
-							myService.AutodiscoverUrl(lblEmail.Text, delegate(string url) { return true; });
+							_myService.AutodiscoverUrl(lblEmail.Text, delegate { return true; });
 						}
 						else
 						{
-							myService.AutodiscoverUrl(lblEmail.Text);
+							_myService.AutodiscoverUrl(lblEmail.Text);
 						}
 
 						// Update server settings
-						reportedVersion = myService.RequestedServerVersion;
-						AddLogEntry(OWAtray.Connected_to + " " + reportedVersion.ToString(), LogType.Success);
+						_reportedVersion = _myService.RequestedServerVersion;
+						AddLogEntry(OWAtray.Connected_to + " " + _reportedVersion.ToString(), Severity.Success);
 
 						// Probe for autodiscover information
-						AutodiscoverService autodiscoverService = new AutodiscoverService(myService.RequestedServerVersion);
+						var autodiscoverService = new AutodiscoverService(_myService.RequestedServerVersion);
 
 						// Credentials
 						if (chkOnDomain.Checked)
@@ -925,84 +673,86 @@ namespace DrunkenBakery.OWAtray
 						{
 							if (txtDomain.Text.Length > 0)
 							{
-								autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text, txtDomain.Text);
+								autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text),
+								                                                     txtPwd.Text, txtDomain.Text);
 							}
 							else
 							{
-								autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text);
+								autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text),
+								                                                     txtPwd.Text);
 							}
 						}
 
 						// Redirection Callback
-						if (Properties.Settings.Default.OverrideValidation)
+						if (Settings.Default.OverrideValidation)
 						{
-							autodiscoverService.RedirectionUrlValidationCallback = delegate(string url) { return true; };
+							autodiscoverService.RedirectionUrlValidationCallback = delegate { return true; };
 						}
 
 						// Is this Internal or External ?
 						if (autodiscoverService.IsExternal == false)
 						{
 							// Internal
-							AddLogEntry(OWAtray.Endpoint_is_INSIDE_corporate, LogType.Info);
+							AddLogEntry(OWAtray.Endpoint_is_INSIDE_corporate);
 
 							// Probe for values
-							GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
-								UserSettingName.InternalWebClientUrls,
-								UserSettingName.InternalEwsUrl,
-								UserSettingName.InternalMailboxServer,
-								UserSettingName.UserDisplayName);
+							var userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
+							                    UserSettingName.InternalWebClientUrls,
+							                    UserSettingName.InternalEwsUrl,
+							                    UserSettingName.InternalMailboxServer,
+							                    UserSettingName.UserDisplayName);
 
 							// OWA Url
-							WebClientUrlCollection col = (WebClientUrlCollection)userresponse.Settings[UserSettingName.InternalWebClientUrls];
-							WebClientUrl owaUrl = col.Urls[0];
-							reportedOwaUrl = owaUrl.Url;
+							var col = (WebClientUrlCollection) userresponse.Settings[UserSettingName.InternalWebClientUrls];
+							var owaUrl = col.Urls[0];
+							_reportedOwaUrl = owaUrl.Url;
 							UpdateOwaUrl();
-							AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + reportedOwaUrl, LogType.Success);
+							AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + _reportedOwaUrl, Severity.Success);
 
 							// EWS Url
-							reportedEwsUrl = (string)userresponse.Settings[UserSettingName.InternalEwsUrl];
-							UpdateURL();
-							AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + reportedEwsUrl, LogType.Success);
+							_reportedEwsUrl = (string) userresponse.Settings[UserSettingName.InternalEwsUrl];
+							UpdateUrl();
+							AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _reportedEwsUrl, Severity.Success);
 
 							// Mailbox
-							reportedMailboxServer = (string)userresponse.Settings[UserSettingName.InternalMailboxServer];
-							AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + reportedMailboxServer, LogType.Success);
+							_reportedMailboxServer = (string) userresponse.Settings[UserSettingName.InternalMailboxServer];
+							AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + _reportedMailboxServer, Severity.Success);
 
 							// User Name
-							reportedUserName = (string)userresponse.Settings[UserSettingName.UserDisplayName];
-							AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + reportedUserName, LogType.Success);
+							_reportedUserName = (string) userresponse.Settings[UserSettingName.UserDisplayName];
+							AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _reportedUserName, Severity.Success);
 						}
 						else
 						{
 							// External (default)
-							AddLogEntry(OWAtray.Endpoint_is_OUTSIDE_corporate, LogType.Info);
+							AddLogEntry(OWAtray.Endpoint_is_OUTSIDE_corporate);
 
 							// Probe for values
-							GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
-								UserSettingName.ExternalWebClientUrls,
-								UserSettingName.ExternalEwsUrl,
-								UserSettingName.ExternalMailboxServer,
-								UserSettingName.UserDisplayName);
+							var userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
+							                    UserSettingName.ExternalWebClientUrls,
+							                    UserSettingName.ExternalEwsUrl,
+							                    UserSettingName.ExternalMailboxServer,
+							                    UserSettingName.UserDisplayName);
 
 							// OWA Url
-							WebClientUrlCollection owaCollection = (WebClientUrlCollection)userresponse.Settings[UserSettingName.ExternalWebClientUrls];
-							WebClientUrl owaUrl = owaCollection.Urls[0];
-							reportedOwaUrl = owaUrl.Url;
+							var owaCollection = (WebClientUrlCollection) userresponse.Settings[UserSettingName.ExternalWebClientUrls];
+							var owaUrl = owaCollection.Urls[0];
+							_reportedOwaUrl = owaUrl.Url;
 							UpdateOwaUrl();
-							AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + reportedOwaUrl, LogType.Success);
+							AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + _reportedOwaUrl, Severity.Success);
 
 							// EWS Url
-							reportedEwsUrl = (string)userresponse.Settings[UserSettingName.ExternalEwsUrl];
-							UpdateURL();
-							AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + reportedEwsUrl, LogType.Success);
+							_reportedEwsUrl = (string) userresponse.Settings[UserSettingName.ExternalEwsUrl];
+							UpdateUrl();
+							AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _reportedEwsUrl, Severity.Success);
 
 							// Mailbox
-							reportedMailboxServer = (string)userresponse.Settings[UserSettingName.ExternalMailboxServer];
-							AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + reportedMailboxServer, LogType.Success);
+							_reportedMailboxServer = (string) userresponse.Settings[UserSettingName.ExternalMailboxServer];
+							AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + _reportedMailboxServer, Severity.Success);
 
 							// User Name
-							reportedUserName = (string)userresponse.Settings[UserSettingName.UserDisplayName];
-							AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + reportedUserName, LogType.Success);
+							_reportedUserName = (string) userresponse.Settings[UserSettingName.UserDisplayName];
+							AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _reportedUserName, Severity.Success);
 						}
 					}
 				}
@@ -1010,513 +760,412 @@ namespace DrunkenBakery.OWAtray
 				{
 					if (lblUrl.Text.Length == 0)
 					{
-						AddLogEntry(OWAtray.Can_establish_valid_URL_for, LogType.Fail);
+						AddLogEntry(OWAtray.Can_establish_valid_URL_for, Severity.Fail);
 					}
 					else
 					{
-						Uri myUri = new Uri(lblUrl.Text);
-						myService.Url = myUri;
+						var myUri = new Uri(lblUrl.Text);
+						_myService.Url = myUri;
 
 						// Update server settings
-						reportedVersion = myService.RequestedServerVersion;
-						AddLogEntry(OWAtray.Connected_to + reportedVersion.ToString(), LogType.Success);
+						_reportedVersion = _myService.RequestedServerVersion;
+						AddLogEntry(OWAtray.Connected_to + _reportedVersion.ToString(), Severity.Success);
 
 						// Update properties
-						reportedMailboxServer = txtServer.Text;
-						reportedUserName = (chkOnDomain.Checked ? "" : (txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text));
+						_reportedMailboxServer = txtServer.Text;
+						_reportedUserName = (chkOnDomain.Checked ? "" : (txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text));
 					}
 				}
 
 				// Set a flag to indicate that subsequent runs can autostart
-				Properties.Settings.Default.FirstTime = false;
-				Properties.Settings.Default.Save();
+				Settings.Default.FirstTime = false;
+				Settings.Default.Save();
 
 				// All clear
 				return true;
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(OWAtray.Error + ex.Message, LogType.Fail);
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
 				return false;
 			}
 			finally
 			{
 				// Cursor
-				this.Cursor = Cursors.Default;
+				Cursor = Cursors.Default;
 			}
 		}
 
-		/// <summary>
-		/// Configures the shell.
-		/// </summary>
 		private void ConfigureShell()
 		{
-			//AddLogEntry("Configuring Shell Integration", LogType.Info);
-
 			// Set OWA Url
-			string owaUrl = lblOWAUrl.Text;
-			//AddLogEntry("Setting OWA url to " + owaUrl, LogType.Info);
+			var owaUrl = lblOWAUrl.Text;
 
 			try
 			{
-				ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-				RunSvc.Arguments = "url " + owaUrl;
-				RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-				Process ServiceProcess = Process.Start(RunSvc);
+				var runSvc = new ProcessStartInfo(_shellPath) {Arguments = "url " + owaUrl, WindowStyle = ProcessWindowStyle.Hidden};
+				var serviceProcess = Process.Start(runSvc);
 
-				while (!(ServiceProcess.HasExited == true))
+				while (!serviceProcess.HasExited)
 				{
-					System.Threading.Thread.Sleep(100);
+					Thread.Sleep(100);
 					System.Windows.Forms.Application.DoEvents();
 				}
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(OWAtray.Error + ex.Message, LogType.Fail);
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
 				return;
 			}
 
-			// Set account name
-			//string userAccount = GetEmailAddress();
-			string userAccount = "";
-			//AddLogEntry("Using user account: " + userAccount, LogType.Info);
-
 			try
 			{
-				ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-				RunSvc.Arguments = "account " + userAccount;
-				RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-				Process ServiceProcess = Process.Start(RunSvc);
+				var runSvc = new ProcessStartInfo(_shellPath)
+				             	{Arguments = "account ", WindowStyle = ProcessWindowStyle.Hidden};
+				var serviceProcess = Process.Start(runSvc);
 
-				while (!(ServiceProcess.HasExited == true))
+				while (!serviceProcess.HasExited)
 				{
-					System.Threading.Thread.Sleep(100);
+					Thread.Sleep(100);
 					System.Windows.Forms.Application.DoEvents();
 				}
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(OWAtray.Error + ex.Message, LogType.Fail);
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
 				return;
 			}
 
-			// Set Exchange Version
-			//AddLogEntry("Configuring for Exchange " + reportedVersion.ToString(), LogType.Info);
-
 			try
 			{
-				ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-				RunSvc.Arguments = "exchange " + reportedVersion.ToString();
-				RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-				Process ServiceProcess = Process.Start(RunSvc);
+				var runSvc = new ProcessStartInfo(_shellPath)
+				             	{Arguments = "exchange " + _reportedVersion.ToString(), WindowStyle = ProcessWindowStyle.Hidden};
+				var serviceProcess = Process.Start(runSvc);
 
-				while (!(ServiceProcess.HasExited == true))
+				while (!serviceProcess.HasExited)
 				{
-					System.Threading.Thread.Sleep(100);
+					Thread.Sleep(100);
 					System.Windows.Forms.Application.DoEvents();
 				}
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(OWAtray.Error + ex.Message, LogType.Fail);
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
 				return;
 			}
 
 			// Set Password
 			try
 			{
-				ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-				RunSvc.Arguments = "password " + txtPwd.Text;
-				RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-				Process ServiceProcess = Process.Start(RunSvc);
+				var runSvc = new ProcessStartInfo(_shellPath)
+				             	{Arguments = "password " + txtPwd.Text, WindowStyle = ProcessWindowStyle.Hidden};
+				var serviceProcess = Process.Start(runSvc);
 
-				while (!(ServiceProcess.HasExited == true))
+				while (!serviceProcess.HasExited)
 				{
-					System.Threading.Thread.Sleep(100);
+					Thread.Sleep(100);
 					System.Windows.Forms.Application.DoEvents();
 				}
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(OWAtray.Error + ex.Message, LogType.Fail);
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
 				return;
 			}
 
 			// Set Autologin
 			try
 			{
-				ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-				RunSvc.Arguments = "autologin " + (Properties.Settings.Default.AutoLogin ? "Yes" : "No");
-				RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-				Process ServiceProcess = Process.Start(RunSvc);
+				var runSvc = new ProcessStartInfo(_shellPath)
+				             	{
+				             		Arguments = "autologin " + (Settings.Default.AutoLogin ? "Yes" : "No"),
+				             		WindowStyle = ProcessWindowStyle.Hidden
+				             	};
+				var serviceProcess = Process.Start(runSvc);
 
-				while (!(ServiceProcess.HasExited == true))
+				while (!serviceProcess.HasExited)
 				{
-					System.Threading.Thread.Sleep(100);
+					Thread.Sleep(100);
 					System.Windows.Forms.Application.DoEvents();
 				}
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(OWAtray.Error + ex.Message, LogType.Fail);
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
 				return;
 			}
 
 			// Set Browser
 			try
 			{
-				ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-				RunSvc.Arguments = "browser " + (Properties.Settings.Default.AlwaysIE ? "Yes" : "No");
-				RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-				Process ServiceProcess = Process.Start(RunSvc);
+				var runSvc = new ProcessStartInfo(_shellPath)
+				             	{
+				             		Arguments = "browser " + (Settings.Default.AlwaysIE ? "Yes" : "No"),
+				             		WindowStyle = ProcessWindowStyle.Hidden
+				             	};
+				var serviceProcess = Process.Start(runSvc);
 
-				while (!(ServiceProcess.HasExited == true))
+				while (!serviceProcess.HasExited)
 				{
-					System.Threading.Thread.Sleep(100);
+					Thread.Sleep(100);
 					System.Windows.Forms.Application.DoEvents();
 				}
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(OWAtray.Error + ex.Message, LogType.Fail);
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
 				return;
 			}
 		}
 
-		/// <summary>
-		/// Handles the CheckStateChanged event of the disableCalendarToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void disableCalendarToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.DisableCalendar = disableCalendarToolStripMenuItem.Checked;
-			Properties.Settings.Default.Save();
-			AddLogEntry(OWAtray.Calendar_notifications_switched + " " + (Properties.Settings.Default.DisableCalendar ? OWAtray.OFF : OWAtray.ON), LogType.Info);
+			Settings.Default.DisableCalendar = disableCalendarToolStripMenuItem.Checked;
+			Settings.Default.Save();
+			AddLogEntry(
+				OWAtray.Calendar_notifications_switched + " " + (Settings.Default.DisableCalendar ? OWAtray.OFF : OWAtray.ON));
 		}
 
-		/// <summary>
-		/// Handles the SelectedIndexChanged event of the exchange2007ToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void exchange2007ToolStripMenuItem_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
 			switch (exchange2007ToolStripMenuItem.SelectedIndex)
 			{
 				case 0:
-					Properties.Settings.Default.ExchangeVersion = "Autodetect";
+					Settings.Default.ExchangeVersion = "Autodetect";
 					break;
 
 				case 1:
-					Properties.Settings.Default.ExchangeVersion = "Exchange2007_SP1";
+					Settings.Default.ExchangeVersion = "Exchange2007_SP1";
 					break;
 
 				case 2:
-					Properties.Settings.Default.ExchangeVersion = "Exchange2010";
+					Settings.Default.ExchangeVersion = "Exchange2010";
 					break;
 
 				case 3:
-					Properties.Settings.Default.ExchangeVersion = "Exchange2010_SP1";
+					Settings.Default.ExchangeVersion = "Exchange2010_SP1";
 					break;
 			}
 
-			Properties.Settings.Default.Save();
+			Settings.Default.Save();
 		}
 
-		/// <summary>
-		/// Handles the Click event of the exitToolStripMenuItem1 control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
-			overRideClose = true;
-			this.Close();
+			_overRideClose = true;
+			Close();
 		}
 
-		/// <summary>
-		/// Handles the Click event of the exitToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			overRideClose = true;
-			this.Close();
+			_overRideClose = true;
+			Close();
 		}
 
-		/// <summary>
-		/// Flushes the output.
-		/// </summary>
 		private void FlushOutput()
 		{
-			if (this.InvokeRequired)
+			// Avoid Illegal Cross Thread Calls
+			Invoke(new Action(() =>
 			{
-				this.BeginInvoke(new FlushOutputDelegate(FlushOutput), new object[] { });
-				return;
-			}
-			else
-			{
-				if (lvBuffer.Count > 0)
+				if (_lvBuffer.Count <= 0) return;
+
+				// Avoid buffer overflows by trimming log after n entries
+				if (lvStatus.Items.Count >= Properties.Settings.Default.ScreenLines) lvStatus.Items.Clear();
+
+				try
 				{
-					if (lvStatus.Items.Count >= Convert.ToInt32(ScreenLines))
-					{
-						lvStatus.Items.Clear();
-					}
-
-					try
-					{
-						// Pause output
-						lvStatus.BeginUpdate();
-
-						// Add new records - use Add rather than AddRange to avoid bug in .Net that causes NullReferenceException
-						foreach (ListViewItem lv in lvBuffer)
-						{
-							if (lv != null)
-							{
-								lvStatus.Items.Add(lv);
-							}
-						}
-					}
-					catch (Exception ex)
-					{
-						// This won't appear on screen but will go to the log file
-						AddLogEntry(OWAtray.Logging_error + ex.Message, LogType.Fail);
-					}
-					finally
-					{
-						if (lvStatus.Items.Count > 0)
-						{
-							try
-							{
-								// Make the latest addition visible
-								lvStatus.EnsureVisible(lvStatus.Items.Count - 1);
-
-								// Update status strip
-								ListViewItem lv = lvStatus.Items[lvStatus.Items.Count - 1];
-								slStatus.Text = lv.SubItems[1].Text.Substring(0, (lv.SubItems[1].Text.Length > 120 ? 120 : lv.SubItems[1].Text.Length));
-							}
-							catch (Exception ex)
-							{
-								// This won't appear on screen but will go to the log file
-								AddLogEntry(OWAtray.Logging_error1 + ex.Message, LogType.Fail);
-							}
-						}
-						// Clear down buffer
-						lvBuffer.Clear();
-						// Resume output
-						lvStatus.EndUpdate();
-						// Repaint control
-						lvStatus.Refresh();
-						this.Refresh();
-					}
+					// Copy from buffer to screen control
+					lvStatus.BeginUpdate();
+					// Note that .AddRange has a bug so avoid
+					foreach (var lv in _lvBuffer.Where(lv => lv != null))
+						lvStatus.Items.Add(lv);
 				}
-			}
+				catch (Exception)
+				{
+				}
+				finally
+				{
+					// Make newest item visible
+					// We don't care about any spurious errors raised here
+					if (lvStatus.Items.Count > 0)
+					{
+						try
+						{
+							lvStatus.EnsureVisible(lvStatus.Items.Count - 1);
+							var lv = lvStatus.Items[lvStatus.Items.Count - 1];
+							slStatus.Text = lv.SubItems[1].Text;
+						}
+						catch (Exception)
+						{
+						}
+					}
+
+					// Tidy up
+					_lvBuffer.Clear();
+					lvStatus.EndUpdate();
+					lvStatus.Refresh();
+					Refresh();
+				}
+			}));
 		}
 
-		/// <summary>
-		/// Handles the FormClosed event of the Form1 control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.Windows.Forms.FormClosedEventArgs"/> instance containing the event data.</param>
 		private void Form1_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			this.FormClosed -= new FormClosedEventHandler(Form1_FormClosed);
+			FormClosed -= Form1_FormClosed;
 			AddLogEntry(OWAtray.Terminating);
-			myLog.Active = false;
 		}
 
-		/// <summary>
-		/// Handles the FormClosing event of the Form1 control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.Windows.Forms.FormClosingEventArgs"/> instance containing the event data.</param>
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			//There are several ways to close an application.
-			//We are trying to find the click of the X in the upper right hand corner
-			//We will only allow the closing of this app if it is minimized.
-			if (this.WindowState != FormWindowState.Minimized && overRideClose == false)
+			if (WindowState != FormWindowState.Minimized && _overRideClose == false)
 			{
-				//we don't close the app...
 				e.Cancel = true;
-				this.WindowState = FormWindowState.Minimized;
+				WindowState = FormWindowState.Minimized;
 			}
 			else
 			{
-				this.FormClosing -= new FormClosingEventHandler(Form1_FormClosing);
-				M_RESULT result = SnarlConnector.RevokeConfig(this.Handle);
-				System.Windows.Forms.Application.Exit(e);
+				FormClosing -= Form1_FormClosing;
+				SnarlConnector.RevokeConfig(Handle);
+				Application.Exit(e);
 			}
 		}
 
-		/// <summary>
-		/// Handles the Move event of the Form1 control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void Form1_Move(object sender, EventArgs e)
 		{
-			if (this == null)
+			if (WindowState == FormWindowState.Minimized)
 			{
-				return;
-			}
-
-			if (this.WindowState == FormWindowState.Minimized)
-			{
-				this.Hide();
+				Hide();
 			}
 			else
 			{
-				this.Show();
+				Show();
 			}
 		}
 
-		/// <summary>
-		/// Times the of newest email.
-		/// </summary>
-		/// <returns></returns>
 		private DateTime TimeOfNewestEmail()
 		{
-			DateTime myTime = DateTime.Now;
+			var myTime = DateTime.Now;
 
 			// Define filters collection
-			SearchFilter.SearchFilterCollection filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And);
-			filters.Add(new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false));
+			var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
+			              	{new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false)};
 
 			// Item view
-			ItemView view = new ItemView(10, 0, OffsetBasePoint.Beginning);
-			view.PropertySet = new PropertySet(BasePropertySet.IdOnly);
-			view.PropertySet.Add(ItemSchema.DateTimeReceived);
+			var view = new ItemView(10, 0, OffsetBasePoint.Beginning)
+			           	{PropertySet = new PropertySet(BasePropertySet.IdOnly) {ItemSchema.DateTimeReceived}};
 			view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
 
 			try
 			{
 				// Now search
-				FindItemsResults<Item> findResults = myService.FindItems(WellKnownFolderName.Inbox, filters, view);
+				var findResults = _myService.FindItems(WellKnownFolderName.Inbox, filters, view);
 
 				// Process each item.
-				foreach (Item myItem in findResults.Items)
+				foreach (var myItem in findResults.Items)
 				{
-					if (myItem is EmailMessage)
-					{
-						EmailMessage myEmail = (EmailMessage)myItem;
-						PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
-						myEmail.Load(ps);
-						myTime = myEmail.DateTimeReceived;
-						break;
-					}
+					var myEmail = myItem as EmailMessage;
+					if (myEmail == null) continue;
+
+					var ps = new PropertySet(BasePropertySet.FirstClassProperties);
+					myEmail.Load(ps);
+					myTime = myEmail.DateTimeReceived;
+					break;
 				}
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(OWAtray.Error_when_getting_email + ex.Message, LogType.Fail);
+				AddLogEntry(OWAtray.Error_when_getting_email + ex.Message, Severity.Fail);
 			}
 
-			//AddLogEntry("Newest email is: " + myTime.ToString());
 			return myTime;
 		}
 
-		/// <summary>
-		/// Gets the unread count from the Inbox
-		/// </summary>
-		/// <returns>Email count</returns>
-		private int GetUnreadCount()
+		private int CheckForNewMail()
 		{
 			int myCount;
 
-			if (myService == null)
+			if (_myService == null)
 			{
-				AddLogEntry(OWAtray.Not_Connected_to_Exchange, LogType.Fail);
-				notifyIcon1.Text = ThisApp + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
+				AddLogEntry(OWAtray.Not_Connected_to_Exchange, Severity.Fail);
+				notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
 				return 0;
 			}
 
 			try
 			{
 				// Set time for initial run only
-				if (firstRun) TimeLastChecked = TimeOfNewestEmail().AddSeconds(1);
+				if (_firstRun) _timeLastChecked = TimeOfNewestEmail().AddSeconds(1);
 
 				// Is there new mail?
-				Folder myFolder = Folder.Bind(myService, WellKnownFolderName.Inbox);
+				var myFolder = Folder.Bind(_myService, WellKnownFolderName.Inbox);
 				myCount = myFolder.UnreadCount;
-				if (myCount > inboxCount)
+				if (myCount > _inboxCount)
 				{
-					if (firstRun)
+					if (_firstRun)
 					{
-						PopToast(OWAtray.New_Mail, OWAtray.You_have + " " + myCount + " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ") + OWAtray.in_your_inbox);
+						PopToast(OWAtray.New_Mail,
+						         OWAtray.You_have + " " + myCount + " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ") +
+						         OWAtray.in_your_inbox);
 					}
 					else
 					{
-						int count = PopUnreadEmail(myCount);
+						var count = PopUnreadEmail(myCount);
 					}
 
-					resetFlag = false;
+					_resetFlag = false;
 				}
 
-				if (!resetFlag)
+				if (!_resetFlag)
 				{
-					notifyIcon1.Icon = new Icon((myCount > 0 ? newIcon : trayIcon));
+					notifyIcon1.Icon = new Icon((myCount > 0 ? _newIcon : _trayIcon));
 				}
-				string text1 = ThisApp + Environment.NewLine + Environment.NewLine + myCount + " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ");
-				const int MaxTipLength = 63;
-				int charsLeft = MaxTipLength - text1.Length;
-				string domainText = reportedMailboxServer + @"\" + reportedUserName;
+
+				var text1 = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Environment.NewLine + myCount + " " +
+				               OWAtray.unread_email + (myCount != 1 ? "s " : " ");
+				const int maxTipLength = 63;
+				var charsLeft = maxTipLength - text1.Length;
+				var domainText = _reportedMailboxServer + @"\" + _reportedUserName;
 				if (domainText.Length > charsLeft) domainText = domainText.Substring(0, charsLeft);
-				string finalText = ThisApp + Environment.NewLine + domainText + Environment.NewLine + myCount + " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ");
+				var finalText = AssemblyHelpers.AssemblyTitle + Environment.NewLine + domainText + Environment.NewLine + myCount +
+				                   " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ");
 				notifyIcon1.Text = finalText;
-				inboxCount = myCount;
+				_inboxCount = myCount;
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(OWAtray.Error + ex.Message, LogType.Fail);
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
 				myCount = 0;
 				stopMonitoring();
 				StartRetryTimer();
 			}
 			finally
 			{
-				firstRun = false;
+				_firstRun = false;
 			}
 
 			return myCount;
 		}
 
-		/// <summary>
-		/// Handles the CheckStateChanged event of the growlToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void growlToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.Growl = growlToolStripMenuItem.Checked;
-			Properties.Settings.Default.Save();
-			AddLogEntry(OWAtray.Growl_notifications_switched + " " + (Properties.Settings.Default.Growl ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			Settings.Default.Growl = growlToolStripMenuItem.Checked;
+			Settings.Default.Save();
+			AddLogEntry(OWAtray.Growl_notifications_switched + " " + (Settings.Default.Growl ? OWAtray.ON : OWAtray.OFF));
 		}
 
-		/// <summary>
-		/// Inits the event view.
-		/// </summary>
-		/// <param name="lvX">The lv X.</param>
-		private void InitEventView(ListView lvX)
+		private static void InitEventView(ListView lvX)
 		{
 			lvX.Columns.Add(OWAtray.Time, 140, HorizontalAlignment.Left);
 			lvX.Columns.Add(OWAtray.Event_Details, 1000, HorizontalAlignment.Left);
 			lvX.Items.Clear();
 		}
 
-		/// <summary>
-		/// Handles the Click event of the makeOWADefaultToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void makeOWADefaultToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// Update shell parameters
@@ -1524,287 +1173,208 @@ namespace DrunkenBakery.OWAtray
 
 			if (!IsUserAdministrator())
 			{
-				AddLogEntry(OWAtray.You_are_not_an_Admin_user, LogType.Fail);
+				AddLogEntry(OWAtray.You_are_not_an_Admin_user, Severity.Fail);
 			}
 
 			// Configure registry
-			AddLogEntry(OWAtray.Setting_up_Mail_handlers, LogType.Info);
+			AddLogEntry(OWAtray.Setting_up_Mail_handlers);
 
 			try
 			{
-				ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-				RunSvc.Arguments = "registry";
-				RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-				if (System.Environment.OSVersion.Version.Major >= 6)
-					RunSvc.Verb = "runas";
-				Process ServiceProcess = Process.Start(RunSvc);
+				var runSvc = new ProcessStartInfo(_shellPath) {Arguments = "registry", WindowStyle = ProcessWindowStyle.Hidden};
+				if (Environment.OSVersion.Version.Major >= 6)
+					runSvc.Verb = "runas";
+				var serviceProcess = Process.Start(runSvc);
 
-				while (!(ServiceProcess.HasExited == true))
+				while (!serviceProcess.HasExited)
 				{
-					System.Threading.Thread.Sleep(100);
+					Thread.Sleep(100);
 					System.Windows.Forms.Application.DoEvents();
 				}
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(OWAtray.Error + ex.Message, LogType.Fail);
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
 				return;
 			}
 
-			AddLogEntry(OWAtray.Mail_functions_will_now_be, LogType.Success);
+			AddLogEntry(OWAtray.Mail_functions_will_now_be, Severity.Success);
 		}
 
-		/// <summary>
-		/// Handles the Click event of the mDACVersionsToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void mDACVersionsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (frmMDAC == null) frmMDAC = new MDACversions();
-			frmMDAC.ShowDialog();
+			if (_frmMdac == null) _frmMdac = new MdaCversions();
+			_frmMdac.ShowDialog();
 		}
 
-		/// <summary>
-		/// Handles the Click event of the nETVersionsToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void nETVersionsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (frmNET == null) frmNET = new NETversions();
-			frmNET.ShowDialog();
+			if (_frmNet == null) _frmNet = new NeTversions();
+			_frmNet.ShowDialog();
 		}
 
-		/// <summary>
-		/// Handles the BalloonTipClicked event of the notifyIcon1 control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void notifyIcon1_BalloonTipClicked(object sender, EventArgs e)
 		{
-			if (Control.MouseButtons == MouseButtons.Left)
-			{
-				//AddLogEntry("PopURL - " + notifyIcon1.Tag);
-				activateOWA();
-				popUrl = "";
-			}
+			if (MouseButtons != MouseButtons.Left) return;
+
+			ActivateOwa();
+			_popUrl = "";
 		}
 
-		/// <summary>
-		/// Handles the MouseDoubleClick event of the notifyIcon1 control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.Windows.Forms.MouseEventArgs"/> instance containing the event data.</param>
 		private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
-			//if (this.WindowState == FormWindowState.Minimized)
-			//{
-			//    this.Show();
-			//    this.WindowState = FormWindowState.Normal;
-			//}
-
-			//// Activate the form.
-			//this.Activate();
-			//this.Focus();
-
-			popUrl = "";
-			activateOWA();
+			_popUrl = "";
+			ActivateOwa();
 		}
 
-		/// <summary>
-		/// Handles the Click event of the openOutlookToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void openOutlookToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			try
 			{
-				System.Diagnostics.Process.Start(Properties.Settings.Default.OutlookPath);
+				Process.Start(Settings.Default.OutlookPath);
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
-				AddLogEntry(ex.Message, LogType.Fail);
+				AddLogEntry(ex.Message, Severity.Fail);
 			}
 		}
 
-		/// <summary>
-		/// Handles the Click event of the openOWAToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void openOWAToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			popUrl = "";
-			activateOWA();
+			_popUrl = "";
+			ActivateOwa();
 		}
 
-		/// <summary>
-		/// Inits the logger.
-		/// </summary>
-		private static void InitLogger()
-		{
-			myLog = new FlatFile();
-			myLog.LogFile = Path.Combine(System.Windows.Forms.Application.LocalUserAppDataPath, "owatray.log");
-			myLog.DateOn = true;
-			myLog.Verbose = true;
-			myLog.LimitSize = true;
-			myLog.Scavenge = true;
-			myLog.Active = true;
-		}
-
-		/// <summary>
-		/// Handles the CheckStateChanged event of the overrideToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void overrideToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.OverrideCert = overrideToolStripMenuItem.Checked;
-			Properties.Settings.Default.Save();
-			AddLogEntry(OWAtray.SSL_Certificate_override + " " + (Properties.Settings.Default.OverrideCert ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			Settings.Default.OverrideCert = overrideToolStripMenuItem.Checked;
+			Settings.Default.Save();
+			AddLogEntry(OWAtray.SSL_Certificate_override + " " + (Settings.Default.OverrideCert ? OWAtray.ON : OWAtray.OFF));
 		}
 
-		/// <summary>
-		/// Handles the CheckStateChanged event of the playSoundToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void playSoundToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.Bell = playSoundToolStripMenuItem.Checked;
-			Properties.Settings.Default.Save();
-			AddLogEntry(OWAtray.Audible_notifications_switched + " " + (Properties.Settings.Default.Bell ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			Settings.Default.Bell = playSoundToolStripMenuItem.Checked;
+			Settings.Default.Save();
+			AddLogEntry(OWAtray.Audible_notifications_switched + " " + (Settings.Default.Bell ? OWAtray.ON : OWAtray.OFF));
 		}
 
-		/// <summary>
-		/// Pops the toast.
-		/// </summary>
-		/// <param name="myTitle">My title.</param>
-		/// <param name="myMessage">My message.</param>
 		private void PopToast(string myTitle, string myMessage)
 		{
 			// Belt & Braces
 			if (myTitle.Length == 0) myTitle = OWAtray.No_Title;
 			if (myMessage.Length == 0) myMessage = OWAtray.No_Subject;
 
-			AddLogEntry(myTitle, LogType.Info);
+			AddLogEntry(myTitle);
 
 			// Store for recall
-			lastPopTitle = myTitle;
-			lastPopMessage = myMessage;
-			lastPopUrl = popUrl;
+			_lastPopTitle = myTitle;
+			_lastPopMessage = myMessage;
+			_lastPopUrl = _popUrl;
 
 			//Balloon
-			if (Properties.Settings.Default.Balloon)
+			if (Settings.Default.Balloon)
 			{
-				notifyIcon1.Tag = popUrl;
+				notifyIcon1.Tag = _popUrl;
 				notifyIcon1.ShowBalloonTip(5000, myTitle, myMessage, ToolTipIcon.Info);
 			}
 
 			// Growl
-			if (Properties.Settings.Default.Growl)
+			if (Settings.Default.Growl)
 			{
-				Notification notification = new Notification(this.growlApp.Name, this.newMail.Name, "", myTitle, myMessage);
-				this.growl.Notify(notification);
+				GrowlHelper.PopGrowl(myTitle, myMessage);
 			}
 
 			// Snarl
-			if (Properties.Settings.Default.Snarl)
+			if (Settings.Default.Snarl)
 			{
-				SnarlConnector.ShowMessage(myTitle, myMessage, 10, iconPath, this.Handle, (WindowsMessage)REPLY_MSG);
+				SnarlConnector.ShowMessage(myTitle, myMessage, 10, _iconPath, Handle, (WindowsMessage) ReplyMsg);
 			}
 
 			// Audible
-			if (Properties.Settings.Default.Bell)
+			if (Settings.Default.Bell)
 			{
-				PlaySound(wavFile, new System.IntPtr(), PlaySoundFlags.SND_SYNC);
+				PlaySound(_wavFile, new IntPtr(), PlaySoundFlags.SndSync);
 			}
 		}
 
-		/// <summary>
-		/// Pops the unread email.
-		/// </summary>
-		/// <param name="unreadCount">The unread count.</param>
-		/// <returns></returns>
 		private int PopUnreadEmail(int unreadCount)
 		{
-			//AddLogEntry("Checking for mail after: " + TimeLastChecked.ToString());
-
 			// Set the offset for the paged search.
-			int offset = 0;
-			int count = 0;
+			var offset = 0;
+			var count = 0;
 
 			// Set the page size.
-			int pageSize = Properties.Settings.Default.PageSize;
+			var pageSize = Settings.Default.PageSize;
 
 			// Set the flag that indicates whether to continue iterating through additional pages.
-			bool MoreItems = true;
+			var moreItems = true;
 
 			// Continue paging while there are more items to page.
-			while (MoreItems)
+			while (moreItems)
 			{
 				// Define filters collection
-				SearchFilter.SearchFilterCollection filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And);
-				filters.Add(new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false));
-				filters.Add(new SearchFilter.IsGreaterThan(EmailMessageSchema.DateTimeReceived, TimeLastChecked));
+				var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
+				              	{
+				              		new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
+				              		new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, _timeLastChecked)
+				              	};
 
 				// Item view
-				ItemView view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning);
-				view.PropertySet = new PropertySet(BasePropertySet.IdOnly);
-				view.PropertySet.Add(ItemSchema.Subject);
-				view.PropertySet.Add(ItemSchema.DateTimeReceived);
+				var view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning)
+				           	{
+				           		PropertySet = new PropertySet(BasePropertySet.IdOnly) {ItemSchema.Subject, ItemSchema.DateTimeReceived}
+				           	};
 				view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
 
 				// Now search
-				FindItemsResults<Item> findResults = myService.FindItems(WellKnownFolderName.Inbox, filters, view);
+				var findResults = _myService.FindItems(WellKnownFolderName.Inbox, filters, view);
 
 				// Process each item.
-				bool allDone = false;
-				bool isFlagged = false;
-				foreach (Item myItem in findResults.Items)
+				var allDone = false;
+				var isFlagged = false;
+				foreach (var myItem in findResults.Items)
 				{
-					if (++count > Convert.ToInt32(Properties.Settings.Default.MaxNotify))
+					if (++count > Convert.ToInt32(Settings.Default.MaxNotify))
 					{
 						if (!allDone)
 						{
-							PopToast(OWAtray.Too_much_mail, OWAtray.There_are + " " + (unreadCount - Convert.ToInt32(Properties.Settings.Default.MaxNotify)) + " " + OWAtray.other_new_emails);
+							PopToast(OWAtray.Too_much_mail,
+							         OWAtray.There_are + " " + (unreadCount - Convert.ToInt32(Settings.Default.MaxNotify)) + " " +
+							         OWAtray.other_new_emails);
 							allDone = true;
 						}
 					}
 					else
 					{
-						if (myItem is EmailMessage)
+						var myEmail = myItem as EmailMessage;
+						if (myEmail != null)
 						{
-							string mySender = OWAtray.No_Sender;
-							string mySubject = OWAtray.No_Subject;
-							DateTime myTime = DateTime.Now;
+							var myTime = DateTime.Now;
 
 							try
 							{
-								EmailMessage myEmail = (EmailMessage)myItem;
-								PropertySet ps = new PropertySet(BasePropertySet.FirstClassProperties);
+								var ps = new PropertySet(BasePropertySet.FirstClassProperties);
 								myEmail.Load(ps);
-								mySender = myEmail.Sender.Name;
-								mySubject = (myEmail.Subject == null ? OWAtray.No_Subject : myEmail.Subject);
+								var mySender = myEmail.Sender.Name;
+								var mySubject = (myEmail.Subject ?? OWAtray.No_Subject);
 								myTime = myEmail.DateTimeReceived;
-								popUrl = (reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myEmail.WebClientReadFormQueryString);
+								_popUrl = (_reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myEmail.WebClientReadFormQueryString);
 								PopToast(OWAtray.New_Mail_from + " " + mySender, mySubject);
 							}
 							catch (Exception ex)
 							{
-								AddLogEntry(OWAtray.Error_when_getting_email + ex.Message, LogType.Fail);
+								AddLogEntry(OWAtray.Error_when_getting_email + ex.Message, Severity.Fail);
 							}
 
 							// Update flag
 							if (!isFlagged)
 							{
-								TimeLastChecked = myTime.AddSeconds(1);
+								_timeLastChecked = myTime.AddSeconds(1);
 								isFlagged = true;
 							}
 						}
@@ -1813,223 +1383,150 @@ namespace DrunkenBakery.OWAtray
 
 				// Set the flag to discontinue paging.
 				if (!findResults.MoreAvailable)
-					MoreItems = false;
+					moreItems = false;
 
 				// Update the offset if there are more items to page.
-				if (MoreItems)
+				if (moreItems)
 					offset = offset + pageSize;
 			}
 
 			return count;
 		}
 
-		/// <summary>
-		/// Handles the Click event of the recallLastPopupToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void recallLastPopupToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (lastPopMessage.Length > 0 && lastPopTitle.Length > 0)
-			{
-				popUrl = lastPopUrl;
-				PopToast(lastPopTitle, lastPopMessage);
-			}
+			if (_lastPopMessage.Length <= 0 || _lastPopTitle.Length <= 0) return;
+
+			_popUrl = _lastPopUrl;
+			PopToast(_lastPopTitle, _lastPopMessage);
 		}
 
-		/// <summary>
-		/// Handles the Click event of the resetTrayIconToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void resetTrayIconToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			notifyIcon1.Icon = new Icon(trayIcon);
-			resetFlag = true;
+			notifyIcon1.Icon = new Icon(_trayIcon);
+			_resetFlag = true;
 		}
 
-		/// <summary>
-		/// Handles the Click event of the restoreToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (this.WindowState == FormWindowState.Minimized)
+			if (WindowState == FormWindowState.Minimized)
 			{
-				this.Show();
-				this.WindowState = FormWindowState.Normal;
+				Show();
+				WindowState = FormWindowState.Normal;
 			}
 
 			// Activate the form.
-			this.Activate();
-			this.Focus();
+			Activate();
+			Focus();
 		}
 
-		/// <summary>
-		/// Handles the CheckStateChanged event of the snarlToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void snarlToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.Snarl = snarlToolStripMenuItem.Checked;
-			Properties.Settings.Default.Save();
-			AddLogEntry(OWAtray.Snarl_notifications_switched + " " + (Properties.Settings.Default.Snarl ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			Settings.Default.Snarl = snarlToolStripMenuItem.Checked;
+			Settings.Default.Save();
+			AddLogEntry(OWAtray.Snarl_notifications_switched + " " + (Settings.Default.Snarl ? OWAtray.ON : OWAtray.OFF));
 		}
 
-		/// <summary>
-		/// Starts the monitoring.
-		/// </summary>
-		private void startMonitoring()
+		private void StartMonitoring()
 		{
 			// Start Timer
 			timerAppt.Start();
-			timerUpdate.Interval = Properties.Settings.Default.UpdateInterval * 1000;
+			timerUpdate.Interval = Settings.Default.UpdateInterval*1000;
 			timerUpdate.Start();
-			AddLogEntry(txtInterval.Text + " " + OWAtray.second_timer_started, LogType.Info);
+			AddLogEntry(txtInterval.Text + " " + OWAtray.second_timer_started);
 
 			// Minimise to tray
-			this.WindowState = FormWindowState.Minimized;
+			WindowState = FormWindowState.Minimized;
 
 			// Configure Shell
 			ConfigureShell();
 
 			// Initial Check
-			GetUnreadCount();
-			if (!Properties.Settings.Default.DisableCalendar)
+			CheckForNewMail();
+			if (!Settings.Default.DisableCalendar)
 			{
 				CheckForAppointments();
 			}
 		}
 
-		/// <summary>
-		/// Handles the Click event of the supportToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void supportToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (frmContact == null) frmContact = new ContactUs();
-			frmContact.ShowDialog();
+			if (_frmContact == null) _frmContact = new ContactUs();
+			_frmContact.ShowDialog();
 		}
 
-		/// <summary>
-		/// Handles the Click event of the switchOffToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void switchOffToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (!IsUserAdministrator())
 			{
-				AddLogEntry(OWAtray.You_are_not_an_Admin_user, LogType.Fail);
+				AddLogEntry(OWAtray.You_are_not_an_Admin_user, Severity.Fail);
 			}
 
 			// Configure registry
-			AddLogEntry(OWAtray.Restoring_Mail_handlers, LogType.Info);
+			AddLogEntry(OWAtray.Restoring_Mail_handlers);
 
 			try
 			{
-				ProcessStartInfo RunSvc = new ProcessStartInfo(shellPath);
-				RunSvc.Arguments = "restore";
-				RunSvc.WindowStyle = ProcessWindowStyle.Hidden;
-				if (System.Environment.OSVersion.Version.Major >= 6)
-					RunSvc.Verb = "runas";
-				Process ServiceProcess = Process.Start(RunSvc);
+				var runSvc = new ProcessStartInfo(_shellPath) {Arguments = "restore", WindowStyle = ProcessWindowStyle.Hidden};
+				if (Environment.OSVersion.Version.Major >= 6)
+					runSvc.Verb = "runas";
+				var serviceProcess = Process.Start(runSvc);
 
-				while (!(ServiceProcess.HasExited == true))
+				while (!serviceProcess.HasExited)
 				{
-					System.Threading.Thread.Sleep(100);
+					Thread.Sleep(100);
 					System.Windows.Forms.Application.DoEvents();
 				}
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(OWAtray.Error + ex.Message, LogType.Fail);
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
 				return;
 			}
 
-			AddLogEntry(OWAtray.Mail_handler_restored_to_system, LogType.Success);
+			AddLogEntry(OWAtray.Mail_handler_restored_to_system, Severity.Success);
 		}
 
-		/// <summary>
-		/// Handles the Click event of the systemInformationToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void systemInformationToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (frmInfo == null) frmInfo = new SysInfo();
-			frmInfo.ShowDialog();
+			if (_frmInfo == null) _frmInfo = new SysInfo();
+			_frmInfo.ShowDialog();
 		}
 
-		/// <summary>
-		/// Handles the Tick event of the timer1 control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			timer1.Enabled = false;
-			startMonitoring();
+			StartMonitoring();
 		}
 
-		/// <summary>
-		/// Handles the Tick event of the timerAppt control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void timerAppt_Tick(object sender, EventArgs e)
 		{
 			// Check for appointments
-			if (!Properties.Settings.Default.DisableCalendar)
+			if (!Settings.Default.DisableCalendar)
 			{
 				CheckForAppointments();
 			}
 		}
 
-		/// <summary>
-		/// Handles the Tick event of the timerLogging control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void timerLogging_Tick(object sender, EventArgs e)
 		{
-			// Update logging view
 			FlushOutput();
 		}
 
-		/// <summary>
-		/// Handles the Tick event of the timerUpdate control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void timerUpdate_Tick(object sender, EventArgs e)
 		{
-			// Look for new email
-			GetUnreadCount();
+			CheckForNewMail();
 		}
 
-		/// <summary>
-		/// Handles the Validated event of the txtInterval control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void txtInterval_Validated(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.UpdateInterval = Convert.ToInt32(txtInterval.Text);
-			Properties.Settings.Default.Save();
+			Settings.Default.UpdateInterval = Convert.ToInt32(txtInterval.Text);
+			Settings.Default.Save();
 		}
 
-		/// <summary>
-		/// Handles the Validating event of the txtInterval control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-		private void txtInterval_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+		private void txtInterval_Validating(object sender, CancelEventArgs e)
 		{
 			int result;
 
@@ -2042,33 +1539,30 @@ namespace DrunkenBakery.OWAtray
 				}
 				else
 				{
-					errorProvider1.SetError(txtInterval, OWAtray.Must_be_numeric_value_between + " " + MaxInterval.ToString());
+					errorProvider1.SetError(txtInterval, OWAtray.Must_be_numeric_value_between + " " + MaxInterval.ToString(CultureInfo.InvariantCulture));
 					e.Cancel = true;
 				}
 			}
 			else
 			{
-				errorProvider1.SetError(txtInterval, OWAtray.Must_be_numeric_value_between + " " + MaxInterval.ToString());
+				errorProvider1.SetError(txtInterval, OWAtray.Must_be_numeric_value_between + " " + MaxInterval.ToString(CultureInfo.InvariantCulture));
 				e.Cancel = true;
 			}
 		}
 
-		/// <summary>
-		/// Updates the URL.
-		/// </summary>
-		private void UpdateURL()
+		private void UpdateUrl()
 		{
-			if (Properties.Settings.Default.Autodiscovery && reportedEwsUrl.Length > 0)
+			if (Settings.Default.Autodiscovery && _reportedEwsUrl.Length > 0)
 			{
-				lblUrl.Text = reportedEwsUrl;
+				lblUrl.Text = _reportedEwsUrl;
 			}
-			else if (Properties.Settings.Default.OverrideURL && txtURLEdit.Text.Length > 0)
+			else if (Settings.Default.OverrideURL && txtURLEdit.Text.Length > 0)
 			{
 				lblUrl.Text = txtURLEdit.Text;
 			}
 			else if (txtServer.Text.Length > 0)
 			{
-				lblUrl.Text = "https://" + txtServer.Text + "/ews/exchange.asmx";
+				lblUrl.Text = string.Format("{0}{1}{2}", "https://", txtServer.Text, "/ews/exchange.asmx");
 			}
 			else
 			{
@@ -2076,304 +1570,198 @@ namespace DrunkenBakery.OWAtray
 			}
 		}
 
-		/// <summary>
-		/// Gets the email address.
-		/// </summary>
-		/// <returns></returns>
-		private string GetEmailAddress()
+		private string EmailAddress
 		{
-			string userAccount = (txtEmail.Text.Length > 0) ? txtEmail.Text : txtUser.Text;
-			if (userAccount.Length > 0 && !userAccount.Contains("@"))
+			get
 			{
-				userAccount = userAccount + "@" + GetSubDomain(txtServer.Text);
-			}
+				var userAccount = (txtEmail.Text.Length > 0) ? txtEmail.Text : txtUser.Text;
+				if (userAccount.Length > 0 && !userAccount.Contains("@"))
+				{
+					userAccount = userAccount + "@" + GetSubDomain(txtServer.Text);
+				}
 
-			return userAccount;
+				return userAccount;
+			}
 		}
 
-		/// <summary>
-		/// Updates the email.
-		/// </summary>
 		private void UpdateEmail()
 		{
-			lblEmail.Text = GetEmailAddress();
+			lblEmail.Text = EmailAddress;
 
-			if (!startingUp)
+			if (!_startingUp)
 			{
 				ConfigureShell();
 			}
 		}
 
-		#endregion Methods
-
-		/// <summary>
-		/// Handles the CheckStateChanged event of the loginAutomaticallyToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void loginAutomaticallyToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.AutoLogin = loginAutomaticallyToolStripMenuItem.Checked;
-			Properties.Settings.Default.Save();
-			AddLogEntry(OWAtray.Automatic_Login_is_switched + (Properties.Settings.Default.AutoLogin ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			Settings.Default.AutoLogin = loginAutomaticallyToolStripMenuItem.Checked;
+			Settings.Default.Save();
+			AddLogEntry(OWAtray.Automatic_Login_is_switched + " " + (Settings.Default.AutoLogin ? OWAtray.ON : OWAtray.OFF));
 
 			ConfigureShell();
 		}
 
-		/// <summary>
-		/// Handles the Validated event of the txtDomain control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void txtDomain_Validated(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.Domain = txtDomain.Text;
-			Properties.Settings.Default.Save();
+			Settings.Default.Domain = txtDomain.Text;
+			Settings.Default.Save();
 		}
 
-		/// <summary>
-		/// Handles the Validated event of the txtPwd control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void txtPwd_Validated(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.Password = (txtPwd.Text.Length > 0 ? EncryptString(ToSecureString(txtPwd.Text)) : "");
-			Properties.Settings.Default.Save();
+			Settings.Default.Password = (txtPwd.Text.Length > 0 ? txtPwd.Text.Encrypt() : "");
+			Settings.Default.Save();
 		}
 
-		/// <summary>
-		/// Handles the Validated event of the txtServer control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void txtServer_Validated(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.Server = txtServer.Text;
-			Properties.Settings.Default.Save();
-			UpdateURL();
+			Settings.Default.Server = txtServer.Text;
+			Settings.Default.Save();
+			UpdateUrl();
 			UpdateOwaUrl();
 		}
 
-		/// <summary>
-		/// Handles the Validated event of the txtUser control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void txtUser_Validated(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.Username = txtUser.Text;
-			Properties.Settings.Default.Save();
+			Settings.Default.Username = txtUser.Text;
+			Settings.Default.Save();
 			UpdateEmail();
 		}
 
-		/// <summary>
-		/// Handles the Validated event of the txtEmail control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void txtEmail_Validated(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.EMail = txtEmail.Text;
-			Properties.Settings.Default.Save();
+			Settings.Default.EMail = txtEmail.Text;
+			Settings.Default.Save();
 			UpdateEmail();
 		}
 
-		/// <summary>
-		/// Handles the CheckStateChanged event of the overrideAutodiscoveryValidationToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.OverrideValidation = overrideAutodiscoveryValidationToolStripMenuItem.Checked;
-			Properties.Settings.Default.Save();
-			AddLogEntry(OWAtray.Autodiscovery_Validation + " " + (Properties.Settings.Default.OverrideValidation ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			Settings.Default.OverrideValidation = overrideAutodiscoveryValidationToolStripMenuItem.Checked;
+			Settings.Default.Save();
+			AddLogEntry(
+				OWAtray.Autodiscovery_Validation + " " + (Settings.Default.OverrideValidation ? OWAtray.ON : OWAtray.OFF));
 		}
 
-		/// <summary>
-		/// Handles the CheckStateChanged event of the office365LoginOverrideToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void office365LoginOverrideToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.UseOffice365 = office365LoginOverrideToolStripMenuItem.Checked;
-			Properties.Settings.Default.Save();
+			Settings.Default.UseOffice365 = office365LoginOverrideToolStripMenuItem.Checked;
+			Settings.Default.Save();
 			UpdateOwaUrl();
-			AddLogEntry(OWAtray.Office_login_override + " " + (Properties.Settings.Default.UseOffice365 ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			AddLogEntry(OWAtray.Office_login_override + " " + (Settings.Default.UseOffice365 ? OWAtray.ON : OWAtray.OFF));
 		}
 
-		/// <summary>
-		/// Handles the Validated event of the txtURLEdit control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void txtURLEdit_Validated(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.ManualURL = txtURLEdit.Text;
-			Properties.Settings.Default.Save();
-			UpdateURL();
+			Settings.Default.ManualURL = txtURLEdit.Text;
+			Settings.Default.Save();
+			UpdateUrl();
 		}
 
-		/// <summary>
-		/// Handles the CheckedChanged event of the cbOverrideEWS control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void cbOverrideEWS_CheckedChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
 			txtURLEdit.Enabled = cbOverrideEWS.Checked;
 
-			Properties.Settings.Default.OverrideURL = cbOverrideEWS.Checked;
-			Properties.Settings.Default.Save();
-			UpdateURL();
-			AddLogEntry(OWAtray.EWS_URL_override_switched + " " + (Properties.Settings.Default.OverrideURL ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			Settings.Default.OverrideURL = cbOverrideEWS.Checked;
+			Settings.Default.Save();
+			UpdateUrl();
+			AddLogEntry(OWAtray.EWS_URL_override_switched + " " + (Settings.Default.OverrideURL ? OWAtray.ON : OWAtray.OFF));
 		}
 
-		/// <summary>
-		/// Handles the CheckedChanged event of the chkAutodiscovery control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void chkAutodiscovery_CheckedChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.Autodiscovery = chkAutodiscovery.Checked;
-			Properties.Settings.Default.Save();
-			AddLogEntry(OWAtray.Autodiscovery_is_switched + " " + (chkAutodiscovery.Checked ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			Settings.Default.Autodiscovery = chkAutodiscovery.Checked;
+			Settings.Default.Save();
+			AddLogEntry(OWAtray.Autodiscovery_is_switched + " " + (chkAutodiscovery.Checked ? OWAtray.ON : OWAtray.OFF));
 
 			// Switch off some options when Autodiscovery is checked
 			SelectAutodiscoveryOptions();
 
 			// Re-evaluate settings
-			UpdateURL();
+			UpdateUrl();
 			UpdateOwaUrl();
 			UpdateEmail();
 		}
 
-		/// <summary>
-		/// Handles the CheckedChanged event of the cbOverrideOWA control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void cbOverrideOWA_CheckedChanged(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
 			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
 
-			Properties.Settings.Default.OverrideOWAUrl = cbOverrideOWA.Checked;
-			Properties.Settings.Default.Save();
+			Settings.Default.OverrideOWAUrl = cbOverrideOWA.Checked;
+			Settings.Default.Save();
 			UpdateOwaUrl();
-			AddLogEntry(OWAtray.OWA_URL_override_switched + " " + (Properties.Settings.Default.OverrideOWAUrl ? OWAtray.ON : OWAtray.OFF), LogType.Info);
+			AddLogEntry(OWAtray.OWA_URL_override_switched + " " + (Settings.Default.OverrideOWAUrl ? OWAtray.ON : OWAtray.OFF));
 		}
 
-		/// <summary>
-		/// Handles the Validated event of the txtOWAEdit control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void txtOWAEdit_Validated(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.ManualOWAUrl = txtOWAEdit.Text;
-			Properties.Settings.Default.Save();
+			Settings.Default.ManualOWAUrl = txtOWAEdit.Text;
+			Settings.Default.Save();
 			UpdateOwaUrl();
 		}
 
-		/// <summary>
-		/// Handles the EnabledChanged event of the cbOverrideEWS control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void cbOverrideEWS_EnabledChanged(object sender, EventArgs e)
 		{
 			if (!cbOverrideEWS.Enabled)
-			{
 				txtURLEdit.Enabled = false;
-			}
 			else
 			{
 				if (cbOverrideEWS.Checked)
-				{
 					txtURLEdit.Enabled = true;
-				}
 			}
 		}
 
-		/// <summary>
-		/// Handles the EnabledChanged event of the cbOverrideOWA control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void cbOverrideOWA_EnabledChanged(object sender, EventArgs e)
 		{
 			if (!cbOverrideOWA.Enabled)
-			{
 				txtOWAEdit.Enabled = false;
-			}
 			else
 			{
 				if (cbOverrideOWA.Checked)
-				{
 					txtOWAEdit.Enabled = true;
-				}
 			}
 		}
 
-		/// <summary>
-		/// Handles the Tick event of the RetryTimer control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void RetryTimer_Tick(object sender, EventArgs e)
 		{
 			RetryTimer.Stop();
 
 			if (ConfigureExchange())
-			{
-				// Start
-				startMonitoring();
-			}
+				StartMonitoring();
 		}
 
-		/// <summary>
-		/// Handles the Click event of the showLogFileToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void showLogFileToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			try
 			{
-				System.Diagnostics.Process.Start(myLog.LogFile);
+				Process.Start(Logger.Filename);
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(ex.Message, LogType.Fail);
+				AddLogEntry(ex.Message, Severity.Fail);
 			}
 		}
 
-		/// <summary>
-		/// Handles the Click event of the useDefaultWebProxyToolStripMenuItem control.
-		/// </summary>
-		/// <param name="sender">The source of the event.</param>
-		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		private void useDefaultWebProxyToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (startingUp) return;
+			if (_startingUp) return;
 
-			Properties.Settings.Default.UseWebProxy = useDefaultWebProxyToolStripMenuItem.Checked;
-			Properties.Settings.Default.Save();
+			Settings.Default.UseWebProxy = useDefaultWebProxyToolStripMenuItem.Checked;
+			Settings.Default.Save();
 		}
 	}
 }

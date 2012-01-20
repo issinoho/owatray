@@ -8,8 +8,8 @@
     <ProjectGuid>{D3638975-E573-4BBD-9B8D-ED3B91200477}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DrunkenBakery.OWAtray</RootNamespace>
-    <AssemblyName>ShellIntegration</AssemblyName>
+    <RootNamespace>DrunkenBakery.OWAtray.ShellIntegration</RootNamespace>
+    <AssemblyName>DrunkenBakery.OWAtray.ShellIntegration</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>owa.ico</ApplicationIcon>
@@ -63,6 +63,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="SecurityExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

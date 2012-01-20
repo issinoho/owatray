@@ -9,56 +9,45 @@
 // Form to provide an RSS feed of changes scraped from the website.
 //
 //------------------------------------------------------------------
+
+using System;
+using System.ServiceModel.Syndication;
+using System.Windows.Forms;
+using System.Xml;
+
 namespace DrunkenBakery.OWAtray
 {
-    using System;
-    using System.ServiceModel.Syndication;
-    using System.Windows.Forms;
-    using System.Xml;
+	public partial class ChangeLog : Form
+	{
+		public ChangeLog(string rssUrl)
+		{
+			InitializeComponent();
 
-    /// <summary>
-    /// Displays a Change Log scraped from an RSS Feed
-    /// </summary>
-    public partial class ChangeLog : Form
-    {
-        #region Constructors
+			try
+			{
+				listBox1.Items.Clear();
+				var reader = XmlReader.Create(rssUrl);
+				var feed = SyndicationFeed.Load(reader);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ChangeLog"/> class.
-        /// </summary>
-        public ChangeLog(string rssUrl)
-        {
-            InitializeComponent();
+				if (feed != null)
+					foreach (SyndicationItem item in feed.Items)
+					{
+						listBox1.Items.Add(item.Title.Text);
+						listBox1.Items.Add(item.PublishDate.ToString("dd MMMM yyyy, hh:mm:ss") + " | " + item.Authors[0].Email + " (" +
+						                   item.Authors[0].Name + ")");
+						listBox1.Items.Add(string.Empty);
+					}
 
-            try
-            {
-                listBox1.Items.Clear();
-                XmlReader reader = XmlReader.Create(rssUrl);
-                SyndicationFeed feed = SyndicationFeed.Load(reader);
+				reader.Close();
+			}
+			catch (Exception)
+			{
+			}
+		}
 
-                foreach (SyndicationItem item in feed.Items)
-                {
-                    listBox1.Items.Add(item.Title.Text);
-                    listBox1.Items.Add(item.PublishDate.ToString("dd MMMM yyyy, hh:mm:ss") + " | " + item.Authors[0].Email + " (" + item.Authors[0].Name + ")");
-                    listBox1.Items.Add(string.Empty);
-                }
-
-                reader.Close();
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        private void cmdOK_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        #endregion Methods
-    }
+		private void cmdOK_Click(object sender, EventArgs e)
+		{
+			Close();
+		}
+	}
 }
