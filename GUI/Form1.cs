@@ -33,8 +33,6 @@ using DrunkenBakery.OWAtray.GUI.Properties;
 using DrunkenBakery.OWAtray.Growl;
 using DrunkenBakery.OWAtray.Logging;
 using DrunkenBakery.OWAtray.Snarl;
-using Microsoft.Exchange.WebServices.Autodiscover;
-using Microsoft.Exchange.WebServices.Data;
 
 namespace DrunkenBakery.OWAtray.GUI
 {
@@ -60,13 +58,11 @@ namespace DrunkenBakery.OWAtray.GUI
 		private string _lastPopMessage;
 		private string _lastPopTitle;
 		private string _lastPopUrl;
-		private ExchangeService _myService;
 		private string _popUrl;
 		private string _reportedEwsUrl = "";
 		private string _reportedMailboxServer = "";
 		private string _reportedOwaUrl = "";
 		private string _reportedUserName = "";
-		private ExchangeVersion _reportedVersion = ExchangeVersion.Exchange2007_SP1;
 		private bool _resetFlag;
 		private DateTime _timeLastChecked = DateTime.Now;
 
@@ -190,20 +186,20 @@ namespace DrunkenBakery.OWAtray.GUI
 			SnarlHelper.RegisterSnarl(AssemblyHelpers.AssemblyTitle, _graphicPath, Handle);
 
 			// Start Timers
-			timerAppt.Interval = Settings.Default.ApptInterval*1000;
-			timerUpdate.Interval = Settings.Default.UpdateInterval*1000;
+			//timerAppt.Interval = Settings.Default.ApptInterval*1000;
+			//timerUpdate.Interval = Settings.Default.UpdateInterval*1000;
 			timerLogging.Enabled = true;
 
 			// Now decide what to do based on whether this is the first run or not
-			if (!Settings.Default.FirstTime)
-			{
-				// Set up Exchange
-				if (ConfigureExchange())
-				{
-					// Start main timer
-					timer1.Enabled = true;
-				}
-			}
+			//if (!Settings.Default.FirstTime)
+			//{
+			//    // Set up Exchange
+			//    if (ConfigureExchange())
+			//    {
+			//        // Start main timer
+			//        timer1.Enabled = true;
+			//    }
+			//}
 
 			// Release interlock
 			_startingUp = false;
@@ -485,63 +481,63 @@ namespace DrunkenBakery.OWAtray.GUI
 			_frmChangeLog.ShowDialog();
 		}
 
-		private void CheckForAppointments()
-		{
-			try
-			{
-				// Interrogate default Calendar
-				var cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Settings.Default.ApptWindow)))
-				            	{PropertySet = PropertySet.FirstClassProperties};
-				FindItemsResults<Appointment> findResults = _myService.FindAppointments(WellKnownFolderName.Calendar, cView);
+		//private void CheckForAppointments()
+		//{
+		//    try
+		//    {
+		//        // Interrogate default Calendar
+		//        var cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Settings.Default.ApptWindow)))
+		//                        {PropertySet = PropertySet.FirstClassProperties};
+		//        FindItemsResults<Appointment> findResults = _myService.FindAppointments(WellKnownFolderName.Calendar, cView);
 
-				// Process each item.
-				int count = 0;
-				bool allDone = false;
-				foreach (Appointment myItem in findResults.Items)
-				{
-					if (++count > Settings.Default.MaxNotify)
-					{
-						if (!allDone)
-						{
-							PopToast(OWAtray.Too_many_appointments,
-							         OWAtray.There_are + " " + (findResults.Items.Count - Settings.Default.MaxNotify) + " " +
-							         OWAtray.others);
-							allDone = true;
-						}
-					}
-					else
-					{
-						if (myItem != null)
-						{
-							int duration = 0;
-							Appointment myAppt = myItem;
-							var ps = new PropertySet(BasePropertySet.FirstClassProperties);
-							myAppt.Load(ps);
-							string myLocation = myAppt.Location;
-							string mySubject = (myAppt.Subject ?? OWAtray.No_Subject);
-							TimeSpan span = myAppt.Start.Subtract(DateTime.Now);
-							duration = (int) Math.Floor(span.TotalMinutes);
-							string myStart = duration.ToString(CultureInfo.InvariantCulture);
-							string myTime = myAppt.Start.ToString("HH:mm");
+		//        // Process each item.
+		//        int count = 0;
+		//        bool allDone = false;
+		//        foreach (Appointment myItem in findResults.Items)
+		//        {
+		//            if (++count > Settings.Default.MaxNotify)
+		//            {
+		//                if (!allDone)
+		//                {
+		//                    PopToast(OWAtray.Too_many_appointments,
+		//                             OWAtray.There_are + " " + (findResults.Items.Count - Settings.Default.MaxNotify) + " " +
+		//                             OWAtray.others);
+		//                    allDone = true;
+		//                }
+		//            }
+		//            else
+		//            {
+		//                if (myItem != null)
+		//                {
+		//                    int duration = 0;
+		//                    Appointment myAppt = myItem;
+		//                    var ps = new PropertySet(BasePropertySet.FirstClassProperties);
+		//                    myAppt.Load(ps);
+		//                    string myLocation = myAppt.Location;
+		//                    string mySubject = (myAppt.Subject ?? OWAtray.No_Subject);
+		//                    TimeSpan span = myAppt.Start.Subtract(DateTime.Now);
+		//                    duration = (int) Math.Floor(span.TotalMinutes);
+		//                    string myStart = duration.ToString(CultureInfo.InvariantCulture);
+		//                    string myTime = myAppt.Start.ToString("HH:mm");
 
-							if (duration > 0)
-							{
-								_popUrl = (_reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myAppt.WebClientReadFormQueryString);
-								PopToast(
-									OWAtray.You_have_an_appointment_in + " " + myStart + " " + (duration != 1 ? OWAtray.mins : OWAtray.min),
-									myTime + " - " + mySubject + " (" + myLocation + ")");
-							}
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				AddLogEntry(ex.ToString(), Severity.Fail);
-				stopMonitoring();
-				StartRetryTimer();
-			}
-		}
+		//                    if (duration > 0)
+		//                    {
+		//                        _popUrl = (_reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myAppt.WebClientReadFormQueryString);
+		//                        PopToast(
+		//                            OWAtray.You_have_an_appointment_in + " " + myStart + " " + (duration != 1 ? OWAtray.mins : OWAtray.min),
+		//                            myTime + " - " + mySubject + " (" + myLocation + ")");
+		//                    }
+		//                }
+		//            }
+		//        }
+		//    }
+		//    catch (Exception ex)
+		//    {
+		//        AddLogEntry(ex.ToString(), Severity.Fail);
+		//        stopMonitoring();
+		//        StartRetryTimer();
+		//    }
+		//}
 
 		private void chkOnDomain_CheckedChanged(object sender, EventArgs e)
 		{
@@ -626,241 +622,236 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void stopMonitoring()
 		{
-			timerUpdate.Stop();
-			timerAppt.Stop();
+			//timerUpdate.Stop();
+			//timerAppt.Stop();
 			AddLogEntry(OWAtray.Timer_stopped);
 			notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
 		}
 
-		private void StartRetryTimer()
-		{
-			RetryTimer.Start();
-		}
+		//private bool ConfigureExchange()
+		//{
+		//    try
+		//    {
+		//        // Cursor
+		//        Cursor = Cursors.WaitCursor;
 
-		private bool ConfigureExchange()
-		{
-			try
-			{
-				// Cursor
-				Cursor = Cursors.WaitCursor;
+		//        // Validate the server certificate
+		//        ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
 
-				// Validate the server certificate
-				ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
+		//        // Set up proxy if needed
+		//        if (Settings.Default.UseWebProxy)
+		//        {
+		//            WebRequest.DefaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
+		//        }
 
-				// Set up proxy if needed
-				if (Settings.Default.UseWebProxy)
-				{
-					WebRequest.DefaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
-				}
+		//        AddLogEntry(OWAtray.Binding_to_Exchange);
+		//        switch (Settings.Default.ExchangeVersion)
+		//        {
+		//            case "Autodetect":
+		//                _myService = new ExchangeService();
+		//                break;
 
-				AddLogEntry(OWAtray.Binding_to_Exchange);
-				switch (Settings.Default.ExchangeVersion)
-				{
-					case "Autodetect":
-						_myService = new ExchangeService();
-						break;
+		//            case "Exchange2007_SP1":
+		//                _myService = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
+		//                break;
 
-					case "Exchange2007_SP1":
-						_myService = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
-						break;
+		//            case "Exchange2010":
+		//                _myService = new ExchangeService(ExchangeVersion.Exchange2010);
+		//                break;
 
-					case "Exchange2010":
-						_myService = new ExchangeService(ExchangeVersion.Exchange2010);
-						break;
+		//            case "Exchange2010_SP1":
+		//                _myService = new ExchangeService(ExchangeVersion.Exchange2010_SP1);
+		//                break;
+		//        }
 
-					case "Exchange2010_SP1":
-						_myService = new ExchangeService(ExchangeVersion.Exchange2010_SP1);
-						break;
-				}
+		//        // Credentials
+		//        if (chkOnDomain.Checked)
+		//        {
+		//            _myService.UseDefaultCredentials = true;
+		//        }
+		//        else
+		//        {
+		//            if (txtUser.Text.Length == 0 && txtEmail.Text.Length == 0)
+		//            {
+		//                AddLogEntry(OWAtray.Please_supply_valid_email, Severity.Fail);
+		//                return false;
+		//            }
 
-				// Credentials
-				if (chkOnDomain.Checked)
-				{
-					_myService.UseDefaultCredentials = true;
-				}
-				else
-				{
-					if (txtUser.Text.Length == 0 && txtEmail.Text.Length == 0)
-					{
-						AddLogEntry(OWAtray.Please_supply_valid_email, Severity.Fail);
-						return false;
-					}
+		//            if (txtPwd.Text.Length == 0)
+		//            {
+		//                AddLogEntry(OWAtray.Please_supply_valid_password, Severity.Fail);
+		//                return false;
+		//            }
 
-					if (txtPwd.Text.Length == 0)
-					{
-						AddLogEntry(OWAtray.Please_supply_valid_password, Severity.Fail);
-						return false;
-					}
+		//            if (txtDomain.Text.Length > 0)
+		//            {
+		//                _myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text,
+		//                                                            txtDomain.Text);
+		//            }
+		//            else
+		//            {
+		//                _myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text);
+		//            }
+		//        }
 
-					if (txtDomain.Text.Length > 0)
-					{
-						_myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text,
-						                                            txtDomain.Text);
-					}
-					else
-					{
-						_myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text);
-					}
-				}
+		//        // If autodiscover is on then that overrides the URI
+		//        if (Settings.Default.Autodiscovery)
+		//        {
+		//            if (lblEmail.Text.Length == 0)
+		//            {
+		//                AddLogEntry(OWAtray.Autodiscovery_requires_an_Email, Severity.Fail);
+		//                return false;
+		//            }
+		//            else
+		//            {
+		//                AddLogEntry(OWAtray.Starting_Autodiscovery);
+		//                if (Settings.Default.OverrideValidation)
+		//                {
+		//                    _myService.AutodiscoverUrl(lblEmail.Text, delegate { return true; });
+		//                }
+		//                else
+		//                {
+		//                    _myService.AutodiscoverUrl(lblEmail.Text);
+		//                }
 
-				// If autodiscover is on then that overrides the URI
-				if (Settings.Default.Autodiscovery)
-				{
-					if (lblEmail.Text.Length == 0)
-					{
-						AddLogEntry(OWAtray.Autodiscovery_requires_an_Email, Severity.Fail);
-						return false;
-					}
-					else
-					{
-						AddLogEntry(OWAtray.Starting_Autodiscovery);
-						if (Settings.Default.OverrideValidation)
-						{
-							_myService.AutodiscoverUrl(lblEmail.Text, delegate { return true; });
-						}
-						else
-						{
-							_myService.AutodiscoverUrl(lblEmail.Text);
-						}
+		//                // Update server settings
+		//                _reportedVersion = _myService.RequestedServerVersion;
+		//                AddLogEntry(OWAtray.Connected_to + " " + _reportedVersion, Severity.Success);
 
-						// Update server settings
-						_reportedVersion = _myService.RequestedServerVersion;
-						AddLogEntry(OWAtray.Connected_to + " " + _reportedVersion, Severity.Success);
+		//                // Probe for autodiscover information
+		//                var autodiscoverService = new AutodiscoverService(_myService.RequestedServerVersion);
 
-						// Probe for autodiscover information
-						var autodiscoverService = new AutodiscoverService(_myService.RequestedServerVersion);
+		//                // Credentials
+		//                if (chkOnDomain.Checked)
+		//                {
+		//                    autodiscoverService.UseDefaultCredentials = true;
+		//                }
+		//                else
+		//                {
+		//                    if (txtDomain.Text.Length > 0)
+		//                    {
+		//                        autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text),
+		//                                                                             txtPwd.Text, txtDomain.Text);
+		//                    }
+		//                    else
+		//                    {
+		//                        autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text),
+		//                                                                             txtPwd.Text);
+		//                    }
+		//                }
 
-						// Credentials
-						if (chkOnDomain.Checked)
-						{
-							autodiscoverService.UseDefaultCredentials = true;
-						}
-						else
-						{
-							if (txtDomain.Text.Length > 0)
-							{
-								autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text),
-								                                                     txtPwd.Text, txtDomain.Text);
-							}
-							else
-							{
-								autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text),
-								                                                     txtPwd.Text);
-							}
-						}
+		//                // Redirection Callback
+		//                if (Settings.Default.OverrideValidation)
+		//                {
+		//                    autodiscoverService.RedirectionUrlValidationCallback = delegate { return true; };
+		//                }
 
-						// Redirection Callback
-						if (Settings.Default.OverrideValidation)
-						{
-							autodiscoverService.RedirectionUrlValidationCallback = delegate { return true; };
-						}
+		//                // Is this Internal or External ?
+		//                if (autodiscoverService.IsExternal == false)
+		//                {
+		//                    // Internal
+		//                    AddLogEntry(OWAtray.Endpoint_is_INSIDE_corporate);
 
-						// Is this Internal or External ?
-						if (autodiscoverService.IsExternal == false)
-						{
-							// Internal
-							AddLogEntry(OWAtray.Endpoint_is_INSIDE_corporate);
+		//                    // Probe for values
+		//                    GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
+		//                                                                                               UserSettingName.InternalWebClientUrls,
+		//                                                                                               UserSettingName.InternalEwsUrl,
+		//                                                                                               UserSettingName.InternalMailboxServer,
+		//                                                                                               UserSettingName.UserDisplayName);
 
-							// Probe for values
-							GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
-							                                                                           UserSettingName.InternalWebClientUrls,
-							                                                                           UserSettingName.InternalEwsUrl,
-							                                                                           UserSettingName.InternalMailboxServer,
-							                                                                           UserSettingName.UserDisplayName);
+		//                    // OWA Url
+		//                    var col = (WebClientUrlCollection) userresponse.Settings[UserSettingName.InternalWebClientUrls];
+		//                    WebClientUrl owaUrl = col.Urls[0];
+		//                    _reportedOwaUrl = owaUrl.Url;
+		//                    UpdateOwaUrl();
+		//                    AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + _reportedOwaUrl, Severity.Success);
 
-							// OWA Url
-							var col = (WebClientUrlCollection) userresponse.Settings[UserSettingName.InternalWebClientUrls];
-							WebClientUrl owaUrl = col.Urls[0];
-							_reportedOwaUrl = owaUrl.Url;
-							UpdateOwaUrl();
-							AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + _reportedOwaUrl, Severity.Success);
+		//                    // EWS Url
+		//                    _reportedEwsUrl = (string) userresponse.Settings[UserSettingName.InternalEwsUrl];
+		//                    UpdateUrl();
+		//                    AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _reportedEwsUrl, Severity.Success);
 
-							// EWS Url
-							_reportedEwsUrl = (string) userresponse.Settings[UserSettingName.InternalEwsUrl];
-							UpdateUrl();
-							AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _reportedEwsUrl, Severity.Success);
+		//                    // Mailbox
+		//                    _reportedMailboxServer = (string) userresponse.Settings[UserSettingName.InternalMailboxServer];
+		//                    AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + _reportedMailboxServer, Severity.Success);
 
-							// Mailbox
-							_reportedMailboxServer = (string) userresponse.Settings[UserSettingName.InternalMailboxServer];
-							AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + _reportedMailboxServer, Severity.Success);
+		//                    // User Name
+		//                    _reportedUserName = (string) userresponse.Settings[UserSettingName.UserDisplayName];
+		//                    AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _reportedUserName, Severity.Success);
+		//                }
+		//                else
+		//                {
+		//                    // External (default)
+		//                    AddLogEntry(OWAtray.Endpoint_is_OUTSIDE_corporate);
 
-							// User Name
-							_reportedUserName = (string) userresponse.Settings[UserSettingName.UserDisplayName];
-							AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _reportedUserName, Severity.Success);
-						}
-						else
-						{
-							// External (default)
-							AddLogEntry(OWAtray.Endpoint_is_OUTSIDE_corporate);
+		//                    // Probe for values
+		//                    GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
+		//                                                                                               UserSettingName.ExternalWebClientUrls,
+		//                                                                                               UserSettingName.ExternalEwsUrl,
+		//                                                                                               UserSettingName.ExternalMailboxServer,
+		//                                                                                               UserSettingName.UserDisplayName);
 
-							// Probe for values
-							GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
-							                                                                           UserSettingName.ExternalWebClientUrls,
-							                                                                           UserSettingName.ExternalEwsUrl,
-							                                                                           UserSettingName.ExternalMailboxServer,
-							                                                                           UserSettingName.UserDisplayName);
+		//                    // OWA Url
+		//                    var owaCollection = (WebClientUrlCollection) userresponse.Settings[UserSettingName.ExternalWebClientUrls];
+		//                    WebClientUrl owaUrl = owaCollection.Urls[0];
+		//                    _reportedOwaUrl = owaUrl.Url;
+		//                    UpdateOwaUrl();
+		//                    AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + _reportedOwaUrl, Severity.Success);
 
-							// OWA Url
-							var owaCollection = (WebClientUrlCollection) userresponse.Settings[UserSettingName.ExternalWebClientUrls];
-							WebClientUrl owaUrl = owaCollection.Urls[0];
-							_reportedOwaUrl = owaUrl.Url;
-							UpdateOwaUrl();
-							AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + _reportedOwaUrl, Severity.Success);
+		//                    // EWS Url
+		//                    _reportedEwsUrl = (string) userresponse.Settings[UserSettingName.ExternalEwsUrl];
+		//                    UpdateUrl();
+		//                    AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _reportedEwsUrl, Severity.Success);
 
-							// EWS Url
-							_reportedEwsUrl = (string) userresponse.Settings[UserSettingName.ExternalEwsUrl];
-							UpdateUrl();
-							AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _reportedEwsUrl, Severity.Success);
+		//                    // Mailbox
+		//                    _reportedMailboxServer = (string) userresponse.Settings[UserSettingName.ExternalMailboxServer];
+		//                    AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + _reportedMailboxServer, Severity.Success);
 
-							// Mailbox
-							_reportedMailboxServer = (string) userresponse.Settings[UserSettingName.ExternalMailboxServer];
-							AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + _reportedMailboxServer, Severity.Success);
+		//                    // User Name
+		//                    _reportedUserName = (string) userresponse.Settings[UserSettingName.UserDisplayName];
+		//                    AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _reportedUserName, Severity.Success);
+		//                }
+		//            }
+		//        }
+		//        else
+		//        {
+		//            if (lblUrl.Text.Length == 0)
+		//            {
+		//                AddLogEntry(OWAtray.Can_establish_valid_URL_for, Severity.Fail);
+		//            }
+		//            else
+		//            {
+		//                var myUri = new Uri(lblUrl.Text);
+		//                _myService.Url = myUri;
 
-							// User Name
-							_reportedUserName = (string) userresponse.Settings[UserSettingName.UserDisplayName];
-							AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _reportedUserName, Severity.Success);
-						}
-					}
-				}
-				else
-				{
-					if (lblUrl.Text.Length == 0)
-					{
-						AddLogEntry(OWAtray.Can_establish_valid_URL_for, Severity.Fail);
-					}
-					else
-					{
-						var myUri = new Uri(lblUrl.Text);
-						_myService.Url = myUri;
+		//                // Update server settings
+		//                _reportedVersion = _myService.RequestedServerVersion;
+		//                AddLogEntry(OWAtray.Connected_to + _reportedVersion, Severity.Success);
 
-						// Update server settings
-						_reportedVersion = _myService.RequestedServerVersion;
-						AddLogEntry(OWAtray.Connected_to + _reportedVersion, Severity.Success);
+		//                // Update properties
+		//                _reportedMailboxServer = txtServer.Text;
+		//                _reportedUserName = (chkOnDomain.Checked ? "" : (txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text));
+		//            }
+		//        }
 
-						// Update properties
-						_reportedMailboxServer = txtServer.Text;
-						_reportedUserName = (chkOnDomain.Checked ? "" : (txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text));
-					}
-				}
+		//        // Set a flag to indicate that subsequent runs can autostart
+		//        Settings.Default.FirstTime = false;
+		//        Settings.Default.Save();
 
-				// Set a flag to indicate that subsequent runs can autostart
-				Settings.Default.FirstTime = false;
-				Settings.Default.Save();
-
-				// All clear
-				return true;
-			}
-			catch (Exception ex)
-			{
-				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-				return false;
-			}
-			finally
-			{
-				// Cursor
-				Cursor = Cursors.Default;
-			}
-		}
+		//        // All clear
+		//        return true;
+		//    }
+		//    catch (Exception ex)
+		//    {
+		//        AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
+		//        return false;
+		//    }
+		//    finally
+		//    {
+		//        // Cursor
+		//        Cursor = Cursors.Default;
+		//    }
+		//}
 
 		private void ConfigureShell()
 		{
@@ -905,7 +896,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			try
 			{
 				var runSvc = new ProcessStartInfo(_shellPath)
-				             	{Arguments = "exchange " + _reportedVersion.ToString(), WindowStyle = ProcessWindowStyle.Hidden};
+				             	{Arguments = "exchange " + _connection.Version, WindowStyle = ProcessWindowStyle.Hidden};
 				Process serviceProcess = Process.Start(runSvc);
 
 				while (!serviceProcess.HasExited)
@@ -1112,109 +1103,71 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 		}
 
-		private DateTime TimeOfNewestEmail()
-		{
-			var myTime = DateTime.Now;
+		//private int CheckForNewMail()
+		//{
+		//    int myCount;
 
-			// Define filters collection
-			var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
-			              	{new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false)};
+		//    if (_myService == null)
+		//    {
+		//        AddLogEntry(OWAtray.Not_Connected_to_Exchange, Severity.Fail);
+		//        notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
+		//        return 0;
+		//    }
 
-			// Item view
-			var view = new ItemView(10, 0, OffsetBasePoint.Beginning)
-			           	{PropertySet = new PropertySet(BasePropertySet.IdOnly) {ItemSchema.DateTimeReceived}};
-			view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
+		//    try
+		//    {
+		//        // Set time for initial run only
+		//        if (_firstRun) _timeLastChecked = TimeOfNewestEmail().AddSeconds(1);
 
-			try
-			{
-				// Now search
-				var findResults = _myService.FindItems(WellKnownFolderName.Inbox, filters, view);
+		//        // Is there new mail?
+		//        var myFolder = Folder.Bind(_myService, WellKnownFolderName.Inbox);
+		//        myCount = myFolder.UnreadCount;
+		//        if (myCount > _inboxCount)
+		//        {
+		//            if (_firstRun)
+		//            {
+		//                PopToast(OWAtray.New_Mail,
+		//                         OWAtray.You_have + " " + myCount + " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ") +
+		//                         OWAtray.in_your_inbox);
+		//            }
+		//            else
+		//            {
+		//                PopUnreadEmail(myCount);
+		//            }
 
-				// Process each item.
-				foreach (Item myItem in findResults.Items)
-				{
-					var myEmail = myItem as EmailMessage;
-					if (myEmail == null) continue;
+		//            _resetFlag = false;
+		//        }
 
-					var ps = new PropertySet(BasePropertySet.FirstClassProperties);
-					myEmail.Load(ps);
-					myTime = myEmail.DateTimeReceived;
-					break;
-				}
-			}
-			catch (Exception ex)
-			{
-				AddLogEntry(OWAtray.Error_when_getting_email + ex.Message, Severity.Fail);
-			}
+		//        if (!_resetFlag)
+		//        {
+		//            notifyIcon1.Icon = new Icon((myCount > 0 ? _alertIcon : _emailIcon));
+		//        }
 
-			return myTime;
-		}
+		//        var text1 = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Environment.NewLine + myCount + " " +
+		//                       OWAtray.unread_email + (myCount != 1 ? "s " : " ");
+		//        const int maxTipLength = 63;
+		//        var charsLeft = maxTipLength - text1.Length;
+		//        var domainText = _reportedMailboxServer + @"\" + _reportedUserName;
+		//        if (domainText.Length > charsLeft) domainText = domainText.Substring(0, charsLeft);
+		//        var finalText = AssemblyHelpers.AssemblyTitle + Environment.NewLine + domainText + Environment.NewLine + myCount +
+		//                           " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ");
+		//        notifyIcon1.Text = finalText;
+		//        _inboxCount = myCount;
+		//    }
+		//    catch (Exception ex)
+		//    {
+		//        AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
+		//        myCount = 0;
+		//        stopMonitoring();
+		//        StartRetryTimer();
+		//    }
+		//    finally
+		//    {
+		//        _firstRun = false;
+		//    }
 
-		private int CheckForNewMail()
-		{
-			int myCount;
-
-			if (_myService == null)
-			{
-				AddLogEntry(OWAtray.Not_Connected_to_Exchange, Severity.Fail);
-				notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
-				return 0;
-			}
-
-			try
-			{
-				// Set time for initial run only
-				if (_firstRun) _timeLastChecked = TimeOfNewestEmail().AddSeconds(1);
-
-				// Is there new mail?
-				var myFolder = Folder.Bind(_myService, WellKnownFolderName.Inbox);
-				myCount = myFolder.UnreadCount;
-				if (myCount > _inboxCount)
-				{
-					if (_firstRun)
-					{
-						PopToast(OWAtray.New_Mail,
-						         OWAtray.You_have + " " + myCount + " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ") +
-						         OWAtray.in_your_inbox);
-					}
-					else
-					{
-						PopUnreadEmail(myCount);
-					}
-
-					_resetFlag = false;
-				}
-
-				if (!_resetFlag)
-				{
-					notifyIcon1.Icon = new Icon((myCount > 0 ? _alertIcon : _emailIcon));
-				}
-
-				var text1 = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Environment.NewLine + myCount + " " +
-				               OWAtray.unread_email + (myCount != 1 ? "s " : " ");
-				const int maxTipLength = 63;
-				var charsLeft = maxTipLength - text1.Length;
-				var domainText = _reportedMailboxServer + @"\" + _reportedUserName;
-				if (domainText.Length > charsLeft) domainText = domainText.Substring(0, charsLeft);
-				var finalText = AssemblyHelpers.AssemblyTitle + Environment.NewLine + domainText + Environment.NewLine + myCount +
-				                   " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ");
-				notifyIcon1.Text = finalText;
-				_inboxCount = myCount;
-			}
-			catch (Exception ex)
-			{
-				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-				myCount = 0;
-				stopMonitoring();
-				StartRetryTimer();
-			}
-			finally
-			{
-				_firstRun = false;
-			}
-
-			return myCount;
-		}
+		//    return myCount;
+		//}
 
 		private void growlToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
@@ -1369,96 +1322,96 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 		}
 
-		private int PopUnreadEmail(int unreadCount)
-		{
-			// Set the offset for the paged search.
-			int offset = 0;
-			int count = 0;
+		//private int PopUnreadEmail(int unreadCount)
+		//{
+		//    // Set the offset for the paged search.
+		//    int offset = 0;
+		//    int count = 0;
 
-			// Set the page size.
-			int pageSize = Settings.Default.PageSize;
+		//    // Set the page size.
+		//    int pageSize = Settings.Default.PageSize;
 
-			// Set the flag that indicates whether to continue iterating through additional pages.
-			bool moreItems = true;
+		//    // Set the flag that indicates whether to continue iterating through additional pages.
+		//    bool moreItems = true;
 
-			// Continue paging while there are more items to page.
-			while (moreItems)
-			{
-				// Define filters collection
-				var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
-				              	{
-				              		new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
-				              		new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, _timeLastChecked)
-				              	};
+		//    // Continue paging while there are more items to page.
+		//    while (moreItems)
+		//    {
+		//        // Define filters collection
+		//        var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
+		//                        {
+		//                            new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
+		//                            new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, _timeLastChecked)
+		//                        };
 
-				// Item view
-				var view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning)
-				           	{
-				           		PropertySet = new PropertySet(BasePropertySet.IdOnly) {ItemSchema.Subject, ItemSchema.DateTimeReceived}
-				           	};
-				view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
+		//        // Item view
+		//        var view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning)
+		//                    {
+		//                        PropertySet = new PropertySet(BasePropertySet.IdOnly) {ItemSchema.Subject, ItemSchema.DateTimeReceived}
+		//                    };
+		//        view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
 
-				// Now search
-				FindItemsResults<Item> findResults = _myService.FindItems(WellKnownFolderName.Inbox, filters, view);
+		//        // Now search
+		//        FindItemsResults<Item> findResults = _myService.FindItems(WellKnownFolderName.Inbox, filters, view);
 
-				// Process each item.
-				bool allDone = false;
-				bool isFlagged = false;
-				foreach (Item myItem in findResults.Items)
-				{
-					if (++count > Settings.Default.MaxNotify)
-					{
-						if (!allDone)
-						{
-							PopToast(OWAtray.Too_much_mail,
-							         OWAtray.There_are + " " + (unreadCount - Settings.Default.MaxNotify) + " " +
-							         OWAtray.other_new_emails);
-							allDone = true;
-						}
-					}
-					else
-					{
-						var myEmail = myItem as EmailMessage;
-						if (myEmail != null)
-						{
-							DateTime myTime = DateTime.Now;
+		//        // Process each item.
+		//        bool allDone = false;
+		//        bool isFlagged = false;
+		//        foreach (Item myItem in findResults.Items)
+		//        {
+		//            if (++count > Settings.Default.MaxNotify)
+		//            {
+		//                if (!allDone)
+		//                {
+		//                    PopToast(OWAtray.Too_much_mail,
+		//                             OWAtray.There_are + " " + (unreadCount - Settings.Default.MaxNotify) + " " +
+		//                             OWAtray.other_new_emails);
+		//                    allDone = true;
+		//                }
+		//            }
+		//            else
+		//            {
+		//                var myEmail = myItem as EmailMessage;
+		//                if (myEmail != null)
+		//                {
+		//                    DateTime myTime = DateTime.Now;
 
-							try
-							{
-								var ps = new PropertySet(BasePropertySet.FirstClassProperties);
-								myEmail.Load(ps);
-								string mySender = myEmail.Sender.Name;
-								string mySubject = (myEmail.Subject ?? OWAtray.No_Subject);
-								myTime = myEmail.DateTimeReceived;
-								_popUrl = (_reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myEmail.WebClientReadFormQueryString);
-								PopToast(OWAtray.New_Mail_from + " " + mySender, mySubject);
-							}
-							catch (Exception ex)
-							{
-								AddLogEntry(OWAtray.Error_when_getting_email + ex.Message, Severity.Fail);
-							}
+		//                    try
+		//                    {
+		//                        var ps = new PropertySet(BasePropertySet.FirstClassProperties);
+		//                        myEmail.Load(ps);
+		//                        string mySender = myEmail.Sender.Name;
+		//                        string mySubject = (myEmail.Subject ?? OWAtray.No_Subject);
+		//                        myTime = myEmail.DateTimeReceived;
+		//                        _popUrl = (_reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myEmail.WebClientReadFormQueryString);
+		//                        PopToast(OWAtray.New_Mail_from + " " + mySender, mySubject);
+		//                    }
+		//                    catch (Exception ex)
+		//                    {
+		//                        AddLogEntry(OWAtray.Error_when_getting_email + ex.Message, Severity.Fail);
+		//                    }
 
-							// Update flag
-							if (!isFlagged)
-							{
-								_timeLastChecked = myTime.AddSeconds(1);
-								isFlagged = true;
-							}
-						}
-					}
-				}
+		//                    // Update flag
+		//                    if (!isFlagged)
+		//                    {
+		//                        _timeLastChecked = myTime.AddSeconds(1);
+		//                        isFlagged = true;
+		//                    }
+		//                }
+		//            }
+		//        }
 
-				// Set the flag to discontinue paging.
-				if (!findResults.MoreAvailable)
-					moreItems = false;
+		//        // Set the flag to discontinue paging.
+		//        if (!findResults.MoreAvailable)
+		//            moreItems = false;
 
-				// Update the offset if there are more items to page.
-				if (moreItems)
-					offset = offset + pageSize;
-			}
+		//        // Update the offset if there are more items to page.
+		//        if (moreItems)
+		//            offset = offset + pageSize;
+		//    }
 
-			return count;
-		}
+		//    return count;
+		//}
 
 		private void recallLastPopupToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -1499,9 +1452,9 @@ namespace DrunkenBakery.OWAtray.GUI
 		private void StartMonitoring()
 		{
 			// Start Timer
-			timerAppt.Start();
-			timerUpdate.Interval = Settings.Default.UpdateInterval*1000;
-			timerUpdate.Start();
+			//timerAppt.Start();
+			//timerUpdate.Interval = Settings.Default.UpdateInterval*1000;
+			//timerUpdate.Start();
 			AddLogEntry(txtInterval.Text + " " + OWAtray.second_timer_started);
 
 			// Minimise to tray
@@ -1511,10 +1464,10 @@ namespace DrunkenBakery.OWAtray.GUI
 			ConfigureShell();
 
 			// Initial Check
-			CheckForNewMail();
+			//CheckForNewMail();
 			if (!Settings.Default.DisableCalendar)
 			{
-				CheckForAppointments();
+				//CheckForAppointments();
 			}
 		}
 
@@ -1568,23 +1521,9 @@ namespace DrunkenBakery.OWAtray.GUI
 			StartMonitoring();
 		}
 
-		private void timerAppt_Tick(object sender, EventArgs e)
-		{
-			// Check for appointments
-			if (!Settings.Default.DisableCalendar)
-			{
-				CheckForAppointments();
-			}
-		}
-
 		private void timerLogging_Tick(object sender, EventArgs e)
 		{
 			FlushOutput();
-		}
-
-		private void timerUpdate_Tick(object sender, EventArgs e)
-		{
-			CheckForNewMail();
 		}
 
 		private void txtInterval_Validated(object sender, EventArgs e)
@@ -1791,14 +1730,6 @@ namespace DrunkenBakery.OWAtray.GUI
 				if (cbOverrideOWA.Checked)
 					txtOWAEdit.Enabled = true;
 			}
-		}
-
-		private void RetryTimer_Tick(object sender, EventArgs e)
-		{
-			RetryTimer.Stop();
-
-			if (ConfigureExchange())
-				StartMonitoring();
 		}
 
 		private void showLogFileToolStripMenuItem_Click(object sender, EventArgs e)

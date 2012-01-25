@@ -99,8 +99,6 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.timerLogging = new System.Windows.Forms.Timer(this.components);
-			this.timerUpdate = new System.Windows.Forms.Timer(this.components);
-			this.timerAppt = new System.Windows.Forms.Timer(this.components);
 			this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
 			this.tabMain = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -128,7 +126,6 @@
 			this.label6 = new System.Windows.Forms.Label();
 			this.label10 = new System.Windows.Forms.Label();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
-			this.RetryTimer = new System.Windows.Forms.Timer(this.components);
 			this.statusStrip1.SuspendLayout();
 			this.contextMenuStrip1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -161,7 +158,7 @@
 			// statusStrip1
 			// 
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.slStatus});
+            this.slStatus});
 			this.statusStrip1.Location = new System.Drawing.Point(0, 421);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Size = new System.Drawing.Size(646, 22);
@@ -188,15 +185,15 @@
 			// contextMenuStrip1
 			// 
 			this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.restoreToolStripMenuItem,
-			this.blankToolStripMenuItem1,
-			this.openOWAToolStripMenuItem,
-			this.openOutlookToolStripMenuItem,
-			this.dividerToolStripMenuItem,
-			this.recallLastPopupToolStripMenuItem,
-			this.resetTrayIconToolStripMenuItem,
-			this.blankToolStripMenuItem,
-			this.exitToolStripMenuItem});
+            this.restoreToolStripMenuItem,
+            this.blankToolStripMenuItem1,
+            this.openOWAToolStripMenuItem,
+            this.openOutlookToolStripMenuItem,
+            this.dividerToolStripMenuItem,
+            this.recallLastPopupToolStripMenuItem,
+            this.resetTrayIconToolStripMenuItem,
+            this.blankToolStripMenuItem,
+            this.exitToolStripMenuItem});
 			this.contextMenuStrip1.Name = "contextMenuStrip1";
 			this.contextMenuStrip1.Size = new System.Drawing.Size(168, 154);
 			// 
@@ -266,13 +263,13 @@
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.fileToolStripMenuItem,
-			this.toolsToolStripMenuItem,
-			this.notificationsToolStripMenuItem,
-			this.advancedToolStripMenuItem,
-			this.exchangeVersionToolStripMenuItem1,
-			this.shellIntegrationToolStripMenuItem,
-			this.helpToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.toolsToolStripMenuItem,
+            this.notificationsToolStripMenuItem,
+            this.advancedToolStripMenuItem,
+            this.exchangeVersionToolStripMenuItem1,
+            this.shellIntegrationToolStripMenuItem,
+            this.helpToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(646, 24);
@@ -282,7 +279,7 @@
 			// fileToolStripMenuItem
 			// 
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.exitToolStripMenuItem1});
+            this.exitToolStripMenuItem1});
 			this.fileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("fileToolStripMenuItem.Image")));
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
@@ -299,9 +296,9 @@
 			// toolsToolStripMenuItem
 			// 
 			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.nETVersionsToolStripMenuItem,
-			this.mDACVersionsToolStripMenuItem,
-			this.systemInformationToolStripMenuItem});
+            this.nETVersionsToolStripMenuItem,
+            this.mDACVersionsToolStripMenuItem,
+            this.systemInformationToolStripMenuItem});
 			this.toolsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("toolsToolStripMenuItem.Image")));
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
 			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
@@ -334,10 +331,10 @@
 			// notificationsToolStripMenuItem
 			// 
 			this.notificationsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.balloonToolStripMenuItem,
-			this.growlToolStripMenuItem,
-			this.snarlToolStripMenuItem,
-			this.playSoundToolStripMenuItem});
+            this.balloonToolStripMenuItem,
+            this.growlToolStripMenuItem,
+            this.snarlToolStripMenuItem,
+            this.playSoundToolStripMenuItem});
 			this.notificationsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("notificationsToolStripMenuItem.Image")));
 			this.notificationsToolStripMenuItem.Name = "notificationsToolStripMenuItem";
 			this.notificationsToolStripMenuItem.Size = new System.Drawing.Size(103, 20);
@@ -386,13 +383,13 @@
 			// advancedToolStripMenuItem
 			// 
 			this.advancedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.overrideToolStripMenuItem,
-			this.alwaysOpenOWAInIEToolStripMenuItem,
-			this.disableCalendarToolStripMenuItem,
-			this.loginAutomaticallyToolStripMenuItem,
-			this.overrideAutodiscoveryValidationToolStripMenuItem,
-			this.office365LoginOverrideToolStripMenuItem,
-			this.useDefaultWebProxyToolStripMenuItem});
+            this.overrideToolStripMenuItem,
+            this.alwaysOpenOWAInIEToolStripMenuItem,
+            this.disableCalendarToolStripMenuItem,
+            this.loginAutomaticallyToolStripMenuItem,
+            this.overrideAutodiscoveryValidationToolStripMenuItem,
+            this.office365LoginOverrideToolStripMenuItem,
+            this.useDefaultWebProxyToolStripMenuItem});
 			this.advancedToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("advancedToolStripMenuItem.Image")));
 			this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
 			this.advancedToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
@@ -464,7 +461,7 @@
 			// exchangeVersionToolStripMenuItem1
 			// 
 			this.exchangeVersionToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.exchange2007ToolStripMenuItem});
+            this.exchange2007ToolStripMenuItem});
 			this.exchangeVersionToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("exchangeVersionToolStripMenuItem1.Image")));
 			this.exchangeVersionToolStripMenuItem1.Name = "exchangeVersionToolStripMenuItem1";
 			this.exchangeVersionToolStripMenuItem1.Size = new System.Drawing.Size(127, 20);
@@ -474,10 +471,10 @@
 			// 
 			this.exchange2007ToolStripMenuItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.exchange2007ToolStripMenuItem.Items.AddRange(new object[] {
-			global::DrunkenBakery.OWAtray.GUI.OWAtray.Autodetect,
-			"Exchange 2007 SP1",
-			"Exchange 2010",
-			"Exchange 2010 SP1"});
+            global::DrunkenBakery.OWAtray.GUI.OWAtray.Autodetect,
+            "Exchange 2007 SP1",
+            "Exchange 2010",
+            "Exchange 2010 SP1"});
 			this.exchange2007ToolStripMenuItem.Name = "exchange2007ToolStripMenuItem";
 			this.exchange2007ToolStripMenuItem.Size = new System.Drawing.Size(152, 23);
 			this.exchange2007ToolStripMenuItem.SelectedIndexChanged += new System.EventHandler(this.exchange2007ToolStripMenuItem_SelectedIndexChanged);
@@ -485,8 +482,8 @@
 			// shellIntegrationToolStripMenuItem
 			// 
 			this.shellIntegrationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.makeOWADefaultToolStripMenuItem,
-			this.switchOffToolStripMenuItem});
+            this.makeOWADefaultToolStripMenuItem,
+            this.switchOffToolStripMenuItem});
 			this.shellIntegrationToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("shellIntegrationToolStripMenuItem.Image")));
 			this.shellIntegrationToolStripMenuItem.Name = "shellIntegrationToolStripMenuItem";
 			this.shellIntegrationToolStripMenuItem.Size = new System.Drawing.Size(121, 20);
@@ -511,10 +508,10 @@
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.changeLogToolStripMenuItem,
-			this.supportToolStripMenuItem,
-			this.showLogFileToolStripMenuItem,
-			this.aboutToolStripMenuItem});
+            this.changeLogToolStripMenuItem,
+            this.supportToolStripMenuItem,
+            this.showLogFileToolStripMenuItem,
+            this.aboutToolStripMenuItem});
 			this.helpToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripMenuItem.Image")));
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
@@ -744,14 +741,6 @@
 			// 
 			this.timerLogging.Interval = 500;
 			this.timerLogging.Tick += new System.EventHandler(this.timerLogging_Tick);
-			// 
-			// timerUpdate
-			// 
-			this.timerUpdate.Tick += new System.EventHandler(this.timerUpdate_Tick);
-			// 
-			// timerAppt
-			// 
-			this.timerAppt.Tick += new System.EventHandler(this.timerAppt_Tick);
 			// 
 			// errorProvider1
 			// 
@@ -1050,11 +1039,6 @@
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Controls";
 			// 
-			// RetryTimer
-			// 
-			this.RetryTimer.Interval = 300000;
-			this.RetryTimer.Tick += new System.EventHandler(this.RetryTimer_Tick);
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1145,12 +1129,10 @@
 		private System.Windows.Forms.CheckBox chkOnDomain;
 		private System.Windows.Forms.ToolStripMenuItem playSoundToolStripMenuItem;
 		private System.Windows.Forms.Timer timerLogging;
-		private System.Windows.Forms.Timer timerUpdate;
 		private System.Windows.Forms.ToolStripMenuItem advancedToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem overrideToolStripMenuItem;
 		private System.Windows.Forms.TextBox txtURLEdit;
 		private System.Windows.Forms.ToolStripMenuItem changeLogToolStripMenuItem;
-		private System.Windows.Forms.Timer timerAppt;
 		private System.Windows.Forms.ToolStripMenuItem alwaysOpenOWAInIEToolStripMenuItem;
 		private System.Windows.Forms.ErrorProvider errorProvider1;
 		private System.Windows.Forms.ToolStripMenuItem recallLastPopupToolStripMenuItem;
@@ -1196,7 +1178,6 @@
 		private System.Windows.Forms.TextBox txtOWAEdit;
 		private System.Windows.Forms.PictureBox pictureBox5;
 		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.Timer RetryTimer;
 		private System.Windows.Forms.ToolStripMenuItem showLogFileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem useDefaultWebProxyToolStripMenuItem;
 	}
