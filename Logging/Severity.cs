@@ -10,7 +10,7 @@
 //
 //------------------------------------------------------------------
 
-namespace DrunkenBakery.OWAtray.GUI
+namespace DrunkenBakery.OWAtray.Logging
 {
 	public enum Severity
 	{

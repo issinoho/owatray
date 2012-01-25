@@ -133,7 +133,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="SecurityExtensions.cs" />
-    <Compile Include="Severity.cs" />
     <Compile Include="SysInfo.cs">
       <SubType>Form</SubType>
     </Compile>

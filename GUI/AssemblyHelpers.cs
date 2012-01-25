@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------------
 // DrunkenBakery OWA Tray Monitor
-// AboutBox Form
+// AssemblyHelpers Class
 //
 // <copyright file="AssemblyHelpers.cs" company="The Drunken Bakery">
 //     Copyright (c) 2012 The Drunken Bakery. All rights reserved.
