@@ -1,0 +1,52 @@
+﻿//------------------------------------------------------------------
+// DrunkenBakery OWA Tray Monitor
+// ContactUs Form
+//
+// <copyright file="ContactUs.cs" company="The Drunken Bakery">
+//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
+// </copyright>
+//
+// Form to provide contact information for Cygnet to the user.
+//
+//------------------------------------------------------------------
+
+using System;
+using System.Diagnostics;
+using System.Windows.Forms;
+
+namespace DrunkenBakery.OWAtray.GUI
+{
+	/// <summary>
+	/// Provides contact information to the user.
+	/// </summary>
+	public partial class ContactUs : Form
+	{
+		public ContactUs()
+		{
+			InitializeComponent();
+
+			// Flags
+			lvX.Items.Add(new ListViewItem(OWAtray.Catalan, 0));
+			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
+			lvX.Items.Add(new ListViewItem(OWAtray.German, 1));
+			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Christian Treudler");
+			lvX.Items.Add(new ListViewItem(OWAtray.Spanish, 2));
+			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
+		}
+
+		private void cmdOK_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+
+		private void linkBakery_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Process.Start(linkBakery.Text);
+		}
+
+		private void linkEmail_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Process.Start(@"mailto:" + linkEmail.Text);
+		}
+	}
+}

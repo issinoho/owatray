@@ -1,0 +1,278 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F207AB90-D419-44C1-8232-6E8BAD175BB5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DrunkenBakery.OWAtray.GUI</RootNamespace>
+    <AssemblyName>DrunkenBakery.OWAtray.GUI</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\owatray\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>email.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>DrunkenBakery.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Exchange.WebServices">
+      <HintPath>..\packages\ExchangeWebServices.1.1\lib\Microsoft.Exchange.WebServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutBox1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutBox1.designer.cs">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AssemblyHelpers.cs" />
+    <Compile Include="ChangeLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangeLog.Designer.cs">
+      <DependentUpon>ChangeLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ContactUs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContactUs.Designer.cs">
+      <DependentUpon>ContactUs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MDACversions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MDACversions.Designer.cs">
+      <DependentUpon>MDACversions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NETversions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NETversions.Designer.cs">
+      <DependentUpon>NETversions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OWAtray.ca.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OWAtray.ca.resx</DependentUpon>
+    </Compile>
+    <Compile Include="OWAtray.de.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OWAtray.de.resx</DependentUpon>
+    </Compile>
+    <Compile Include="OWAtray.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OWAtray.resx</DependentUpon>
+    </Compile>
+    <Compile Include="OWAtray.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OWAtray.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="SecurityExtensions.cs" />
+    <Compile Include="Severity.cs" />
+    <Compile Include="SysInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SysInfo.Designer.cs">
+      <DependentUpon>SysInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WindowsShortcut.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="DrunkenBakery.snk" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AboutBox1.resx">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChangeLog.resx">
+      <DependentUpon>ChangeLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ContactUs.resx">
+      <DependentUpon>ContactUs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MDACversions.resx">
+      <DependentUpon>MDACversions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NETversions.resx">
+      <DependentUpon>NETversions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OWAtray.ca.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OWAtray.ca.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OWAtray.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OWAtray.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OWAtray.es.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OWAtray.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OWAtray.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OWAtray.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SysInfo.resx">
+      <DependentUpon>SysInfo.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="alert.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="email.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="License.txt" />
+    <Content Include="notify.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\about.png" />
+    <Content Include="Resources\applications.png" />
+    <Content Include="Resources\apply.png" />
+    <Content Include="Resources\bookmark.png" />
+    <Content Include="Resources\bt_play.png" />
+    <Content Include="Resources\calendar.png" />
+    <Content Include="Resources\Clipboard01.png" />
+    <Content Include="Resources\computer.png" />
+    <Content Include="Resources\email_error.png" />
+    <Content Include="Resources\exchange.png" />
+    <Content Include="Resources\find.png" />
+    <Content Include="Resources\font.png" />
+    <Content Include="Resources\history.png" />
+    <Content Include="Resources\info.png" />
+    <Content Include="Resources\key.png" />
+    <Content Include="Resources\lightbulb.png" />
+    <Content Include="Resources\mail.png" />
+    <Content Include="Resources\note.png" />
+    <Content Include="Resources\office.png" />
+    <Content Include="Resources\options.png" />
+    <Content Include="Resources\outlook.png" />
+    <Content Include="Resources\star.png" />
+    <Content Include="Resources\toolbox.png" />
+    <Content Include="Resources\unlock.png" />
+    <Content Include="Resources\web_app.png" />
+    <Content Include="Resources\win.png" />
+    <Content Include="Resources\wizard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Audio\DrunkenBakery.OWAtray.Audio.csproj">
+      <Project>{55F1653D-2A7C-4C06-8D12-864D1540305D}</Project>
+      <Name>DrunkenBakery.OWAtray.Audio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Growl\DrunkenBakery.OWAtray.Growl.csproj">
+      <Project>{432ABDDF-CA91-49F8-A12E-BDD660F6BF71}</Project>
+      <Name>DrunkenBakery.OWAtray.Growl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logging\DrunkenBakery.OWAtray.Logging.csproj">
+      <Project>{0EC3CCE1-E95E-45A9-9386-AD4E7A6C09C2}</Project>
+      <Name>DrunkenBakery.OWAtray.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Snarl\DrunkenBakery.OWAtray.Snarl.csproj">
+      <Project>{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}</Project>
+      <Name>DrunkenBakery.OWAtray.Snarl</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
