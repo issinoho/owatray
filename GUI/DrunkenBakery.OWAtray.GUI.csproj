@@ -252,6 +252,18 @@
       <Project>{55F1653D-2A7C-4C06-8D12-864D1540305D}</Project>
       <Name>DrunkenBakery.OWAtray.Audio</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Connections\AbstractConnection\DrunkenBakery.OWAtray.Connections.Abstract.csproj">
+      <Project>{94D3AD21-4245-4700-8376-89D0705F28BC}</Project>
+      <Name>DrunkenBakery.OWAtray.Connections.Abstract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Connections\EWS\DrunkenBakery.OWAtray.Connections.EWS.csproj">
+      <Project>{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}</Project>
+      <Name>DrunkenBakery.OWAtray.Connections.EWS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Connections\Proxy\DrunkenBakery.OWAtray.Connections.Proxy.csproj">
+      <Project>{573E4922-2D13-4499-8EA9-7ED37DF363FE}</Project>
+      <Name>DrunkenBakery.OWAtray.Connections.Proxy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Growl\DrunkenBakery.OWAtray.Growl.csproj">
       <Project>{432ABDDF-CA91-49F8-A12E-BDD660F6BF71}</Project>
       <Name>DrunkenBakery.OWAtray.Growl</Name>

@@ -91,7 +91,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		// Events
 		public event Action<string, Severity> LogMessage;
-		public event Action<DateTime, string> NewMail;
+		public event Action<DateTime, string, string> NewMail;
 
 		public virtual event Action<IEmailInterface, ConnectionState> ConnectedStateChange
 		{
@@ -111,9 +111,9 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 			if (LogMessage != null) LogMessage(string.Format("[{0}] - {1}", EmailAddress, message), severity);
 		}
 
-		public virtual void RaiseNewMail(DateTime arrivalTime, string subject)
+		public virtual void RaiseNewMail(DateTime arrivalTime, string subject, string sender)
 		{
-			if (NewMail != null) NewMail(arrivalTime, subject);
+			if (NewMail != null) NewMail(arrivalTime, subject, sender);
 		}
 	}
 }

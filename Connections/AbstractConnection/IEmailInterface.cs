@@ -53,7 +53,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		// Events
 		event Action<string, Severity> LogMessage;
-		event Action<DateTime, string> NewMail;
+		event Action<DateTime, string, string> NewMail;
 		event Action<IEmailInterface, ConnectionState> ConnectedStateChange;
 	}
 }

@@ -27,6 +27,8 @@ using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
 using DrunkenBakery.OWAtray.Audio;
+using DrunkenBakery.OWAtray.Connections.Abstract;
+using DrunkenBakery.OWAtray.Connections.Proxy;
 using DrunkenBakery.OWAtray.GUI.Properties;
 using DrunkenBakery.OWAtray.Growl;
 using DrunkenBakery.OWAtray.Logging;
@@ -67,6 +69,10 @@ namespace DrunkenBakery.OWAtray.GUI
 		private ExchangeVersion _reportedVersion = ExchangeVersion.Exchange2007_SP1;
 		private bool _resetFlag;
 		private DateTime _timeLastChecked = DateTime.Now;
+
+		// New variables
+		private EmailConnections Connections { get; set; }
+		private IEmailInterface _connection;
 
 		public Form1()
 		{
@@ -208,7 +214,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			get
 			{
-				string userAccount = (txtEmail.Text.Length > 0) ? txtEmail.Text : txtUser.Text;
+				var userAccount = (txtEmail.Text.Length > 0) ? txtEmail.Text : txtUser.Text;
 				if (userAccount.Length > 0 && !userAccount.Contains("@"))
 				{
 					userAccount = userAccount + "@" + GetSubDomain(txtServer.Text);
@@ -241,6 +247,37 @@ namespace DrunkenBakery.OWAtray.GUI
 			cbOverrideOWA.Enabled = !Settings.Default.Autodiscovery;
 			txtDomain.Enabled = !Settings.Default.Autodiscovery;
 			overrideAutodiscoveryValidationToolStripMenuItem.Enabled = Settings.Default.Autodiscovery;
+		}
+
+		private void WireUpConnectionEvents()
+		{
+			foreach (var item in Connections.Where(item => !item.IsLogEventDefined))
+			{
+				// Logging event
+				item.LogMessage += AddLogEntry;
+
+				// State change event
+				var itemCopy = item;
+				item.ConnectedStateChange += (connection, state) =>
+				{
+					switch (state)
+					{
+						case ConnectionState.Connected:
+							AddLogEntry(
+								string.Format("[{0}] - Connected to {1}", connection.EmailAddress,
+												connection.Version), Severity.Success);
+							break;
+
+						case ConnectionState.Disconnected:
+							AddLogEntry(string.Format("[{0}] - Disconnected", connection.EmailAddress),
+										Severity.Success);
+							break;
+					}
+				};
+
+				// New mail event
+				item.NewMail += (arrivalTime, subject, sender) => AddLogEntry(string.Format("New mail from {0} - {1}", sender, subject));
+			}
 		}
 
 		private void UpdateOwaUrl()
@@ -539,16 +576,52 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void cmdStart_Click(object sender, EventArgs e)
 		{
-			if (ConfigureExchange())
+			//if (ConfigureExchange())
+			//{
+			//    // Start
+			//    StartMonitoring();
+			//}
+
+			ConnectToExchange();
+		}
+
+		private void ConnectToExchange()
+		{
+			// Build connection collection
+			if (Connections == null) Connections = new EmailConnections();
+
+			// Remove any existing entry
+			if (_connection != null)
 			{
-				// Start
-				StartMonitoring();
+				_connection.Disconnect();
+				Connections.Remove(_connection);
 			}
+
+			// Create the new entry
+			_connection = ConnectionFactory.CreateConnection(EmailType.Exchange);
+			_connection.EmailAddress = txtEmail.Text;
+			_connection.Password = txtPwd.Text;
+			_connection.Username = txtUser.Text;
+			Connections.Add(_connection);
+			WireUpConnectionEvents();				
+
+			// Go!
+			_connection.ConnectA();
+		}
+
+		private void DisconnectFromExchange()
+		{
+			if (_connection == null) return;
+
+			_connection.Disconnect();
+			Connections.Remove(_connection);
 		}
 
 		private void cmdStop_Click(object sender, EventArgs e)
 		{
-			stopMonitoring();
+			//stopMonitoring();
+
+			DisconnectFromExchange();
 		}
 
 		private void stopMonitoring()

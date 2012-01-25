@@ -14,6 +14,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using DrunkenBakery.OWAtray.Connections.Abstract;
+using DrunkenBakery.OWAtray.Connections.EWS.Properties;
 using DrunkenBakery.OWAtray.Logging;
 using Microsoft.Exchange.WebServices.Data;
 using Timer = System.Timers.Timer;
@@ -26,7 +27,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 		private readonly Timer _backgroundPoll = new Timer {Interval = 5000};
 		private readonly object _locker = new object();
 		private ExchangeService _service;
-		private DateTime _timeLastChecked = DateTime.Now;
+		private DateTime _timeLastChecked;
 
 		public override string Version
 		{
@@ -36,6 +37,15 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 		public override EmailType Type
 		{
 			get { return EmailType.Exchange; }
+		}
+
+		private int UnreadCount
+		{
+			get
+			{
+				var myFolder = Folder.Bind(_service, WellKnownFolderName.Inbox);
+				return myFolder.UnreadCount;
+			}
 		}
 
 		// Events
@@ -62,7 +72,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				_service = new ExchangeService();
 
 				// Enable Tracing (if required)
-				if (Properties.Settings.Default.UseTracing)
+				if (Settings.Default.UseTracing)
 				{
 					_service.TraceListener = new EwsTraceListener();
 					_service.TraceFlags = TraceFlags.EwsRequest | TraceFlags.EwsResponse;
@@ -73,15 +83,22 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				_service.Credentials = new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password);
 				_service.AutodiscoverUrl(EmailAddress, delegate { return true; });
 
+				// State
+				ChangeState(ConnectionState.Connected);
+
 				// Get initial timestamp
 				_timeLastChecked = TimeOfNewestEmail().AddSeconds(1);
+
+				// Initial Message
+				var count = UnreadCount;
+				if (count > 0)
+				{
+					RaiseLogMessage(string.Format("You have {0} unread messages in your Inbox", count));
+				}
 
 				// Timer
 				_backgroundPoll.Elapsed += backgroundPoll_Elapsed;
 				_backgroundPoll.Start();
-
-				// State
-				ChangeState(ConnectionState.Connected);
 			}
 			catch (Exception ex)
 			{
@@ -158,10 +175,12 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			var myTime = DateTime.Now;
 
 			// Define filters collection
-			var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And) { new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false) };
+			var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
+			              	{new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false)};
 
 			// Item view
-			var view = new ItemView(10, 0, OffsetBasePoint.Beginning) { PropertySet = new PropertySet(BasePropertySet.IdOnly) { ItemSchema.DateTimeReceived } };
+			var view = new ItemView(10, 0, OffsetBasePoint.Beginning)
+			           	{PropertySet = new PropertySet(BasePropertySet.IdOnly) {ItemSchema.DateTimeReceived}};
 			view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
 
 			try
@@ -200,7 +219,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				var offset = 0;
 
 				// Set the page size.
-				var pageSize = Properties.Settings.Default.BatchAmount;
+				var pageSize = Settings.Default.BatchAmount;
 
 				// Set the flag that indicates whether to continue iterating through additional pages.
 				var moreItems = true;
@@ -211,26 +230,50 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					// Define filters collection
 					var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
 					              	{
-				              			new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
-				              			new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, _timeLastChecked)
+					              		new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
+					              		new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, _timeLastChecked)
 					              	};
 
 					// Item view
 					var view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning)
 					           	{
-					           		PropertySet = new PropertySet(BasePropertySet.IdOnly) {ItemSchema.Subject, ItemSchema.DateTimeReceived}
+					           		PropertySet =
+					           			new PropertySet(BasePropertySet.IdOnly) {ItemSchema.Subject, ItemSchema.DateTimeReceived}
 					           	};
 					view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
 
 					// Now search
 					var findResults = _service.FindItems(WellKnownFolderName.Inbox, filters, view);
 
+					// Only update timestamp once
+					var isFlagged = false;
+
 					// Process each item.
 					foreach (var myItem in findResults.Items.OfType<EmailMessage>())
 					{
-						RaiseLogMessage("New Email - " + myItem.Subject);
-						RaiseNewMail(myItem.DateTimeReceived, myItem.Subject);
-						myItem.Delete(DeleteMode.HardDelete);
+						var myTime = DateTime.Now;
+
+						try
+						{
+							// Get the email details
+							var ps = new PropertySet(BasePropertySet.FirstClassProperties);
+							myItem.Load(ps);
+							var mySender = myItem.Sender.Name;
+							var mySubject = (myItem.Subject ?? "No subject");
+							myTime = myItem.DateTimeReceived;
+
+							// Pop message
+							RaiseNewMail(myTime, mySubject, mySender);
+						}
+						catch (Exception ex)
+						{
+							RaiseLogMessage(ex.Message, Severity.Fail);
+						}
+
+						// Update flag
+						if (isFlagged) continue;
+						_timeLastChecked = myTime.AddSeconds(1);
+						isFlagged = true;
 					}
 
 					// Set the flag to discontinue paging.
