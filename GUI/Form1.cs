@@ -1041,7 +1041,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private DateTime TimeOfNewestEmail()
 		{
-			DateTime myTime = DateTime.Now;
+			var myTime = DateTime.Now;
 
 			// Define filters collection
 			var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
@@ -1055,7 +1055,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			try
 			{
 				// Now search
-				FindItemsResults<Item> findResults = _myService.FindItems(WellKnownFolderName.Inbox, filters, view);
+				var findResults = _myService.FindItems(WellKnownFolderName.Inbox, filters, view);
 
 				// Process each item.
 				foreach (Item myItem in findResults.Items)
@@ -1094,7 +1094,7 @@ namespace DrunkenBakery.OWAtray.GUI
 				if (_firstRun) _timeLastChecked = TimeOfNewestEmail().AddSeconds(1);
 
 				// Is there new mail?
-				Folder myFolder = Folder.Bind(_myService, WellKnownFolderName.Inbox);
+				var myFolder = Folder.Bind(_myService, WellKnownFolderName.Inbox);
 				myCount = myFolder.UnreadCount;
 				if (myCount > _inboxCount)
 				{
@@ -1117,13 +1117,13 @@ namespace DrunkenBakery.OWAtray.GUI
 					notifyIcon1.Icon = new Icon((myCount > 0 ? _alertIcon : _emailIcon));
 				}
 
-				string text1 = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Environment.NewLine + myCount + " " +
+				var text1 = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Environment.NewLine + myCount + " " +
 				               OWAtray.unread_email + (myCount != 1 ? "s " : " ");
 				const int maxTipLength = 63;
-				int charsLeft = maxTipLength - text1.Length;
-				string domainText = _reportedMailboxServer + @"\" + _reportedUserName;
+				var charsLeft = maxTipLength - text1.Length;
+				var domainText = _reportedMailboxServer + @"\" + _reportedUserName;
 				if (domainText.Length > charsLeft) domainText = domainText.Substring(0, charsLeft);
-				string finalText = AssemblyHelpers.AssemblyTitle + Environment.NewLine + domainText + Environment.NewLine + myCount +
+				var finalText = AssemblyHelpers.AssemblyTitle + Environment.NewLine + domainText + Environment.NewLine + myCount +
 				                   " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ");
 				notifyIcon1.Text = finalText;
 				_inboxCount = myCount;

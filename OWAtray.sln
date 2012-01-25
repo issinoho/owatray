@@ -20,6 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Audio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Connections.Abstract", "Connections\AbstractConnection\DrunkenBakery.OWAtray.Connections.Abstract.csproj", "{94D3AD21-4245-4700-8376-89D0705F28BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Connections.Proxy", "Connections\Proxy\DrunkenBakery.OWAtray.Connections.Proxy.csproj", "{573E4922-2D13-4499-8EA9-7ED37DF363FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Connections.EWS", "Connections\EWS\DrunkenBakery.OWAtray.Connections.EWS.csproj", "{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +68,18 @@ Global
 		{94D3AD21-4245-4700-8376-89D0705F28BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94D3AD21-4245-4700-8376-89D0705F28BC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{94D3AD21-4245-4700-8376-89D0705F28BC}.Release|x86.ActiveCfg = Release|Any CPU
+		{573E4922-2D13-4499-8EA9-7ED37DF363FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{573E4922-2D13-4499-8EA9-7ED37DF363FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{573E4922-2D13-4499-8EA9-7ED37DF363FE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{573E4922-2D13-4499-8EA9-7ED37DF363FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{573E4922-2D13-4499-8EA9-7ED37DF363FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{573E4922-2D13-4499-8EA9-7ED37DF363FE}.Release|x86.ActiveCfg = Release|Any CPU
+		{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
