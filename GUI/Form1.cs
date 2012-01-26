@@ -19,7 +19,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Security;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
@@ -29,6 +28,7 @@ using System.Windows.Forms;
 using DrunkenBakery.OWAtray.Audio;
 using DrunkenBakery.OWAtray.Connections.Abstract;
 using DrunkenBakery.OWAtray.Connections.Proxy;
+using DrunkenBakery.OWAtray.Framework;
 using DrunkenBakery.OWAtray.GUI.Properties;
 using DrunkenBakery.OWAtray.Growl;
 using DrunkenBakery.OWAtray.Logging;
@@ -67,7 +67,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		private DateTime _timeLastChecked = DateTime.Now;
 
 		// New variables
-		private EmailConnections Connections { get; set; }
+		private Scenario _scenario;
 		private IEmailInterface _connection;
 
 		public Form1()
@@ -86,6 +86,9 @@ namespace DrunkenBakery.OWAtray.GUI
 			// Welcome message
 			AddLogEntry(string.Format("{0} {1} v{2}", OWAtray.Welcome_to_the, AssemblyHelpers.AssemblyTitle,
 			                          AssemblyHelpers.UpgradeSettings()));
+
+			// Scenario
+			BootScenario();
 
 			// Options
 			exchange2007ToolStripMenuItem.SelectedIndex = 0;
@@ -206,6 +209,12 @@ namespace DrunkenBakery.OWAtray.GUI
 			AddLogEntry(OWAtray.Ready);
 		}
 
+		private void BootScenario()
+		{
+			_scenario = ScenarioFactory.CreateScenario(Settings.Default.ScenarioFile);
+			WireUpConnectionEvents();
+		}
+
 		private string EmailAddress
 		{
 			get
@@ -222,8 +231,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void WindowDressing()
 		{
-			Text = AssemblyHelpers.AssemblyTitle + OWAtray.Form1_WindowDressing__freshly_baked_at_ +
-			       AssemblyHelpers.AssemblyCompany;
+			Text = string.Format("{0}{1}{2}", AssemblyHelpers.AssemblyTitle, OWAtray.Form1_WindowDressing__freshly_baked_at_, AssemblyHelpers.AssemblyCompany);
 			notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
 			foreach (TabPage tab in tabMain.TabPages) tab.BackColor = SystemColors.Control;
 			InitEventView(lvStatus);
@@ -247,7 +255,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void WireUpConnectionEvents()
 		{
-			foreach (var item in Connections.Where(item => !item.IsLogEventDefined))
+			foreach (var item in _scenario.Connections.Where(item => !item.IsLogEventDefined))
 			{
 				// Logging event
 				item.LogMessage += AddLogEntry;
@@ -583,14 +591,11 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void ConnectToExchange()
 		{
-			// Build connection collection
-			if (Connections == null) Connections = new EmailConnections();
-
 			// Remove any existing entry
 			if (_connection != null)
 			{
 				_connection.Disconnect();
-				Connections.Remove(_connection);
+				_scenario.Connections.Remove(_connection);
 			}
 
 			// Create the new entry
@@ -598,7 +603,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			_connection.EmailAddress = txtEmail.Text;
 			_connection.Password = txtPwd.Text;
 			_connection.Username = txtUser.Text;
-			Connections.Add(_connection);
+			_scenario.Connections.Add(_connection);
 			WireUpConnectionEvents();				
 
 			// Go!
@@ -610,7 +615,6 @@ namespace DrunkenBakery.OWAtray.GUI
 			if (_connection == null) return;
 
 			_connection.Disconnect();
-			Connections.Remove(_connection);
 		}
 
 		private void cmdStop_Click(object sender, EventArgs e)
