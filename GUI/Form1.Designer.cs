@@ -81,7 +81,7 @@
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.pictureBox4 = new System.Windows.Forms.PictureBox();
 			this.lvStatus = new System.Windows.Forms.ListView();
-			this.lblUrl = new System.Windows.Forms.Label();
+			this.lblServiceUrl = new System.Windows.Forms.Label();
 			this.txtURLEdit = new System.Windows.Forms.TextBox();
 			this.txtInterval = new System.Windows.Forms.TextBox();
 			this.txtDomain = new System.Windows.Forms.TextBox();
@@ -399,7 +399,7 @@
 			// 
 			this.overrideCertificateToolStripMenuItem.CheckOnClick = true;
 			this.overrideCertificateToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideCertificateToolStripMenuItem.Image")));
-			this.overrideCertificateToolStripMenuItem.Name = "overrideToolStripMenuItem";
+			this.overrideCertificateToolStripMenuItem.Name = "overrideCertificateToolStripMenuItem";
 			this.overrideCertificateToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
 			this.overrideCertificateToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.OWAtray.Override_Certificate;
 			this.overrideCertificateToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideCertificateToolStripMenuItem_CheckStateChanged);
@@ -472,10 +472,10 @@
 			this.exchangeToolStripMenuItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.exchangeToolStripMenuItem.Items.AddRange(new object[] {
             "Autodetect",
-            "Exchange 2007_SP1",
-            "Exchange 2010",
-            "Exchange 2010_SP1"});
-			this.exchangeToolStripMenuItem.Name = "exchange2007ToolStripMenuItem";
+            "Exchange2007_SP1",
+            "Exchange2010",
+            "Exchange2010_SP1"});
+			this.exchangeToolStripMenuItem.Name = "exchangeToolStripMenuItem";
 			this.exchangeToolStripMenuItem.Size = new System.Drawing.Size(152, 23);
 			this.exchangeToolStripMenuItem.SelectedIndexChanged += new System.EventHandler(this.exchangeToolStripMenuItem_SelectedIndexChanged);
 			// 
@@ -580,15 +580,15 @@
 			this.lvStatus.UseCompatibleStateImageBehavior = false;
 			this.lvStatus.View = System.Windows.Forms.View.Details;
 			// 
-			// lblUrl
+			// lblServiceUrl
 			// 
-			this.lblUrl.AutoSize = true;
-			this.lblUrl.ForeColor = System.Drawing.Color.Black;
-			this.lblUrl.Location = new System.Drawing.Point(115, 61);
-			this.lblUrl.Name = "lblUrl";
-			this.lblUrl.Size = new System.Drawing.Size(50, 13);
-			this.lblUrl.TabIndex = 3;
-			this.lblUrl.Text = "unknown";
+			this.lblServiceUrl.AutoSize = true;
+			this.lblServiceUrl.ForeColor = System.Drawing.Color.Black;
+			this.lblServiceUrl.Location = new System.Drawing.Point(115, 61);
+			this.lblServiceUrl.Name = "lblServiceUrl";
+			this.lblServiceUrl.Size = new System.Drawing.Size(50, 13);
+			this.lblServiceUrl.TabIndex = 3;
+			this.lblServiceUrl.Text = "unknown";
 			// 
 			// txtURLEdit
 			// 
@@ -970,7 +970,7 @@
 			this.tabPage3.Controls.Add(this.lblEmail);
 			this.tabPage3.Controls.Add(this.label6);
 			this.tabPage3.Controls.Add(this.label10);
-			this.tabPage3.Controls.Add(this.lblUrl);
+			this.tabPage3.Controls.Add(this.lblServiceUrl);
 			this.tabPage3.Location = new System.Drawing.Point(4, 22);
 			this.tabPage3.Name = "tabPage3";
 			this.tabPage3.Size = new System.Drawing.Size(540, 140);
@@ -1113,7 +1113,7 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox txtServer;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label lblUrl;
+		private System.Windows.Forms.Label lblServiceUrl;
 		private System.Windows.Forms.TextBox txtDomain;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Button cmdStart;

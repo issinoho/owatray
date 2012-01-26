@@ -12,10 +12,14 @@
 
 using System;
 using System.Linq;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using DrunkenBakery.OWAtray.Connections.Abstract;
 using DrunkenBakery.OWAtray.Connections.EWS.Properties;
 using DrunkenBakery.OWAtray.Logging;
+using Microsoft.Exchange.WebServices.Autodiscover;
 using Microsoft.Exchange.WebServices.Data;
 using Timer = System.Timers.Timer;
 
@@ -67,8 +71,11 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				// State
 				ChangeState(ConnectionState.Connecting);
 
+				// Validate the server certificate
+				ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
+
 				// Define service
-				_service = new ExchangeService();
+				_service = ServerVersion == "Autodetect" ? new ExchangeService() : new ExchangeService((ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), ServerVersion));
 
 				// Enable Tracing (if required)
 				if (Settings.Default.UseTracing)
@@ -78,9 +85,103 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					_service.TraceEnabled = true;
 				}
 
-				// Connect - this is a synchronous operation
-				_service.Credentials = new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password);
-				_service.AutodiscoverUrl(EmailAddress, delegate { return true; });
+				// Are we on a Windows domain?
+				_service.UseDefaultCredentials = OnWindowsDomain;
+
+				if (!OnWindowsDomain)
+				{
+					_service.Credentials = AccountDomain.Length > 0 ? new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password, AccountDomain) : new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password);
+				}
+
+				// Connect using Autodiscover?
+				if (UseAutodiscovery)
+				{
+					if (OverrideAutodiscoveryValidation)
+					{
+						_service.AutodiscoverUrl(EmailAddress, delegate { return true; });
+					}
+					else
+					{
+						_service.AutodiscoverUrl(EmailAddress);
+					}
+
+					// Probe for autodiscover information
+					var autodiscoverService = new AutodiscoverService(_service.RequestedServerVersion);
+
+					// Credentials
+					if (OnWindowsDomain)
+					{
+					    autodiscoverService.UseDefaultCredentials = true;
+					}
+					else
+					{
+					    autodiscoverService.Credentials = AccountDomain.Length > 0 ? new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password, AccountDomain) : new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password);
+					}
+
+					// Redirection Callback
+					if (OverrideAutodiscoveryValidation)
+					{
+					    autodiscoverService.RedirectionUrlValidationCallback = delegate { return true; };
+					}
+
+					// Is this Internal or External ?
+					if (autodiscoverService.IsExternal == false)
+					{
+					    // Probe for values
+					    var userresponse = autodiscoverService.GetUserSettings(EmailAddress,
+					                                                            UserSettingName.InternalWebClientUrls,
+					                                                            UserSettingName.InternalEwsUrl,
+					                                                            UserSettingName.InternalMailboxServer,
+					                                                            UserSettingName.UserDisplayName);
+
+					    // OWA Url
+					    var col = (WebClientUrlCollection) userresponse.Settings[UserSettingName.InternalWebClientUrls];
+					    DiscoveredEmailUrl = col.Urls[0].Url;
+
+					    // EWS Url
+					    DiscoveredServiceUrl = (string) userresponse.Settings[UserSettingName.InternalEwsUrl];
+
+					    // Server
+					    DiscoveredEmailServer = (string) userresponse.Settings[UserSettingName.InternalMailboxServer];
+
+					    // User Name
+					    DiscoveredUsername = (string) userresponse.Settings[UserSettingName.UserDisplayName];
+					}
+					else
+					{
+					    // Probe for values
+					    var userresponse = autodiscoverService.GetUserSettings(EmailAddress,
+					                                                            UserSettingName.ExternalWebClientUrls,
+					                                                            UserSettingName.ExternalEwsUrl,
+					                                                            UserSettingName.ExternalMailboxServer,
+					                                                            UserSettingName.UserDisplayName);
+
+					    // OWA Url
+					    var owaCollection = (WebClientUrlCollection) userresponse.Settings[UserSettingName.ExternalWebClientUrls];
+					    DiscoveredEmailUrl = owaCollection.Urls[0].Url;
+
+					    // EWS Url
+					    DiscoveredServiceUrl = (string) userresponse.Settings[UserSettingName.ExternalEwsUrl];
+
+					    // Server
+					    DiscoveredEmailServer = (string) userresponse.Settings[UserSettingName.ExternalMailboxServer];
+
+					    // User Name
+					    DiscoveredUsername = (string) userresponse.Settings[UserSettingName.UserDisplayName];
+					}
+				}
+				else
+				{
+					if (DerivedServiceUrl.Length > 0)
+					{
+						var myUri = new Uri(DerivedServiceUrl);
+						_service.Url = myUri;
+
+						// Update properties
+						DiscoveredEmailServer = EmailServer;
+						DiscoveredUsername = (OnWindowsDomain ? "" : (Username.Length == 0 ? EmailAddress : Username));
+					}
+				}
 
 				// State
 				ChangeState(ConnectionState.Connected);
@@ -104,6 +205,51 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			{
 				ChangeState(ConnectionState.Disconnected);
 				RaiseLogMessage(ex.Message, Severity.Fail);
+			}
+		}
+
+		private bool CertificateValidationCallBack(
+			object sender,
+			X509Certificate certificate,
+			X509Chain chain,
+			SslPolicyErrors sslPolicyErrors)
+		{
+			// If the override has been set then just return true
+			if (OverrideCertificate) return true;
+
+			// If the certificate is a valid, signed certificate, return true.
+			if (sslPolicyErrors == SslPolicyErrors.None) return true;
+
+			// If there are errors in the certificate chain, look at each error to determine the cause.
+			if ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateChainErrors) == 0)
+			{
+				// In all other cases, return false.
+				return false;
+			}
+			else
+			{
+				if (chain != null)
+				{
+					foreach (var status in chain.ChainStatus)
+					{
+						if ((certificate.Subject == certificate.Issuer) &&
+							(status.Status == X509ChainStatusFlags.UntrustedRoot))
+						{
+							// Self-signed certificates with an untrusted root are valid.
+							continue;
+						}
+						else
+						{
+							if (status.Status != X509ChainStatusFlags.NoError)
+							{
+								// If there are any other errors in the certificate chain, the certificate is invalid
+								return false;
+							}
+						}
+					}
+				}
+
+				return true;
 			}
 		}
 

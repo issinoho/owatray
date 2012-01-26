@@ -19,9 +19,8 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Security;
+using System.Net;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
@@ -40,12 +39,12 @@ namespace DrunkenBakery.OWAtray.GUI
 	{
 		private const int MaxInterval = 3600;
 
-		private static bool _overRideClose;
-		private readonly string _alertIcon;
-		private readonly string _emailIcon;
-		private readonly string _graphicPath;
 		private readonly List<ListViewItem> _lvBuffer = new List<ListViewItem>();
-		private readonly string _shellPath;
+		private static bool _overRideClose;
+		private string _alertIcon;
+		private string _emailIcon;
+		private string _graphicPath;
+		private string _shellPath;
 		private readonly bool _booting;
 		private Form _frmAbout;
 		private Form _frmChangeLog;
@@ -57,10 +56,6 @@ namespace DrunkenBakery.OWAtray.GUI
 		private string _lastPopTitle = "";
 		private string _lastPopUrl = "";
 		private string _popUrl = "";
-		private string _reportedEwsUrl = "";
-		private string _reportedMailboxServer = "";
-		private string _reportedOwaUrl = "";
-		private string _reportedUserName = "";
 		private bool _resetFlag = false;
 
 		// New variables
@@ -92,22 +87,11 @@ namespace DrunkenBakery.OWAtray.GUI
 			BootShell();
 			BootHelpers();
 
-			// Now decide what to do based on whether this is the first run or not
-			//if (!Settings.Default.FirstTime)
-			//{
-			//    // Set up Exchange
-			//    if (ConfigureExchange())
-			//    {
-			//        // Start main timer
-			//        timer1.Enabled = true;
-			//    }
-			//}
-
 			// Release boot interlock
 			_booting = false;
 
-			// Final message to user
-			AddLogEntry(OWAtray.Ready);
+			// Start Timer to kick off match
+			timer1.Start();
 		}
 
 		private void BootHelpers()
@@ -147,6 +131,7 @@ namespace DrunkenBakery.OWAtray.GUI
 	
 			// Web Proxy
 			useDefaultWebProxyToolStripMenuItem.Checked = Settings.Default.UseWebProxy;
+			UpdateWebProxySettings();
 
 			// Lockdown mode
 			restoreToolStripMenuItem.Enabled = (!Settings.Default.LockDown);
@@ -258,11 +243,26 @@ namespace DrunkenBakery.OWAtray.GUI
 							AddLogEntry(
 								string.Format("[{0}] - Connected to {1}", connection.EmailAddress,
 												connection.Version), Severity.Success);
+
+							// Minimise to tray
+							WindowState = FormWindowState.Minimized;
+
+							// Update discovered properties
+							AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _connection.DiscoveredUsername, Severity.Success);
+							AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + _connection.DiscoveredEmailServer, Severity.Success);
+							UpdateOwaUrl();
+							AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + _connection.DiscoveredEmailUrl, Severity.Success);
+							UpdateServiceUrl();
+							AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _connection.DiscoveredServiceUrl, Severity.Success);
+
+							// Configure Shell
+							ConfigureShell();
 							break;
 
 						case ConnectionState.Disconnected:
 							AddLogEntry(string.Format("[{0}] - Disconnected", connection.EmailAddress),
 										Severity.Success);
+							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
 							break;
 					}
 				};
@@ -278,9 +278,9 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				lblOWAUrl.Text = Settings.Default.Office365OwaUrl + StripEmailDomain(lblEmail.Text);
 			}
-			else if (_connection.UseAutodiscovery && _reportedOwaUrl.Length > 0)
+			else if (_connection.UseAutodiscovery && _connection.DiscoveredEmailUrl.Length > 0)
 			{
-				lblOWAUrl.Text = _reportedOwaUrl;
+				lblOWAUrl.Text = _connection.DiscoveredEmailUrl;
 			}
 			else if (_connection.OverrideEmailUrl && txtOWAEdit.Text.Length > 0)
 			{
@@ -292,7 +292,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			else
 			{
-				lblOWAUrl.Text = OWAtray.unknown;
+				lblOWAUrl.Text = "";
 			}
 
 			if (!_booting)
@@ -304,20 +304,19 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private static string StripEmailDomain(string email)
 		{
-			string sub = "";
-			int start = email.IndexOf("@", StringComparison.Ordinal);
+			var sub = "";
+			var start = email.IndexOf("@", StringComparison.Ordinal);
 			if (start > 0) sub = email.Substring(start + 1);
 			return sub;
 		}
 
 		public bool IsUserAdministrator()
 		{
-			//bool value to hold our return value
-			bool isAdmin = false;
+			var isAdmin = false;
 			try
 			{
 				//get the currently logged in user
-				WindowsIdentity user = WindowsIdentity.GetCurrent();
+				var user = WindowsIdentity.GetCurrent();
 				if (user != null)
 				{
 					var principal = new WindowsPrincipal(user);
@@ -339,13 +338,13 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private static string GetSubDomain(string domain)
 		{
-			string result = "";
+			var result = "";
 
-			string[] parts = domain.Split('.');
+			var parts = domain.Split('.');
 
 			if (parts.Length > 1)
 			{
-				for (int f = 1; f < parts.Length; ++f)
+				for (var f = 1; f < parts.Length; ++f)
 				{
 					result = result + parts[f];
 					if (f != (parts.Length - 1)) result = result + ".";
@@ -415,61 +414,6 @@ namespace DrunkenBakery.OWAtray.GUI
 			Settings.Default.Balloon = balloonToolStripMenuItem.Checked;
 			Settings.Default.Save();
 			AddLogEntry(OWAtray.Balloon_notifications_switched + " " + (Settings.Default.Balloon ? OWAtray.ON : OWAtray.OFF));
-		}
-
-		private bool CertificateValidationCallBack(
-			object sender,
-			X509Certificate certificate,
-			X509Chain chain,
-			SslPolicyErrors sslPolicyErrors)
-		{
-			// If the override has been set then just return true
-			if (_connection.OverrideCertificate)
-			{
-				return true;
-			}
-
-			// If the certificate is a valid, signed certificate, return true.
-			if (sslPolicyErrors == SslPolicyErrors.None)
-			{
-				return true;
-			}
-
-			// If there are errors in the certificate chain, look at each error to determine the cause.
-			if ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateChainErrors) == 0)
-			{
-				// In all other cases, return false.
-				return false;
-			}
-			else
-			{
-				if (chain != null)
-				{
-					foreach (X509ChainStatus status in chain.ChainStatus)
-					{
-						if ((certificate.Subject == certificate.Issuer) &&
-						    (status.Status == X509ChainStatusFlags.UntrustedRoot))
-						{
-							// Self-signed certificates with an untrusted root are valid.
-							continue;
-						}
-						else
-						{
-							if (status.Status != X509ChainStatusFlags.NoError)
-							{
-								// If there are any other errors in the certificate chain, the certificate is invalid,
-								// so the method returns false.
-								return false;
-							}
-						}
-					}
-				}
-
-				// When processing reaches this line, the only errors in the certificate chain are
-				// untrusted root errors for self-signed certifcates. These certificates are valid
-				// for default Exchange server installations, so return true.
-				return true;
-			}
 		}
 
 		private void changeLogToolStripMenuItem_Click(object sender, EventArgs e)
@@ -569,276 +513,42 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void cmdStart_Click(object sender, EventArgs e)
 		{
-			//if (ConfigureExchange())
-			//{
-			//    // Start
-			//    StartMonitoring();
-			//}
-
 			ConnectToExchange();
 		}
 
 		private void ConnectToExchange()
 		{
+			if (_connection.ConnectedState != ConnectionState.Disconnected) return;
+
 			_connection.ConnectA();
 		}
 
 		private void DisconnectFromExchange()
 		{
-			if (_connection == null) return;
+			if (_connection.ConnectedState != ConnectionState.Connected) return;
 
 			_connection.Disconnect();
 		}
 
 		private void cmdStop_Click(object sender, EventArgs e)
 		{
-			//stopMonitoring();
-
 			DisconnectFromExchange();
 		}
 
-		private void stopMonitoring()
+		private static void UpdateWebProxySettings()
 		{
-			//timerUpdate.Stop();
-			//timerAppt.Stop();
-			AddLogEntry(OWAtray.Timer_stopped);
-			notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
+			WebRequest.DefaultWebProxy.Credentials = Properties.Settings.Default.UseWebProxy ? CredentialCache.DefaultCredentials : null;
 		}
-
-		//private bool ConfigureExchange()
-		//{
-		//    try
-		//    {
-		//        // Cursor
-		//        Cursor = Cursors.WaitCursor;
-
-		//        // Validate the server certificate
-		//        ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
-
-		//        // Set up proxy if needed
-		//        if (Settings.Default.UseWebProxy)
-		//        {
-		//            WebRequest.DefaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
-		//        }
-
-		//        AddLogEntry(OWAtray.Binding_to_Exchange);
-		//        switch (Settings.Default.ExchangeVersion)
-		//        {
-		//            case "Autodetect":
-		//                _myService = new ExchangeService();
-		//                break;
-
-		//            case "Exchange2007_SP1":
-		//                _myService = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
-		//                break;
-
-		//            case "Exchange2010":
-		//                _myService = new ExchangeService(ExchangeVersion.Exchange2010);
-		//                break;
-
-		//            case "Exchange2010_SP1":
-		//                _myService = new ExchangeService(ExchangeVersion.Exchange2010_SP1);
-		//                break;
-		//        }
-
-		//        // Credentials
-		//        if (chkOnDomain.Checked)
-		//        {
-		//            _myService.UseDefaultCredentials = true;
-		//        }
-		//        else
-		//        {
-		//            if (txtUser.Text.Length == 0 && txtEmail.Text.Length == 0)
-		//            {
-		//                AddLogEntry(OWAtray.Please_supply_valid_email, Severity.Fail);
-		//                return false;
-		//            }
-
-		//            if (txtPwd.Text.Length == 0)
-		//            {
-		//                AddLogEntry(OWAtray.Please_supply_valid_password, Severity.Fail);
-		//                return false;
-		//            }
-
-		//            if (txtDomain.Text.Length > 0)
-		//            {
-		//                _myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text,
-		//                                                            txtDomain.Text);
-		//            }
-		//            else
-		//            {
-		//                _myService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text), txtPwd.Text);
-		//            }
-		//        }
-
-		//        // If autodiscover is on then that overrides the URI
-		//        if (Settings.Default.Autodiscovery)
-		//        {
-		//            if (lblEmail.Text.Length == 0)
-		//            {
-		//                AddLogEntry(OWAtray.Autodiscovery_requires_an_Email, Severity.Fail);
-		//                return false;
-		//            }
-		//            else
-		//            {
-		//                AddLogEntry(OWAtray.Starting_Autodiscovery);
-		//                if (Settings.Default.OverrideValidation)
-		//                {
-		//                    _myService.AutodiscoverUrl(lblEmail.Text, delegate { return true; });
-		//                }
-		//                else
-		//                {
-		//                    _myService.AutodiscoverUrl(lblEmail.Text);
-		//                }
-
-		//                // Update server settings
-		//                _reportedVersion = _myService.RequestedServerVersion;
-		//                AddLogEntry(OWAtray.Connected_to + " " + _reportedVersion, Severity.Success);
-
-		//                // Probe for autodiscover information
-		//                var autodiscoverService = new AutodiscoverService(_myService.RequestedServerVersion);
-
-		//                // Credentials
-		//                if (chkOnDomain.Checked)
-		//                {
-		//                    autodiscoverService.UseDefaultCredentials = true;
-		//                }
-		//                else
-		//                {
-		//                    if (txtDomain.Text.Length > 0)
-		//                    {
-		//                        autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text),
-		//                                                                             txtPwd.Text, txtDomain.Text);
-		//                    }
-		//                    else
-		//                    {
-		//                        autodiscoverService.Credentials = new WebCredentials((txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text),
-		//                                                                             txtPwd.Text);
-		//                    }
-		//                }
-
-		//                // Redirection Callback
-		//                if (Settings.Default.OverrideValidation)
-		//                {
-		//                    autodiscoverService.RedirectionUrlValidationCallback = delegate { return true; };
-		//                }
-
-		//                // Is this Internal or External ?
-		//                if (autodiscoverService.IsExternal == false)
-		//                {
-		//                    // Internal
-		//                    AddLogEntry(OWAtray.Endpoint_is_INSIDE_corporate);
-
-		//                    // Probe for values
-		//                    GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
-		//                                                                                               UserSettingName.InternalWebClientUrls,
-		//                                                                                               UserSettingName.InternalEwsUrl,
-		//                                                                                               UserSettingName.InternalMailboxServer,
-		//                                                                                               UserSettingName.UserDisplayName);
-
-		//                    // OWA Url
-		//                    var col = (WebClientUrlCollection) userresponse.Settings[UserSettingName.InternalWebClientUrls];
-		//                    WebClientUrl owaUrl = col.Urls[0];
-		//                    _reportedOwaUrl = owaUrl.Url;
-		//                    UpdateOwaUrl();
-		//                    AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + _reportedOwaUrl, Severity.Success);
-
-		//                    // EWS Url
-		//                    _reportedEwsUrl = (string) userresponse.Settings[UserSettingName.InternalEwsUrl];
-		//                    UpdateServiceUrl();
-		//                    AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _reportedEwsUrl, Severity.Success);
-
-		//                    // Mailbox
-		//                    _reportedMailboxServer = (string) userresponse.Settings[UserSettingName.InternalMailboxServer];
-		//                    AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + _reportedMailboxServer, Severity.Success);
-
-		//                    // User Name
-		//                    _reportedUserName = (string) userresponse.Settings[UserSettingName.UserDisplayName];
-		//                    AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _reportedUserName, Severity.Success);
-		//                }
-		//                else
-		//                {
-		//                    // External (default)
-		//                    AddLogEntry(OWAtray.Endpoint_is_OUTSIDE_corporate);
-
-		//                    // Probe for values
-		//                    GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(lblEmail.Text,
-		//                                                                                               UserSettingName.ExternalWebClientUrls,
-		//                                                                                               UserSettingName.ExternalEwsUrl,
-		//                                                                                               UserSettingName.ExternalMailboxServer,
-		//                                                                                               UserSettingName.UserDisplayName);
-
-		//                    // OWA Url
-		//                    var owaCollection = (WebClientUrlCollection) userresponse.Settings[UserSettingName.ExternalWebClientUrls];
-		//                    WebClientUrl owaUrl = owaCollection.Urls[0];
-		//                    _reportedOwaUrl = owaUrl.Url;
-		//                    UpdateOwaUrl();
-		//                    AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + _reportedOwaUrl, Severity.Success);
-
-		//                    // EWS Url
-		//                    _reportedEwsUrl = (string) userresponse.Settings[UserSettingName.ExternalEwsUrl];
-		//                    UpdateServiceUrl();
-		//                    AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _reportedEwsUrl, Severity.Success);
-
-		//                    // Mailbox
-		//                    _reportedMailboxServer = (string) userresponse.Settings[UserSettingName.ExternalMailboxServer];
-		//                    AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + _reportedMailboxServer, Severity.Success);
-
-		//                    // User Name
-		//                    _reportedUserName = (string) userresponse.Settings[UserSettingName.UserDisplayName];
-		//                    AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _reportedUserName, Severity.Success);
-		//                }
-		//            }
-		//        }
-		//        else
-		//        {
-		//            if (lblUrl.Text.Length == 0)
-		//            {
-		//                AddLogEntry(OWAtray.Can_establish_valid_URL_for, Severity.Fail);
-		//            }
-		//            else
-		//            {
-		//                var myUri = new Uri(lblUrl.Text);
-		//                _myService.Url = myUri;
-
-		//                // Update server settings
-		//                _reportedVersion = _myService.RequestedServerVersion;
-		//                AddLogEntry(OWAtray.Connected_to + _reportedVersion, Severity.Success);
-
-		//                // Update properties
-		//                _reportedMailboxServer = txtServer.Text;
-		//                _reportedUserName = (chkOnDomain.Checked ? "" : (txtUser.Text.Length == 0 ? txtEmail.Text : txtUser.Text));
-		//            }
-		//        }
-
-		//        // Set a flag to indicate that subsequent runs can autostart
-		//        Settings.Default.FirstTime = false;
-		//        Settings.Default.Save();
-
-		//        // All clear
-		//        return true;
-		//    }
-		//    catch (Exception ex)
-		//    {
-		//        AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-		//        return false;
-		//    }
-		//    finally
-		//    {
-		//        // Cursor
-		//        Cursor = Cursors.Default;
-		//    }
-		//}
 
 		private void ConfigureShell()
 		{
 			// Set OWA Url
-			string owaUrl = lblOWAUrl.Text;
+			var owaUrl = lblOWAUrl.Text;
 
 			try
 			{
 				var runSvc = new ProcessStartInfo(_shellPath) {Arguments = "url " + owaUrl, WindowStyle = ProcessWindowStyle.Hidden};
-				Process serviceProcess = Process.Start(runSvc);
+				var serviceProcess = Process.Start(runSvc);
 
 				while (!serviceProcess.HasExited)
 				{
@@ -856,7 +566,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				var runSvc = new ProcessStartInfo(_shellPath)
 				             	{Arguments = "account ", WindowStyle = ProcessWindowStyle.Hidden};
-				Process serviceProcess = Process.Start(runSvc);
+				var serviceProcess = Process.Start(runSvc);
 
 				while (!serviceProcess.HasExited)
 				{
@@ -874,7 +584,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				var runSvc = new ProcessStartInfo(_shellPath)
 				             	{Arguments = "exchange " + _connection.Version, WindowStyle = ProcessWindowStyle.Hidden};
-				Process serviceProcess = Process.Start(runSvc);
+				var serviceProcess = Process.Start(runSvc);
 
 				while (!serviceProcess.HasExited)
 				{
@@ -893,7 +603,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				var runSvc = new ProcessStartInfo(_shellPath)
 				             	{Arguments = "password " + txtPwd.Text, WindowStyle = ProcessWindowStyle.Hidden};
-				Process serviceProcess = Process.Start(runSvc);
+				var serviceProcess = Process.Start(runSvc);
 
 				while (!serviceProcess.HasExited)
 				{
@@ -1410,28 +1120,6 @@ namespace DrunkenBakery.OWAtray.GUI
 			AddLogEntry(OWAtray.Snarl_notifications_switched + " " + (Settings.Default.Snarl ? OWAtray.ON : OWAtray.OFF));
 		}
 
-		private void StartMonitoring()
-		{
-			// Start Timer
-			//timerAppt.Start();
-			//timerUpdate.Interval = Settings.Default.UpdateInterval*1000;
-			//timerUpdate.Start();
-			AddLogEntry(txtInterval.Text + " " + OWAtray.second_timer_started);
-
-			// Minimise to tray
-			WindowState = FormWindowState.Minimized;
-
-			// Configure Shell
-			ConfigureShell();
-
-			// Initial Check
-			//CheckForNewMail();
-			if (!_connection.DisableCalendar)
-			{
-				//CheckForAppointments();
-			}
-		}
-
 		private void supportToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (_frmContact == null) _frmContact = new ContactUs();
@@ -1479,7 +1167,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			timer1.Enabled = false;
-			StartMonitoring();
+			ConnectToExchange();
 		}
 
 		private void timerLogging_Tick(object sender, EventArgs e)
@@ -1523,22 +1211,24 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void UpdateServiceUrl()
 		{
-			if (_connection.UseAutodiscovery && _reportedEwsUrl.Length > 0)
+			if (_connection.UseAutodiscovery && _connection.DiscoveredServiceUrl.Length > 0)
 			{
-				lblUrl.Text = _reportedEwsUrl;
+				lblServiceUrl.Text = _connection.DiscoveredServiceUrl;
 			}
 			else if (_connection.OverrideServiceUrl && txtURLEdit.Text.Length > 0)
 			{
-				lblUrl.Text = txtURLEdit.Text;
+				lblServiceUrl.Text = txtURLEdit.Text;
 			}
 			else if (txtServer.Text.Length > 0)
 			{
-				lblUrl.Text = string.Format("{0}{1}{2}", "https://", txtServer.Text, "/ews/exchange.asmx");
+				lblServiceUrl.Text = string.Format("{0}{1}{2}", "https://", txtServer.Text, "/ews/exchange.asmx");
 			}
 			else
 			{
-				lblUrl.Text = OWAtray.unknown;
+				lblServiceUrl.Text = "";
 			}
+
+			_connection.DerivedServiceUrl = lblServiceUrl.Text;
 		}
 
 		private void UpdateEmail()
@@ -1717,6 +1407,8 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			Settings.Default.UseWebProxy = useDefaultWebProxyToolStripMenuItem.Checked;
 			Settings.Default.Save();
+
+			UpdateWebProxySettings();
 		}
 	}
 }

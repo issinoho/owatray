@@ -37,17 +37,27 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		string EmailServer { get; set; }
 
+		string DiscoveredEmailServer { get; set; }
+
 		string AccountDomain { get; set; }
 
 		bool OverrideServiceUrl { get; set; }
 
 		string ServiceUrl { get; set; }
 
+		string DiscoveredServiceUrl { get; set; }
+
+		string DerivedServiceUrl { get; set; }
+
 		bool OverrideEmailUrl { get; set; }
 
 		string EmailUrl { get; set; }
 
+		string DiscoveredEmailUrl { get; set; }
+
 		string Username { get; set; }
+
+		string DiscoveredUsername { get; set; }
 
 		string Password { get; set; }
 
