@@ -25,42 +25,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Server {
-            get {
-                return ((string)(this["Server"]));
-            }
-            set {
-                this["Server"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Domain {
-            get {
-                return ((string)(this["Domain"]));
-            }
-            set {
-                this["Domain"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool FirstTime {
-            get {
-                return ((bool)(this["FirstTime"]));
-            }
-            set {
-                this["FirstTime"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Balloon {
             get {
@@ -92,30 +56,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
             }
             set {
                 this["Snarl"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Autodetect")]
-        public string ExchangeVersion {
-            get {
-                return ((string)(this["ExchangeVersion"]));
-            }
-            set {
-                this["ExchangeVersion"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool NetworkCredentials {
-            get {
-                return ((bool)(this["NetworkCredentials"]));
-            }
-            set {
-                this["NetworkCredentials"] = value;
             }
         }
         
@@ -167,42 +107,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool OverrideCert {
-            get {
-                return ((bool)(this["OverrideCert"]));
-            }
-            set {
-                this["OverrideCert"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool OverrideURL {
-            get {
-                return ((bool)(this["OverrideURL"]));
-            }
-            set {
-                this["OverrideURL"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ManualURL {
-            get {
-                return ((string)(this["ManualURL"]));
-            }
-            set {
-                this["ManualURL"] = value;
-            }
-        }
-        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://www.owatray.com/blog/posts.xml")]
@@ -230,18 +134,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AlwaysIE {
-            get {
-                return ((bool)(this["AlwaysIE"]));
-            }
-            set {
-                this["AlwaysIE"] = value;
-            }
-        }
-        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("OUTLOOK.EXE")]
@@ -257,54 +149,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         public string ShellIntegration {
             get {
                 return ((string)(this["ShellIntegration"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DisableCalendar {
-            get {
-                return ((bool)(this["DisableCalendar"]));
-            }
-            set {
-                this["DisableCalendar"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AutoLogin {
-            get {
-                return ((bool)(this["AutoLogin"]));
-            }
-            set {
-                this["AutoLogin"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EmailOverride {
-            get {
-                return ((bool)(this["EmailOverride"]));
-            }
-            set {
-                this["EmailOverride"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Autodiscovery {
-            get {
-                return ((bool)(this["Autodiscovery"]));
-            }
-            set {
-                this["Autodiscovery"] = value;
             }
         }
         
@@ -329,60 +173,12 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool OverrideValidation {
-            get {
-                return ((bool)(this["OverrideValidation"]));
-            }
-            set {
-                this["OverrideValidation"] = value;
-            }
-        }
-        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://www.outlook.com/owa/")]
         public string Office365OwaUrl {
             get {
                 return ((string)(this["Office365OwaUrl"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool UseOffice365 {
-            get {
-                return ((bool)(this["UseOffice365"]));
-            }
-            set {
-                this["UseOffice365"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool OverrideOWAUrl {
-            get {
-                return ((bool)(this["OverrideOWAUrl"]));
-            }
-            set {
-                this["OverrideOWAUrl"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ManualOWAUrl {
-            get {
-                return ((string)(this["ManualOWAUrl"]));
-            }
-            set {
-                this["ManualOWAUrl"] = value;
             }
         }
         

@@ -46,25 +46,22 @@ namespace DrunkenBakery.OWAtray.GUI
 		private readonly string _graphicPath;
 		private readonly List<ListViewItem> _lvBuffer = new List<ListViewItem>();
 		private readonly string _shellPath;
-		private readonly bool _startingUp;
-		private bool _firstRun = true;
+		private readonly bool _booting;
 		private Form _frmAbout;
 		private Form _frmChangeLog;
 		private Form _frmContact;
 		private Form _frmInfo;
 		private Form _frmMdac;
 		private Form _frmNet;
-		private int _inboxCount;
-		private string _lastPopMessage;
-		private string _lastPopTitle;
-		private string _lastPopUrl;
-		private string _popUrl;
+		private string _lastPopMessage = "";
+		private string _lastPopTitle = "";
+		private string _lastPopUrl = "";
+		private string _popUrl = "";
 		private string _reportedEwsUrl = "";
 		private string _reportedMailboxServer = "";
 		private string _reportedOwaUrl = "";
 		private string _reportedUserName = "";
-		private bool _resetFlag;
-		private DateTime _timeLastChecked = DateTime.Now;
+		private bool _resetFlag = false;
 
 		// New variables
 		private Scenario _scenario;
@@ -74,120 +71,26 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			InitializeComponent();
 
-			// Interlock for starting up
-			_startingUp = true;
+			// Interlock for booting up
+			_booting = true;
 
 			// Set up look & feel
 			WindowDressing();
 
 			// Start Logging
 			Logger.Execute();
+			timerLogging.Enabled = true;
 
 			// Welcome message
 			AddLogEntry(string.Format("{0} {1} v{2}", OWAtray.Welcome_to_the, AssemblyHelpers.AssemblyTitle,
 			                          AssemblyHelpers.UpgradeSettings()));
 
-			// Scenario
+			// Boot the various subsystems
+			BootEnvironment();
 			BootScenario();
-
-			// Options
-			exchange2007ToolStripMenuItem.SelectedIndex = 0;
-			switch (Settings.Default.ExchangeVersion)
-			{
-				case "Autodetect":
-					exchange2007ToolStripMenuItem.SelectedIndex = 0;
-					break;
-
-				case "Exchange2007_SP1":
-					exchange2007ToolStripMenuItem.SelectedIndex = 1;
-					break;
-
-				case "Exchange2010":
-					exchange2007ToolStripMenuItem.SelectedIndex = 2;
-					break;
-
-				case "Exchange2010_SP1":
-					exchange2007ToolStripMenuItem.SelectedIndex = 3;
-					break;
-			}
-
-			txtServer.Text = Settings.Default.Server;
-			txtDomain.Text = Settings.Default.Domain;
-			txtURLEdit.Text = Settings.Default.ManualURL;
-			txtOWAEdit.Text = Settings.Default.ManualOWAUrl;
-
-			// Startup Flag
-			chkRunOnStartup.Checked = WindowsShortcut.Exists(Environment.SpecialFolder.Startup,
-			                                                 AssemblyHelpers.AssemblyTitle);
-
-			// Notifications
-			balloonToolStripMenuItem.Checked = Settings.Default.Balloon;
-			growlToolStripMenuItem.Checked = Settings.Default.Growl;
-			snarlToolStripMenuItem.Checked = Settings.Default.Snarl;
-			playSoundToolStripMenuItem.Checked = Settings.Default.Bell;
-
-			// Checkboxes
-			cbOverrideEWS.Checked = Settings.Default.OverrideURL;
-			txtURLEdit.Enabled = cbOverrideEWS.Checked;
-			cbOverrideOWA.Checked = Settings.Default.OverrideOWAUrl;
-			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
-
-			// Menu Items
-			overrideToolStripMenuItem.Checked = Settings.Default.OverrideCert;
-			alwaysOpenOWAInIEToolStripMenuItem.Checked = Settings.Default.AlwaysIE;
-			disableCalendarToolStripMenuItem.Checked = Settings.Default.DisableCalendar;
-			loginAutomaticallyToolStripMenuItem.Checked = Settings.Default.AutoLogin;
-			office365LoginOverrideToolStripMenuItem.Checked = Settings.Default.UseOffice365;
-			overrideAutodiscoveryValidationToolStripMenuItem.Checked = Settings.Default.OverrideValidation;
-			useDefaultWebProxyToolStripMenuItem.Checked = Settings.Default.UseWebProxy;
-
-			// Autodiscover?
-			chkAutodiscovery.Checked = Settings.Default.Autodiscovery;
-			SelectAutodiscoveryOptions();
-
-			// URLs
-			UpdateUrl();
-			UpdateOwaUrl();
-			UpdateEmail();
-
-			// Domain
-			chkOnDomain.Checked = Settings.Default.NetworkCredentials;
-			SelectDomainOptions();
-
-			// Special lockdown option
-			restoreToolStripMenuItem.Enabled = (!Settings.Default.LockDown);
-
-			// Icon
-			_graphicPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-			                            Settings.Default.EmailGraphic);
-			_emailIcon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.EmailIcon);
-			_alertIcon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.AlertIcon);
-
-			// Tray icon (default)
-			notifyIcon1.Icon = new Icon(_emailIcon);
-
-			// Path to shell integration module
-			_shellPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-			                          Settings.Default.ShellIntegration);
-
-			// A few flags
-			_lastPopTitle = "";
-			_lastPopMessage = "";
-			_popUrl = "";
-			_lastPopUrl = "";
-			_resetFlag = false;
-			_inboxCount = 0;
-
-			// Growl
-			GrowlHelper.RegisterGrowl(AssemblyHelpers.AssemblyTitle, _graphicPath, "NEWMAIL", "New Mail");
-
-			// Snarl
-			SnarlHelper.RegisterSnarl(AssemblyHelpers.AssemblyTitle, _graphicPath, Handle);
-
-			// Start Timers
-			//timerAppt.Interval = Settings.Default.ApptInterval*1000;
-			//timerUpdate.Interval = Settings.Default.UpdateInterval*1000;
-			timerLogging.Enabled = true;
+			BootIcons();
+			BootShell();
+			BootHelpers();
 
 			// Now decide what to do based on whether this is the first run or not
 			//if (!Settings.Default.FirstTime)
@@ -200,9 +103,53 @@ namespace DrunkenBakery.OWAtray.GUI
 			//    }
 			//}
 
-			// Release interlock
-			_startingUp = false;
+			// Release boot interlock
+			_booting = false;
+
+			// Final message to user
 			AddLogEntry(OWAtray.Ready);
+		}
+
+		private void BootHelpers()
+		{
+			GrowlHelper.RegisterGrowl(AssemblyHelpers.AssemblyTitle, _graphicPath, "NEWMAIL", "New Mail");
+			SnarlHelper.RegisterSnarl(AssemblyHelpers.AssemblyTitle, _graphicPath, Handle);			
+		}
+
+		private void BootShell()
+		{
+			_shellPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+									  Settings.Default.ShellIntegration);			
+		}
+
+		private void BootIcons()
+		{
+			_graphicPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+										Settings.Default.EmailGraphic);
+			_emailIcon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.EmailIcon);
+			_alertIcon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.AlertIcon);
+
+			// Tray icon
+			notifyIcon1.Icon = new Icon(_emailIcon);			
+		}
+
+		private void BootEnvironment()
+		{
+			// Startup Flag
+			chkRunOnStartup.Checked = WindowsShortcut.Exists(Environment.SpecialFolder.Startup,
+															 AssemblyHelpers.AssemblyTitle);
+
+			// Notifications
+			balloonToolStripMenuItem.Checked = Settings.Default.Balloon;
+			growlToolStripMenuItem.Checked = Settings.Default.Growl;
+			snarlToolStripMenuItem.Checked = Settings.Default.Snarl;
+			playSoundToolStripMenuItem.Checked = Settings.Default.Bell;		
+	
+			// Web Proxy
+			useDefaultWebProxyToolStripMenuItem.Checked = Settings.Default.UseWebProxy;
+
+			// Lockdown mode
+			restoreToolStripMenuItem.Enabled = (!Settings.Default.LockDown);
 		}
 
 		private void BootScenario()
@@ -215,21 +162,42 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				// Create the new entry
 				_connection = ConnectionFactory.CreateConnection(EmailType.Exchange);
-				_connection.EmailAddress = txtEmail.Text;
-				_connection.Password = txtPwd.Text;
-				_connection.Username = txtUser.Text;
-				if (txtInterval.Text != string.Empty) _connection.Interval = Convert.ToInt32(txtInterval.Text);
 				_scenario.Connections.Add(_connection);
 				_scenario.Save();
 			}
 			else
 			{
+				// Retrieve all the settings
 				_connection = _scenario.Connections[0];
 				txtEmail.Text = _connection.EmailAddress;
 				txtUser.Text = _connection.Username;
 				txtPwd.Text = _connection.Password;
+				txtServer.Text = _connection.EmailServer;
+				txtDomain.Text = _connection.AccountDomain;
+				txtURLEdit.Text = _connection.ServiceUrl;
+				txtOWAEdit.Text = _connection.EmailUrl;
 				txtInterval.Text = _connection.Interval.ToString(CultureInfo.InvariantCulture);
+				cbOverrideEWS.Checked = _connection.OverrideServiceUrl;
+				cbOverrideOWA.Checked = _connection.OverrideEmailUrl;
+				chkAutodiscovery.Checked = _connection.UseAutodiscovery;
+				chkOnDomain.Checked = _connection.OnWindowsDomain;
+				overrideCertificateToolStripMenuItem.Checked = _connection.OverrideCertificate;
+				alwaysOpenOWAInIEToolStripMenuItem.Checked = _connection.AlwaysUseInternetExplorer;
+				disableCalendarToolStripMenuItem.Checked = _connection.DisableCalendar;
+				loginAutomaticallyToolStripMenuItem.Checked = _connection.AutoLogin;
+				office365LoginOverrideToolStripMenuItem.Checked = _connection.OverrideOffice365Login;
+				overrideAutodiscoveryValidationToolStripMenuItem.Checked = _connection.OverrideAutodiscoveryValidation;
+				exchangeToolStripMenuItem.SelectedIndex = exchangeToolStripMenuItem.FindStringExact(_connection.ServerVersion);
 			}
+
+			// Update any UI
+			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
+			txtURLEdit.Enabled = cbOverrideEWS.Checked;
+			SelectAutodiscoveryOptions();
+			UpdateServiceUrl();
+			UpdateOwaUrl();
+			UpdateEmail();
+			SelectDomainOptions();
 
 			// Set up event handling
 			WireUpConnectionEvents();
@@ -259,18 +227,18 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void SelectDomainOptions()
 		{
-			txtDomain.Enabled = !chkOnDomain.Checked;
-			txtPwd.Enabled = !chkOnDomain.Checked;
-			txtUser.Enabled = !chkOnDomain.Checked;
+			txtDomain.Enabled = !_connection.OnWindowsDomain;
+			txtPwd.Enabled = !_connection.OnWindowsDomain;
+			txtUser.Enabled = !_connection.OnWindowsDomain;
 		}
 
 		private void SelectAutodiscoveryOptions()
 		{
-			txtServer.Enabled = !Settings.Default.Autodiscovery;
-			cbOverrideEWS.Enabled = !Settings.Default.Autodiscovery;
-			cbOverrideOWA.Enabled = !Settings.Default.Autodiscovery;
-			txtDomain.Enabled = !Settings.Default.Autodiscovery;
-			overrideAutodiscoveryValidationToolStripMenuItem.Enabled = Settings.Default.Autodiscovery;
+			txtServer.Enabled = !_connection.UseAutodiscovery;
+			cbOverrideEWS.Enabled = !_connection.UseAutodiscovery;
+			cbOverrideOWA.Enabled = !_connection.UseAutodiscovery;
+			txtDomain.Enabled = !_connection.UseAutodiscovery;
+			overrideAutodiscoveryValidationToolStripMenuItem.Enabled = _connection.UseAutodiscovery;
 		}
 
 		private void WireUpConnectionEvents()
@@ -306,15 +274,15 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void UpdateOwaUrl()
 		{
-			if (Settings.Default.UseOffice365)
+			if (_connection.OverrideOffice365Login)
 			{
 				lblOWAUrl.Text = Settings.Default.Office365OwaUrl + StripEmailDomain(lblEmail.Text);
 			}
-			else if (Settings.Default.Autodiscovery && _reportedOwaUrl.Length > 0)
+			else if (_connection.UseAutodiscovery && _reportedOwaUrl.Length > 0)
 			{
 				lblOWAUrl.Text = _reportedOwaUrl;
 			}
-			else if (Settings.Default.OverrideOWAUrl && txtOWAEdit.Text.Length > 0)
+			else if (_connection.OverrideEmailUrl && txtOWAEdit.Text.Length > 0)
 			{
 				lblOWAUrl.Text = txtOWAEdit.Text;
 			}
@@ -327,7 +295,7 @@ namespace DrunkenBakery.OWAtray.GUI
 				lblOWAUrl.Text = OWAtray.unknown;
 			}
 
-			if (!_startingUp)
+			if (!_booting)
 			{
 				// Update shell parameters
 				ConfigureShell();
@@ -397,7 +365,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			var runSvc = new ProcessStartInfo(_shellPath) {WindowStyle = ProcessWindowStyle.Hidden};
 
-			if (Settings.Default.AlwaysIE)
+			if (_connection.AlwaysUseInternetExplorer)
 			{
 				runSvc.Arguments = "owa" + ((_popUrl.Length > 0) ? " " + _popUrl : "");
 			}
@@ -406,7 +374,7 @@ namespace DrunkenBakery.OWAtray.GUI
 				runSvc.Arguments = "shell" + ((_popUrl.Length > 0) ? " " + _popUrl : "");
 			}
 
-			Process serviceProcess = Process.Start(runSvc);
+			var serviceProcess = Process.Start(runSvc);
 
 			if (office365LoginOverrideToolStripMenuItem.CheckState == CheckState.Checked)
 				office365LoginOverrideToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -430,32 +398,33 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
-			Settings.Default.AlwaysIE = alwaysOpenOWAInIEToolStripMenuItem.Checked;
-			Settings.Default.Save();
-			AddLogEntry(OWAtray.Always_use_IE_switched + " " + (Settings.Default.AlwaysIE ? OWAtray.ON : OWAtray.OFF));
+			_connection.AlwaysUseInternetExplorer = alwaysOpenOWAInIEToolStripMenuItem.Checked;
+			_scenario.Save();
+
+			AddLogEntry(OWAtray.Always_use_IE_switched + " " + (_connection.AlwaysUseInternetExplorer ? OWAtray.ON : OWAtray.OFF));
 
 			ConfigureShell();
 		}
 
 		private void balloonToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
 			Settings.Default.Balloon = balloonToolStripMenuItem.Checked;
 			Settings.Default.Save();
 			AddLogEntry(OWAtray.Balloon_notifications_switched + " " + (Settings.Default.Balloon ? OWAtray.ON : OWAtray.OFF));
 		}
 
-		private static bool CertificateValidationCallBack(
+		private bool CertificateValidationCallBack(
 			object sender,
 			X509Certificate certificate,
 			X509Chain chain,
 			SslPolicyErrors sslPolicyErrors)
 		{
 			// If the override has been set then just return true
-			if (Settings.Default.OverrideCert)
+			if (_connection.OverrideCertificate)
 			{
 				return true;
 			}
@@ -569,10 +538,10 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void chkOnDomain_CheckedChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
-			Settings.Default.NetworkCredentials = chkOnDomain.Checked;
-			Settings.Default.Save();
+			_connection.OnWindowsDomain = chkOnDomain.Checked;
+			_scenario.Save();
 
 			// Switch off some options when domain authentication selected
 			SelectDomainOptions();
@@ -776,7 +745,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		//                    // EWS Url
 		//                    _reportedEwsUrl = (string) userresponse.Settings[UserSettingName.InternalEwsUrl];
-		//                    UpdateUrl();
+		//                    UpdateServiceUrl();
 		//                    AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _reportedEwsUrl, Severity.Success);
 
 		//                    // Mailbox
@@ -808,7 +777,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		//                    // EWS Url
 		//                    _reportedEwsUrl = (string) userresponse.Settings[UserSettingName.ExternalEwsUrl];
-		//                    UpdateUrl();
+		//                    UpdateServiceUrl();
 		//                    AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _reportedEwsUrl, Severity.Success);
 
 		//                    // Mailbox
@@ -943,10 +912,10 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				var runSvc = new ProcessStartInfo(_shellPath)
 				             	{
-				             		Arguments = "autologin " + (Settings.Default.AutoLogin ? "Yes" : "No"),
+				             		Arguments = "autologin " + (_connection.AutoLogin ? "Yes" : "No"),
 				             		WindowStyle = ProcessWindowStyle.Hidden
 				             	};
-				Process serviceProcess = Process.Start(runSvc);
+				var serviceProcess = Process.Start(runSvc);
 
 				while (!serviceProcess.HasExited)
 				{
@@ -965,10 +934,10 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				var runSvc = new ProcessStartInfo(_shellPath)
 				             	{
-				             		Arguments = "browser " + (Settings.Default.AlwaysIE ? "Yes" : "No"),
+				             		Arguments = "browser " + (_connection.AlwaysUseInternetExplorer ? "Yes" : "No"),
 				             		WindowStyle = ProcessWindowStyle.Hidden
 				             	};
-				Process serviceProcess = Process.Start(runSvc);
+				var serviceProcess = Process.Start(runSvc);
 
 				while (!serviceProcess.HasExited)
 				{
@@ -985,38 +954,21 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void disableCalendarToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
-			Settings.Default.DisableCalendar = disableCalendarToolStripMenuItem.Checked;
-			Settings.Default.Save();
+			_connection.DisableCalendar = disableCalendarToolStripMenuItem.Checked;
+			_scenario.Save();
+
 			AddLogEntry(
-				OWAtray.Calendar_notifications_switched + " " + (Settings.Default.DisableCalendar ? OWAtray.OFF : OWAtray.ON));
+				OWAtray.Calendar_notifications_switched + " " + (_connection.DisableCalendar ? OWAtray.OFF : OWAtray.ON));
 		}
 
-		private void exchange2007ToolStripMenuItem_SelectedIndexChanged(object sender, EventArgs e)
+		private void exchangeToolStripMenuItem_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
-			switch (exchange2007ToolStripMenuItem.SelectedIndex)
-			{
-				case 0:
-					Settings.Default.ExchangeVersion = "Autodetect";
-					break;
-
-				case 1:
-					Settings.Default.ExchangeVersion = "Exchange2007_SP1";
-					break;
-
-				case 2:
-					Settings.Default.ExchangeVersion = "Exchange2010";
-					break;
-
-				case 3:
-					Settings.Default.ExchangeVersion = "Exchange2010_SP1";
-					break;
-			}
-
-			Settings.Default.Save();
+			_connection.ServerVersion = exchangeToolStripMenuItem.Text;
+			_scenario.Save();
 		}
 
 		private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1179,7 +1131,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void growlToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
 			Settings.Default.Growl = growlToolStripMenuItem.Checked;
 			Settings.Default.Save();
@@ -1272,18 +1224,19 @@ namespace DrunkenBakery.OWAtray.GUI
 			ActivateOwa();
 		}
 
-		private void overrideToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+		private void overrideCertificateToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
-			Settings.Default.OverrideCert = overrideToolStripMenuItem.Checked;
-			Settings.Default.Save();
-			AddLogEntry(OWAtray.SSL_Certificate_override + " " + (Settings.Default.OverrideCert ? OWAtray.ON : OWAtray.OFF));
+			_connection.OverrideCertificate = overrideCertificateToolStripMenuItem.Checked;
+			_scenario.Save();
+
+			AddLogEntry(OWAtray.SSL_Certificate_override + " " + (_connection.OverrideCertificate ? OWAtray.ON : OWAtray.OFF));
 		}
 
 		private void playSoundToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
 			Settings.Default.Bell = playSoundToolStripMenuItem.Checked;
 			Settings.Default.Save();
@@ -1450,7 +1403,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void snarlToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
 			Settings.Default.Snarl = snarlToolStripMenuItem.Checked;
 			Settings.Default.Save();
@@ -1473,7 +1426,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			// Initial Check
 			//CheckForNewMail();
-			if (!Settings.Default.DisableCalendar)
+			if (!_connection.DisableCalendar)
 			{
 				//CheckForAppointments();
 			}
@@ -1568,13 +1521,13 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 		}
 
-		private void UpdateUrl()
+		private void UpdateServiceUrl()
 		{
-			if (Settings.Default.Autodiscovery && _reportedEwsUrl.Length > 0)
+			if (_connection.UseAutodiscovery && _reportedEwsUrl.Length > 0)
 			{
 				lblUrl.Text = _reportedEwsUrl;
 			}
-			else if (Settings.Default.OverrideURL && txtURLEdit.Text.Length > 0)
+			else if (_connection.OverrideServiceUrl && txtURLEdit.Text.Length > 0)
 			{
 				lblUrl.Text = txtURLEdit.Text;
 			}
@@ -1592,7 +1545,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			lblEmail.Text = EmailAddress;
 
-			if (!_startingUp)
+			if (!_booting)
 			{
 				ConfigureShell();
 			}
@@ -1600,19 +1553,20 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void loginAutomaticallyToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
-			Settings.Default.AutoLogin = loginAutomaticallyToolStripMenuItem.Checked;
-			Settings.Default.Save();
-			AddLogEntry(OWAtray.Automatic_Login_is_switched + " " + (Settings.Default.AutoLogin ? OWAtray.ON : OWAtray.OFF));
+			_connection.AutoLogin = loginAutomaticallyToolStripMenuItem.Checked;
+			_scenario.Save();
+
+			AddLogEntry(OWAtray.Automatic_Login_is_switched + " " + (_connection.AutoLogin ? OWAtray.ON : OWAtray.OFF));
 
 			ConfigureShell();
 		}
 
 		private void txtDomain_Validated(object sender, EventArgs e)
 		{
-			Settings.Default.Domain = txtDomain.Text;
-			Settings.Default.Save();
+			_connection.AccountDomain = txtDomain.Text;
+			_scenario.Save();
 		}
 
 		private void txtPwd_Validated(object sender, EventArgs e)
@@ -1623,9 +1577,9 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void txtServer_Validated(object sender, EventArgs e)
 		{
-			Settings.Default.Server = txtServer.Text;
-			Settings.Default.Save();
-			UpdateUrl();
+			_connection.EmailServer = txtServer.Text;
+			_scenario.Save();
+			UpdateServiceUrl();
 			UpdateOwaUrl();
 		}
 
@@ -1645,76 +1599,81 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
-			Settings.Default.OverrideValidation = overrideAutodiscoveryValidationToolStripMenuItem.Checked;
-			Settings.Default.Save();
+			_connection.OverrideAutodiscoveryValidation = overrideAutodiscoveryValidationToolStripMenuItem.Checked;
+			_scenario.Save();
+
 			AddLogEntry(
-				OWAtray.Autodiscovery_Validation + " " + (Settings.Default.OverrideValidation ? OWAtray.ON : OWAtray.OFF));
+				OWAtray.Autodiscovery_Validation + " " + (_connection.OverrideAutodiscoveryValidation ? OWAtray.ON : OWAtray.OFF));
 		}
 
 		private void office365LoginOverrideToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
-			Settings.Default.UseOffice365 = office365LoginOverrideToolStripMenuItem.Checked;
-			Settings.Default.Save();
+			_connection.OverrideOffice365Login = office365LoginOverrideToolStripMenuItem.Checked;
+			_scenario.Save();
+
+			AddLogEntry(OWAtray.Office_login_override + " " + (_connection.OverrideOffice365Login ? OWAtray.ON : OWAtray.OFF));
+
 			UpdateOwaUrl();
-			AddLogEntry(OWAtray.Office_login_override + " " + (Settings.Default.UseOffice365 ? OWAtray.ON : OWAtray.OFF));
 		}
 
 		private void txtURLEdit_Validated(object sender, EventArgs e)
 		{
-			Settings.Default.ManualURL = txtURLEdit.Text;
-			Settings.Default.Save();
-			UpdateUrl();
+			_connection.ServiceUrl = txtURLEdit.Text;
+			_scenario.Save();
+			UpdateServiceUrl();
 		}
 
 		private void cbOverrideEWS_CheckedChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
 			txtURLEdit.Enabled = cbOverrideEWS.Checked;
 
-			Settings.Default.OverrideURL = cbOverrideEWS.Checked;
-			Settings.Default.Save();
-			UpdateUrl();
-			AddLogEntry(OWAtray.EWS_URL_override_switched + " " + (Settings.Default.OverrideURL ? OWAtray.ON : OWAtray.OFF));
+			_connection.OverrideServiceUrl = cbOverrideEWS.Checked;
+			_scenario.Save();
+
+			UpdateServiceUrl();
+			AddLogEntry(OWAtray.EWS_URL_override_switched + " " + (_connection.OverrideServiceUrl ? OWAtray.ON : OWAtray.OFF));
 		}
 
 		private void chkAutodiscovery_CheckedChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
-			Settings.Default.Autodiscovery = chkAutodiscovery.Checked;
-			Settings.Default.Save();
+			_connection.UseAutodiscovery = chkAutodiscovery.Checked;
+			_scenario.Save();
 			AddLogEntry(OWAtray.Autodiscovery_is_switched + " " + (chkAutodiscovery.Checked ? OWAtray.ON : OWAtray.OFF));
 
 			// Switch off some options when Autodiscovery is checked
 			SelectAutodiscoveryOptions();
 
 			// Re-evaluate settings
-			UpdateUrl();
+			UpdateServiceUrl();
 			UpdateOwaUrl();
 			UpdateEmail();
 		}
 
 		private void cbOverrideOWA_CheckedChanged(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
 			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
 
-			Settings.Default.OverrideOWAUrl = cbOverrideOWA.Checked;
-			Settings.Default.Save();
+			_connection.OverrideEmailUrl = cbOverrideOWA.Checked;
+			_scenario.Save();
+
 			UpdateOwaUrl();
-			AddLogEntry(OWAtray.OWA_URL_override_switched + " " + (Settings.Default.OverrideOWAUrl ? OWAtray.ON : OWAtray.OFF));
+			AddLogEntry(OWAtray.OWA_URL_override_switched + " " + (_connection.OverrideEmailUrl ? OWAtray.ON : OWAtray.OFF));
 		}
 
 		private void txtOWAEdit_Validated(object sender, EventArgs e)
 		{
-			Settings.Default.ManualOWAUrl = txtOWAEdit.Text;
-			Settings.Default.Save();
+			_connection.EmailUrl = txtOWAEdit.Text;
+			_scenario.Save();
 			UpdateOwaUrl();
 		}
 
@@ -1754,7 +1713,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void useDefaultWebProxyToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (_startingUp) return;
+			if (_booting) return;
 
 			Settings.Default.UseWebProxy = useDefaultWebProxyToolStripMenuItem.Checked;
 			Settings.Default.Save();

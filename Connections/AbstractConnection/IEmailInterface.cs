@@ -17,6 +17,36 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 {
 	public interface IEmailInterface
 	{
+		string ServerVersion { get; set; }
+
+		bool OverrideCertificate { get; set; }
+
+		bool AlwaysUseInternetExplorer { get; set; }
+
+		bool DisableCalendar { get; set; }
+
+		bool AutoLogin { get; set; }
+
+		bool OverrideOffice365Login { get; set; }
+
+		bool OverrideAutodiscoveryValidation { get; set; }
+
+		bool UseAutodiscovery { get; set; }
+
+		bool OnWindowsDomain { get; set; }
+
+		string EmailServer { get; set; }
+
+		string AccountDomain { get; set; }
+
+		bool OverrideServiceUrl { get; set; }
+
+		string ServiceUrl { get; set; }
+
+		bool OverrideEmailUrl { get; set; }
+
+		string EmailUrl { get; set; }
+
 		string Username { get; set; }
 
 		string Password { get; set; }

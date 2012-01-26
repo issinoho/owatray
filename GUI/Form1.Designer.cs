@@ -61,7 +61,7 @@
 			this.snarlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.playSoundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.advancedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.overrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.overrideCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.alwaysOpenOWAInIEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.disableCalendarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loginAutomaticallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,7 +69,7 @@
 			this.office365LoginOverrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.useDefaultWebProxyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exchangeVersionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-			this.exchange2007ToolStripMenuItem = new System.Windows.Forms.ToolStripComboBox();
+			this.exchangeToolStripMenuItem = new System.Windows.Forms.ToolStripComboBox();
 			this.shellIntegrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.makeOWADefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.switchOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -383,7 +383,7 @@
 			// advancedToolStripMenuItem
 			// 
 			this.advancedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.overrideToolStripMenuItem,
+            this.overrideCertificateToolStripMenuItem,
             this.alwaysOpenOWAInIEToolStripMenuItem,
             this.disableCalendarToolStripMenuItem,
             this.loginAutomaticallyToolStripMenuItem,
@@ -395,14 +395,14 @@
 			this.advancedToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
 			this.advancedToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.OWAtray.Expert;
 			// 
-			// overrideToolStripMenuItem
+			// overrideCertificateToolStripMenuItem
 			// 
-			this.overrideToolStripMenuItem.CheckOnClick = true;
-			this.overrideToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideToolStripMenuItem.Image")));
-			this.overrideToolStripMenuItem.Name = "overrideToolStripMenuItem";
-			this.overrideToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-			this.overrideToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.OWAtray.Override_Certificate;
-			this.overrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideToolStripMenuItem_CheckStateChanged);
+			this.overrideCertificateToolStripMenuItem.CheckOnClick = true;
+			this.overrideCertificateToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("overrideCertificateToolStripMenuItem.Image")));
+			this.overrideCertificateToolStripMenuItem.Name = "overrideToolStripMenuItem";
+			this.overrideCertificateToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+			this.overrideCertificateToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.OWAtray.Override_Certificate;
+			this.overrideCertificateToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideCertificateToolStripMenuItem_CheckStateChanged);
 			// 
 			// alwaysOpenOWAInIEToolStripMenuItem
 			// 
@@ -461,23 +461,23 @@
 			// exchangeVersionToolStripMenuItem1
 			// 
 			this.exchangeVersionToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exchange2007ToolStripMenuItem});
+            this.exchangeToolStripMenuItem});
 			this.exchangeVersionToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("exchangeVersionToolStripMenuItem1.Image")));
 			this.exchangeVersionToolStripMenuItem1.Name = "exchangeVersionToolStripMenuItem1";
 			this.exchangeVersionToolStripMenuItem1.Size = new System.Drawing.Size(127, 20);
 			this.exchangeVersionToolStripMenuItem1.Text = global::DrunkenBakery.OWAtray.GUI.OWAtray.Exchange_Version;
 			// 
-			// exchange2007ToolStripMenuItem
+			// exchangeToolStripMenuItem
 			// 
-			this.exchange2007ToolStripMenuItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.exchange2007ToolStripMenuItem.Items.AddRange(new object[] {
-            global::DrunkenBakery.OWAtray.GUI.OWAtray.Autodetect,
-            "Exchange 2007 SP1",
+			this.exchangeToolStripMenuItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.exchangeToolStripMenuItem.Items.AddRange(new object[] {
+            "Autodetect",
+            "Exchange 2007_SP1",
             "Exchange 2010",
-            "Exchange 2010 SP1"});
-			this.exchange2007ToolStripMenuItem.Name = "exchange2007ToolStripMenuItem";
-			this.exchange2007ToolStripMenuItem.Size = new System.Drawing.Size(152, 23);
-			this.exchange2007ToolStripMenuItem.SelectedIndexChanged += new System.EventHandler(this.exchange2007ToolStripMenuItem_SelectedIndexChanged);
+            "Exchange 2010_SP1"});
+			this.exchangeToolStripMenuItem.Name = "exchange2007ToolStripMenuItem";
+			this.exchangeToolStripMenuItem.Size = new System.Drawing.Size(152, 23);
+			this.exchangeToolStripMenuItem.SelectedIndexChanged += new System.EventHandler(this.exchangeToolStripMenuItem_SelectedIndexChanged);
 			// 
 			// shellIntegrationToolStripMenuItem
 			// 
@@ -1130,7 +1130,7 @@
 		private System.Windows.Forms.ToolStripMenuItem playSoundToolStripMenuItem;
 		private System.Windows.Forms.Timer timerLogging;
 		private System.Windows.Forms.ToolStripMenuItem advancedToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem overrideToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem overrideCertificateToolStripMenuItem;
 		private System.Windows.Forms.TextBox txtURLEdit;
 		private System.Windows.Forms.ToolStripMenuItem changeLogToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem alwaysOpenOWAInIEToolStripMenuItem;
@@ -1141,7 +1141,7 @@
 		private System.Windows.Forms.ToolStripSeparator blankToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripSeparator blankToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem exchangeVersionToolStripMenuItem1;
-		private System.Windows.Forms.ToolStripComboBox exchange2007ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripComboBox exchangeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator dividerToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem shellIntegrationToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem makeOWADefaultToolStripMenuItem;

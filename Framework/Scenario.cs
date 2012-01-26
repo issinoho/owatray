@@ -21,15 +21,30 @@ namespace DrunkenBakery.OWAtray.Framework
 {
 	public class Scenario
 	{
+		private const string GroupConnections = "Connections";
+		private const string NodeConnection = "Connection";
+		private const string RootElement = "Scenario";
+		private const string SearchConnection = "//Connection";
+		private const string ElementEmailServer = "EmailServer";
+		private const string ElementAccountDomain = "AccountDomain";
+		private const string ElementOverrideServiceUrl = "OverrideServiceUrl";
+		private const string ElementServiceUrl = "ServiceUrl";
+		private const string ElementOverrideEmailUrl = "OverrideEmailUrl";
+		private const string ElementEmailUrl = "EmailUrl";
 		private const string ElementEmailAddress = "EmailAddress";
 		private const string ElementInterval = "Interval";
 		private const string ElementPassword = "EncryptedPassword";
 		private const string ElementType = "Type";
 		private const string ElementUsername = "Username";
-		private const string GroupConnections = "Connections";
-		private const string NodeConnection = "Connection";
-		private const string RootElement = "Scenario";
-		private const string SearchConnection = "//Connection";
+		private const string ElementUseAutodiscovery = "UseAutodiscovery";
+		private const string ElementOnWindowsDomain = "OnWindowsDomain";
+		private const string ElementOverrideCertificate = "OverrideCertificate";
+		private const string ElementAlwaysUseInternetExplorer = "AlwaysUseInternetExplorer";
+		private const string ElementDisableCalendar = "DisableCalendar";
+		private const string ElementAutoLogin = "AutoLogin";
+		private const string ElementOverrideOffice365Login = "OverrideOffice365Login";
+		private const string ElementOverrideAutodiscoveryValidation = "OverrideAutodiscoveryValidation";
+		private const string ElementServerVersion = "ServerVersion";
 
 		public string ScenarioFile { get; set; }
 
@@ -57,6 +72,21 @@ namespace DrunkenBakery.OWAtray.Framework
 					writer.WriteElementString(ElementUsername, item.Username);
 					writer.WriteElementString(ElementPassword, item.EncryptedPassword);
 					writer.WriteElementString(ElementInterval, item.Interval.ToString(CultureInfo.InvariantCulture));
+					writer.WriteElementString(ElementEmailServer, item.EmailServer);
+					writer.WriteElementString(ElementAccountDomain, item.AccountDomain);
+					writer.WriteElementString(ElementOverrideServiceUrl, item.OverrideServiceUrl ? "1" : "0");
+					writer.WriteElementString(ElementServiceUrl, item.ServiceUrl);
+					writer.WriteElementString(ElementOverrideEmailUrl, item.OverrideEmailUrl ? "1": "0");
+					writer.WriteElementString(ElementEmailUrl, item.EmailUrl);
+					writer.WriteElementString(ElementUseAutodiscovery, item.UseAutodiscovery ? "1" : "0");
+					writer.WriteElementString(ElementOnWindowsDomain, item.OnWindowsDomain ? "1" : "0");
+					writer.WriteElementString(ElementOverrideCertificate, item.OverrideCertificate ? "1" : "0");
+					writer.WriteElementString(ElementAlwaysUseInternetExplorer, item.AlwaysUseInternetExplorer ? "1" : "0");
+					writer.WriteElementString(ElementDisableCalendar, item.DisableCalendar ? "1" : "0");
+					writer.WriteElementString(ElementAutoLogin, item.AutoLogin ? "1" : "0");
+					writer.WriteElementString(ElementOverrideOffice365Login, item.OverrideOffice365Login ? "1" : "0");
+					writer.WriteElementString(ElementOverrideAutodiscoveryValidation, item.OverrideAutodiscoveryValidation ? "1" : "0");
+					writer.WriteElementString(ElementServerVersion, item.ServerVersion);
 					writer.WriteEndElement();
 				}
 				writer.WriteEndElement();
@@ -91,6 +121,21 @@ namespace DrunkenBakery.OWAtray.Framework
 					item.EncryptedPassword = node[ElementPassword].InnerText;
 					item.Username = node[ElementUsername].InnerText;
 					item.Interval = Convert.ToInt32(node[ElementInterval].InnerText);
+					item.EmailServer = node[ElementEmailServer].InnerText;
+					item.AccountDomain = node[ElementAccountDomain].InnerText;
+					item.OverrideServiceUrl = node[ElementOverrideServiceUrl].InnerText == "0" ? false : true;
+					item.ServiceUrl = node[ElementServiceUrl].InnerText;
+					item.OverrideEmailUrl = node[ElementOverrideEmailUrl].InnerText == "0" ? false : true;
+					item.EmailUrl = node[ElementEmailUrl].InnerText;
+					item.UseAutodiscovery = node[ElementUseAutodiscovery].InnerText == "0" ? false : true;
+					item.OnWindowsDomain = node[ElementOnWindowsDomain].InnerText == "0" ? false : true;
+					item.OverrideCertificate = node[ElementOverrideCertificate].InnerText == "0" ? false : true;
+					item.AlwaysUseInternetExplorer = node[ElementAlwaysUseInternetExplorer].InnerText == "0" ? false : true;
+					item.DisableCalendar = node[ElementDisableCalendar].InnerText == "0" ? false : true;
+					item.AutoLogin = node[ElementAutoLogin].InnerText == "0" ? false : true;
+					item.OverrideOffice365Login = node[ElementOverrideOffice365Login].InnerText == "0" ? false : true;
+					item.OverrideAutodiscoveryValidation = node[ElementOverrideAutodiscoveryValidation].InnerText == "0" ? false : true;
+					item.ServerVersion = node[ElementServerVersion].InnerText;
 					Connections.Add(item);
 				}
 		}

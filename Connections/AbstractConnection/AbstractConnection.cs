@@ -27,9 +27,54 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 			Type = EmailType.Exchange;
 			ConnectedState = ConnectionState.Disconnected;
 			Interval = 5;
+			EmailServer = "";
+			AccountDomain = "";
+			OverrideServiceUrl = false;
+			ServiceUrl = "";
+			OverrideEmailUrl = false;
+			EmailUrl = "";
+			UseAutodiscovery = true;
+			OnWindowsDomain = false;
+			OverrideCertificate = false;
+			AlwaysUseInternetExplorer = true;
+			DisableCalendar = false;
+			AutoLogin = false;
+			OverrideOffice365Login = false;
+			OverrideAutodiscoveryValidation = true;
+			ServerVersion = "Autodiscover";
 		}
 
 		#region IEmailInterface Members
+
+		public string ServerVersion { get; set; }
+
+		public bool OverrideCertificate { get; set; }
+
+		public bool AlwaysUseInternetExplorer { get; set; }
+
+		public bool DisableCalendar { get; set; }
+
+		public bool AutoLogin { get; set; }
+
+		public bool OverrideOffice365Login { get; set; }
+
+		public bool OverrideAutodiscoveryValidation { get; set; }
+
+		public bool UseAutodiscovery { get; set; }
+
+		public bool OnWindowsDomain { get; set; }
+
+		public string EmailServer { get; set; }
+
+		public string AccountDomain { get; set; }
+
+		public bool OverrideServiceUrl { get; set; }
+
+		public string ServiceUrl { get; set; }
+
+		public bool OverrideEmailUrl { get; set; }
+
+		public string EmailUrl { get; set; }
 
 		public int Interval { get; set; }
 
