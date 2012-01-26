@@ -111,12 +111,8 @@ namespace DrunkenBakery.OWAtray.GUI
 					break;
 			}
 
-			txtEmail.Text = Settings.Default.EMail;
 			txtServer.Text = Settings.Default.Server;
-			txtUser.Text = Settings.Default.Username;
-			txtPwd.Text = Settings.Default.Password.Decrypt();
 			txtDomain.Text = Settings.Default.Domain;
-			txtInterval.Text = Settings.Default.UpdateInterval.ToString(CultureInfo.InvariantCulture);
 			txtURLEdit.Text = Settings.Default.ManualURL;
 			txtOWAEdit.Text = Settings.Default.ManualOWAUrl;
 
@@ -211,7 +207,31 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void BootScenario()
 		{
+			// Create our whole universe
 			_scenario = ScenarioFactory.CreateScenario(Settings.Default.ScenarioFile);
+
+			// TODO: Special case for single connection use only
+			if (_scenario.Connections.Count == 0)
+			{
+				// Create the new entry
+				_connection = ConnectionFactory.CreateConnection(EmailType.Exchange);
+				_connection.EmailAddress = txtEmail.Text;
+				_connection.Password = txtPwd.Text;
+				_connection.Username = txtUser.Text;
+				if (txtInterval.Text != string.Empty) _connection.Interval = Convert.ToInt32(txtInterval.Text);
+				_scenario.Connections.Add(_connection);
+				_scenario.Save();
+			}
+			else
+			{
+				_connection = _scenario.Connections[0];
+				txtEmail.Text = _connection.EmailAddress;
+				txtUser.Text = _connection.Username;
+				txtPwd.Text = _connection.Password;
+				txtInterval.Text = _connection.Interval.ToString(CultureInfo.InvariantCulture);
+			}
+
+			// Set up event handling
 			WireUpConnectionEvents();
 		}
 
@@ -219,13 +239,13 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			get
 			{
-				var userAccount = (txtEmail.Text.Length > 0) ? txtEmail.Text : txtUser.Text;
-				if (userAccount.Length > 0 && !userAccount.Contains("@"))
+				var email = (txtEmail.Text.Length > 0) ? txtEmail.Text : txtUser.Text;
+				if (email.Length > 0 && !email.Contains("@"))
 				{
-					userAccount = userAccount + "@" + GetSubDomain(txtServer.Text);
+					email = email + "@" + GetSubDomain(txtServer.Text);
 				}
 
-				return userAccount;
+				return email;
 			}
 		}
 
@@ -591,22 +611,6 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void ConnectToExchange()
 		{
-			// Remove any existing entry
-			if (_connection != null)
-			{
-				_connection.Disconnect();
-				_scenario.Connections.Remove(_connection);
-			}
-
-			// Create the new entry
-			_connection = ConnectionFactory.CreateConnection(EmailType.Exchange);
-			_connection.EmailAddress = txtEmail.Text;
-			_connection.Password = txtPwd.Text;
-			_connection.Username = txtUser.Text;
-			_scenario.Connections.Add(_connection);
-			WireUpConnectionEvents();				
-
-			// Go!
 			_connection.ConnectA();
 		}
 
@@ -1532,8 +1536,8 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void txtInterval_Validated(object sender, EventArgs e)
 		{
-			Settings.Default.UpdateInterval = Convert.ToInt32(txtInterval.Text);
-			Settings.Default.Save();
+			_connection.Interval = Convert.ToInt32(txtInterval.Text);
+			_scenario.Save();
 		}
 
 		private void txtInterval_Validating(object sender, CancelEventArgs e)
@@ -1613,8 +1617,8 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void txtPwd_Validated(object sender, EventArgs e)
 		{
-			Settings.Default.Password = (txtPwd.Text.Length > 0 ? txtPwd.Text.Encrypt() : "");
-			Settings.Default.Save();
+			_connection.Password = txtPwd.Text;
+			_scenario.Save();
 		}
 
 		private void txtServer_Validated(object sender, EventArgs e)
@@ -1627,15 +1631,15 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void txtUser_Validated(object sender, EventArgs e)
 		{
-			Settings.Default.Username = txtUser.Text;
-			Settings.Default.Save();
+			_connection.Username = txtUser.Text;
+			_scenario.Save();
 			UpdateEmail();
 		}
 
 		private void txtEmail_Validated(object sender, EventArgs e)
 		{
-			Settings.Default.EMail = txtEmail.Text;
-			Settings.Default.Save();
+			_connection.EmailAddress = txtEmail.Text;
+			_scenario.Save();
 			UpdateEmail();
 		}
 

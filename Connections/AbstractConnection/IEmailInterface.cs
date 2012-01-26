@@ -27,6 +27,8 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		string Version { get; }
 
+		int Interval { get; set; }
+
 		bool IsConnected { get; }
 
 		bool IsLogEventDefined { get; }

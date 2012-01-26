@@ -11,6 +11,7 @@
 //------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Xml;
 using DrunkenBakery.OWAtray.Connections.Abstract;
@@ -21,6 +22,7 @@ namespace DrunkenBakery.OWAtray.Framework
 	public class Scenario
 	{
 		private const string ElementEmailAddress = "EmailAddress";
+		private const string ElementInterval = "Interval";
 		private const string ElementPassword = "EncryptedPassword";
 		private const string ElementType = "Type";
 		private const string ElementUsername = "Username";
@@ -54,6 +56,7 @@ namespace DrunkenBakery.OWAtray.Framework
 					writer.WriteElementString(ElementEmailAddress, item.EmailAddress);
 					writer.WriteElementString(ElementUsername, item.Username);
 					writer.WriteElementString(ElementPassword, item.EncryptedPassword);
+					writer.WriteElementString(ElementInterval, item.Interval.ToString(CultureInfo.InvariantCulture));
 					writer.WriteEndElement();
 				}
 				writer.WriteEndElement();
@@ -87,6 +90,7 @@ namespace DrunkenBakery.OWAtray.Framework
 					item.EmailAddress = node[ElementEmailAddress].InnerText;
 					item.EncryptedPassword = node[ElementPassword].InnerText;
 					item.Username = node[ElementUsername].InnerText;
+					item.Interval = Convert.ToInt32(node[ElementInterval].InnerText);
 					Connections.Add(item);
 				}
 		}

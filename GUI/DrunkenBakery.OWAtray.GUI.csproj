@@ -54,9 +54,6 @@
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -251,10 +248,6 @@
     <ProjectReference Include="..\Connections\AbstractConnection\DrunkenBakery.OWAtray.Connections.Abstract.csproj">
       <Project>{94D3AD21-4245-4700-8376-89D0705F28BC}</Project>
       <Name>DrunkenBakery.OWAtray.Connections.Abstract</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Connections\EWS\DrunkenBakery.OWAtray.Connections.EWS.csproj">
-      <Project>{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}</Project>
-      <Name>DrunkenBakery.OWAtray.Connections.EWS</Name>
     </ProjectReference>
     <ProjectReference Include="..\Connections\Proxy\DrunkenBakery.OWAtray.Connections.Proxy.csproj">
       <Project>{573E4922-2D13-4499-8EA9-7ED37DF363FE}</Project>

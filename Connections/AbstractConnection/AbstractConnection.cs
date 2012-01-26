@@ -26,9 +26,12 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 			EmailAddress = string.Empty;
 			Type = EmailType.Exchange;
 			ConnectedState = ConnectionState.Disconnected;
+			Interval = 5;
 		}
 
 		#region IEmailInterface Members
+
+		public int Interval { get; set; }
 
 		public string Username { get; set; }
 

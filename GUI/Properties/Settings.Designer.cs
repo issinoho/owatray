@@ -37,18 +37,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int UpdateInterval {
-            get {
-                return ((int)(this["UpdateInterval"]));
-            }
-            set {
-                this["UpdateInterval"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string Domain {
             get {

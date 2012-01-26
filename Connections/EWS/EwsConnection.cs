@@ -23,8 +23,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 {
 	public class EwsConnection : AbstractConnection
 	{
-		// Public inherited properties
-		private readonly Timer _backgroundPoll = new Timer {Interval = 5000};
+		private readonly Timer _backgroundPoll = new Timer();
 		private readonly object _locker = new object();
 		private ExchangeService _service;
 		private DateTime _timeLastChecked;
@@ -97,6 +96,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				}
 
 				// Timer
+				_backgroundPoll.Interval = (Interval * 1000);
 				_backgroundPoll.Elapsed += backgroundPoll_Elapsed;
 				_backgroundPoll.Start();
 			}
