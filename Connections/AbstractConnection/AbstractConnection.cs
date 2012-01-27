@@ -124,6 +124,8 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		public virtual EmailType Type { get; set; }
 
+		public virtual int UnreadCount { get; set; }
+
 		public virtual string Version { get; set; }
 
 		public virtual ConnectionState ConnectedState { get; set; }
@@ -156,8 +158,9 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 		public abstract void SendA(string subject, string recipient);
 
 		// Events
+		public event Action<int> MessageCount;
 		public event Action<string, Severity> LogMessage;
-		public event Action<DateTime, string, string> NewMail;
+		public event Action<string, DateTime, string, string> NewMail;
 
 		public virtual event Action<IEmailInterface, ConnectionState> ConnectedStateChange
 		{
@@ -166,6 +169,11 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 		}
 
 		#endregion
+
+		public virtual void RaiseMessageCount(int count)
+		{
+			if (MessageCount != null) MessageCount(count);
+		}
 
 		public virtual void RaiseLogMessage(string message)
 		{
@@ -179,7 +187,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		public virtual void RaiseNewMail(DateTime arrivalTime, string subject, string sender)
 		{
-			if (NewMail != null) NewMail(arrivalTime, subject, sender);
+			if (NewMail != null) NewMail(EmailAddress, arrivalTime, subject, sender);
 		}
 	}
 }

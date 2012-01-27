@@ -77,6 +77,8 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		EmailType Type { get; }
 
+		int UnreadCount { get; }
+
 		ConnectionState ConnectedState { get; }
 
 		void Connect();
@@ -96,8 +98,9 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 		void SendA(string subject, string recipient);
 
 		// Events
+		event Action<int> MessageCount;
 		event Action<string, Severity> LogMessage;
-		event Action<DateTime, string, string> NewMail;
+		event Action<string, DateTime, string, string> NewMail;
 		event Action<IEmailInterface, ConnectionState> ConnectedStateChange;
 	}
 }

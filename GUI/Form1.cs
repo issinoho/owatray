@@ -45,6 +45,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		private string _emailIcon;
 		private string _graphicPath;
 		private string _shellPath;
+		private string _audioPath;
 		private bool _booting;
 		private Form _frmAbout;
 		private Form _frmChangeLog;
@@ -56,11 +57,9 @@ namespace DrunkenBakery.OWAtray.GUI
 		private string _lastPopTitle = "";
 		private string _lastPopUrl = "";
 		private string _popUrl = "";
-		private bool _resetFlag = false;
-
-		// New variables
 		private Scenario _scenario;
 		private IEmailInterface _connection;
+		private bool firstRun = true;
 
 		public Form1()
 		{
@@ -92,6 +91,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			// Boot the various subsystems
 			BootEnvironment();
 			BootShell();
+			BootAudio();
 			BootScenario();
 			BootIcons();
 			BootHelpers();
@@ -99,7 +99,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			// Connect if autostart is good to go
 			if (Settings.Default.Autostart)
 			{
-				//WindowState = FormWindowState.Minimized;
+				WindowState = FormWindowState.Minimized;
 				ConnectToExchange();
 			}
 
@@ -119,8 +119,15 @@ namespace DrunkenBakery.OWAtray.GUI
 									  Settings.Default.ShellIntegration);			
 		}
 
+		private void BootAudio()
+		{
+			_audioPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+											  Settings.Default.SoundFile);
+		}
+
 		private void BootIcons()
 		{
+
 			_graphicPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
 										Settings.Default.EmailGraphic);
 			_emailIcon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.EmailIcon);
@@ -297,6 +304,7 @@ namespace DrunkenBakery.OWAtray.GUI
 							// Configure Shell
 							ShellExchangeVersion();
 
+							// Log message
 							AddLogEntry(
 								string.Format("[{0}] - Connected to {1}", connection.EmailAddress,
 												connection.Version), Severity.Success);
@@ -311,7 +319,25 @@ namespace DrunkenBakery.OWAtray.GUI
 				};
 
 				// New mail event
-				item.NewMail += (arrivalTime, subject, sender) => AddLogEntry(string.Format("New mail from {0} - {1}", sender, subject));
+				item.NewMail += (email, arrivalTime, subject, sender) => Invoke(new Action(() =>
+				            {
+				                PopToast(OWAtray.New_Mail_from + " " + sender, subject);
+				            }));
+
+				// Mail count event
+				item.MessageCount += count => Invoke(new Action(() =>
+				            {
+								notifyIcon1.Text = NotificationText(count);
+								notifyIcon1.Icon = new Icon((count > 0 ? _alertIcon : _emailIcon));
+
+								// Special case - pop message at the start if there is any unread email
+				            	if (!firstRun) return;
+				            	if (count <= 0) return;
+				            	firstRun = false;
+				            	PopToast(OWAtray.New_Mail,
+				            	         string.Format("{0} {1} {2}{3}{4}", OWAtray.You_have, count, OWAtray.unread_email,
+				            	                       (count != 1 ? "s " : " "), OWAtray.in_your_inbox));
+				            }));
 			}
 		}
 
@@ -810,6 +836,17 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 		}
 
+		private string NotificationText(int myCount)
+		{
+			const int maxTipLength = 63;
+			var text1 = string.Format("{0}{1}{1}{2} {3}{4}", AssemblyHelpers.AssemblyTitle, Environment.NewLine, myCount, OWAtray.unread_email, (myCount != 1 ? "s " : " "));
+			var charsLeft = maxTipLength - text1.Length;
+			var domainText = string.Format("{0}\\{1}", _connection.DiscoveredEmailServer, _connection.DiscoveredUsername);
+			if (domainText.Length > charsLeft) domainText = domainText.Substring(0, charsLeft);
+			var finalText = string.Format("{0}{1}{2}{1}{3} {4}{5}", AssemblyHelpers.AssemblyTitle, Environment.NewLine, domainText, myCount, OWAtray.unread_email, (myCount != 1 ? "s " : " "));
+			return finalText;
+		}
+
 		//private int CheckForNewMail()
 		//{
 		//    int myCount;
@@ -833,9 +870,9 @@ namespace DrunkenBakery.OWAtray.GUI
 		//        {
 		//            if (_firstRun)
 		//            {
-		//                PopToast(OWAtray.New_Mail,
-		//                         OWAtray.You_have + " " + myCount + " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ") +
-		//                         OWAtray.in_your_inbox);
+						//PopToast(OWAtray.New_Mail,
+						//         OWAtray.You_have + " " + myCount + " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ") +
+						//         OWAtray.in_your_inbox);
 		//            }
 		//            else
 		//            {
@@ -1022,8 +1059,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			// Audible
 			if (Settings.Default.Bell)
 			{
-				AudioHelper.Play(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-				                              Settings.Default.SoundFile));
+				AudioHelper.Play(_audioPath);
 			}
 		}
 
@@ -1129,7 +1165,6 @@ namespace DrunkenBakery.OWAtray.GUI
 		private void resetTrayIconToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			notifyIcon1.Icon = new Icon(_emailIcon);
-			_resetFlag = true;
 		}
 
 		private void restoreToolStripMenuItem_Click(object sender, EventArgs e)

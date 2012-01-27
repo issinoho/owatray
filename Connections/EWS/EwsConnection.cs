@@ -31,6 +31,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 		private readonly object _locker = new object();
 		private ExchangeService _service;
 		private DateTime _timeLastChecked;
+		private int mailCount;
 
 		public override string Version
 		{
@@ -42,7 +43,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			get { return EmailType.Exchange; }
 		}
 
-		private int UnreadCount
+		public override int UnreadCount
 		{
 			get
 			{
@@ -203,7 +204,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				var count = UnreadCount;
 				if (count > 0)
 				{
-					RaiseLogMessage(string.Format("You have {0} unread messages in your Inbox", count));
+					RaiseLogMessage(string.Format("You have {0} unread {1} in your Inbox", count, count == 1 ? "message" : "messages"));
 				}
 
 				// Timer
@@ -334,26 +335,19 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			           	{PropertySet = new PropertySet(BasePropertySet.IdOnly) {ItemSchema.DateTimeReceived}};
 			view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
 
-			try
-			{
-				// Now search
-				var findResults = _service.FindItems(WellKnownFolderName.Inbox, filters, view);
+			// Now search
+			var findResults = _service.FindItems(WellKnownFolderName.Inbox, filters, view);
 
-				// Process each item.
-				foreach (var myItem in findResults.Items)
-				{
-					var myEmail = myItem as EmailMessage;
-					if (myEmail == null) continue;
-
-					var ps = new PropertySet(BasePropertySet.FirstClassProperties);
-					myEmail.Load(ps);
-					myTime = myEmail.DateTimeReceived;
-					break;
-				}
-			}
-			catch (Exception ex)
+			// Process each item.
+			foreach (var myItem in findResults.Items)
 			{
-				RaiseLogMessage(ex.Message, Severity.Fail);
+				var myEmail = myItem as EmailMessage;
+				if (myEmail == null) continue;
+
+				var ps = new PropertySet(BasePropertySet.FirstClassProperties);
+				myEmail.Load(ps);
+				myTime = myEmail.DateTimeReceived;
+				break;
 			}
 
 			return myTime;
@@ -365,6 +359,14 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			{
 				// Belt & braces
 				if (!IsConnected) return;
+
+				// Quick mail count check
+				var count = UnreadCount;
+				if (count != mailCount)
+				{
+					mailCount = count;
+					RaiseMessageCount(count);
+				}
 
 				// Set the offset for the paged search.
 				var offset = 0;
@@ -443,6 +445,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			catch (Exception ex)
 			{
 				RaiseLogMessage(ex.Message, Severity.Fail);
+				ChangeState(ConnectionState.Failed);
+				Disconnect();
 			}
 		}
 

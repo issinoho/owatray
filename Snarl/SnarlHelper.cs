@@ -9,8 +9,6 @@ using Snarl;
 namespace DrunkenBakery.OWAtray.Snarl
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Text;
 
 	/// <summary>
 	/// TODO: Update summary.

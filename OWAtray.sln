@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DE5E6E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.GUI", "GUI\DrunkenBakery.OWAtray.GUI.csproj", "{F207AB90-D419-44C1-8232-6E8BAD175BB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Snarl", "Snarl\DrunkenBakery.OWAtray.Snarl.csproj", "{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Growl", "Growl\DrunkenBakery.OWAtray.Growl.csproj", "{432ABDDF-CA91-49F8-A12E-BDD660F6BF71}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Logging", "Logging\DrunkenBakery.OWAtray.Logging.csproj", "{0EC3CCE1-E95E-45A9-9386-AD4E7A6C09C2}"
@@ -25,6 +23,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Connections.EWS", "Connections\EWS\DrunkenBakery.OWAtray.Connections.EWS.csproj", "{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Framework", "Framework\DrunkenBakery.OWAtray.Framework.csproj", "{48C4C1F1-1A70-447D-AC52-FB77751FD5E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Snarl", "Snarl\DrunkenBakery.OWAtray.Snarl.csproj", "{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,12 +40,6 @@ Global
 		{F207AB90-D419-44C1-8232-6E8BAD175BB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F207AB90-D419-44C1-8232-6E8BAD175BB5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F207AB90-D419-44C1-8232-6E8BAD175BB5}.Release|x86.ActiveCfg = Release|Any CPU
-		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Release|x86.ActiveCfg = Release|Any CPU
 		{432ABDDF-CA91-49F8-A12E-BDD660F6BF71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{432ABDDF-CA91-49F8-A12E-BDD660F6BF71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{432ABDDF-CA91-49F8-A12E-BDD660F6BF71}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -88,6 +82,12 @@ Global
 		{48C4C1F1-1A70-447D-AC52-FB77751FD5E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48C4C1F1-1A70-447D-AC52-FB77751FD5E9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{48C4C1F1-1A70-447D-AC52-FB77751FD5E9}.Release|x86.ActiveCfg = Release|Any CPU
+		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
