@@ -41,12 +41,13 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 			AutoLogin = false;
 			OverrideOffice365Login = false;
 			OverrideAutodiscoveryValidation = true;
-			ServerVersion = "Autodiscover";
+			ServerVersion = "Autodetect";
 			DiscoveredEmailServer = "";
 			DiscoveredEmailUrl = "";
 			DiscoveredServiceUrl = "";
 			DiscoveredUsername = "";
 			DerivedServiceUrl = "";
+			DerivedEmailUrl = "";
 		}
 
 		#region IEmailInterface Members
@@ -88,6 +89,8 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 		public string EmailUrl { get; set; }
 
 		public string DiscoveredEmailUrl { get; set; }
+
+		public string DerivedEmailUrl { get; set; }
 
 		public int Interval { get; set; }
 

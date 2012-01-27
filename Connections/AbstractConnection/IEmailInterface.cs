@@ -55,6 +55,8 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		string DiscoveredEmailUrl { get; set; }
 
+		string DerivedEmailUrl { get; set; }
+
 		string Username { get; set; }
 
 		string DiscoveredUsername { get; set; }

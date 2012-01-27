@@ -151,7 +151,7 @@ namespace DrunkenBakery.OWAtray.GUI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Autodiscovered EWS Url:.
+        ///   Looks up a localized string similar to Discovered EWS Url:.
         /// </summary>
         internal static string Autodiscovered_EWS_Url {
             get {
@@ -160,7 +160,7 @@ namespace DrunkenBakery.OWAtray.GUI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Autodiscovered Mailbox Server:.
+        ///   Looks up a localized string similar to Discovered Mailbox Server:.
         /// </summary>
         internal static string Autodiscovered_Mailbox_Server {
             get {
@@ -169,7 +169,7 @@ namespace DrunkenBakery.OWAtray.GUI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Autodiscovered OWA Url:.
+        ///   Looks up a localized string similar to Discovered OWA Url:.
         /// </summary>
         internal static string Autodiscovered_OWA_Url {
             get {
@@ -178,7 +178,7 @@ namespace DrunkenBakery.OWAtray.GUI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Autodiscovered User Name:.
+        ///   Looks up a localized string similar to Discovered User Name:.
         /// </summary>
         internal static string Autodiscovered_User_Name {
             get {

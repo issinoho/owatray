@@ -53,7 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DrunkenBakery.snk" />
-    <None Include="Log4Net.config" />
+    <None Include="Log4Net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

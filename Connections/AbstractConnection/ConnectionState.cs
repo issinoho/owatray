@@ -17,6 +17,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 		Disconnected,
 		Connecting,
 		Connected,
-		Disconnecting
+		Disconnecting,
+		Failed
 	}
 }

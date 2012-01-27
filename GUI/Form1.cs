@@ -45,7 +45,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		private string _emailIcon;
 		private string _graphicPath;
 		private string _shellPath;
-		private readonly bool _booting;
+		private bool _booting;
 		private Form _frmAbout;
 		private Form _frmChangeLog;
 		private Form _frmContact;
@@ -66,32 +66,45 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			InitializeComponent();
 
-			// Interlock for booting up
-			_booting = true;
-
 			// Set up look & feel
 			WindowDressing();
 
 			// Start Logging
 			Logger.Execute();
-			timerLogging.Enabled = true;
 
 			// Welcome message
 			AddLogEntry(string.Format("{0} {1} v{2}", OWAtray.Welcome_to_the, AssemblyHelpers.AssemblyTitle,
 			                          AssemblyHelpers.UpgradeSettings()));
 
+			// The rest gets kicked off an a timer
+			AddLogEntry("Ready.");
+			timer1.Start();
+		}
+
+		private void timer1_Tick(object sender, EventArgs e)
+		{
+			timer1.Enabled = false;
+			timerLogging.Enabled = true;
+
+			// Interlock for booting up
+			_booting = true;
+
 			// Boot the various subsystems
 			BootEnvironment();
+			BootShell();
 			BootScenario();
 			BootIcons();
-			BootShell();
 			BootHelpers();
+
+			// Connect if autostart is good to go
+			if (Settings.Default.Autostart)
+			{
+				//WindowState = FormWindowState.Minimized;
+				ConnectToExchange();
+			}
 
 			// Release boot interlock
 			_booting = false;
-
-			// Start Timer to kick off match
-			timer1.Start();
 		}
 
 		private void BootHelpers()
@@ -154,35 +167,38 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				// Retrieve all the settings
 				_connection = _scenario.Connections[0];
-				txtEmail.Text = _connection.EmailAddress;
-				txtUser.Text = _connection.Username;
-				txtPwd.Text = _connection.Password;
-				txtServer.Text = _connection.EmailServer;
-				txtDomain.Text = _connection.AccountDomain;
-				txtURLEdit.Text = _connection.ServiceUrl;
-				txtOWAEdit.Text = _connection.EmailUrl;
-				txtInterval.Text = _connection.Interval.ToString(CultureInfo.InvariantCulture);
-				cbOverrideEWS.Checked = _connection.OverrideServiceUrl;
-				cbOverrideOWA.Checked = _connection.OverrideEmailUrl;
-				chkAutodiscovery.Checked = _connection.UseAutodiscovery;
-				chkOnDomain.Checked = _connection.OnWindowsDomain;
-				overrideCertificateToolStripMenuItem.Checked = _connection.OverrideCertificate;
-				alwaysOpenOWAInIEToolStripMenuItem.Checked = _connection.AlwaysUseInternetExplorer;
-				disableCalendarToolStripMenuItem.Checked = _connection.DisableCalendar;
-				loginAutomaticallyToolStripMenuItem.Checked = _connection.AutoLogin;
-				office365LoginOverrideToolStripMenuItem.Checked = _connection.OverrideOffice365Login;
-				overrideAutodiscoveryValidationToolStripMenuItem.Checked = _connection.OverrideAutodiscoveryValidation;
-				exchangeToolStripMenuItem.SelectedIndex = exchangeToolStripMenuItem.FindStringExact(_connection.ServerVersion);
 			}
 
 			// Update any UI
-			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
+			txtEmail.Text = _connection.EmailAddress;
+			txtUser.Text = _connection.Username;
+			txtPwd.Text = _connection.Password;
+			txtServer.Text = _connection.EmailServer;
+			txtDomain.Text = _connection.AccountDomain;
+			txtURLEdit.Text = _connection.ServiceUrl;
+			txtOWAEdit.Text = _connection.EmailUrl;
+			txtInterval.Text = _connection.Interval.ToString(CultureInfo.InvariantCulture);
+			cbOverrideEWS.Checked = _connection.OverrideServiceUrl;
 			txtURLEdit.Enabled = cbOverrideEWS.Checked;
+			cbOverrideOWA.Checked = _connection.OverrideEmailUrl;
+			txtOWAEdit.Enabled = cbOverrideOWA.Checked;
+			chkAutodiscovery.Checked = _connection.UseAutodiscovery;
 			SelectAutodiscoveryOptions();
+			chkOnDomain.Checked = _connection.OnWindowsDomain;
+			SelectDomainOptions();
+			overrideCertificateToolStripMenuItem.Checked = _connection.OverrideCertificate;
+			alwaysOpenOWAInIEToolStripMenuItem.Checked = _connection.AlwaysUseInternetExplorer;
+			disableCalendarToolStripMenuItem.Checked = _connection.DisableCalendar;
+			loginAutomaticallyToolStripMenuItem.Checked = _connection.AutoLogin;
+			office365LoginOverrideToolStripMenuItem.Checked = _connection.OverrideOffice365Login;
+			overrideAutodiscoveryValidationToolStripMenuItem.Checked = _connection.OverrideAutodiscoveryValidation;
+			exchangeToolStripMenuItem.SelectedIndex = exchangeToolStripMenuItem.FindStringExact(_connection.ServerVersion);
 			UpdateServiceUrl();
 			UpdateOwaUrl();
 			UpdateEmail();
-			SelectDomainOptions();
+
+			// Update shell handler
+			ConfigureShell();
 
 			// Set up event handling
 			WireUpConnectionEvents();
@@ -239,24 +255,51 @@ namespace DrunkenBakery.OWAtray.GUI
 				{
 					switch (state)
 					{
+						case ConnectionState.Connecting:
+							AddLogEntry(string.Format("[{0}] - Connecting, please wait...", _connection.EmailAddress));
+							break;
+						
+						case ConnectionState.Disconnecting:
+							AddLogEntry(string.Format("[{0}] - Disconnecting...", _connection.EmailAddress));
+							break;
+
+						case ConnectionState.Failed:
+							// Switch off autostart if we can't connect
+							Settings.Default.Autostart = false;
+							Settings.Default.Save();
+							break;
+
 						case ConnectionState.Connected:
+							// After a successful connection then next time we can autostart
+							Settings.Default.Autostart = true;
+							Settings.Default.Save();
+
+							// Update discovered properties
+							if (_connection.DiscoveredUsername.Length > 0)
+							{
+								AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _connection.DiscoveredUsername, Severity.Success);
+							}
+							if (_connection.DiscoveredEmailServer.Length > 0)
+							{
+								AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + _connection.DiscoveredEmailServer, Severity.Success);
+								UpdateOwaUrl();
+							}
+							if (_connection.DiscoveredEmailUrl.Length > 0)
+							{
+								AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + _connection.DiscoveredEmailUrl, Severity.Success);
+								UpdateServiceUrl();
+							}
+							if (_connection.DiscoveredServiceUrl.Length > 0)
+							{
+								AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _connection.DiscoveredServiceUrl, Severity.Success);
+							}
+
+							// Configure Shell
+							ShellExchangeVersion();
+
 							AddLogEntry(
 								string.Format("[{0}] - Connected to {1}", connection.EmailAddress,
 												connection.Version), Severity.Success);
-
-							// Minimise to tray
-							WindowState = FormWindowState.Minimized;
-
-							// Update discovered properties
-							AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _connection.DiscoveredUsername, Severity.Success);
-							AddLogEntry(OWAtray.Autodiscovered_Mailbox_Server + " " + _connection.DiscoveredEmailServer, Severity.Success);
-							UpdateOwaUrl();
-							AddLogEntry(OWAtray.Autodiscovered_OWA_Url + " " + _connection.DiscoveredEmailUrl, Severity.Success);
-							UpdateServiceUrl();
-							AddLogEntry(OWAtray.Autodiscovered_EWS_Url + " " + _connection.DiscoveredServiceUrl, Severity.Success);
-
-							// Configure Shell
-							ConfigureShell();
 							break;
 
 						case ConnectionState.Disconnected:
@@ -295,11 +338,8 @@ namespace DrunkenBakery.OWAtray.GUI
 				lblOWAUrl.Text = "";
 			}
 
-			if (!_booting)
-			{
-				// Update shell parameters
-				ConfigureShell();
-			}
+			_connection.DerivedEmailUrl = lblOWAUrl.Text;
+			ShellOwaUrl();
 		}
 
 		private static string StripEmailDomain(string email)
@@ -401,10 +441,9 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			_connection.AlwaysUseInternetExplorer = alwaysOpenOWAInIEToolStripMenuItem.Checked;
 			_scenario.Save();
+			ShellBrowserVersion();
 
 			AddLogEntry(OWAtray.Always_use_IE_switched + " " + (_connection.AlwaysUseInternetExplorer ? OWAtray.ON : OWAtray.OFF));
-
-			ConfigureShell();
 		}
 
 		private void balloonToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
@@ -518,14 +557,22 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void ConnectToExchange()
 		{
-			if (_connection.ConnectedState != ConnectionState.Disconnected) return;
+			if (_connection.ConnectedState != ConnectionState.Disconnected)
+			{
+				AddLogEntry("Already connected", Severity.Fail);
+				return;
+			}
 
 			_connection.ConnectA();
 		}
 
 		private void DisconnectFromExchange()
 		{
-			if (_connection.ConnectedState != ConnectionState.Connected) return;
+			if (_connection.ConnectedState != ConnectionState.Connected)
+			{
+				AddLogEntry("Not connected");
+				return;
+			}
 
 			_connection.Disconnect();
 		}
@@ -540,126 +587,116 @@ namespace DrunkenBakery.OWAtray.GUI
 			WebRequest.DefaultWebProxy.Credentials = Properties.Settings.Default.UseWebProxy ? CredentialCache.DefaultCredentials : null;
 		}
 
+		private void ShellOwaUrl()
+		{
+			try
+			{
+				var runSvc = new ProcessStartInfo(_shellPath) { Arguments = "url " + _connection.DerivedEmailUrl, WindowStyle = ProcessWindowStyle.Hidden };
+				var serviceProcess = Process.Start(runSvc);
+
+				while (!serviceProcess.HasExited)
+				{
+					Thread.Sleep(100);
+					Application.DoEvents();
+				}
+			}
+			catch (Exception ex)
+			{
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
+			}			
+		}
+
+		private void ShellExchangeVersion()
+		{
+			try
+			{
+				var runSvc = new ProcessStartInfo(_shellPath) { Arguments = "exchange " + _connection.Version, WindowStyle = ProcessWindowStyle.Hidden };
+				var serviceProcess = Process.Start(runSvc);
+
+				while (!serviceProcess.HasExited)
+				{
+					Thread.Sleep(100);
+					Application.DoEvents();
+				}
+			}
+			catch (Exception ex)
+			{
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
+			}			
+		}
+
+		private void ShellPassword()
+		{
+			try
+			{
+				var runSvc = new ProcessStartInfo(_shellPath) { Arguments = "password " + _connection.Password, WindowStyle = ProcessWindowStyle.Hidden };
+				var serviceProcess = Process.Start(runSvc);
+
+				while (!serviceProcess.HasExited)
+				{
+					Thread.Sleep(100);
+					Application.DoEvents();
+				}
+			}
+			catch (Exception ex)
+			{
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
+			}			
+		}
+
+		private void ShellAutologin()
+		{
+			try
+			{
+				var runSvc = new ProcessStartInfo(_shellPath)
+				{
+					Arguments = "autologin " + (_connection.AutoLogin ? "Yes" : "No"),
+					WindowStyle = ProcessWindowStyle.Hidden
+				};
+				var serviceProcess = Process.Start(runSvc);
+
+				while (!serviceProcess.HasExited)
+				{
+					Thread.Sleep(100);
+					Application.DoEvents();
+				}
+			}
+			catch (Exception ex)
+			{
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
+			}			
+		}
+
+		private void ShellBrowserVersion()
+		{
+			try
+			{
+				var runSvc = new ProcessStartInfo(_shellPath)
+				{
+					Arguments = "browser " + (_connection.AlwaysUseInternetExplorer ? "Yes" : "No"),
+					WindowStyle = ProcessWindowStyle.Hidden
+				};
+				var serviceProcess = Process.Start(runSvc);
+
+				while (!serviceProcess.HasExited)
+				{
+					Thread.Sleep(100);
+					Application.DoEvents();
+				}
+			}
+			catch (Exception ex)
+			{
+				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
+			}			
+		}
+
 		private void ConfigureShell()
 		{
-			// Set OWA Url
-			var owaUrl = lblOWAUrl.Text;
-
-			try
-			{
-				var runSvc = new ProcessStartInfo(_shellPath) {Arguments = "url " + owaUrl, WindowStyle = ProcessWindowStyle.Hidden};
-				var serviceProcess = Process.Start(runSvc);
-
-				while (!serviceProcess.HasExited)
-				{
-					Thread.Sleep(100);
-					Application.DoEvents();
-				}
-			}
-			catch (Exception ex)
-			{
-				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-				return;
-			}
-
-			try
-			{
-				var runSvc = new ProcessStartInfo(_shellPath)
-				             	{Arguments = "account ", WindowStyle = ProcessWindowStyle.Hidden};
-				var serviceProcess = Process.Start(runSvc);
-
-				while (!serviceProcess.HasExited)
-				{
-					Thread.Sleep(100);
-					Application.DoEvents();
-				}
-			}
-			catch (Exception ex)
-			{
-				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-				return;
-			}
-
-			try
-			{
-				var runSvc = new ProcessStartInfo(_shellPath)
-				             	{Arguments = "exchange " + _connection.Version, WindowStyle = ProcessWindowStyle.Hidden};
-				var serviceProcess = Process.Start(runSvc);
-
-				while (!serviceProcess.HasExited)
-				{
-					Thread.Sleep(100);
-					Application.DoEvents();
-				}
-			}
-			catch (Exception ex)
-			{
-				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-				return;
-			}
-
-			// Set Password
-			try
-			{
-				var runSvc = new ProcessStartInfo(_shellPath)
-				             	{Arguments = "password " + txtPwd.Text, WindowStyle = ProcessWindowStyle.Hidden};
-				var serviceProcess = Process.Start(runSvc);
-
-				while (!serviceProcess.HasExited)
-				{
-					Thread.Sleep(100);
-					Application.DoEvents();
-				}
-			}
-			catch (Exception ex)
-			{
-				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-				return;
-			}
-
-			// Set Autologin
-			try
-			{
-				var runSvc = new ProcessStartInfo(_shellPath)
-				             	{
-				             		Arguments = "autologin " + (_connection.AutoLogin ? "Yes" : "No"),
-				             		WindowStyle = ProcessWindowStyle.Hidden
-				             	};
-				var serviceProcess = Process.Start(runSvc);
-
-				while (!serviceProcess.HasExited)
-				{
-					Thread.Sleep(100);
-					Application.DoEvents();
-				}
-			}
-			catch (Exception ex)
-			{
-				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-				return;
-			}
-
-			// Set Browser
-			try
-			{
-				var runSvc = new ProcessStartInfo(_shellPath)
-				             	{
-				             		Arguments = "browser " + (_connection.AlwaysUseInternetExplorer ? "Yes" : "No"),
-				             		WindowStyle = ProcessWindowStyle.Hidden
-				             	};
-				var serviceProcess = Process.Start(runSvc);
-
-				while (!serviceProcess.HasExited)
-				{
-					Thread.Sleep(100);
-					Application.DoEvents();
-				}
-			}
-			catch (Exception ex)
-			{
-				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-				return;
-			}
+			ShellAutologin();
+			ShellBrowserVersion();
+			ShellExchangeVersion();
+			ShellOwaUrl();
+			ShellPassword();
 		}
 
 		private void disableCalendarToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
@@ -857,9 +894,6 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void makeOWADefaultToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			// Update shell parameters
-			ConfigureShell();
-
 			if (!IsUserAdministrator())
 			{
 				AddLogEntry(OWAtray.You_are_not_an_Admin_user, Severity.Fail);
@@ -873,7 +907,7 @@ namespace DrunkenBakery.OWAtray.GUI
 				var runSvc = new ProcessStartInfo(_shellPath) {Arguments = "registry", WindowStyle = ProcessWindowStyle.Hidden};
 				if (Environment.OSVersion.Version.Major >= 6)
 					runSvc.Verb = "runas";
-				Process serviceProcess = Process.Start(runSvc);
+				var serviceProcess = Process.Start(runSvc);
 
 				while (!serviceProcess.HasExited)
 				{
@@ -1164,12 +1198,6 @@ namespace DrunkenBakery.OWAtray.GUI
 			_frmInfo.ShowDialog();
 		}
 
-		private void timer1_Tick(object sender, EventArgs e)
-		{
-			timer1.Enabled = false;
-			ConnectToExchange();
-		}
-
 		private void timerLogging_Tick(object sender, EventArgs e)
 		{
 			FlushOutput();
@@ -1234,11 +1262,6 @@ namespace DrunkenBakery.OWAtray.GUI
 		private void UpdateEmail()
 		{
 			lblEmail.Text = EmailAddress;
-
-			if (!_booting)
-			{
-				ConfigureShell();
-			}
 		}
 
 		private void loginAutomaticallyToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
@@ -1247,10 +1270,9 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			_connection.AutoLogin = loginAutomaticallyToolStripMenuItem.Checked;
 			_scenario.Save();
+			ShellAutologin();
 
 			AddLogEntry(OWAtray.Automatic_Login_is_switched + " " + (_connection.AutoLogin ? OWAtray.ON : OWAtray.OFF));
-
-			ConfigureShell();
 		}
 
 		private void txtDomain_Validated(object sender, EventArgs e)
@@ -1263,6 +1285,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			_connection.Password = txtPwd.Text;
 			_scenario.Save();
+			ShellPassword();
 		}
 
 		private void txtServer_Validated(object sender, EventArgs e)

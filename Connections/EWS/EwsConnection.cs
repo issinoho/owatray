@@ -51,19 +51,29 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 		}
 
-		// Events
 		public override event Action<IEmailInterface, ConnectionState> ConnectedStateChange;
 
 		public override void Connect()
 		{
-			if (IsConnected)
+			// Check input
+			if (EmailAddress.Length == 0)
 			{
-				RaiseLogMessage("Already connected", Severity.Fail);
+				RaiseLogMessage("Please provide a valid Email Address", Severity.Fail);
 				return;
 			}
-			else
+			if (Password.Length == 0)
 			{
-				RaiseLogMessage("Connecting, please wait");
+				RaiseLogMessage("Please provide a Password", Severity.Fail);
+				return;
+			}
+
+			if (!UseAutodiscovery)
+			{
+				if (DerivedServiceUrl.Length == 0)
+				{
+					RaiseLogMessage("Please provide a valid Server Address", Severity.Fail);
+					return;
+				}
 			}
 
 			try
@@ -203,8 +213,9 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
-				ChangeState(ConnectionState.Disconnected);
 				RaiseLogMessage(ex.Message, Severity.Fail);
+				ChangeState(ConnectionState.Failed);
+				ChangeState(ConnectionState.Disconnected);
 			}
 		}
 
@@ -269,14 +280,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		public override void Disconnect()
 		{
-			if (!IsConnected)
-			{
-				return;
-			}
-			else
-			{
-				RaiseLogMessage("Disconnecting, please wait");
-			}
+			if (!IsConnected) return;
 
 			try
 			{
@@ -287,6 +291,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
+				ChangeState(ConnectionState.Failed);
 				RaiseLogMessage(ex.Message, Severity.Fail);
 			}
 			finally
