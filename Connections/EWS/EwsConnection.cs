@@ -31,7 +31,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 		private readonly object _locker = new object();
 		private ExchangeService _service;
 		private DateTime _timeLastChecked;
-		private int mailCount;
+		private int _mailCount = -1;
 
 		public override string Version
 		{
@@ -211,6 +211,9 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				_backgroundPoll.Interval = (Interval * 1000);
 				_backgroundPoll.Elapsed += backgroundPoll_Elapsed;
 				_backgroundPoll.Start();
+
+				// Initial check
+				CheckForNewMailA();
 			}
 			catch (Exception ex)
 			{
@@ -362,9 +365,9 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 				// Quick mail count check
 				var count = UnreadCount;
-				if (count != mailCount)
+				if (count != _mailCount)
 				{
-					mailCount = count;
+					_mailCount = count;
 					RaiseMessageCount(count);
 				}
 
