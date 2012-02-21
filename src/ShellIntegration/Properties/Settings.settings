@@ -1,0 +1,69 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DrunkenBakery.OWAtray.ShellIntegration.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CurrentKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MailtoClass" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">OWA.Url.Mailto</Value>
+    </Setting>
+    <Setting Name="OwaUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://mail.company.com/owa</Value>
+    </Setting>
+    <Setting Name="UserAccount" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MAPIBridge" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">DrunkenBakery.OWAtray.Mapi.dll</Value>
+    </Setting>
+    <Setting Name="DefaultMail" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BrowseTimeout" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="DefaultMailUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="TabStops" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="IETitle" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Untitled Message - Windows Internet Explorer</Value>
+    </Setting>
+    <Setting Name="DefaultIcon" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DefaultOpen" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PopupDelay" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2500</Value>
+    </Setting>
+    <Setting Name="URL2010" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">&amp;cc=MTQuMC43MDIuMCxlbi1HQiw0Mjk0OTY3Mjk1LEhUTUwsMSww&amp;smime=SSL%3a1%3bVer%3a14.0.639.19</Value>
+    </Setting>
+    <Setting Name="URL2010SP1" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">&amp;cc=MTQuMS4yMTguMTMsZW4tR0IsNDI5NDk2NzI5NSxIVE1MLDEsMA==&amp;smime=SSL%3a1%3bVer%3a14.1.218.12</Value>
+    </Setting>
+    <Setting Name="MimeURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LoginTitle" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Outlook Web App</Value>
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AutoLogin" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
+    <Setting Name="SmallWait" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="Browser" Type="System.String" Scope="User">
+      <Value Profile="(Default)">No</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
