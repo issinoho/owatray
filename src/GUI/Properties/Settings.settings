@@ -17,20 +17,11 @@
     <Setting Name="ApplicationVersion" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="MaxNotify" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10</Value>
-    </Setting>
     <Setting Name="LockDown" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="RSSFeed" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://www.owatray.com/blog/posts.xml</Value>
-    </Setting>
-    <Setting Name="ApptInterval" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">300</Value>
-    </Setting>
-    <Setting Name="ApptWindow" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">15</Value>
     </Setting>
     <Setting Name="OutlookPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">OUTLOOK.EXE</Value>

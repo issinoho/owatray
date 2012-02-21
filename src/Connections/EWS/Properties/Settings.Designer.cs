@@ -40,5 +40,32 @@ namespace DrunkenBakery.OWAtray.Connections.EWS.Properties {
                 return ((int)(this["BatchAmount"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int MaxNotify {
+            get {
+                return ((int)(this["MaxNotify"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("300")]
+        public int ApptInterval {
+            get {
+                return ((int)(this["ApptInterval"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int ApptWindow {
+            get {
+                return ((int)(this["ApptWindow"]));
+            }
+        }
     }
 }

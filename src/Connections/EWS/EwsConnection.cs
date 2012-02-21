@@ -11,6 +11,7 @@
 //------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Security;
@@ -28,6 +29,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 	public class EwsConnection : AbstractConnection
 	{
 		private readonly Timer _backgroundPoll = new Timer();
+		private readonly Timer _appointmentPoll = new Timer();
 		private readonly object _locker = new object();
 		private ExchangeService _service;
 		private DateTime _timeLastChecked;
@@ -212,14 +214,18 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					RaiseLogMessage(string.Format("You have {0} unread {1} in your Inbox", count, count == 1 ? "message" : "messages"));
 				}
 
-				// Timer
+				// Timers
 				_backgroundPoll.Interval = (Interval * 1000);
 				_backgroundPoll.Elapsed += backgroundPoll_Elapsed;
 				_backgroundPoll.Start();
+				_appointmentPoll.Interval = (Settings.Default.ApptInterval * 1000);
+				_appointmentPoll.Elapsed += appointmentPoll_Elapsed;
+				_appointmentPoll.Start();
 
 				// Initial check
 				_mailCount = -1;
 				CheckForNewMailA();
+				if (!DisableCalendar) CheckForNewAppointmentA();
 			}
 			catch (Exception ex)
 			{
@@ -297,6 +303,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				ChangeState(ConnectionState.Disconnecting);
 				_backgroundPoll.Stop();
 				_backgroundPoll.Elapsed -= backgroundPoll_Elapsed;
+				_appointmentPoll.Stop();
+				_appointmentPoll.Elapsed -= appointmentPoll_Elapsed;
 				_service = null;
 			}
 			catch (Exception ex)
@@ -323,11 +331,24 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			CheckForNewMailA();
 		}
 
+		private void appointmentPoll_Elapsed(object sender, EventArgs e)
+		{
+			if (!DisableCalendar) CheckForNewAppointmentA();
+		}
+
 		private void CheckForNewMailA()
 		{
 			lock (_locker)
 			{
 				new Thread(CheckForNewMail).Start();
+			}
+		}
+
+		private void CheckForNewAppointmentA()
+		{
+			lock (_locker)
+			{
+				new Thread(CheckForNewAppointment).Start();
 			}
 		}
 
@@ -450,6 +471,41 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					{
 						offset = offset + pageSize;
 					}
+				}
+			}
+			catch (Exception ex)
+			{
+				RaiseLogMessage(ex.Message, Severity.Fail);
+				ChangeState(ConnectionState.Failed);
+				Disconnect();
+			}
+		}
+
+		private void CheckForNewAppointment()
+		{
+			try
+			{
+				// Interrogate default Calendar
+				var cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Settings.Default.ApptWindow)))
+				            	{PropertySet = PropertySet.FirstClassProperties};
+				var findResults = _service.FindAppointments(WellKnownFolderName.Calendar, cView);
+
+				// Process each item.
+				foreach (var myItem in findResults.Items)
+				{
+					if (myItem == null) continue;
+
+					var duration = 0;
+					var myAppt = myItem;
+					var ps = new PropertySet(BasePropertySet.FirstClassProperties);
+					myAppt.Load(ps);
+					var myLocation = myAppt.Location;
+					var mySubject = (myAppt.Subject ?? "No subject");
+					var span = myAppt.Start.Subtract(DateTime.Now);
+					duration = (int)Math.Floor(span.TotalMinutes);
+					var myTime = myAppt.Start;
+					var myAccessUrl = SupportsDirectMessageAccess ? myItem.WebClientReadFormQueryString : "";
+					if (duration > 0) RaiseNewAppointment(duration, myTime, mySubject, myLocation, myAccessUrl);
 				}
 			}
 			catch (Exception ex)

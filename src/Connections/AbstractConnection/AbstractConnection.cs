@@ -163,6 +163,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 		public event Action<int> MessageCount;
 		public event Action<string, Severity> LogMessage;
 		public event Action<string, DateTime, string, string, string> NewMail;
+		public event Action<int, DateTime, string, string, string> NewAppointment;
 
 		public virtual event Action<IEmailInterface, ConnectionState> ConnectedStateChange
 		{
@@ -190,6 +191,11 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 		public virtual void RaiseNewMail(DateTime arrivalTime, string subject, string sender, string accessUrl)
 		{
 			if (NewMail != null) NewMail(EmailAddress, arrivalTime, subject, sender, accessUrl);
+		}
+
+		public virtual void RaiseNewAppointment(int minsToGo, DateTime startTime, string subject, string location, string accessUrl)
+		{
+			if (NewAppointment != null) NewAppointment(minsToGo, startTime, subject, location, accessUrl);
 		}
 	}
 }

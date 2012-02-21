@@ -324,8 +324,18 @@ namespace DrunkenBakery.OWAtray.GUI
 				item.NewMail += (email, arrivalTime, subject, sender, accessUrl) => Invoke(new Action(() =>
 				            {
 								_popUrl = accessUrl;
-				                PopToast(OWAtray.New_Mail_from + " " + sender, subject);
+				                PopToast(string.Format("{0} {1}", OWAtray.New_Mail_from ,sender), subject);
 				            }));
+
+				// New appointment event
+				item.NewAppointment += (minsToGo, startTime, subject, location, accessUrl) => Invoke(new Action(() =>
+							{
+								_popUrl = accessUrl;
+								PopToast(
+									string.Format("{0} {1} {2}", OWAtray.You_have_an_appointment_in, minsToGo,
+									              (minsToGo != 1 ? OWAtray.mins : OWAtray.min)),
+									string.Format("{0} - {1} ({2})", startTime.ToShortTimeString(), subject, location));
+							}));
 
 				// Mail count event
 				item.MessageCount += count => Invoke(new Action(() =>
@@ -489,64 +499,6 @@ namespace DrunkenBakery.OWAtray.GUI
 			if (_frmChangeLog == null) _frmChangeLog = new ChangeLog(Settings.Default.RSSFeed);
 			_frmChangeLog.ShowDialog();
 		}
-
-		//private void CheckForAppointments()
-		//{
-		//    try
-		//    {
-		//        // Interrogate default Calendar
-		//        var cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Settings.Default.ApptWindow)))
-		//                        {PropertySet = PropertySet.FirstClassProperties};
-		//        FindItemsResults<Appointment> findResults = _myService.FindAppointments(WellKnownFolderName.Calendar, cView);
-
-		//        // Process each item.
-		//        int count = 0;
-		//        bool allDone = false;
-		//        foreach (Appointment myItem in findResults.Items)
-		//        {
-		//            if (++count > Settings.Default.MaxNotify)
-		//            {
-		//                if (!allDone)
-		//                {
-		//                    PopToast(OWAtray.Too_many_appointments,
-		//                             OWAtray.There_are + " " + (findResults.Items.Count - Settings.Default.MaxNotify) + " " +
-		//                             OWAtray.others);
-		//                    allDone = true;
-		//                }
-		//            }
-		//            else
-		//            {
-		//                if (myItem != null)
-		//                {
-		//                    int duration = 0;
-		//                    Appointment myAppt = myItem;
-		//                    var ps = new PropertySet(BasePropertySet.FirstClassProperties);
-		//                    myAppt.Load(ps);
-		//                    string myLocation = myAppt.Location;
-		//                    string mySubject = (myAppt.Subject ?? OWAtray.No_Subject);
-		//                    TimeSpan span = myAppt.Start.Subtract(DateTime.Now);
-		//                    duration = (int) Math.Floor(span.TotalMinutes);
-		//                    string myStart = duration.ToString(CultureInfo.InvariantCulture);
-		//                    string myTime = myAppt.Start.ToString("HH:mm");
-
-		//                    if (duration > 0)
-		//                    {
-		//                        _popUrl = (_reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myAppt.WebClientReadFormQueryString);
-		//                        PopToast(
-		//                            OWAtray.You_have_an_appointment_in + " " + myStart + " " + (duration != 1 ? OWAtray.mins : OWAtray.min),
-		//                            myTime + " - " + mySubject + " (" + myLocation + ")");
-		//                    }
-		//                }
-		//            }
-		//        }
-		//    }
-		//    catch (Exception ex)
-		//    {
-		//        AddLogEntry(ex.ToString(), Severity.Fail);
-		//        stopMonitoring();
-		//        StartRetryTimer();
-		//    }
-		//}
 
 		private void chkOnDomain_CheckedChanged(object sender, EventArgs e)
 		{
@@ -859,72 +811,6 @@ namespace DrunkenBakery.OWAtray.GUI
 			return finalText;
 		}
 
-		//private int CheckForNewMail()
-		//{
-		//    int myCount;
-
-		//    if (_myService == null)
-		//    {
-		//        AddLogEntry(OWAtray.Not_Connected_to_Exchange, Severity.Fail);
-		//        notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
-		//        return 0;
-		//    }
-
-		//    try
-		//    {
-		//        // Set time for initial run only
-		//        if (_firstRun) _timeLastChecked = TimeOfNewestEmail().AddSeconds(1);
-
-		//        // Is there new mail?
-		//        var myFolder = Folder.Bind(_myService, WellKnownFolderName.Inbox);
-		//        myCount = myFolder.UnreadCount;
-		//        if (myCount > _inboxCount)
-		//        {
-		//            if (_firstRun)
-		//            {
-						//PopToast(OWAtray.New_Mail,
-						//         OWAtray.You_have + " " + myCount + " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ") +
-						//         OWAtray.in_your_inbox);
-		//            }
-		//            else
-		//            {
-		//                PopUnreadEmail(myCount);
-		//            }
-
-		//            _resetFlag = false;
-		//        }
-
-		//        if (!_resetFlag)
-		//        {
-		//            notifyIcon1.Icon = new Icon((myCount > 0 ? _alertIcon : _emailIcon));
-		//        }
-
-		//        var text1 = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Environment.NewLine + myCount + " " +
-		//                       OWAtray.unread_email + (myCount != 1 ? "s " : " ");
-		//        const int maxTipLength = 63;
-		//        var charsLeft = maxTipLength - text1.Length;
-		//        var domainText = _reportedMailboxServer + @"\" + _reportedUserName;
-		//        if (domainText.Length > charsLeft) domainText = domainText.Substring(0, charsLeft);
-		//        var finalText = AssemblyHelpers.AssemblyTitle + Environment.NewLine + domainText + Environment.NewLine + myCount +
-		//                           " " + OWAtray.unread_email + (myCount != 1 ? "s " : " ");
-		//        notifyIcon1.Text = finalText;
-		//        _inboxCount = myCount;
-		//    }
-		//    catch (Exception ex)
-		//    {
-		//        AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-		//        myCount = 0;
-		//        stopMonitoring();
-		//        StartRetryTimer();
-		//    }
-		//    finally
-		//    {
-		//        _firstRun = false;
-		//    }
-
-		//    return myCount;
-		//}
-
 		private void growlToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
 			if (_booting) return;
@@ -1074,97 +960,6 @@ namespace DrunkenBakery.OWAtray.GUI
 				AudioHelper.Play(_audioPath);
 			}
 		}
-
-		//private int PopUnreadEmail(int unreadCount)
-		//{
-		//    // Set the offset for the paged search.
-		//    int offset = 0;
-		//    int count = 0;
-
-		//    // Set the page size.
-		//    int pageSize = Settings.Default.PageSize;
-
-		//    // Set the flag that indicates whether to continue iterating through additional pages.
-		//    bool moreItems = true;
-
-		//    // Continue paging while there are more items to page.
-		//    while (moreItems)
-		//    {
-		//        // Define filters collection
-		//        var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
-		//                        {
-		//                            new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
-		//                            new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, _timeLastChecked)
-		//                        };
-
-		//        // Item view
-		//        var view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning)
-		//                    {
-		//                        PropertySet = new PropertySet(BasePropertySet.IdOnly) {ItemSchema.Subject, ItemSchema.DateTimeReceived}
-		//                    };
-		//        view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
-
-		//        // Now search
-		//        FindItemsResults<Item> findResults = _myService.FindItems(WellKnownFolderName.Inbox, filters, view);
-
-		//        // Process each item.
-		//        bool allDone = false;
-		//        bool isFlagged = false;
-		//        foreach (Item myItem in findResults.Items)
-		//        {
-		//            if (++count > Settings.Default.MaxNotify)
-		//            {
-		//                if (!allDone)
-		//                {
-		//                    PopToast(OWAtray.Too_much_mail,
-		//                             OWAtray.There_are + " " + (unreadCount - Settings.Default.MaxNotify) + " " +
-		//                             OWAtray.other_new_emails);
-		//                    allDone = true;
-		//                }
-		//            }
-		//            else
-		//            {
-		//                var myEmail = myItem as EmailMessage;
-		//                if (myEmail != null)
-		//                {
-		//                    DateTime myTime = DateTime.Now;
-
-		//                    try
-		//                    {
-		//                        var ps = new PropertySet(BasePropertySet.FirstClassProperties);
-		//                        myEmail.Load(ps);
-		//                        string mySender = myEmail.Sender.Name;
-		//                        string mySubject = (myEmail.Subject ?? OWAtray.No_Subject);
-		//                        myTime = myEmail.DateTimeReceived;
-		//                        _popUrl = (_reportedVersion == ExchangeVersion.Exchange2007_SP1 ? "" : myEmail.WebClientReadFormQueryString);
-		//                        PopToast(OWAtray.New_Mail_from + " " + mySender, mySubject);
-		//                    }
-		//                    catch (Exception ex)
-		//                    {
-		//                        AddLogEntry(OWAtray.Error_when_getting_email + ex.Message, Severity.Fail);
-		//                    }
-
-		//                    // Update flag
-		//                    if (!isFlagged)
-		//                    {
-		//                        _timeLastChecked = myTime.AddSeconds(1);
-		//                        isFlagged = true;
-		//                    }
-		//                }
-		//            }
-		//        }
-
-		//        // Set the flag to discontinue paging.
-		//        if (!findResults.MoreAvailable)
-		//            moreItems = false;
-
-		//        // Update the offset if there are more items to page.
-		//        if (moreItems)
-		//            offset = offset + pageSize;
-		//    }
-
-		//    return count;
-		//}
 
 		private void recallLastPopupToolStripMenuItem_Click(object sender, EventArgs e)
 		{

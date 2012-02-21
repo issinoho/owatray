@@ -85,18 +85,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int MaxNotify {
-            get {
-                return ((int)(this["MaxNotify"]));
-            }
-            set {
-                this["MaxNotify"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool LockDown {
             get {
@@ -113,24 +101,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         public string RSSFeed {
             get {
                 return ((string)(this["RSSFeed"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("300")]
-        public int ApptInterval {
-            get {
-                return ((int)(this["ApptInterval"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
-        public int ApptWindow {
-            get {
-                return ((int)(this["ApptWindow"]));
             }
         }
         
