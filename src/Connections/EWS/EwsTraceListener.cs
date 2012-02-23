@@ -11,7 +11,6 @@
 //------------------------------------------------------------------
 
 using System.IO;
-using System.Windows.Forms;
 using System.Xml;
 using Microsoft.Exchange.WebServices.Data;
 
@@ -21,7 +20,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 	{
 		public void Trace(string traceType, string traceMessage)
 		{
-			CreateXmlTextFile(Path.Combine(Application.LocalUserAppDataPath, traceType), traceMessage);
+			CreateXmlTextFile(Path.Combine("Logs", traceType), traceMessage);
 		}
 
 		private static void CreateXmlTextFile(string fileName, string traceContent)
