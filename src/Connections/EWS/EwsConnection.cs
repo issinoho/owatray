@@ -93,7 +93,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
 
 				// Define service
-				_service = ServerVersion == "Autodetect" ? new ExchangeService() : new ExchangeService((ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), ServerVersion));
+				_service = ServerVersion == "Default" ? new ExchangeService() : new ExchangeService((ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), ServerVersion));
 
 				// Enable Tracing (if required)
 				if (Settings.Default.UseTracing)
@@ -153,17 +153,35 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					                                                            UserSettingName.UserDisplayName);
 
 					    // OWA Url
-					    var col = (WebClientUrlCollection) userresponse.Settings[UserSettingName.InternalWebClientUrls];
-					    DiscoveredEmailUrl = col.Urls[0].Url;
+						WebClientUrlCollection webCollection;
+						if (userresponse.TryGetSettingValue(UserSettingName.InternalWebClientUrls, out webCollection))
+						{
+							foreach (WebClientUrl url in webCollection.Urls)
+							{
+								DiscoveredEmailUrl = url.Url;
+							}
+						}
 
 					    // EWS Url
-					    DiscoveredServiceUrl = (string) userresponse.Settings[UserSettingName.InternalEwsUrl];
+						string internalUrl;
+						if (userresponse.TryGetSettingValue(UserSettingName.InternalEwsUrl, out internalUrl))
+						{
+							DiscoveredServiceUrl = internalUrl;
+						}
 
 					    // Server
-					    DiscoveredEmailServer = (string) userresponse.Settings[UserSettingName.InternalMailboxServer];
+						string internalServer;
+						if (userresponse.TryGetSettingValue(UserSettingName.InternalMailboxServer, out internalServer))
+						{
+							DiscoveredEmailServer = internalServer;
+						}
 
 					    // User Name
-					    DiscoveredUsername = (string) userresponse.Settings[UserSettingName.UserDisplayName];
+						string userName;
+						if (userresponse.TryGetSettingValue(UserSettingName.UserDisplayName, out userName))
+						{
+							DiscoveredUsername = userName;
+						}
 					}
 					else
 					{
@@ -175,17 +193,35 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					                                                            UserSettingName.UserDisplayName);
 
 					    // OWA Url
-					    var owaCollection = (WebClientUrlCollection) userresponse.Settings[UserSettingName.ExternalWebClientUrls];
-					    DiscoveredEmailUrl = owaCollection.Urls[0].Url;
+						WebClientUrlCollection webCollection;
+						if (userresponse.TryGetSettingValue(UserSettingName.ExternalWebClientUrls, out webCollection))
+						{
+							foreach (WebClientUrl url in webCollection.Urls)
+							{
+								DiscoveredEmailUrl = url.Url;
+							}
+						}
 
-					    // EWS Url
-					    DiscoveredServiceUrl = (string) userresponse.Settings[UserSettingName.ExternalEwsUrl];
+						// EWS Url
+						string externalUrl;
+						if (userresponse.TryGetSettingValue(UserSettingName.ExternalEwsUrl, out externalUrl))
+						{
+							DiscoveredServiceUrl = externalUrl;
+						}
 
-					    // Server
-					    DiscoveredEmailServer = (string) userresponse.Settings[UserSettingName.ExternalMailboxServer];
+						// Server
+						string externalServer;
+						if (userresponse.TryGetSettingValue(UserSettingName.ExternalMailboxServer, out externalServer))
+						{
+							DiscoveredEmailServer = externalServer;
+						}
 
-					    // User Name
-					    DiscoveredUsername = (string) userresponse.Settings[UserSettingName.UserDisplayName];
+						// User Name
+						string userName;
+						if (userresponse.TryGetSettingValue(UserSettingName.UserDisplayName, out userName))
+						{
+							DiscoveredUsername = userName;
+						}
 					}
 				}
 				else
@@ -200,9 +236,6 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 						DiscoveredUsername = (OnWindowsDomain ? "" : (Username.Length == 0 ? EmailAddress : Username));
 					}
 				}
-
-				// State
-				ChangeState(ConnectionState.Connected);
 
 				// Get initial timestamp
 				_timeLastChecked = TimeOfNewestEmail().AddSeconds(1);
@@ -226,10 +259,13 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				_mailCount = -1;
 				CheckForNewMailA();
 				if (!DisableCalendar) CheckForNewAppointmentA();
+
+				// State
+				ChangeState(ConnectionState.Connected);
 			}
 			catch (Exception ex)
 			{
-				RaiseLogMessage(ex.Message, Severity.Fail);
+				RaiseLogMessage(ex.ToString(), Severity.Fail);
 				ChangeState(ConnectionState.Failed);
 				ChangeState(ConnectionState.Disconnected);
 			}
@@ -310,7 +346,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			catch (Exception ex)
 			{
 				ChangeState(ConnectionState.Failed);
-				RaiseLogMessage(ex.Message, Severity.Fail);
+				RaiseLogMessage(ex.ToString(), Severity.Fail);
 			}
 			finally
 			{
@@ -451,7 +487,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 						}
 						catch (Exception ex)
 						{
-							RaiseLogMessage(ex.Message, Severity.Fail);
+							RaiseLogMessage(ex.ToString(), Severity.Fail);
 						}
 
 						// Update flag
@@ -475,7 +511,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
-				RaiseLogMessage(ex.Message, Severity.Fail);
+				RaiseLogMessage(ex.ToString(), Severity.Fail);
 				ChangeState(ConnectionState.Failed);
 				Disconnect();
 			}
@@ -510,7 +546,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
-				RaiseLogMessage(ex.Message, Severity.Fail);
+				RaiseLogMessage(ex.ToString(), Severity.Fail);
 				ChangeState(ConnectionState.Failed);
 				Disconnect();
 			}
@@ -538,7 +574,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
-				RaiseLogMessage(ex.Message, Severity.Fail);
+				RaiseLogMessage(ex.ToString(), Severity.Fail);
 			}
 		}
 

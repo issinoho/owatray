@@ -135,7 +135,7 @@ namespace DrunkenBakery.OWAtray.Framework
 					item.AutoLogin = node[ElementAutoLogin].InnerText == "0" ? false : true;
 					item.OverrideOffice365Login = node[ElementOverrideOffice365Login].InnerText == "0" ? false : true;
 					item.OverrideAutodiscoveryValidation = node[ElementOverrideAutodiscoveryValidation].InnerText == "0" ? false : true;
-					item.ServerVersion = node[ElementServerVersion].InnerText;
+					item.ServerVersion = node[ElementServerVersion].InnerText == "Autodetect" ? "Default" : node[ElementServerVersion].InnerText;
 					Connections.Add(item);
 				}
 		}

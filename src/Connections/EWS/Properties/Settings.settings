@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="UseTracing" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="BatchAmount" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">1000</Value>

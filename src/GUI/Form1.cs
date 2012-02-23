@@ -198,7 +198,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			loginAutomaticallyToolStripMenuItem.Checked = _connection.AutoLogin;
 			office365LoginOverrideToolStripMenuItem.Checked = _connection.OverrideOffice365Login;
 			overrideAutodiscoveryValidationToolStripMenuItem.Checked = _connection.OverrideAutodiscoveryValidation;
-			exchangeToolStripMenuItem.SelectedIndex = exchangeToolStripMenuItem.FindStringExact(_connection.ServerVersion);
+			cmbExchangeVersion.SelectedIndex = cmbExchangeVersion.FindStringExact(_connection.ServerVersion);
 			UpdateServiceUrl();
 			UpdateOwaUrl();
 			UpdateEmail();
@@ -309,7 +309,7 @@ namespace DrunkenBakery.OWAtray.GUI
 												connection.Version), Severity.Success);
 
 							// Minimize
-							WindowState = FormWindowState.Minimized;
+							//WindowState = FormWindowState.Minimized;
 							break;
 
 						case ConnectionState.Disconnected:
@@ -540,24 +540,36 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void ConnectToExchange()
 		{
-			if (_connection.ConnectedState != ConnectionState.Disconnected)
+			switch (_connection.ConnectedState)
 			{
-				AddLogEntry("Already connected", Severity.Fail);
-				return;
+				case ConnectionState.Connected:
+					AddLogEntry("Already connected", Severity.Fail);
+					break;
+				case ConnectionState.Disconnecting:
+				case ConnectionState.Connecting:
+					AddLogEntry("Transitioning state, please wait...", Severity.Fail);
+					break;
+				default:
+					_connection.ConnectA();
+					break;
 			}
-
-			_connection.ConnectA();
 		}
 
 		private void DisconnectFromExchange()
 		{
-			if (_connection.ConnectedState != ConnectionState.Connected)
+			switch (_connection.ConnectedState)
 			{
-				AddLogEntry("Not connected");
-				return;
+				case ConnectionState.Disconnected:
+					AddLogEntry("Already disconnected");
+					break;
+				case ConnectionState.Disconnecting:
+				case ConnectionState.Connecting:
+					AddLogEntry("Transitioning state, please wait...", Severity.Fail);
+					break;
+				default:
+					_connection.DisconnectA();
+					break;
 			}
-
-			_connection.Disconnect();
 		}
 
 		private void cmdStop_Click(object sender, EventArgs e)
@@ -691,14 +703,6 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			AddLogEntry(
 				OWAtray.Calendar_notifications_switched + " " + (_connection.DisableCalendar ? OWAtray.OFF : OWAtray.ON));
-		}
-
-		private void exchangeToolStripMenuItem_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			if (_booting) return;
-
-			_connection.ServerVersion = exchangeToolStripMenuItem.Text;
-			_scenario.Save();
 		}
 
 		private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1274,6 +1278,14 @@ namespace DrunkenBakery.OWAtray.GUI
 			Settings.Default.Save();
 
 			UpdateWebProxySettings();
+		}
+
+		private void cmbExchangeVersion_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (_booting) return;
+
+			_connection.ServerVersion = cmbExchangeVersion.Text;
+			_scenario.Save();
 		}
 	}
 }

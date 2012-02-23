@@ -226,7 +226,9 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 				case "URL":
 					if (args.Length > 1)
 					{
-						Settings.Default.OwaUrl = args[1];
+						var myPath = args[1];
+						myPath = myPath.TrimEnd(new char[] { '\\', '/' });
+						Settings.Default.OwaUrl = myPath;
 						Settings.Default.Save();
 					}
 					break;
@@ -254,6 +256,9 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 								break;
 							case "Exchange2010_SP1":
 								Settings.Default.MimeURL = Settings.Default.URL2010SP1;
+								break;
+							case "Exchange2010_SP2":
+								Settings.Default.MimeURL = Settings.Default.URL2010SP2;
 								break;
 							default:
 								Settings.Default.MimeURL = "";

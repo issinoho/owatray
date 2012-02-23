@@ -238,6 +238,7 @@
     <Content Include="Resources\star.png" />
     <Content Include="Resources\toolbox.png" />
     <Content Include="Resources\unlock.png" />
+    <None Include="Resources\user.png" />
     <Content Include="Resources\web_app.png" />
     <Content Include="Resources\win.png" />
     <Content Include="Resources\wizard.png" />
