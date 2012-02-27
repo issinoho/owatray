@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "3.0.4436.35931"
+!define PRODUCT_VERSION "3.0.4440.31010"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray"
@@ -11,6 +11,7 @@
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
+!include "x64.nsh"
 
 ; MUI Settings
 !define MUI_ABORTWARNING
@@ -57,7 +58,6 @@ Section "MainSection" SEC01
   File "..\bin\Secure\DrunkenBakery.OWAtray.GUI.exe"
   File "..\bin\DrunkenBakery.OWAtray.GUI.exe.config"
   File "..\bin\Secure\DrunkenBakery.OWAtray.Logging.dll"
-  File "..\bin\DrunkenBakery.OWAtray.Mapi.dll"
   File "..\bin\Secure\DrunkenBakery.OWAtray.ShellIntegration.exe"
   File "..\bin\DrunkenBakery.OWAtray.ShellIntegration.exe.config"
   File "..\bin\Secure\DrunkenBakery.OWAtray.Snarl.dll"
@@ -71,6 +71,12 @@ Section "MainSection" SEC01
   File "..\bin\Microsoft.Exchange.WebServices.dll"
   File "..\bin\notify.wav"
   File "..\bin\SnarlConnector.dll"
+
+  ${If} ${RunningX64}
+  File "..\bin\x64\DrunkenBakery.OWAtray.Mapi.dll"
+  {Else}
+  File "..\bin\DrunkenBakery.OWAtray.Mapi.dll"
+  ${EndIf}
 
   CreateDirectory "$SMPROGRAMS\OWAtray"
   CreateShortCut "$SMPROGRAMS\OWAtray\OWAtray.lnk" "$INSTDIR\DrunkenBakery.OWAtray.GUI.exe"

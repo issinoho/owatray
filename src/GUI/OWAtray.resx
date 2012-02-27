@@ -588,4 +588,13 @@
   <data name="Form1_WindowDressing__freshly_baked_at_" xml:space="preserve">
     <value> freshly baked at </value>
   </data>
+  <data name="Form1_WireUpConnectionEvents_Connection_Failure_" xml:space="preserve">
+    <value>Connection Failure!</value>
+  </data>
+  <data name="Check_log_file_for_details" xml:space="preserve">
+    <value>Check log file for details</value>
+  </data>
+  <data name="Connected_to_Exchange" xml:space="preserve">
+    <value>Connected to Exchange</value>
+  </data>
 </root>

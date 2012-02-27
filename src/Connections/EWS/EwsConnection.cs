@@ -267,7 +267,6 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			{
 				RaiseLogMessage(ex.ToString(), Severity.Fail);
 				ChangeState(ConnectionState.Failed);
-				ChangeState(ConnectionState.Disconnected);
 			}
 		}
 
@@ -320,6 +319,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 		{
 			ConnectedState = state;
 			if (ConnectedStateChange != null) ConnectedStateChange(this, state);
+			RaiseLogMessage(string.Format("Changed state to {0}", state.ToString()));
 		}
 
 		public override void ConnectA()
@@ -342,15 +342,12 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				_appointmentPoll.Stop();
 				_appointmentPoll.Elapsed -= appointmentPoll_Elapsed;
 				_service = null;
+				ChangeState(ConnectionState.Disconnected);
 			}
 			catch (Exception ex)
 			{
 				ChangeState(ConnectionState.Failed);
 				RaiseLogMessage(ex.ToString(), Severity.Fail);
-			}
-			finally
-			{
-				ChangeState(ConnectionState.Disconnected);
 			}
 		}
 
@@ -513,7 +510,6 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			{
 				RaiseLogMessage(ex.ToString(), Severity.Fail);
 				ChangeState(ConnectionState.Failed);
-				Disconnect();
 			}
 		}
 
@@ -548,7 +544,6 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			{
 				RaiseLogMessage(ex.ToString(), Severity.Fail);
 				ChangeState(ConnectionState.Failed);
-				Disconnect();
 			}
 		}
 

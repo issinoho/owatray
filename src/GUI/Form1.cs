@@ -262,17 +262,19 @@ namespace DrunkenBakery.OWAtray.GUI
 					switch (state)
 					{
 						case ConnectionState.Connecting:
-							AddLogEntry(string.Format("[{0}] - Connecting, please wait...", _connection.EmailAddress));
 							break;
 						
 						case ConnectionState.Disconnecting:
-							AddLogEntry(string.Format("[{0}] - Disconnecting...", _connection.EmailAddress));
 							break;
 
 						case ConnectionState.Failed:
-							// Switch off autostart if we can't connect
+							// Switch off autostart if there has been an issue
 							Settings.Default.Autostart = false;
 							Settings.Default.Save();
+
+							// Show failure message in tray & pop balloon							
+							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Form1_WireUpConnectionEvents_Connection_Failure_;
+							PopToast(string.Format("{0} {1}", connection.EmailAddress, OWAtray.Form1_WireUpConnectionEvents_Connection_Failure_), OWAtray.Check_log_file_for_details);
 							break;
 
 						case ConnectionState.Connected:
@@ -303,13 +305,9 @@ namespace DrunkenBakery.OWAtray.GUI
 							UpdateServiceUrl();
 							ShellExchangeVersion();
 
-							// Log message
-							AddLogEntry(
-								string.Format("[{0}] - Connected to {1}", connection.EmailAddress,
-												connection.Version), Severity.Success);
-
 							// Minimize
 							//WindowState = FormWindowState.Minimized;
+							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Connected_to_Exchange;
 							break;
 
 						case ConnectionState.Disconnected:

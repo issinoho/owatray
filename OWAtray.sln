@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Snarl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.ShellIntegration", "src\ShellIntegration\DrunkenBakery.OWAtray.ShellIntegration.csproj", "{D3638975-E573-4BBD-9B8D-ED3B91200477}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DrunkenBakery.OWAtray.MapiDll", "src\Mapi\MapiDll.vcxproj", "{902675FD-4CCE-4425-803D-D4323A9D50D4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DrunkenBakery.OWAtray.Mapi", "src\Mapi\MapiDll.vcxproj", "{902675FD-4CCE-4425-803D-D4323A9D50D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
