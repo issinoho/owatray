@@ -465,27 +465,19 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					var isFlagged = false;
 
 					// Process each item.
-					foreach (var myItem in findResults.Items.OfType<EmailMessage>())
+					foreach (EmailMessage myItem in findResults.Items)
 					{
-						var myTime = DateTime.Now;
+						// Get the email details
+						var ps = new PropertySet(BasePropertySet.FirstClassProperties);
 
-						try
-						{
-							// Get the email details
-							var ps = new PropertySet(BasePropertySet.FirstClassProperties);
-							myItem.Load(ps);
-							var mySender = myItem.Sender.Name;
-							var mySubject = (myItem.Subject ?? "No subject");
-							var myAccessUrl = SupportsDirectMessageAccess ? myItem.WebClientReadFormQueryString : "";
-							myTime = myItem.DateTimeReceived;
+						myItem.Load(ps);
+						var mySender = myItem.Sender.Name;
+						var mySubject = (myItem.Subject ?? "No subject");
+						var myAccessUrl = SupportsDirectMessageAccess ? myItem.WebClientReadFormQueryString : "";
+						DateTime myTime = myItem.DateTimeReceived;
 
-							// Pop message
-							RaiseNewMail(myTime, mySubject, mySender, myAccessUrl);
-						}
-						catch (Exception ex)
-						{
-							RaiseLogMessage(ex.ToString(), Severity.Fail);
-						}
+						// Pop message
+						RaiseNewMail(myTime, mySubject, mySender, myAccessUrl);
 
 						// Update flag
 						if (isFlagged) continue;

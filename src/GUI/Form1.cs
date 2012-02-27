@@ -541,11 +541,11 @@ namespace DrunkenBakery.OWAtray.GUI
 			switch (_connection.ConnectedState)
 			{
 				case ConnectionState.Connected:
-					AddLogEntry("Already connected", Severity.Fail);
+					AddLogEntry(string.Format("{0}", "Already connected"), Severity.Fail);
 					break;
 				case ConnectionState.Disconnecting:
 				case ConnectionState.Connecting:
-					AddLogEntry("Transitioning state, please wait...", Severity.Fail);
+					AddLogEntry(string.Format("{0}", "Transitioning state, please wait..."), Severity.Fail);
 					break;
 				default:
 					_connection.ConnectA();
@@ -558,11 +558,11 @@ namespace DrunkenBakery.OWAtray.GUI
 			switch (_connection.ConnectedState)
 			{
 				case ConnectionState.Disconnected:
-					AddLogEntry("Already disconnected");
+					AddLogEntry(string.Format("{0}", "Already disconnected"));
 					break;
 				case ConnectionState.Disconnecting:
 				case ConnectionState.Connecting:
-					AddLogEntry("Transitioning state, please wait...", Severity.Fail);
+					AddLogEntry(string.Format("{0}", "Transitioning state, please wait..."), Severity.Fail);
 					break;
 				default:
 					_connection.DisconnectA();
