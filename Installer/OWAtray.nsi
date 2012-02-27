@@ -74,7 +74,7 @@ Section "MainSection" SEC01
 
   ${If} ${RunningX64}
   File "..\bin\x64\DrunkenBakery.OWAtray.Mapi.dll"
-  {Else}
+  ${Else}
   File "..\bin\DrunkenBakery.OWAtray.Mapi.dll"
   ${EndIf}
 
