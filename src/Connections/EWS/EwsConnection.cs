@@ -37,12 +37,12 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		public override string Version
 		{
-			get { return (!IsConnected ? "Disconnected" : _service.RequestedServerVersion.ToString()); }
+			get { return (!IsConnected ? ExchangeVersion.Exchange2007_SP1.ToString() : _service.ServerInfo.VersionString); }
 		}
 
 		public override bool SupportsDirectMessageAccess
 		{
-			get { return (_service.RequestedServerVersion != ExchangeVersion.Exchange2007_SP1); }
+			get { return (Version != ExchangeVersion.Exchange2007_SP1.ToString()); }
 		}
 
 		public override EmailType Type
@@ -54,8 +54,16 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 		{
 			get
 			{
-				var myFolder = Folder.Bind(_service, WellKnownFolderName.Inbox);
-				return myFolder.UnreadCount;
+				var count = 0;
+				try
+				{
+					var myFolder = Folder.Bind(_service, WellKnownFolderName.Inbox);
+					count = myFolder.UnreadCount;
+				}
+				catch
+				{
+				}
+				return count;
 			}
 		}
 
@@ -515,7 +523,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				var findResults = _service.FindAppointments(WellKnownFolderName.Calendar, cView);
 
 				// Process each item.
-				foreach (var myItem in findResults.Items)
+				foreach (Appointment myItem in findResults.Items)
 				{
 					if (myItem == null) continue;
 

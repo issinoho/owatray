@@ -283,6 +283,7 @@ namespace DrunkenBakery.OWAtray.GUI
 							Settings.Default.Save();
 
 							// Update discovered properties
+							AddLogEntry(string.Format("{0} {1}", "Connected to ", _connection.Version));
 							if (_connection.DiscoveredUsername.Length > 0)
 							{
 								AddLogEntry(OWAtray.Autodiscovered_User_Name + " " + _connection.DiscoveredUsername, Severity.Success);
@@ -311,8 +312,6 @@ namespace DrunkenBakery.OWAtray.GUI
 							break;
 
 						case ConnectionState.Disconnected:
-							AddLogEntry(string.Format("[{0}] - Disconnected", connection.EmailAddress),
-										Severity.Success);
 							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
 							break;
 					}
