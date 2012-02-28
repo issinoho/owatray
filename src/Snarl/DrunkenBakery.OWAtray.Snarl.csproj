@@ -41,7 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SnarlConnector">
-      <HintPath>..\lib\SnarlConnector.dll</HintPath>
+      <HintPath>..\..\lib\SnarlConnector.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

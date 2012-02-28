@@ -13,26 +13,26 @@ using Growl.Connector;
 
 namespace DrunkenBakery.OWAtray.Growl
 {
-	public class GrowlHelper
+	public static class GrowlHelper
 	{
-		private static string _application;
-		private static string _notificationTitle;
-		private static GrowlConnector _simpleGrowl;
+		private static string application;
+		private static string notificationTitle;
+		private static GrowlConnector simpleGrowl;
 
 		public static void RegisterGrowl(string application, string iconPath, string notificationTitle, string notificationText)
 		{
-			_application = application;
-			_notificationTitle = notificationTitle;
-			_simpleGrowl = new GrowlConnector();
-			var thisApp = new Application(application) {Icon = iconPath};
-			var simpleGrowlType = new NotificationType(notificationTitle, notificationText);			
-			_simpleGrowl.Register(thisApp, new NotificationType[] { simpleGrowlType });
+			GrowlHelper.application = application;
+			GrowlHelper.notificationTitle = notificationTitle;
+			simpleGrowl = new GrowlConnector();
+			var thisApp = new Application(application) { Icon = iconPath };
+			var simpleGrowlType = new NotificationType(notificationTitle, notificationText);
+			simpleGrowl.Register(thisApp, new NotificationType[] { simpleGrowlType });
 		}
 
 		public static void PopGrowl(string title, string message = "")
 		{
-			var myGrowl = new Notification(_application, _notificationTitle, title, title, message);
-			_simpleGrowl.Notify(myGrowl);
+			var myGrowl = new Notification(application, notificationTitle, title, title, message);
+			simpleGrowl.Notify(myGrowl);
 		}
 	}
 }

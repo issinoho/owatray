@@ -19,10 +19,10 @@ using log4net.Config;
 
 namespace DrunkenBakery.OWAtray.Logging
 {
-	public class Logger
+	public static class Logger
 	{
 		private const string ConfigFileName = "Log4Net.config";
-		private static bool _logInitialized;
+		private static bool logInitialized;
 		private static readonly Dictionary<Type, ILog> Loggers = new Dictionary<Type, ILog>();
 
 		public static Action<object, object> Debug = (source, message) => { };
@@ -52,7 +52,7 @@ namespace DrunkenBakery.OWAtray.Logging
 		private static Type GetSourceType(object source)
 		{
 			var sourceType = source.GetType();
-			if (sourceType == typeof (Type))
+			if (sourceType == typeof(Type))
 				return source as Type;
 			return sourceType;
 		}
@@ -81,10 +81,10 @@ namespace DrunkenBakery.OWAtray.Logging
 
 		private static void EnsureInitialized()
 		{
-			if (_logInitialized) return;
+			if (logInitialized) return;
 
 			Initialize();
-			_logInitialized = true;
+			logInitialized = true;
 		}
 
 		private static ILog GetLogger(Type source)

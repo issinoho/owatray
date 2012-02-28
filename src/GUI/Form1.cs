@@ -28,8 +28,8 @@ using DrunkenBakery.OWAtray.Audio;
 using DrunkenBakery.OWAtray.Connections.Abstract;
 using DrunkenBakery.OWAtray.Connections.Proxy;
 using DrunkenBakery.OWAtray.Framework;
-using DrunkenBakery.OWAtray.GUI.Properties;
 using DrunkenBakery.OWAtray.Growl;
+using DrunkenBakery.OWAtray.GUI.Properties;
 using DrunkenBakery.OWAtray.Logging;
 using DrunkenBakery.OWAtray.Snarl;
 
@@ -73,7 +73,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			// Welcome message
 			AddLogEntry(string.Format("{0} {1} v{2}", OWAtray.Welcome_to_the, AssemblyHelpers.AssemblyTitle,
-			                          AssemblyHelpers.UpgradeSettings()));
+									  AssemblyHelpers.UpgradeSettings()));
 
 			// The rest gets kicked off an a timer
 			AddLogEntry("Ready.");
@@ -109,13 +109,13 @@ namespace DrunkenBakery.OWAtray.GUI
 		private void BootHelpers()
 		{
 			GrowlHelper.RegisterGrowl(AssemblyHelpers.AssemblyTitle, _graphicPath, "NEWMAIL", "New Mail");
-			SnarlHelper.RegisterSnarl(AssemblyHelpers.AssemblyTitle, _graphicPath, Handle);			
+			SnarlHelper.RegisterSnarl(AssemblyHelpers.AssemblyTitle, _graphicPath, Handle);
 		}
 
 		private void BootShell()
 		{
 			_shellPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-									  Settings.Default.ShellIntegration);			
+									  Settings.Default.ShellIntegration);
 		}
 
 		private void BootAudio()
@@ -126,14 +126,13 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void BootIcons()
 		{
-
 			_graphicPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
 										Settings.Default.EmailGraphic);
 			_emailIcon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.EmailIcon);
 			_alertIcon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.AlertIcon);
 
 			// Tray icon
-			notifyIcon1.Icon = new Icon(_emailIcon);			
+			notifyIcon1.Icon = new Icon(_emailIcon);
 		}
 
 		private void BootEnvironment()
@@ -146,8 +145,8 @@ namespace DrunkenBakery.OWAtray.GUI
 			balloonToolStripMenuItem.Checked = Settings.Default.Balloon;
 			growlToolStripMenuItem.Checked = Settings.Default.Growl;
 			snarlToolStripMenuItem.Checked = Settings.Default.Snarl;
-			playSoundToolStripMenuItem.Checked = Settings.Default.Bell;		
-	
+			playSoundToolStripMenuItem.Checked = Settings.Default.Bell;
+
 			// Web Proxy
 			useDefaultWebProxyToolStripMenuItem.Checked = Settings.Default.UseWebProxy;
 			UpdateWebProxySettings();
@@ -263,7 +262,7 @@ namespace DrunkenBakery.OWAtray.GUI
 					{
 						case ConnectionState.Connecting:
 							break;
-						
+
 						case ConnectionState.Disconnecting:
 							break;
 
@@ -272,7 +271,7 @@ namespace DrunkenBakery.OWAtray.GUI
 							Settings.Default.Autostart = false;
 							Settings.Default.Save();
 
-							// Show failure message in tray & pop balloon							
+							// Show failure message in tray & pop balloon
 							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Form1_WireUpConnectionEvents_Connection_Failure_;
 							PopToast(string.Format("{0} {1}", connection.EmailAddress, OWAtray.Form1_WireUpConnectionEvents_Connection_Failure_), OWAtray.Check_log_file_for_details);
 							break;
@@ -319,10 +318,10 @@ namespace DrunkenBakery.OWAtray.GUI
 
 				// New mail event
 				item.NewMail += (email, arrivalTime, subject, sender, accessUrl) => Invoke(new Action(() =>
-				            {
+							{
 								_popUrl = accessUrl;
-				                PopToast(string.Format("{0} {1}", OWAtray.New_Mail_from ,sender), subject);
-				            }));
+								PopToast(string.Format("{0} {1}", OWAtray.New_Mail_from, sender), subject);
+							}));
 
 				// New appointment event
 				item.NewAppointment += (minsToGo, startTime, subject, location, accessUrl) => Invoke(new Action(() =>
@@ -330,24 +329,24 @@ namespace DrunkenBakery.OWAtray.GUI
 								_popUrl = accessUrl;
 								PopToast(
 									string.Format("{0} {1} {2}", OWAtray.You_have_an_appointment_in, minsToGo,
-									              (minsToGo != 1 ? OWAtray.mins : OWAtray.min)),
+												  (minsToGo != 1 ? OWAtray.mins : OWAtray.min)),
 									string.Format("{0} - {1} ({2})", startTime.ToShortTimeString(), subject, location));
 							}));
 
 				// Mail count event
 				item.MessageCount += count => Invoke(new Action(() =>
-				            {
+							{
 								notifyIcon1.Text = NotificationText(count);
 								notifyIcon1.Icon = new Icon((count > 0 ? _alertIcon : _emailIcon));
 
 								// Special case - pop message at the start if there is any unread email
-				            	if (!_firstRun) return;
-				            	if (count <= 0) return;
-				            	_firstRun = false;
-				            	PopToast(OWAtray.New_Mail,
-				            	         string.Format("{0} {1} {2}{3}{4}", OWAtray.You_have, count, OWAtray.unread_email,
-				            	                       (count != 1 ? "s " : " "), OWAtray.in_your_inbox));
-				            }));
+								if (!_firstRun) return;
+								if (count <= 0) return;
+								_firstRun = false;
+								PopToast(OWAtray.New_Mail,
+										 string.Format("{0} {1} {2}{3}{4}", OWAtray.You_have, count, OWAtray.unread_email,
+													   (count != 1 ? "s " : " "), OWAtray.in_your_inbox));
+							}));
 			}
 		}
 
@@ -438,7 +437,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void ActivateOwa()
 		{
-			var runSvc = new ProcessStartInfo(_shellPath) {WindowStyle = ProcessWindowStyle.Hidden};
+			var runSvc = new ProcessStartInfo(_shellPath) { WindowStyle = ProcessWindowStyle.Hidden };
 
 			if (_connection.AlwaysUseInternetExplorer)
 			{
@@ -520,7 +519,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			try
 			{
 				WindowsShortcut.Update(Environment.SpecialFolder.Startup, Application.ExecutablePath, AssemblyHelpers.AssemblyTitle,
-				                       switchOn);
+									   switchOn);
 				AddLogEntry(
 					OWAtray.OWAtray_will + (switchOn ? " " : " " + OWAtray.not + " ") + OWAtray.autostart_with_Windows);
 			}
@@ -595,7 +594,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			catch (Exception ex)
 			{
 				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-			}			
+			}
 		}
 
 		private void ShellExchangeVersion()
@@ -614,7 +613,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			catch (Exception ex)
 			{
 				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-			}			
+			}
 		}
 
 		private void ShellPassword()
@@ -633,7 +632,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			catch (Exception ex)
 			{
 				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-			}			
+			}
 		}
 
 		private void ShellAutologin()
@@ -656,7 +655,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			catch (Exception ex)
 			{
 				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-			}			
+			}
 		}
 
 		private void ShellBrowserVersion()
@@ -679,7 +678,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			catch (Exception ex)
 			{
 				AddLogEntry(OWAtray.Error + ex.Message, Severity.Fail);
-			}			
+			}
 		}
 
 		private void ConfigureShell()
@@ -718,47 +717,47 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			// Avoid Illegal Cross Thread Calls
 			Invoke(new Action(() =>
-			                  	{
-			                  		if (_lvBuffer.Count <= 0) return;
+								{
+									if (_lvBuffer.Count <= 0) return;
 
-			                  		// Avoid buffer overflows by trimming log after n entries
-			                  		if (lvStatus.Items.Count >= Settings.Default.ScreenLines) lvStatus.Items.Clear();
+									// Avoid buffer overflows by trimming log after n entries
+									if (lvStatus.Items.Count >= Settings.Default.ScreenLines) lvStatus.Items.Clear();
 
-			                  		try
-			                  		{
-			                  			// Copy from buffer to screen control
-			                  			lvStatus.BeginUpdate();
-			                  			// Note that .AddRange has a bug so avoid
-			                  			foreach (ListViewItem lv in _lvBuffer.Where(lv => lv != null))
-			                  				lvStatus.Items.Add(lv);
-			                  		}
-			                  		catch (Exception)
-			                  		{
-			                  		}
-			                  		finally
-			                  		{
-			                  			// Make newest item visible
-			                  			// We don't care about any spurious errors raised here
-			                  			if (lvStatus.Items.Count > 0)
-			                  			{
-			                  				try
-			                  				{
-			                  					lvStatus.EnsureVisible(lvStatus.Items.Count - 1);
-			                  					var lv = lvStatus.Items[lvStatus.Items.Count - 1];
+									try
+									{
+										// Copy from buffer to screen control
+										lvStatus.BeginUpdate();
+										// Note that .AddRange has a bug so avoid
+										foreach (ListViewItem lv in _lvBuffer.Where(lv => lv != null))
+											lvStatus.Items.Add(lv);
+									}
+									catch (Exception)
+									{
+									}
+									finally
+									{
+										// Make newest item visible
+										// We don't care about any spurious errors raised here
+										if (lvStatus.Items.Count > 0)
+										{
+											try
+											{
+												lvStatus.EnsureVisible(lvStatus.Items.Count - 1);
+												var lv = lvStatus.Items[lvStatus.Items.Count - 1];
 												slStatus.Text = lv.SubItems[1].Text.Substring(0, SafeControlTextSize(slStatus.Width, lv.SubItems[1].Text.Length));
 											}
-			                  				catch (Exception)
-			                  				{
-			                  				}
-			                  			}
+											catch (Exception)
+											{
+											}
+										}
 
-			                  			// Tidy up
-			                  			_lvBuffer.Clear();
-			                  			lvStatus.EndUpdate();
-			                  			lvStatus.Refresh();
-			                  			Refresh();
-			                  		}
-			                  	}));
+										// Tidy up
+										_lvBuffer.Clear();
+										lvStatus.EndUpdate();
+										lvStatus.Refresh();
+										Refresh();
+									}
+								}));
 		}
 
 		private static int SafeControlTextSize(int controlWidth, int textLength)
@@ -840,7 +839,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			try
 			{
-				var runSvc = new ProcessStartInfo(_shellPath) {Arguments = "registry", WindowStyle = ProcessWindowStyle.Hidden};
+				var runSvc = new ProcessStartInfo(_shellPath) { Arguments = "registry", WindowStyle = ProcessWindowStyle.Hidden };
 				if (Environment.OSVersion.Version.Major >= 6)
 					runSvc.Verb = "runas";
 				var serviceProcess = Process.Start(runSvc);
@@ -1015,7 +1014,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			try
 			{
-				var runSvc = new ProcessStartInfo(_shellPath) {Arguments = "restore", WindowStyle = ProcessWindowStyle.Hidden};
+				var runSvc = new ProcessStartInfo(_shellPath) { Arguments = "restore", WindowStyle = ProcessWindowStyle.Hidden };
 				if (Environment.OSVersion.Version.Major >= 6)
 					runSvc.Verb = "runas";
 				Process serviceProcess = Process.Start(runSvc);
@@ -1066,16 +1065,16 @@ namespace DrunkenBakery.OWAtray.GUI
 				else
 				{
 					errorProvider1.SetError(txtInterval,
-					                        OWAtray.Must_be_numeric_value_between + " " +
-					                        MaxInterval.ToString(CultureInfo.InvariantCulture));
+											OWAtray.Must_be_numeric_value_between + " " +
+											MaxInterval.ToString(CultureInfo.InvariantCulture));
 					e.Cancel = true;
 				}
 			}
 			else
 			{
 				errorProvider1.SetError(txtInterval,
-				                        OWAtray.Must_be_numeric_value_between + " " +
-				                        MaxInterval.ToString(CultureInfo.InvariantCulture));
+										OWAtray.Must_be_numeric_value_between + " " +
+										MaxInterval.ToString(CultureInfo.InvariantCulture));
 				e.Cancel = true;
 			}
 		}

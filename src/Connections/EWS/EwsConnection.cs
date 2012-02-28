@@ -11,8 +11,6 @@
 //------------------------------------------------------------------
 
 using System;
-using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -28,16 +26,16 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 {
 	public class EwsConnection : AbstractConnection
 	{
-		private readonly Timer _backgroundPoll = new Timer();
-		private readonly Timer _appointmentPoll = new Timer();
-		private readonly object _locker = new object();
-		private ExchangeService _service;
-		private DateTime _timeLastChecked;
-		private int _mailCount = -1;
+		private readonly Timer backgroundPoll = new Timer();
+		private readonly Timer appointmentPoll = new Timer();
+		private readonly object locker = new object();
+		private ExchangeService service;
+		private DateTime timeLastChecked;
+		private int mailCount = -1;
 
 		public override string Version
 		{
-			get { return (!IsConnected ? ExchangeVersion.Exchange2007_SP1.ToString() : _service.ServerInfo.VersionString); }
+			get { return (!IsConnected ? ExchangeVersion.Exchange2007_SP1.ToString() : this.service.ServerInfo.VersionString); }
 		}
 
 		public override bool SupportsDirectMessageAccess
@@ -57,7 +55,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				var count = 0;
 				try
 				{
-					var myFolder = Folder.Bind(_service, WellKnownFolderName.Inbox);
+					var myFolder = Folder.Bind(this.service, WellKnownFolderName.Inbox);
 					count = myFolder.UnreadCount;
 				}
 				catch
@@ -101,22 +99,22 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
 
 				// Define service
-				_service = ServerVersion == "Default" ? new ExchangeService() : new ExchangeService((ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), ServerVersion));
+				this.service = ServerVersion == "Default" ? new ExchangeService() : new ExchangeService((ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), ServerVersion));
 
 				// Enable Tracing (if required)
 				if (Settings.Default.UseTracing)
 				{
-					_service.TraceListener = new EwsTraceListener();
-					_service.TraceFlags = TraceFlags.EwsRequest | TraceFlags.EwsResponse;
-					_service.TraceEnabled = true;
+					this.service.TraceListener = new EwsTraceListener();
+					this.service.TraceFlags = TraceFlags.EwsRequest | TraceFlags.EwsResponse;
+					this.service.TraceEnabled = true;
 				}
 
 				// Are we on a Windows domain?
-				_service.UseDefaultCredentials = OnWindowsDomain;
+				this.service.UseDefaultCredentials = OnWindowsDomain;
 
 				if (!OnWindowsDomain)
 				{
-					_service.Credentials = AccountDomain.Length > 0 ? new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password, AccountDomain) : new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password);
+					this.service.Credentials = AccountDomain.Length > 0 ? new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password, AccountDomain) : new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password);
 				}
 
 				// Connect using Autodiscover?
@@ -124,43 +122,43 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				{
 					if (OverrideAutodiscoveryValidation)
 					{
-						_service.AutodiscoverUrl(EmailAddress, delegate { return true; });
+						this.service.AutodiscoverUrl(EmailAddress, delegate { return true; });
 					}
 					else
 					{
-						_service.AutodiscoverUrl(EmailAddress);
+						this.service.AutodiscoverUrl(EmailAddress);
 					}
 
 					// Probe for autodiscover information
-					var autodiscoverService = new AutodiscoverService(_service.RequestedServerVersion);
+					var autodiscoverService = new AutodiscoverService(this.service.RequestedServerVersion);
 
 					// Credentials
 					if (OnWindowsDomain)
 					{
-					    autodiscoverService.UseDefaultCredentials = true;
+						autodiscoverService.UseDefaultCredentials = true;
 					}
 					else
 					{
-					    autodiscoverService.Credentials = AccountDomain.Length > 0 ? new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password, AccountDomain) : new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password);
+						autodiscoverService.Credentials = AccountDomain.Length > 0 ? new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password, AccountDomain) : new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password);
 					}
 
 					// Redirection Callback
 					if (OverrideAutodiscoveryValidation)
 					{
-					    autodiscoverService.RedirectionUrlValidationCallback = delegate { return true; };
+						autodiscoverService.RedirectionUrlValidationCallback = delegate { return true; };
 					}
 
 					// Is this Internal or External ?
 					if (autodiscoverService.IsExternal == false)
 					{
-					    // Probe for values
-					    var userresponse = autodiscoverService.GetUserSettings(EmailAddress,
-					                                                            UserSettingName.InternalWebClientUrls,
-					                                                            UserSettingName.InternalEwsUrl,
-					                                                            UserSettingName.InternalMailboxServer,
-					                                                            UserSettingName.UserDisplayName);
+						// Probe for values
+						var userresponse = autodiscoverService.GetUserSettings(EmailAddress,
+																				UserSettingName.InternalWebClientUrls,
+																				UserSettingName.InternalEwsUrl,
+																				UserSettingName.InternalMailboxServer,
+																				UserSettingName.UserDisplayName);
 
-					    // OWA Url
+						// OWA Url
 						WebClientUrlCollection webCollection;
 						if (userresponse.TryGetSettingValue(UserSettingName.InternalWebClientUrls, out webCollection))
 						{
@@ -170,21 +168,21 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 							}
 						}
 
-					    // EWS Url
+						// EWS Url
 						string internalUrl;
 						if (userresponse.TryGetSettingValue(UserSettingName.InternalEwsUrl, out internalUrl))
 						{
 							DiscoveredServiceUrl = internalUrl;
 						}
 
-					    // Server
+						// Server
 						string internalServer;
 						if (userresponse.TryGetSettingValue(UserSettingName.InternalMailboxServer, out internalServer))
 						{
 							DiscoveredEmailServer = internalServer;
 						}
 
-					    // User Name
+						// User Name
 						string userName;
 						if (userresponse.TryGetSettingValue(UserSettingName.UserDisplayName, out userName))
 						{
@@ -193,14 +191,14 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					}
 					else
 					{
-					    // Probe for values
-					    var userresponse = autodiscoverService.GetUserSettings(EmailAddress,
-					                                                            UserSettingName.ExternalWebClientUrls,
-					                                                            UserSettingName.ExternalEwsUrl,
-					                                                            UserSettingName.ExternalMailboxServer,
-					                                                            UserSettingName.UserDisplayName);
+						// Probe for values
+						var userresponse = autodiscoverService.GetUserSettings(EmailAddress,
+																				UserSettingName.ExternalWebClientUrls,
+																				UserSettingName.ExternalEwsUrl,
+																				UserSettingName.ExternalMailboxServer,
+																				UserSettingName.UserDisplayName);
 
-					    // OWA Url
+						// OWA Url
 						WebClientUrlCollection webCollection;
 						if (userresponse.TryGetSettingValue(UserSettingName.ExternalWebClientUrls, out webCollection))
 						{
@@ -237,7 +235,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					if (DerivedServiceUrl.Length > 0)
 					{
 						var myUri = new Uri(DerivedServiceUrl);
-						_service.Url = myUri;
+						this.service.Url = myUri;
 
 						// Update properties
 						DiscoveredEmailServer = EmailServer;
@@ -246,25 +244,25 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				}
 
 				// Get initial timestamp
-				_timeLastChecked = TimeOfNewestEmail().AddSeconds(1);
+				this.timeLastChecked = TimeOfNewestEmail().AddSeconds(1);
 
 				// Initial Message
 				var count = UnreadCount;
-				if (count > 0)
-				{
-					RaiseLogMessage(string.Format("You have {0} unread {1} in your Inbox", count, count == 1 ? "message" : "messages"));
-				}
+				this.RaiseMessageCount(count);
 
 				// Timers
-				_backgroundPoll.Interval = (Interval * 1000);
-				_backgroundPoll.Elapsed += backgroundPoll_Elapsed;
-				_backgroundPoll.Start();
-				_appointmentPoll.Interval = (Settings.Default.ApptInterval * 1000);
-				_appointmentPoll.Elapsed += appointmentPoll_Elapsed;
-				_appointmentPoll.Start();
+				this.backgroundPoll.Interval = (Interval * 1000);
+				this.backgroundPoll.Elapsed += backgroundPoll_Elapsed;
+				this.backgroundPoll.Start();
+				this.appointmentPoll.Interval = (Settings.Default.ApptInterval * 1000);
+				this.appointmentPoll.Elapsed += appointmentPoll_Elapsed;
+				this.appointmentPoll.Start();
+
+				// Set timeout
+				this.service.Timeout = (Interval * 1000) - 500;
 
 				// Initial check
-				_mailCount = -1;
+				this.mailCount = -1;
 				CheckForNewMailA();
 				if (!DisableCalendar) CheckForNewAppointmentA();
 
@@ -273,8 +271,11 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
-				RaiseLogMessage(ex.ToString(), Severity.Fail);
-				ChangeState(ConnectionState.Failed);
+				if (ex.InnerException.Message != "The operation has timed out")
+				{
+					RaiseLogMessage(ex.ToString(), Severity.Fail);
+					ChangeState(ConnectionState.Failed);
+				}
 			}
 		}
 
@@ -332,7 +333,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		public override void ConnectA()
 		{
-			lock (_locker)
+			lock (this.locker)
 			{
 				new Thread(Connect).Start();
 			}
@@ -345,23 +346,26 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			try
 			{
 				ChangeState(ConnectionState.Disconnecting);
-				_backgroundPoll.Stop();
-				_backgroundPoll.Elapsed -= backgroundPoll_Elapsed;
-				_appointmentPoll.Stop();
-				_appointmentPoll.Elapsed -= appointmentPoll_Elapsed;
-				_service = null;
+				this.backgroundPoll.Stop();
+				this.backgroundPoll.Elapsed -= backgroundPoll_Elapsed;
+				this.appointmentPoll.Stop();
+				this.appointmentPoll.Elapsed -= appointmentPoll_Elapsed;
+				this.service = null;
 				ChangeState(ConnectionState.Disconnected);
 			}
 			catch (Exception ex)
 			{
-				ChangeState(ConnectionState.Failed);
-				RaiseLogMessage(ex.ToString(), Severity.Fail);
+				if (ex.InnerException.Message != "The operation has timed out")
+				{
+					ChangeState(ConnectionState.Failed);
+					RaiseLogMessage(ex.ToString(), Severity.Fail);
+				}
 			}
 		}
 
 		public override void DisconnectA()
 		{
-			lock (_locker)
+			lock (this.locker)
 			{
 				new Thread(Disconnect).Start();
 			}
@@ -379,7 +383,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		private void CheckForNewMailA()
 		{
-			lock (_locker)
+			lock (this.locker)
 			{
 				new Thread(CheckForNewMail).Start();
 			}
@@ -387,7 +391,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		private void CheckForNewAppointmentA()
 		{
-			lock (_locker)
+			lock (this.locker)
 			{
 				new Thread(CheckForNewAppointment).Start();
 			}
@@ -398,16 +402,14 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			var myTime = DateTime.Now;
 
 			// Define filters collection
-			var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
-			              	{new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false)};
+			var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And) { new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false) };
 
 			// Item view
-			var view = new ItemView(10, 0, OffsetBasePoint.Beginning)
-			           	{PropertySet = new PropertySet(BasePropertySet.IdOnly) {ItemSchema.DateTimeReceived}};
+			var view = new ItemView(10, 0, OffsetBasePoint.Beginning) { PropertySet = new PropertySet(BasePropertySet.IdOnly) { ItemSchema.DateTimeReceived } };
 			view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
 
 			// Now search
-			var findResults = _service.FindItems(WellKnownFolderName.Inbox, filters, view);
+			var findResults = this.service.FindItems(WellKnownFolderName.Inbox, filters, view);
 
 			// Process each item.
 			foreach (var myItem in findResults.Items)
@@ -433,9 +435,9 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 				// Quick mail count check
 				var count = UnreadCount;
-				if (count != _mailCount)
+				if (count != this.mailCount)
 				{
-					_mailCount = count;
+					this.mailCount = count;
 					RaiseMessageCount(count);
 				}
 
@@ -455,19 +457,19 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
 					              	{
 					              		new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
-					              		new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, _timeLastChecked)
+					              		new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, this.timeLastChecked)
 					              	};
 
 					// Item view
 					var view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning)
-					           	{
-					           		PropertySet =
-					           			new PropertySet(BasePropertySet.IdOnly) {ItemSchema.Subject, ItemSchema.DateTimeReceived}
-					           	};
+								{
+									PropertySet =
+										new PropertySet(BasePropertySet.IdOnly) { ItemSchema.Subject, ItemSchema.DateTimeReceived }
+								};
 					view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
 
 					// Now search
-					var findResults = _service.FindItems(WellKnownFolderName.Inbox, filters, view);
+					var findResults = this.service.FindItems(WellKnownFolderName.Inbox, filters, view);
 
 					// Only update timestamp once
 					var isFlagged = false;
@@ -489,7 +491,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 						// Update flag
 						if (isFlagged) continue;
-						_timeLastChecked = myTime.AddSeconds(1);
+						this.timeLastChecked = myTime.AddSeconds(1);
 						isFlagged = true;
 					}
 
@@ -508,8 +510,11 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
-				RaiseLogMessage(ex.ToString(), Severity.Fail);
-				ChangeState(ConnectionState.Failed);
+				if (ex.InnerException.Message != "The operation has timed out")
+				{
+					RaiseLogMessage(ex.ToString(), Severity.Fail);
+					ChangeState(ConnectionState.Failed);
+				}
 			}
 		}
 
@@ -518,9 +523,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			try
 			{
 				// Interrogate default Calendar
-				var cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Settings.Default.ApptWindow)))
-				            	{PropertySet = PropertySet.FirstClassProperties};
-				var findResults = _service.FindAppointments(WellKnownFolderName.Calendar, cView);
+				var cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Settings.Default.ApptWindow))) { PropertySet = PropertySet.FirstClassProperties };
+				var findResults = this.service.FindAppointments(WellKnownFolderName.Calendar, cView);
 
 				// Process each item.
 				foreach (Appointment myItem in findResults.Items)
@@ -542,8 +546,11 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
-				RaiseLogMessage(ex.ToString(), Severity.Fail);
-				ChangeState(ConnectionState.Failed);
+				if (ex.InnerException.Message != "The operation has timed out")
+				{
+					RaiseLogMessage(ex.ToString(), Severity.Fail);
+					ChangeState(ConnectionState.Failed);
+				}
 			}
 		}
 
@@ -563,7 +570,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 			try
 			{
-				var message = new EmailMessage(_service) {Subject = subject, Body = "OWAtray Test Message"};
+				var message = new EmailMessage(this.service) { Subject = subject, Body = "OWAtray Test Message" };
 				message.ToRecipients.Add(recipient);
 				message.Send();
 			}
@@ -575,19 +582,19 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		private void Send(object payload)
 		{
-			var p = (EmailPayload) payload;
+			var p = (EmailPayload)payload;
 			Send(p.Subject, p.Recipient);
 		}
 
 		public override void SendA(string subject, string recipient)
 		{
-			lock (_locker)
+			lock (this.locker)
 			{
 				var payload = new EmailPayload
-				              	{
-				              		Subject = subject,
-				              		Recipient = recipient
-				              	};
+								{
+									Subject = subject,
+									Recipient = recipient
+								};
 				ThreadPool.QueueUserWorkItem(Send, payload);
 			}
 		}

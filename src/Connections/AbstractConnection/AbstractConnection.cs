@@ -17,7 +17,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 {
 	public abstract class AbstractConnection : IEmailInterface
 	{
-		private string _encryptedPassword;
+		private string encryptedPassword;
 
 		protected AbstractConnection()
 		{
@@ -112,14 +112,14 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		public string Password
 		{
-			get { return _encryptedPassword.Decrypt(); }
-			set { _encryptedPassword = value.Encrypt(); }
+			get { return this.encryptedPassword.Decrypt(); }
+			set { this.encryptedPassword = value.Encrypt(); }
 		}
 
 		public string EncryptedPassword
 		{
-			get { return _encryptedPassword; }
-			set { _encryptedPassword = value; }
+			get { return this.encryptedPassword; }
+			set { this.encryptedPassword = value; }
 		}
 
 		public virtual EmailType Type { get; set; }
@@ -171,29 +171,29 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 			remove { }
 		}
 
-		#endregion
+		#endregion IEmailInterface Members
 
-		public virtual void RaiseMessageCount(int count)
+		protected virtual void RaiseMessageCount(int count)
 		{
 			if (MessageCount != null) MessageCount(count);
 		}
 
-		public virtual void RaiseLogMessage(string message)
+		protected virtual void RaiseLogMessage(string message)
 		{
 			RaiseLogMessage(message, Severity.Info);
 		}
 
-		public virtual void RaiseLogMessage(string message, Severity severity)
+		protected virtual void RaiseLogMessage(string message, Severity severity)
 		{
 			if (LogMessage != null) LogMessage(string.Format("[{0}] - {1}", EmailAddress, message), severity);
 		}
 
-		public virtual void RaiseNewMail(DateTime arrivalTime, string subject, string sender, string accessUrl)
+		protected virtual void RaiseNewMail(DateTime arrivalTime, string subject, string sender, string accessUrl)
 		{
 			if (NewMail != null) NewMail(EmailAddress, arrivalTime, subject, sender, accessUrl);
 		}
 
-		public virtual void RaiseNewAppointment(int minsToGo, DateTime startTime, string subject, string location, string accessUrl)
+		protected virtual void RaiseNewAppointment(int minsToGo, DateTime startTime, string subject, string location, string accessUrl)
 		{
 			if (NewAppointment != null) NewAppointment(minsToGo, startTime, subject, location, accessUrl);
 		}

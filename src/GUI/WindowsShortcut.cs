@@ -18,7 +18,7 @@ namespace DrunkenBakery.OWAtray
 {
 	public static class WindowsShortcut
 	{
-		public static bool Exists(string directoryPath, string linkPathName)
+		private static bool Exists(string directoryPath, string linkPathName)
 		{
 			var specialDir = new DirectoryInfo(directoryPath);
 			var originalfile = new FileInfo(linkPathName);
@@ -29,10 +29,10 @@ namespace DrunkenBakery.OWAtray
 
 		public static bool Exists(Environment.SpecialFolder folder, string linkPathName)
 		{
-			return WindowsShortcut.Exists(Environment.GetFolderPath(folder), linkPathName);
+			return Exists(Environment.GetFolderPath(folder), linkPathName);
 		}
 
-		public static void Update(string directoryPath, string targetPathName, string linkPathName, bool create)
+		private static void Update(string directoryPath, string targetPathName, string linkPathName, bool create)
 		{
 			var specialDir = new DirectoryInfo(directoryPath);
 			var originalFile = new FileInfo(linkPathName);
@@ -44,7 +44,7 @@ namespace DrunkenBakery.OWAtray
 				if (!linkFile.Exists)
 				{
 					var shell = new WshShell();
-					var link = (IWshShortcut) shell.CreateShortcut(linkFile.FullName);
+					var link = (IWshShortcut)shell.CreateShortcut(linkFile.FullName);
 					link.TargetPath = targetPathName;
 					link.WorkingDirectory = Path.GetDirectoryName(targetPathName);
 					link.Save();
@@ -58,7 +58,7 @@ namespace DrunkenBakery.OWAtray
 
 		public static void Update(Environment.SpecialFolder folder, string targetPathName, string linkPathName, bool install)
 		{
-			WindowsShortcut.Update(Environment.GetFolderPath(folder), targetPathName, linkPathName, install);
+			Update(Environment.GetFolderPath(folder), targetPathName, linkPathName, install);
 		}
 	}
 }

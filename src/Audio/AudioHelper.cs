@@ -16,12 +16,12 @@ using System.Runtime.InteropServices;
 
 namespace DrunkenBakery.OWAtray.Audio
 {
-	public class AudioHelper
+	public static class AudioHelper
 	{
 		#region PlaySoundFlags enum
 
 		[Flags]
-		public enum PlaySoundFlags
+		private enum PlaySoundFlags
 		{
 			SndSync = 0x0000,
 			SndAsync = 0x0001,
@@ -33,7 +33,7 @@ namespace DrunkenBakery.OWAtray.Audio
 			SndResource = 0x00040004
 		}
 
-		#endregion
+		#endregion PlaySoundFlags enum
 
 		[DllImport("winmm.DLL", EntryPoint = "PlaySound", SetLastError = true)]
 		private static extern bool PlaySound(string szSound, IntPtr hMod, PlaySoundFlags flags);

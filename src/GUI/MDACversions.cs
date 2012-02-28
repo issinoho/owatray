@@ -15,46 +15,46 @@ using Microsoft.Win32;
 
 namespace DrunkenBakery.OWAtray.GUI
 {
-    using System;
-    using System.Windows.Forms;
+	using System;
+	using System.Windows.Forms;
 
-    public partial class MdaCversions : Form
-    {
-        public MdaCversions()
-        {
-            InitializeComponent();
+	public partial class MdaCversions : Form
+	{
+		public MdaCversions()
+		{
+			InitializeComponent();
 
-            // Clear list
-            lvStatus.Columns.Add(OWAtray.Major_Version, (lvStatus.Width / 2), HorizontalAlignment.Left);
-            lvStatus.Columns.Add(OWAtray.Revision, (lvStatus.Width / 2) - 3, HorizontalAlignment.Left);
-            lvStatus.Items.Clear();
+			// Clear list
+			lvStatus.Columns.Add(OWAtray.Major_Version, (lvStatus.Width / 2), HorizontalAlignment.Left);
+			lvStatus.Columns.Add(OWAtray.Revision, (lvStatus.Width / 2) - 3, HorizontalAlignment.Left);
+			lvStatus.Items.Clear();
 
-            // Now get the versions from the reg
-            ScrapeRegistry();
-        }
+			// Now get the versions from the reg
+			ScrapeRegistry();
+		}
 
-        private void AddEntry(string newEntry, string subEntry)
-        {
-            ListViewItem itmX = null;
+		private void AddEntry(string newEntry, string subEntry)
+		{
+			ListViewItem itmX = null;
 
-            itmX = new ListViewItem(newEntry, 0);
-            lvStatus.Items.Add(itmX);
-            var i = (lvStatus.Items.Count - 1);
-            lvStatus.Items[i].SubItems.Add(subEntry);
-        }
+			itmX = new ListViewItem(newEntry, 0);
+			lvStatus.Items.Add(itmX);
+			var i = (lvStatus.Items.Count - 1);
+			lvStatus.Items[i].SubItems.Add(subEntry);
+		}
 
-        private void cmdOK_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+		private void cmdOK_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
 
-        private void ScrapeRegistry()
-        {
-        	var regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\DataAccess\", false);
-        	if (regKey == null) return;
-        	var verVal = (string)regKey.GetValue("Version");
-        	var revVal = (string)regKey.GetValue("FullInstallVer");
-        	AddEntry(verVal, revVal);
-        }
-    }
+		private void ScrapeRegistry()
+		{
+			var regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\DataAccess\", false);
+			if (regKey == null) return;
+			var verVal = (string)regKey.GetValue("Version");
+			var revVal = (string)regKey.GetValue("FullInstallVer");
+			AddEntry(verVal, revVal);
+		}
+	}
 }

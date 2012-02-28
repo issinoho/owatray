@@ -52,9 +52,9 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			var regKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\", false);
 			if (regKey != null)
-				foreach ( var keyname in regKey.GetSubKeyNames())
+				foreach (var keyname in regKey.GetSubKeyNames())
 				{
-					var revKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\" + keyname + @"\", false);
+					var revKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\" + keyname + @"\", false);
 					if (revKey == null) continue;
 					var revVal = (string)revKey.GetValue("Version");
 					AddEntry(keyname, revVal);

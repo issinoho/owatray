@@ -3,7 +3,7 @@ using System.Text;
 
 namespace DrunkenBakery.OWAtray.ShellIntegration
 {
-	internal class NativeWin32
+	internal static class NativeWin32
 	{
 		public delegate int EnumWindowsProcDelegate(int hWnd, int lParam);
 

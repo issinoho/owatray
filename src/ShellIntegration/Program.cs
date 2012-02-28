@@ -14,9 +14,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -25,7 +22,7 @@ using Microsoft.Win32;
 
 namespace DrunkenBakery.OWAtray.ShellIntegration
 {
-	internal class Program
+	internal static class Program
 	{
 		private static readonly byte[] Entropy = Encoding.Unicode.GetBytes("Salt Is Not A Password");
 
@@ -48,7 +45,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
 			// Spawn IE
 			var myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + @"/?ae=Item&a=New&t=IPM.Note" +
-			               Settings.Default.MimeURL;
+						   Settings.Default.MimeURL;
 			try
 			{
 				Console.WriteLine("Browsing to " + myUrl);
@@ -80,7 +77,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 		private static void InitRegistry()
 		{
 			var bridge = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-			                             Settings.Default.MAPIBridge);
+										 Settings.Default.MAPIBridge);
 			var shell = Assembly.GetExecutingAssembly().Location;
 
 			try
@@ -88,7 +85,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 				// Define a class root for us
 				Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "", "URL:MailTo Protocol");
 				Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "URL Protocol", "");
-				Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "EditFlags", new byte[] {0x2, 0x0, 0x0, 0x0});
+				Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "EditFlags", new byte[] { 0x2, 0x0, 0x0, 0x0 });
 				Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto\DefaultIcon", "", "\"" + shell + "\",0");
 				Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto\shell\open\command", "", "\"" + shell + "\" mailto %1");
 
@@ -105,34 +102,34 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "EXE", "\"" + shell + "\"");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "Parameters", "mapi %1");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities", "ApplicationDescription",
-				                  "Integrate Outlook Web Access into the desktop.");
+								  "Integrate Outlook Web Access into the desktop.");
 				Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Clients\Mail\OWAMapi\Capabilities\FileAssociations");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities\Start Menu", "Mail", "OWA");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities\URLAssociations", "mailto",
-				                  Settings.Default.MailtoClass);
+								  Settings.Default.MailtoClass);
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", "", "URL:MailTo Protocol");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", "EditFlags",
-				                  new byte[] {0x2, 0x0, 0x0, 0x0});
+								  new byte[] { 0x2, 0x0, 0x0, 0x0 });
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", "URL Protocol", "");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\DefaultIcon", "",
-				                  "\"" + shell + "\",0");
+								  "\"" + shell + "\",0");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\shell\open\command", "",
-				                  "\"" + shell + "\" mailto %1");
+								  "\"" + shell + "\" mailto %1");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\shell\open\command", "",
-				                  "\"" + shell + "\" owa");
+								  "\"" + shell + "\" owa");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\DefaultIcon", "", "\"" + shell + "\",0");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "HideIconsCommand",
-				                  "\"" + shell + "\" restore");
+								  "\"" + shell + "\" restore");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "ReinstallCommand",
-				                  "\"" + shell + "\" registry");
+								  "\"" + shell + "\" registry");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "ShowIconsCommand",
-				                  "\"" + shell + "\" registry");
+								  "\"" + shell + "\" registry");
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "IconsVisible", 1,
-				                  RegistryValueKind.DWord);
+								  RegistryValueKind.DWord);
 
 				// Register the application
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\RegisteredApplications", "OWA",
-				                  @"Software\Clients\Mail\OWAMapi\Capabilities");
+								  @"Software\Clients\Mail\OWAMapi\Capabilities");
 
 				// Set default mail handler
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", "", "OWAMapi");
@@ -294,7 +291,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 					Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", "", Settings.Default.DefaultOpen);
 
 				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "IconsVisible", 0,
-				                  RegistryValueKind.DWord);
+								  RegistryValueKind.DWord);
 			}
 			catch (Exception ex)
 			{
@@ -305,7 +302,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 		private static void SaveCurrentKey()
 		{
 			var bridge = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-			                             Settings.Default.MAPIBridge);
+										 Settings.Default.MAPIBridge);
 			var shell = Assembly.GetExecutingAssembly().Location;
 
 			try
@@ -368,7 +365,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 				target = target.Substring(7, target.Length - 7);
 			}
 			var myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note" +
-			               Settings.Default.MimeURL + "&to=" + target;
+						   Settings.Default.MimeURL + "&to=" + target;
 			if (Settings.Default.Browser == "Yes")
 			{
 				Process.Start("IEXPLORE.EXE", myUrl);

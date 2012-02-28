@@ -169,6 +169,7 @@ Global
 		{902675FD-4CCE-4425-803D-D4323A9D50D4}.Debug|Win32.Build.0 = Debug|Win32
 		{902675FD-4CCE-4425-803D-D4323A9D50D4}.Debug|x86.ActiveCfg = Debug|Win32
 		{902675FD-4CCE-4425-803D-D4323A9D50D4}.Release|Any CPU.ActiveCfg = Release|Win32
+		{902675FD-4CCE-4425-803D-D4323A9D50D4}.Release|Any CPU.Build.0 = Release|Win32
 		{902675FD-4CCE-4425-803D-D4323A9D50D4}.Release|Mixed Platforms.ActiveCfg = Release|Win32
 		{902675FD-4CCE-4425-803D-D4323A9D50D4}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{902675FD-4CCE-4425-803D-D4323A9D50D4}.Release|Win32.ActiveCfg = Release|Win32

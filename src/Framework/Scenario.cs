@@ -46,7 +46,7 @@ namespace DrunkenBakery.OWAtray.Framework
 		private const string ElementOverrideAutodiscoveryValidation = "OverrideAutodiscoveryValidation";
 		private const string ElementServerVersion = "ServerVersion";
 
-		public string ScenarioFile { get; set; }
+		public string ScenarioFile { private get; set; }
 
 		public EmailConnections Connections { get; set; }
 
@@ -55,7 +55,7 @@ namespace DrunkenBakery.OWAtray.Framework
 			Save(ScenarioFile);
 		}
 
-		public void Save(string filename)
+		private void Save(string filename)
 		{
 			using (var writer = XmlWriter.Create(filename))
 			{
@@ -76,7 +76,7 @@ namespace DrunkenBakery.OWAtray.Framework
 					writer.WriteElementString(ElementAccountDomain, item.AccountDomain);
 					writer.WriteElementString(ElementOverrideServiceUrl, item.OverrideServiceUrl ? "1" : "0");
 					writer.WriteElementString(ElementServiceUrl, item.ServiceUrl);
-					writer.WriteElementString(ElementOverrideEmailUrl, item.OverrideEmailUrl ? "1": "0");
+					writer.WriteElementString(ElementOverrideEmailUrl, item.OverrideEmailUrl ? "1" : "0");
 					writer.WriteElementString(ElementEmailUrl, item.EmailUrl);
 					writer.WriteElementString(ElementUseAutodiscovery, item.UseAutodiscovery ? "1" : "0");
 					writer.WriteElementString(ElementOnWindowsDomain, item.OnWindowsDomain ? "1" : "0");
@@ -116,7 +116,7 @@ namespace DrunkenBakery.OWAtray.Framework
 			if (connections != null)
 				foreach (XmlNode node in connections)
 				{
-					var item = ConnectionFactory.CreateConnection((EmailType) Enum.Parse(typeof (EmailType), node[ElementType].InnerText));
+					var item = ConnectionFactory.CreateConnection((EmailType)Enum.Parse(typeof(EmailType), node[ElementType].InnerText));
 					item.EmailAddress = node[ElementEmailAddress].InnerText;
 					item.EncryptedPassword = node[ElementPassword].InnerText;
 					item.Username = node[ElementUsername].InnerText;
