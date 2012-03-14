@@ -225,7 +225,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void WindowDressing()
 		{
-			Text = string.Format("{0}{1}{2}", AssemblyHelpers.AssemblyTitle, OWAtray.Form1_WindowDressing__freshly_baked_at_, AssemblyHelpers.AssemblyCompany);
+			Text = string.Format("{0} {1} {2}", AssemblyHelpers.AssemblyTitle, OWAtray.Form1_WindowDressing__freshly_baked_at_, AssemblyHelpers.AssemblyCompany);
 			notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Not_Connected_to_Exchange;
 			foreach (TabPage tab in tabMain.TabPages) tab.BackColor = SystemColors.Control;
 			InitEventView(lvStatus);

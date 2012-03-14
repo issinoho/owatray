@@ -126,9 +126,6 @@
   <data name="Audible_notifications_switched" xml:space="preserve">
     <value>Audible notifications switched</value>
   </data>
-  <data name="Logging" xml:space="preserve">
-    <value>Logging</value>
-  </data>
   <data name="About_OWA_Tray_Monitor" xml:space="preserve">
     <value>About OWA Tray Monitor</value>
   </data>
@@ -155,9 +152,6 @@
   </data>
   <data name="Override_Certificate" xml:space="preserve">
     <value>Override Certificate</value>
-  </data>
-  <data name="Log_files_are_NOT_size" xml:space="preserve">
-    <value>*** Log files are NOT size limited</value>
   </data>
   <data name="Time" xml:space="preserve">
     <value>Time</value>
@@ -197,9 +191,6 @@
   </data>
   <data name="OFF" xml:space="preserve">
     <value>OFF</value>
-  </data>
-  <data name="Logging_Stopped" xml:space="preserve">
-    <value>*** Logging Stopped</value>
   </data>
   <data name="Autodiscovery_Validation" xml:space="preserve">
     <value>Autodiscovery Validation override switched</value>
@@ -267,9 +258,6 @@
   <data name="MDAC_Versions" xml:space="preserve">
     <value>MDAC Versions</value>
   </data>
-  <data name="Logging_error1" xml:space="preserve">
-    <value>Logging error 2:</value>
-  </data>
   <data name="Mail_handler_restored_to_system" xml:space="preserve">
     <value>Mail handler restored to system default</value>
   </data>
@@ -321,9 +309,6 @@
   <data name="Snarl_notifications_switched" xml:space="preserve">
     <value>Snarl notifications switched</value>
   </data>
-  <data name="Date_stamping_switched_off" xml:space="preserve">
-    <value>*** Date stamping switched off</value>
-  </data>
   <data name="Please_supply_valid_password" xml:space="preserve">
     <value>Please supply a valid password.</value>
   </data>
@@ -357,9 +342,6 @@
   <data name="Compiled_on_NET" xml:space="preserve">
     <value>Compiled on .NET</value>
   </data>
-  <data name="Logging_error" xml:space="preserve">
-    <value>Logging error 1:</value>
-  </data>
   <data name="Autodetect" xml:space="preserve">
     <value>Autodetect</value>
   </data>
@@ -374,9 +356,6 @@
   </data>
   <data name="Mb_total_size" xml:space="preserve">
     <value>Mb total size)</value>
-  </data>
-  <data name="Log_files_will_NOT_be" xml:space="preserve">
-    <value>*** Log files will NOT be scavenged</value>
   </data>
   <data name="Override_Autodiscovery" xml:space="preserve">
     <value>Override Autodiscovery Validation</value>
@@ -441,9 +420,6 @@
   <data name="Translations" xml:space="preserve">
     <value>Translations</value>
   </data>
-  <data name="Logging_Started" xml:space="preserve">
-    <value>*** Logging Started</value>
-  </data>
   <data name="Calendar_notifications_switched" xml:space="preserve">
     <value>Calendar notifications switched</value>
   </data>
@@ -462,9 +438,6 @@
   <data name="Please_supply_valid_email" xml:space="preserve">
     <value>Please supply a valid email address or username.</value>
   </data>
-  <data name="Log_files_will_be_scavenged" xml:space="preserve">
-    <value>*** Log files will be scavenged (after</value>
-  </data>
   <data name="days_or" xml:space="preserve">
     <value>days or</value>
   </data>
@@ -479,9 +452,6 @@
   </data>
   <data name="Operating_System" xml:space="preserve">
     <value>Operating System</value>
-  </data>
-  <data name="Log_file_is" xml:space="preserve">
-    <value>Log file is</value>
   </data>
   <data name="Running_on_NET" xml:space="preserve">
     <value>Running on .NET v</value>
@@ -510,9 +480,6 @@
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>
   </data>
-  <data name="Log_files_are_size_limited" xml:space="preserve">
-    <value>*** Log files are size limited (currently</value>
-  </data>
   <data name="Ready" xml:space="preserve">
     <value>Ready.</value>
   </data>
@@ -536,9 +503,6 @@
   </data>
   <data name="Login_Automatically" xml:space="preserve">
     <value>Login Automatically</value>
-  </data>
-  <data name="Date_stamping_switched_on" xml:space="preserve">
-    <value>*** Date stamping switched on</value>
   </data>
   <data name="Reset_Tray_Icon" xml:space="preserve">
     <value>Reset Tray Icon</value>
@@ -586,7 +550,7 @@
     <value>Expert</value>
   </data>
   <data name="Form1_WindowDressing__freshly_baked_at_" xml:space="preserve">
-    <value> freshly baked at </value>
+    <value>freshly baked at</value>
   </data>
   <data name="Form1_WireUpConnectionEvents_Connection_Failure_" xml:space="preserve">
     <value>Connection Failure!</value>
