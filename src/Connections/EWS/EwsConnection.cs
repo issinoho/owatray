@@ -35,7 +35,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		public override string Version
 		{
-			get { return (!IsConnected ? ExchangeVersion.Exchange2007_SP1.ToString() : this.service.ServerInfo.VersionString); }
+			get { return (!IsConnected ? ServerVersion == "Default" ? ExchangeVersion.Exchange2007_SP1.ToString() : ServerVersion : this.service.ServerInfo.VersionString); }
 		}
 
 		public override bool SupportsDirectMessageAccess
@@ -130,7 +130,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					}
 
 					// Probe for autodiscover information
-					var autodiscoverService = new AutodiscoverService(this.service.RequestedServerVersion);
+                    //var autodiscoverService = new AutodiscoverService((ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), Version));
+                    var autodiscoverService = new AutodiscoverService(ExchangeVersion.Exchange2007_SP1);
 
 					// Credentials
 					if (OnWindowsDomain)
@@ -271,11 +272,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
-				if (ex.InnerException.Message != "The operation has timed out")
-				{
-					RaiseLogMessage(ex.ToString(), Severity.Fail);
-					ChangeState(ConnectionState.Failed);
-				}
+                RaiseLogMessage(ex.Message, Severity.Fail);
+                ChangeState(ConnectionState.Failed);
 			}
 		}
 
@@ -441,6 +439,9 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					RaiseMessageCount(count);
 				}
 
+                // Only process further if there is unread email
+                if (count == 0) return;
+         
 				// Set the offset for the paged search.
 				var offset = 0;
 

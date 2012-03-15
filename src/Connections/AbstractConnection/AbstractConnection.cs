@@ -41,7 +41,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 			AutoLogin = false;
 			OverrideOffice365Login = false;
 			OverrideAutodiscoveryValidation = true;
-			ServerVersion = "Autodetect";
+			ServerVersion = "Default";
 			DiscoveredEmailServer = "";
 			DiscoveredEmailUrl = "";
 			DiscoveredServiceUrl = "";
