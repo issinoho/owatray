@@ -241,6 +241,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 						// Update properties
 						DiscoveredEmailServer = EmailServer;
 						DiscoveredUsername = (OnWindowsDomain ? "" : (Username.Length == 0 ? EmailAddress : Username));
+						DiscoveredServiceUrl = DerivedServiceUrl;
+						DiscoveredEmailUrl = DerivedEmailUrl;
 					}
 				}
 
