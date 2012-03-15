@@ -273,7 +273,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
 							// Show failure message in tray & pop balloon
 							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + OWAtray.Form1_WireUpConnectionEvents_Connection_Failure_;
-							PopToast(string.Format("{0} {1}", connection.EmailAddress, OWAtray.Form1_WireUpConnectionEvents_Connection_Failure_), OWAtray.Check_log_file_for_details);
+							PopToast(string.Format("[{0}] - {1}", connection.EmailAddress, OWAtray.Form1_WireUpConnectionEvents_Connection_Failure_), OWAtray.Check_log_file_for_details);
 							break;
 
 						case ConnectionState.Connected:

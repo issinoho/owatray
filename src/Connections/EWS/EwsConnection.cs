@@ -355,10 +355,18 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
-				if (ex.InnerException.Message != "The operation has timed out")
+				if (ex.InnerException != null)
 				{
-					ChangeState(ConnectionState.Failed);
+					if (ex.InnerException.Message != "The operation has timed out")
+					{
+						ChangeState(ConnectionState.Failed);
+						RaiseLogMessage(ex.ToString(), Severity.Fail);
+					}
+				}
+				else
+				{
 					RaiseLogMessage(ex.ToString(), Severity.Fail);
+					ChangeState(ConnectionState.Failed);
 				}
 			}
 		}
@@ -513,10 +521,18 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
-				if (ex.InnerException.Message != "The operation has timed out")
+				if (ex.InnerException != null)
+				{
+					if (ex.InnerException.Message != "The operation has timed out")
+					{
+						RaiseLogMessage(ex.ToString(), Severity.Fail);
+						ChangeState(ConnectionState.Failed);
+					}
+				}
+				else
 				{
 					RaiseLogMessage(ex.ToString(), Severity.Fail);
-					ChangeState(ConnectionState.Failed);
+					ChangeState(ConnectionState.Failed);					
 				}
 			}
 		}
@@ -549,10 +565,18 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 			}
 			catch (Exception ex)
 			{
-				if (ex.InnerException.Message != "The operation has timed out")
+				if (ex.InnerException != null)
+				{
+					if (ex.InnerException.Message != "The operation has timed out")
+					{
+						RaiseLogMessage(ex.ToString(), Severity.Fail);
+						ChangeState(ConnectionState.Failed);
+					}
+				}
+				else
 				{
 					RaiseLogMessage(ex.ToString(), Severity.Fail);
-					ChangeState(ConnectionState.Failed);
+					ChangeState(ConnectionState.Failed);					
 				}
 			}
 		}
