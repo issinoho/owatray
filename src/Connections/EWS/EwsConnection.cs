@@ -495,7 +495,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 						var mySender = myItem.Sender.Name;
 						var mySubject = (myItem.Subject ?? "No subject");
 						var myAccessUrl = SupportsDirectMessageAccess ? myItem.WebClientReadFormQueryString : "";
-						DateTime myTime = myItem.DateTimeReceived;
+						var myTime = myItem.DateTimeReceived;
 
 						// Pop message
 						RaiseNewMail(myTime, mySubject, mySender, myAccessUrl);

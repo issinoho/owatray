@@ -162,7 +162,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.OkButton.Name = "OkButton";
 			this.OkButton.Size = new System.Drawing.Size(75, 23);
 			this.OkButton.TabIndex = 24;
-			this.OkButton.Text = global::DrunkenBakery.OWAtray.GUI.OWAtray.OK;
+			this.OkButton.Text = "OK";
 			this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
 			// 
 			// AboutBox1

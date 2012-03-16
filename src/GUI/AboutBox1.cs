@@ -30,9 +30,9 @@ namespace DrunkenBakery.OWAtray.GUI
 			textBoxDescription.Text = AssemblyHelpers.AssemblyDescription +
 									  Environment.NewLine +
 									  Environment.NewLine +
-									  OWAtray.Compiled_on_NET + AssemblyHelpers.DotNetRuntimeVersion +
+									  "Compiled on .NET" + AssemblyHelpers.DotNetRuntimeVersion +
 									  Environment.NewLine +
-									  OWAtray.Running_on_NET + Environment.Version +
+									  "Running on .NET v" + Environment.Version +
 									  Environment.NewLine;
 
 			foreach (var myRef in AssemblyHelpers.DependentAssemblies())

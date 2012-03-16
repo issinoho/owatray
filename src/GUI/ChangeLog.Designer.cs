@@ -58,7 +58,7 @@
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(75, 23);
             this.cmdOK.TabIndex = 1;
-            this.cmdOK.Text = OWAtray.OK;
+            this.cmdOK.Text = "OK";
             this.cmdOK.UseVisualStyleBackColor = true;
             this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
             // 
@@ -73,7 +73,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ChangeLog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = OWAtray.Change_Log;
+            this.Text = "Change Log";
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 

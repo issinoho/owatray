@@ -25,8 +25,8 @@ namespace DrunkenBakery.OWAtray.GUI
 			InitializeComponent();
 
 			// Clear list
-			lvStatus.Columns.Add(OWAtray.Major_Version, (lvStatus.Width / 2), HorizontalAlignment.Left);
-			lvStatus.Columns.Add(OWAtray.Revision, (lvStatus.Width / 2) - 3, HorizontalAlignment.Left);
+			lvStatus.Columns.Add("Major Version", (lvStatus.Width / 2), HorizontalAlignment.Left);
+			lvStatus.Columns.Add("Revision", (lvStatus.Width / 2) - 3, HorizontalAlignment.Left);
 			lvStatus.Items.Clear();
 
 			// Now get the versions from the reg
