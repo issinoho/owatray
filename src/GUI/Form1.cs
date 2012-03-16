@@ -772,7 +772,8 @@ namespace DrunkenBakery.OWAtray.GUI
 											{
 												lvStatus.EnsureVisible(lvStatus.Items.Count - 1);
 												var lv = lvStatus.Items[lvStatus.Items.Count - 1];
-												slStatus.Text = lv.SubItems[1].Text.Substring(0, 100);
+												var txt = lv.SubItems[1].Text;
+												slStatus.Text = txt.Substring(0, txt.Length < 100 ? txt.Length : 100);
 											}
 											catch (Exception)
 											{

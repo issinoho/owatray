@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "3.0.4457.39825"
+!define PRODUCT_VERSION "3.0.4458.36334"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray"
@@ -83,15 +83,15 @@ Section "MainSection" SEC01
   CreateShortCut "$SMPROGRAMS\OWAtray\OWAtray.lnk" "$INSTDIR\DrunkenBakery.OWAtray.GUI.exe"
   CreateShortCut "$DESKTOP\OWAtray.lnk" "$INSTDIR\DrunkenBakery.OWAtray.GUI.exe"
 
-  CreateDirectory "$INSTDIR\ca"
-  SetOutPath "$INSTDIR\ca"
-  File "..\bin\ca\DrunkenBakery.OWAtray.GUI.resources.dll"
-  CreateDirectory "$INSTDIR\de"
-  SetOutPath "$INSTDIR\de"
-  File "..\bin\de\DrunkenBakery.OWAtray.GUI.resources.dll"
-  CreateDirectory "$INSTDIR\es"
-  SetOutPath "$INSTDIR\es"
-  File "..\bin\es\DrunkenBakery.OWAtray.GUI.resources.dll"
+;  CreateDirectory "$INSTDIR\ca"
+;  SetOutPath "$INSTDIR\ca"
+;  File "..\bin\ca\DrunkenBakery.OWAtray.GUI.resources.dll"
+;  CreateDirectory "$INSTDIR\de"
+;  SetOutPath "$INSTDIR\de"
+;  File "..\bin\de\DrunkenBakery.OWAtray.GUI.resources.dll"
+;  CreateDirectory "$INSTDIR\es"
+;  SetOutPath "$INSTDIR\es"
+;  File "..\bin\es\DrunkenBakery.OWAtray.GUI.resources.dll"
 SectionEnd
 
 Section -AdditionalIcons
@@ -147,9 +147,9 @@ Section Uninstall
   Delete "$INSTDIR\Microsoft.Exchange.WebServices.dll"
   Delete "$INSTDIR\notify.wav"
   Delete "$INSTDIR\SnarlConnector.dll"
-  Delete "$INSTDIR\de\DrunkenBakery.OWAtray.GUI.resources.dll"
-  Delete "$INSTDIR\ca\DrunkenBakery.OWAtray.GUI.resources.dll"
-  Delete "$INSTDIR\es\DrunkenBakery.OWAtray.GUI.resources.dll"
+;  Delete "$INSTDIR\de\DrunkenBakery.OWAtray.GUI.resources.dll"
+;  Delete "$INSTDIR\ca\DrunkenBakery.OWAtray.GUI.resources.dll"
+;  Delete "$INSTDIR\es\DrunkenBakery.OWAtray.GUI.resources.dll"
 
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
@@ -160,9 +160,9 @@ Section Uninstall
   Delete "$SMPROGRAMS\OWAtray\OWAtray.lnk"
 
   RMDir "$SMPROGRAMS\OWAtray"
-  RMDir "$INSTDIR\de"
-  RMDir "$INSTDIR\ca"
-  RMDir "$INSTDIR\es"
+;  RMDir "$INSTDIR\de"
+;  RMDir "$INSTDIR\ca"
+;  RMDir "$INSTDIR\es"
   RMDir "$INSTDIR"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
