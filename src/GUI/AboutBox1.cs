@@ -11,6 +11,9 @@
 // Also reports the name and version of all dependent assemblies.
 //
 //------------------------------------------------------------------
+
+using DrunkenBakery.OWAtray.GUI.Properties;
+
 namespace DrunkenBakery.OWAtray.GUI
 {
 	using System;
@@ -22,17 +25,17 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			this.InitializeComponent();
 
-			Text = String.Format("About {0}", AssemblyHelpers.AssemblyTitle);
-			labelProductName.Text = string.Format("{0} - {1}", AssemblyHelpers.AssemblyProduct, AssemblyHelpers.AssemblyTitle);
-			labelVersion.Text = String.Format("Version {0}", AssemblyHelpers.AssemblyVersion);
+			Text = String.Format("{0} {1}", Resources.AboutBox1_AboutBox1_About, AssemblyHelpers.AssemblyTitle);
+			labelProductName.Text = String.Format("{0} - {1}", AssemblyHelpers.AssemblyProduct, AssemblyHelpers.AssemblyTitle);
+			labelVersion.Text = String.Format("{0} {1}", Resources.AboutBox1_AboutBox1_Version, AssemblyHelpers.AssemblyVersion);
 			labelCopyright.Text = AssemblyHelpers.AssemblyCopyright;
 			labelCompanyName.Text = AssemblyHelpers.AssemblyCompany;
 			textBoxDescription.Text = AssemblyHelpers.AssemblyDescription +
 									  Environment.NewLine +
 									  Environment.NewLine +
-									  "Compiled on .NET" + AssemblyHelpers.DotNetRuntimeVersion +
+									  Resources.AboutBox1_AboutBox1_Compiled_on__NET + AssemblyHelpers.DotNetRuntimeVersion +
 									  Environment.NewLine +
-									  "Running on .NET v" + Environment.Version +
+									  Resources.AboutBox1_AboutBox1_Running_on__NET_v + Environment.Version +
 									  Environment.NewLine;
 
 			foreach (var myRef in AssemblyHelpers.DependentAssemblies())

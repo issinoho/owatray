@@ -30,7 +30,7 @@ namespace DrunkenBakery.OWAtray.GUI
 				var feed = SyndicationFeed.Load(reader);
 
 				if (feed != null)
-					foreach (SyndicationItem item in feed.Items)
+					foreach (var item in feed.Items)
 					{
 						listBox1.Items.Add(item.Title.Text);
 						listBox1.Items.Add(item.PublishDate.ToString("dd MMMM yyyy, hh:mm:ss") + " | " + item.Authors[0].Email + " (" +

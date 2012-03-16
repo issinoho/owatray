@@ -14,7 +14,7 @@ using System;
 using System.IO;
 using IWshRuntimeLibrary;
 
-namespace DrunkenBakery.OWAtray
+namespace DrunkenBakery.OWAtray.GUI
 {
 	public static class WindowsShortcut
 	{

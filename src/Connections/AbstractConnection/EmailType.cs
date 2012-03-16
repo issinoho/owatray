@@ -10,10 +10,30 @@
 //
 //------------------------------------------------------------------
 
+using DrunkenBakery.OWAtray.Connections.Abstract.Properties;
+
 namespace DrunkenBakery.OWAtray.Connections.Abstract
 {
 	public enum EmailType
 	{
 		Exchange
 	}
+
+    public static partial class EnumExtensions
+    {
+        public static string Description(this EmailType e)
+        {
+            var state = "";
+
+            switch (e)
+            {
+                case EmailType.Exchange:
+                    state = Resources.EnumExtensions_Description_Exchange;
+                    break;
+            }
+
+            return state;
+        }
+    }
+
 }

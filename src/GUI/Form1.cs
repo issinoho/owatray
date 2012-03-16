@@ -72,11 +72,11 @@ namespace DrunkenBakery.OWAtray.GUI
 			Logger.Execute();
 
 			// Welcome message
-			AddLogEntry(string.Format("{0} {1} v{2}", "Welcome to the", AssemblyHelpers.AssemblyTitle,
+			AddLogEntry(string.Format("{0} {1} v{2}", Resources.Form1_Form1_Welcome_to_the, AssemblyHelpers.AssemblyTitle,
 									  AssemblyHelpers.UpgradeSettings()));
 
 			// The rest gets kicked off an a timer
-			AddLogEntry("Ready.");
+			AddLogEntry(String.Format("{0}.", Resources.Form1_Form1_Ready));
 			timer1.Start();
 		}
 
@@ -225,8 +225,8 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void WindowDressing()
 		{
-			Text = string.Format("{0} {1} {2}", AssemblyHelpers.AssemblyTitle, "freshly baked at", AssemblyHelpers.AssemblyCompany);
-			notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + "Not Connected to Exchange";
+			Text = string.Format("{0} {1} {2}", AssemblyHelpers.AssemblyTitle, Resources.Form1_WindowDressing_freshly_baked_at, AssemblyHelpers.AssemblyCompany);
+			notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Resources.Form1_WindowDressing_Not_Connected_to_Exchange;
 			foreach (TabPage tab in tabMain.TabPages) tab.BackColor = SystemColors.Control;
 			InitEventView(lvStatus);
 		}
@@ -272,8 +272,8 @@ namespace DrunkenBakery.OWAtray.GUI
 							Settings.Default.Save();
 
 							// Show failure message in tray & pop balloon
-							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + "Connection Failure!";
-							PopToast(string.Format("[{0}] - {1}", connection.EmailAddress, "Connection Failure!"), "Check log file for details");
+							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + String.Format("{0}!", Resources.Form1_WireUpConnectionEvents_Connection_Failure);
+							PopToast(string.Format("[{0}] - {1}!", connection.EmailAddress, Resources.Form1_WireUpConnectionEvents_Connection_Failure), Resources.Form1_WireUpConnectionEvents_Check_log_file_for_details);
 							break;
 
 						case ConnectionState.Connected:
@@ -282,22 +282,22 @@ namespace DrunkenBakery.OWAtray.GUI
 							Settings.Default.Save();
 
 							// Update discovered properties
-							AddLogEntry(string.Format("{0} {1}", "Connected to ", _connection.Version));
+							AddLogEntry(string.Format("{0} {1}", Resources.Form1_WireUpConnectionEvents_Connected_to, _connection.Version));
 							if (_connection.DiscoveredUsername.Length > 0)
 							{
-								AddLogEntry("Discovered User Name:" + " " + _connection.DiscoveredUsername, Severity.Success);
+								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_User_Name, _connection.DiscoveredUsername), Severity.Success);
 							}
 							if (_connection.DiscoveredEmailServer.Length > 0)
 							{
-								AddLogEntry("Discovered Mailbox Server:" + " " + _connection.DiscoveredEmailServer, Severity.Success);
+								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_Mailbox_Server, _connection.DiscoveredEmailServer), Severity.Success);
 							}
 							if (_connection.DiscoveredEmailUrl.Length > 0)
 							{
-								AddLogEntry("Discovered OWA Url:" + " " + _connection.DiscoveredEmailUrl, Severity.Success);
+								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_OWA_Url, _connection.DiscoveredEmailUrl), Severity.Success);
 							}
 							if (_connection.DiscoveredServiceUrl.Length > 0)
 							{
-								AddLogEntry("Discovered EWS Url:" + " " + _connection.DiscoveredServiceUrl, Severity.Success);
+								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_EWS_Url, _connection.DiscoveredServiceUrl), Severity.Success);
 							}
 
 							// Configure Shell
@@ -306,12 +306,12 @@ namespace DrunkenBakery.OWAtray.GUI
 							ShellExchangeVersion();
 
 							// Minimize
-							//WindowState = FormWindowState.Minimized;
-							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + "Connected to Exchange";
+							WindowState = FormWindowState.Minimized;
+							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Resources.Form1_WireUpConnectionEvents_Connected_to_Exchange;
 							break;
 
 						case ConnectionState.Disconnected:
-							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + "Not Connected to Exchange";
+							notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Resources.Form1_WindowDressing_Not_Connected_to_Exchange;
 							break;
 					}
 				}));
@@ -320,7 +320,7 @@ namespace DrunkenBakery.OWAtray.GUI
 				item.NewMail += (email, arrivalTime, subject, sender, accessUrl) => Invoke(new Action(() =>
 							{
 								_popUrl = accessUrl;
-								PopToast(string.Format("{0} {1}", "New Mail from", sender), subject);
+								PopToast(string.Format("{0} {1}", Resources.Form1_WireUpConnectionEvents_New_Mail_from, sender), subject);
 							}));
 
 				// New appointment event
@@ -328,8 +328,10 @@ namespace DrunkenBakery.OWAtray.GUI
 							{
 								_popUrl = accessUrl;
 								PopToast(
-									string.Format("{0} {1} {2}", "You have an appointment in", minsToGo,
-												  (minsToGo != 1 ? "mins" : "min")),
+									string.Format("{0} {1} {2}", Resources.Form1_WireUpConnectionEvents_You_have_an_appointment_in, minsToGo,
+												  (minsToGo != 1
+													   ? Resources.Form1_WireUpConnectionEvents_minutes
+													   : Resources.Form1_WireUpConnectionEvents_minute)),
 									string.Format("{0} - {1} ({2})", startTime.ToShortTimeString(), subject, location));
 							}));
 
@@ -344,8 +346,9 @@ namespace DrunkenBakery.OWAtray.GUI
 								if (count <= 0) return;
 								_firstRun = false;
 								PopToast("New Mail",
-										 string.Format("{0} {1} {2}{3}{4}", "You have", count, "unread email",
-													   (count != 1 ? "s " : " "), "in your inbox"));
+										 string.Format("{0} {1} {2}{3}{4}", Resources.Form1_WireUpConnectionEvents_You_have, count,
+													   Resources.Form1_WireUpConnectionEvents_unread_email,
+													   (count != 1 ? "s " : " "), Resources.Form1_WireUpConnectionEvents_in_your_inbox));
 							}));
 			}
 		}
@@ -478,7 +481,12 @@ namespace DrunkenBakery.OWAtray.GUI
 			_scenario.Save();
 			ShellBrowserVersion();
 
-			AddLogEntry("Always use IE switched" + " " + (_connection.AlwaysUseInternetExplorer ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}",
+									  Resources.
+										  Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_Always_use_IE_switched_,
+									  (_connection.AlwaysUseInternetExplorer
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 		}
 
 		private void balloonToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
@@ -487,7 +495,12 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			Settings.Default.Balloon = balloonToolStripMenuItem.Checked;
 			Settings.Default.Save();
-			AddLogEntry("Balloon notifications switched" + " " + (Settings.Default.Balloon ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}",
+									  Resources.
+										  Form1_balloonToolStripMenuItem_CheckStateChanged_Balloon_notifications_switched,
+									  (Settings.Default.Balloon
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 		}
 
 		private void changeLogToolStripMenuItem_Click(object sender, EventArgs e)
@@ -518,10 +531,13 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			try
 			{
-				WindowsShortcut.Update(Environment.SpecialFolder.Startup, Application.ExecutablePath, AssemblyHelpers.AssemblyTitle,
+				WindowsShortcut.Update(Environment.SpecialFolder.Startup, Application.ExecutablePath,
+									   AssemblyHelpers.AssemblyTitle,
 									   switchOn);
 				AddLogEntry(
-					"OWAtray will" + (switchOn ? " " : " " + "not" + " ") + "autostart with Windows");
+					String.Format("{0}{1} {2}", Resources.Form1_RunAtStartup_OWAtray_will,
+								  (switchOn ? " " : Resources.Form1_RunAtStartup__not),
+								  Resources.Form1_RunAtStartup_autostart_with_Windows));
 			}
 			catch (Exception ex)
 			{
@@ -539,11 +555,13 @@ namespace DrunkenBakery.OWAtray.GUI
 			switch (_connection.ConnectedState)
 			{
 				case ConnectionState.Connected:
-					AddLogEntry(string.Format("{0}", "Already connected"), Severity.Fail);
+					AddLogEntry(String.Format("{0}", Resources.Form1_ConnectToExchange_Already_connected), Severity.Fail);
 					break;
 				case ConnectionState.Disconnecting:
 				case ConnectionState.Connecting:
-					AddLogEntry(string.Format("{0}", "Transitioning state, please wait..."), Severity.Fail);
+					AddLogEntry(
+						String.Format("{0}, {1}...", Resources.Form1_ConnectToExchange_Transitioning_state,
+									  Resources.Form1_ConnectToExchange_please_wait), Severity.Fail);
 					break;
 				default:
 					_connection.ConnectA();
@@ -556,11 +574,13 @@ namespace DrunkenBakery.OWAtray.GUI
 			switch (_connection.ConnectedState)
 			{
 				case ConnectionState.Disconnected:
-					AddLogEntry(string.Format("{0}", "Already disconnected"));
+					AddLogEntry(string.Format("{0}", Resources.Form1_DisconnectFromExchange_Already_disconnected));
 					break;
 				case ConnectionState.Disconnecting:
 				case ConnectionState.Connecting:
-					AddLogEntry(string.Format("{0}", "Transitioning state, please wait..."), Severity.Fail);
+					AddLogEntry(
+						string.Format("{0}, {1}...", Resources.Form1_DisconnectFromExchange_Transitioning_state,
+									  Resources.Form1_DisconnectFromExchange_please_wait), Severity.Fail);
 					break;
 				default:
 					_connection.DisconnectA();
@@ -575,14 +595,17 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private static void UpdateWebProxySettings()
 		{
-			WebRequest.DefaultWebProxy.Credentials = Properties.Settings.Default.UseWebProxy ? CredentialCache.DefaultCredentials : null;
+			WebRequest.DefaultWebProxy.Credentials = Properties.Settings.Default.UseWebProxy
+														 ? CredentialCache.DefaultCredentials
+														 : null;
 		}
 
 		private void ShellOwaUrl()
 		{
 			try
 			{
-				var runSvc = new ProcessStartInfo(_shellPath) { Arguments = "url " + _connection.DerivedEmailUrl, WindowStyle = ProcessWindowStyle.Hidden };
+				var runSvc = new ProcessStartInfo(_shellPath)
+								 {Arguments = "url " + _connection.DerivedEmailUrl, WindowStyle = ProcessWindowStyle.Hidden};
 				var serviceProcess = Process.Start(runSvc);
 
 				while (!serviceProcess.HasExited)
@@ -593,7 +616,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry("Error:" + ex.Message, Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
 			}
 		}
 
@@ -601,7 +624,8 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			try
 			{
-				var runSvc = new ProcessStartInfo(_shellPath) { Arguments = "exchange " + _connection.Version, WindowStyle = ProcessWindowStyle.Hidden };
+				var runSvc = new ProcessStartInfo(_shellPath)
+								 {Arguments = "exchange " + _connection.Version, WindowStyle = ProcessWindowStyle.Hidden};
 				var serviceProcess = Process.Start(runSvc);
 
 				while (!serviceProcess.HasExited)
@@ -612,7 +636,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry("Error:" + ex.Message, Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
 			}
 		}
 
@@ -620,7 +644,8 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			try
 			{
-				var runSvc = new ProcessStartInfo(_shellPath) { Arguments = "password " + _connection.Password, WindowStyle = ProcessWindowStyle.Hidden };
+				var runSvc = new ProcessStartInfo(_shellPath)
+								 {Arguments = "password " + _connection.Password, WindowStyle = ProcessWindowStyle.Hidden};
 				var serviceProcess = Process.Start(runSvc);
 
 				while (!serviceProcess.HasExited)
@@ -631,7 +656,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry("Error:" + ex.Message, Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
 			}
 		}
 
@@ -654,7 +679,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry("Error:" + ex.Message, Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
 			}
 		}
 
@@ -677,7 +702,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry("Error:" + ex.Message, Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
 			}
 		}
 
@@ -697,8 +722,11 @@ namespace DrunkenBakery.OWAtray.GUI
 			_connection.DisableCalendar = disableCalendarToolStripMenuItem.Checked;
 			_scenario.Save();
 
-			AddLogEntry(
-				"Calendar notifications switched" + " " + (_connection.DisableCalendar ? "OFF" : "ON"));
+			AddLogEntry(String.Format("{0} {1}",
+									  Resources.Form1_disableCalendarToolStripMenuItem_CheckStateChanged_Calendar_notifications_switched,
+									  (_connection.DisableCalendar
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON)));
 		}
 
 		private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -744,7 +772,7 @@ namespace DrunkenBakery.OWAtray.GUI
 											{
 												lvStatus.EnsureVisible(lvStatus.Items.Count - 1);
 												var lv = lvStatus.Items[lvStatus.Items.Count - 1];
-												slStatus.Text = lv.SubItems[1].Text.Substring(0, SafeControlTextSize(slStatus.Width, lv.SubItems[1].Text.Length));
+												slStatus.Text = lv.SubItems[1].Text.Substring(0, 100);
 											}
 											catch (Exception)
 											{
@@ -760,17 +788,10 @@ namespace DrunkenBakery.OWAtray.GUI
 								}));
 		}
 
-		private static int SafeControlTextSize(int controlWidth, int textLength)
-		{
-			const string representative = "abcdefghijklmnopqrstuvwxyz";
-			var charWidth = TextRenderer.MeasureText(representative, SystemFonts.DefaultFont).Width / representative.Length;
-			return Math.Min(textLength, (int)(controlWidth / charWidth));
-		}
-
 		private void Form1_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			FormClosed -= Form1_FormClosed;
-			AddLogEntry("Terminating");
+			AddLogEntry(Resources.Form1_Form1_FormClosed_Terminating);
 		}
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -803,11 +824,11 @@ namespace DrunkenBakery.OWAtray.GUI
 		private string NotificationText(int myCount)
 		{
 			const int maxTipLength = 63;
-			var text1 = string.Format("{0}{1}{1}{2} {3}{4}", AssemblyHelpers.AssemblyTitle, Environment.NewLine, myCount, "unread email", (myCount != 1 ? "s " : " "));
+			var text1 = string.Format("{0}{1}{1}{2} {3}{4}", AssemblyHelpers.AssemblyTitle, Environment.NewLine, myCount, Resources.Form1_WireUpConnectionEvents_unread_email, (myCount != 1 ? "s " : " "));
 			var charsLeft = maxTipLength - text1.Length;
 			var domainText = string.Format("{0}\\{1}", _connection.DiscoveredEmailServer, _connection.DiscoveredUsername);
 			if (domainText.Length > charsLeft) domainText = domainText.Substring(0, charsLeft);
-			var finalText = string.Format("{0}{1}{2}{1}{3} {4}{5}", AssemblyHelpers.AssemblyTitle, Environment.NewLine, domainText, myCount, "unread email", (myCount != 1 ? "s " : " "));
+			var finalText = string.Format("{0}{1}{2}{1}{3} {4}{5}", AssemblyHelpers.AssemblyTitle, Environment.NewLine, domainText, myCount, Resources.Form1_WireUpConnectionEvents_unread_email, (myCount != 1 ? "s " : " "));
 			return finalText;
 		}
 
@@ -817,13 +838,16 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			Settings.Default.Growl = growlToolStripMenuItem.Checked;
 			Settings.Default.Save();
-			AddLogEntry("Growl notifications switched" + " " + (Settings.Default.Growl ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}", Resources.Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched,
+									  (Settings.Default.Growl
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 		}
 
 		private static void InitEventView(ListView lvX)
 		{
-			lvX.Columns.Add("Time", 140, HorizontalAlignment.Left);
-			lvX.Columns.Add("Event Details", 1000, HorizontalAlignment.Left);
+			lvX.Columns.Add(Resources.Form1_InitEventView_Time, 140, HorizontalAlignment.Left);
+			lvX.Columns.Add(Resources.Form1_InitEventView_Event_Details, 1000, HorizontalAlignment.Left);
 			lvX.Items.Clear();
 		}
 
@@ -831,11 +855,13 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			if (!IsUserAdministrator())
 			{
-				AddLogEntry("You are not an Admin user. Operation may fail.", Severity.Fail);
+				AddLogEntry(
+					String.Format("{0}. {1}.", Resources.Form1_makeOWADefaultToolStripMenuItem_Click_You_are_not_an_Admin_user,
+								  Resources.Form1_makeOWADefaultToolStripMenuItem_Click_Operation_may_fail), Severity.Fail);
 			}
 
 			// Configure registry
-			AddLogEntry("Setting up Mail handlers");
+			AddLogEntry(Resources.Form1_makeOWADefaultToolStripMenuItem_Click_Setting_up_Mail_handlers);
 
 			try
 			{
@@ -852,11 +878,11 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry("Error:" + ex.Message, Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
 				return;
 			}
 
-			AddLogEntry("Mail functions will now be handled by OWA", Severity.Success);
+			AddLogEntry(Resources.Form1_makeOWADefaultToolStripMenuItem_Click_Mail_functions_will_now_be_handled_by_OWA, Severity.Success);
 		}
 
 		private void mDACVersionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -910,7 +936,12 @@ namespace DrunkenBakery.OWAtray.GUI
 			_connection.OverrideCertificate = overrideCertificateToolStripMenuItem.Checked;
 			_scenario.Save();
 
-			AddLogEntry("SSL Certificate override switched" + " " + (_connection.OverrideCertificate ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}",
+									  Resources.
+										  Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched,
+									  (_connection.OverrideCertificate
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 		}
 
 		private void playSoundToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
@@ -919,14 +950,19 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			Settings.Default.Bell = playSoundToolStripMenuItem.Checked;
 			Settings.Default.Save();
-			AddLogEntry("Audible notifications switched" + " " + (Settings.Default.Bell ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}",
+									  Resources.
+										  Form1_playSoundToolStripMenuItem_CheckStateChanged_Audible_notifications_switched,
+									  (Settings.Default.Bell
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 		}
 
 		private void PopToast(string myTitle, string myMessage)
 		{
 			// Belt & Braces
-			if (myTitle.Length == 0) myTitle = "<No Title>";
-			if (myMessage.Length == 0) myMessage = "<No Subject>";
+			if (myTitle.Length == 0) myTitle = String.Format("<{0}>", Resources.Form1_PopToast_No_Title);
+			if (myMessage.Length == 0) myMessage = String.Format("<{0}>", Resources.Form1_PopToast_No_Subject);
 
 			AddLogEntry(myTitle);
 
@@ -993,7 +1029,11 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			Settings.Default.Snarl = snarlToolStripMenuItem.Checked;
 			Settings.Default.Save();
-			AddLogEntry("Snarl notifications switched" + " " + (Settings.Default.Snarl ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}",
+									  Resources.Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched,
+									  (Settings.Default.Snarl
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 		}
 
 		private void supportToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1006,11 +1046,13 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			if (!IsUserAdministrator())
 			{
-				AddLogEntry("You are not an Admin user. Operation may fail.", Severity.Fail);
+				AddLogEntry(
+					String.Format("{0}. {1}.", Resources.Form1_switchOffToolStripMenuItem_Click_You_are_not_an_Admin_user,
+								  Resources.Form1_switchOffToolStripMenuItem_Click_Operation_may_fail), Severity.Fail);
 			}
 
 			// Configure registry
-			AddLogEntry("Restoring Mail handlers");
+			AddLogEntry(Resources.Form1_switchOffToolStripMenuItem_Click_Restoring_Mail_handlers);
 
 			try
 			{
@@ -1027,7 +1069,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry("Error:" + ex.Message, Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
 				return;
 			}
 
@@ -1065,7 +1107,7 @@ namespace DrunkenBakery.OWAtray.GUI
 				else
 				{
 					errorProvider1.SetError(txtInterval,
-											"Must be a numeric value between 1 and" + " " +
+											Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_ +
 											MaxInterval.ToString(CultureInfo.InvariantCulture));
 					e.Cancel = true;
 				}
@@ -1073,7 +1115,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			else
 			{
 				errorProvider1.SetError(txtInterval,
-										"Must be a numeric value between 1 and" + " " +
+										Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_ +
 										MaxInterval.ToString(CultureInfo.InvariantCulture));
 				e.Cancel = true;
 			}
@@ -1114,7 +1156,12 @@ namespace DrunkenBakery.OWAtray.GUI
 			_scenario.Save();
 			ShellAutologin();
 
-			AddLogEntry("Automatic Login is switched" + " " + (_connection.AutoLogin ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}",
+									  Resources.
+										  Form1_loginAutomaticallyToolStripMenuItem_CheckStateChanged_Automatic_Login_is_switched,
+									  (_connection.AutoLogin
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 		}
 
 		private void txtDomain_Validated(object sender, EventArgs e)
@@ -1159,8 +1206,12 @@ namespace DrunkenBakery.OWAtray.GUI
 			_connection.OverrideAutodiscoveryValidation = overrideAutodiscoveryValidationToolStripMenuItem.Checked;
 			_scenario.Save();
 
-			AddLogEntry(
-				"Autodiscovery Validation override switched" + " " + (_connection.OverrideAutodiscoveryValidation ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}",
+									  Resources.
+										  Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched,
+									  (_connection.OverrideAutodiscoveryValidation
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 		}
 
 		private void office365LoginOverrideToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
@@ -1170,7 +1221,12 @@ namespace DrunkenBakery.OWAtray.GUI
 			_connection.OverrideOffice365Login = office365LoginOverrideToolStripMenuItem.Checked;
 			_scenario.Save();
 
-			AddLogEntry("Office365 login override" + " " + (_connection.OverrideOffice365Login ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}",
+									  Resources.
+										  Form1_office365LoginOverrideToolStripMenuItem_CheckStateChanged_Office365_login_override,
+									  (_connection.OverrideOffice365Login
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 
 			UpdateOwaUrl();
 		}
@@ -1192,7 +1248,10 @@ namespace DrunkenBakery.OWAtray.GUI
 			_scenario.Save();
 
 			UpdateServiceUrl();
-			AddLogEntry("EWS URL override switched" + " " + (_connection.OverrideServiceUrl ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}", Resources.Form1_cbOverrideEWS_CheckedChanged_EWS_URL_override_switched,
+									  (_connection.OverrideServiceUrl
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 		}
 
 		private void chkAutodiscovery_CheckedChanged(object sender, EventArgs e)
@@ -1201,7 +1260,10 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			_connection.UseAutodiscovery = chkAutodiscovery.Checked;
 			_scenario.Save();
-			AddLogEntry("Autodiscovery is switched" + " " + (chkAutodiscovery.Checked ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}", Resources.Form1_chkAutodiscovery_CheckedChanged_Autodiscovery_is_switched,
+									  (chkAutodiscovery.Checked
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 
 			// Switch off some options when Autodiscovery is checked
 			SelectAutodiscoveryOptions();
@@ -1222,7 +1284,10 @@ namespace DrunkenBakery.OWAtray.GUI
 			_scenario.Save();
 
 			UpdateOwaUrl();
-			AddLogEntry("OWA URL override switched" + " " + (_connection.OverrideEmailUrl ? "ON" : "OFF"));
+			AddLogEntry(String.Format("{0} {1}", Resources.Form1_cbOverrideOWA_CheckedChanged_OWA_URL_override_switched,
+									  (_connection.OverrideEmailUrl
+										   ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+										   : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
 		}
 
 		private void txtOWAEdit_Validated(object sender, EventArgs e)

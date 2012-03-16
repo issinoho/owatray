@@ -11,13 +11,14 @@
 //------------------------------------------------------------------
 
 using System;
+using DrunkenBakery.OWAtray.Connections.Abstract.Properties;
 using DrunkenBakery.OWAtray.Logging;
 
 namespace DrunkenBakery.OWAtray.Connections.Abstract
 {
 	public abstract class AbstractConnection : IEmailInterface
 	{
-		private string encryptedPassword;
+		private string _encryptedPassword;
 
 		protected AbstractConnection()
 		{
@@ -41,7 +42,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 			AutoLogin = false;
 			OverrideOffice365Login = false;
 			OverrideAutodiscoveryValidation = true;
-			ServerVersion = "Default";
+			ServerVersion = Resources.AbstractConnection_AbstractConnection_Default;
 			DiscoveredEmailServer = "";
 			DiscoveredEmailUrl = "";
 			DiscoveredServiceUrl = "";
@@ -112,14 +113,14 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		public string Password
 		{
-			get { return this.encryptedPassword.Decrypt(); }
-			set { this.encryptedPassword = value.Encrypt(); }
+			get { return this._encryptedPassword.Decrypt(); }
+			set { this._encryptedPassword = value.Encrypt(); }
 		}
 
 		public string EncryptedPassword
 		{
-			get { return this.encryptedPassword; }
-			set { this.encryptedPassword = value; }
+			get { return this._encryptedPassword; }
+			set { this._encryptedPassword = value; }
 		}
 
 		public virtual EmailType Type { get; set; }

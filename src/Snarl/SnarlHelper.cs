@@ -1,4 +1,15 @@
-﻿using System;
+﻿//------------------------------------------------------------------
+// DrunkenBakery OWA Tray Monitor
+// SnarlHelper
+//
+// <copyright file="SnarlHelper.cs" company="The Drunken Bakery">
+//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
+// </copyright>
+//
+// Helper class for Snarl
+//
+//------------------------------------------------------------------
+using System;
 using Snarl;
 
 namespace DrunkenBakery.OWAtray.Snarl
@@ -7,11 +18,11 @@ namespace DrunkenBakery.OWAtray.Snarl
 	{
 		private const Int32 ReplyMsg = 0x400 + 100;
 
-		private static string application;
+		private static string _application;
 
 		public static void RegisterSnarl(string thisApplication, string iconPath, IntPtr handle)
 		{
-			SnarlHelper.application = thisApplication;
+			_application = thisApplication;
 			SnarlConnector.RegisterConfig(handle, thisApplication, WindowsMessage.WM_MDIMAXIMIZE, iconPath);
 		}
 

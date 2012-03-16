@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DrunkenBakery.OWAtray.GUI.Properties;
 
 namespace DrunkenBakery.OWAtray.GUI
 {
@@ -24,7 +25,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			get
 			{
 				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof (AssemblyProductAttribute), false);
-				return attributes.Length > 0 ? ((AssemblyProductAttribute) attributes[0]).Product : "Unknown";
+				return attributes.Length > 0 ? ((AssemblyProductAttribute) attributes[0]).Product : Resources.AssemblyHelpers_ProductName_Unknown;
 			}
 		}
 

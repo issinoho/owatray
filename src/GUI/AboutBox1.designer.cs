@@ -1,3 +1,5 @@
+using DrunkenBakery.OWAtray.GUI.Properties;
+
 namespace DrunkenBakery.OWAtray.GUI
 {
 	partial class AboutBox1
@@ -100,7 +102,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.labelProductName.Name = "labelProductName";
 			this.labelProductName.Size = new System.Drawing.Size(271, 17);
 			this.labelProductName.TabIndex = 19;
-			this.labelProductName.Text = "Product Name";
+			this.labelProductName.Text = Resources.AboutBox1_InitializeComponent_Product_Name;
 			this.labelProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// labelVersion
@@ -112,7 +114,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.labelVersion.Name = "labelVersion";
 			this.labelVersion.Size = new System.Drawing.Size(271, 17);
 			this.labelVersion.TabIndex = 0;
-			this.labelVersion.Text = "Version";
+			this.labelVersion.Text = Resources.AboutBox1_InitializeComponent_Version;
 			this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// labelCopyright
@@ -124,7 +126,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.labelCopyright.Name = "labelCopyright";
 			this.labelCopyright.Size = new System.Drawing.Size(271, 17);
 			this.labelCopyright.TabIndex = 21;
-			this.labelCopyright.Text = "Copyright";
+			this.labelCopyright.Text = Resources.AboutBox1_InitializeComponent_Copyright;
 			this.labelCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// labelCompanyName
@@ -136,7 +138,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.labelCompanyName.Name = "labelCompanyName";
 			this.labelCompanyName.Size = new System.Drawing.Size(271, 17);
 			this.labelCompanyName.TabIndex = 22;
-			this.labelCompanyName.Text = "Company Name";
+			this.labelCompanyName.Text = Resources.AboutBox1_InitializeComponent_Company_Name;
 			this.labelCompanyName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// textBoxDescription
@@ -152,7 +154,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.textBoxDescription.Size = new System.Drawing.Size(271, 126);
 			this.textBoxDescription.TabIndex = 23;
 			this.textBoxDescription.TabStop = false;
-			this.textBoxDescription.Text = "Description";
+			this.textBoxDescription.Text = Resources.AboutBox1_InitializeComponent_Description;
 			// 
 			// OkButton
 			// 
@@ -162,7 +164,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.OkButton.Name = "OkButton";
 			this.OkButton.Size = new System.Drawing.Size(75, 23);
 			this.OkButton.TabIndex = 24;
-			this.OkButton.Text = "OK";
+			this.OkButton.Text = Resources.AboutBox1_InitializeComponent_OK;
 			this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
 			// 
 			// AboutBox1
@@ -180,7 +182,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "About OWA Tray Monitor";
+			this.Text = Resources.AboutBox1_InitializeComponent_About_OWA_Tray_Monitor;
 			this.tableLayoutPanel.ResumeLayout(false);
 			this.tableLayoutPanel.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();

@@ -13,6 +13,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using DrunkenBakery.OWAtray.GUI.Properties;
 
 namespace DrunkenBakery.OWAtray.GUI
 {
@@ -26,11 +27,11 @@ namespace DrunkenBakery.OWAtray.GUI
 			InitializeComponent();
 
 			// Flags
-			lvX.Items.Add(new ListViewItem("Catalan", 0));
+			lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_Catalan, 0));
 			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
-			lvX.Items.Add(new ListViewItem("German", 1));
+			lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_German, 1));
 			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Christian Treudler");
-			lvX.Items.Add(new ListViewItem("Spanish", 2));
+			lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_Spanish, 2));
 			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
 		}
 

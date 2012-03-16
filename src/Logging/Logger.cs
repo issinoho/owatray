@@ -22,7 +22,7 @@ namespace DrunkenBakery.OWAtray.Logging
 	public static class Logger
 	{
 		private const string ConfigFileName = "Log4Net.config";
-		private static bool logInitialized;
+		private static bool _logInitialized;
 		private static readonly Dictionary<Type, ILog> Loggers = new Dictionary<Type, ILog>();
 
 		public static Action<object, object> Debug = (source, message) => { };
@@ -81,10 +81,10 @@ namespace DrunkenBakery.OWAtray.Logging
 
 		private static void EnsureInitialized()
 		{
-			if (logInitialized) return;
+			if (_logInitialized) return;
 
 			Initialize();
-			logInitialized = true;
+			_logInitialized = true;
 		}
 
 		private static ILog GetLogger(Type source)

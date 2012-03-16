@@ -1,4 +1,6 @@
-﻿namespace DrunkenBakery.OWAtray.GUI
+﻿using DrunkenBakery.OWAtray.GUI.Properties;
+
+namespace DrunkenBakery.OWAtray.GUI
 {
 	partial class ContactUs
 	{
@@ -55,7 +57,7 @@
 			this.groupBox1.Size = new System.Drawing.Size(327, 220);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Translations";
+			this.groupBox1.Text = Resources.ContactUs_InitializeComponent_Translations;
 			// 
 			// lvX
 			// 
@@ -73,12 +75,12 @@
 			// 
 			// Language
 			// 
-			this.Language.Text = "Language";
+			this.Language.Text = Resources.ContactUs_InitializeComponent_Language;
 			this.Language.Width = 118;
 			// 
 			// Author
 			// 
-			this.Author.Text = "Author";
+			this.Author.Text = Resources.ContactUs_InitializeComponent_Author;
 			this.Author.Width = 190;
 			// 
 			// imLarge
@@ -95,7 +97,7 @@
 			this.cmdOK.Name = "cmdOK";
 			this.cmdOK.Size = new System.Drawing.Size(75, 23);
 			this.cmdOK.TabIndex = 1;
-			this.cmdOK.Text = "OK";
+			this.cmdOK.Text = Resources.ContactUs_InitializeComponent_OK;
 			this.cmdOK.UseVisualStyleBackColor = true;
 			this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
 			// 
@@ -112,7 +114,7 @@
 			this.groupBox2.Size = new System.Drawing.Size(327, 85);
 			this.groupBox2.TabIndex = 2;
 			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Contact Details";
+			this.groupBox2.Text = Resources.ContactUs_InitializeComponent_Contact_Details;
 			// 
 			// linkEmail
 			// 
@@ -192,7 +194,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "ContactUs";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Support Information";
+			this.Text = Resources.ContactUs_InitializeComponent_Support_Information;
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();

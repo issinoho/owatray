@@ -10,6 +10,8 @@
 //
 //------------------------------------------------------------------
 
+using DrunkenBakery.OWAtray.Logging.Properties;
+
 namespace DrunkenBakery.OWAtray.Logging
 {
 	public enum Severity
@@ -17,5 +19,28 @@ namespace DrunkenBakery.OWAtray.Logging
 		Success,
 		Fail,
 		Info
+	}
+
+	public static class EnumExtensions
+	{
+		public static string Description(this Severity e)
+		{
+			var state = "";
+
+			switch (e)
+			{
+				case Severity.Success:
+					state = Resources.EnumExtensions_Description_Success;
+					break;
+				case Severity.Fail:
+					state = Resources.EnumExtensions_Description_Fail;
+					break;
+				case Severity.Info:
+					state = Resources.EnumExtensions_Description_Info;
+					break;
+			}
+
+			return state;
+		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿namespace DrunkenBakery.OWAtray.GUI
+﻿using DrunkenBakery.OWAtray.GUI.Properties;
+
+namespace DrunkenBakery.OWAtray.GUI
 {
     partial class ChangeLog
     {
@@ -58,7 +60,7 @@
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(75, 23);
             this.cmdOK.TabIndex = 1;
-            this.cmdOK.Text = "OK";
+            this.cmdOK.Text = Resources.ChangeLog_InitializeComponent_OK;
             this.cmdOK.UseVisualStyleBackColor = true;
             this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
             // 
@@ -73,7 +75,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ChangeLog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Change Log";
+            this.Text = Resources.ChangeLog_InitializeComponent_Change_Log;
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 

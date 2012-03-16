@@ -13,6 +13,7 @@
 //------------------------------------------------------------------
 
 using System.Linq;
+using DrunkenBakery.OWAtray.GUI.Properties;
 
 namespace DrunkenBakery.OWAtray.GUI
 {
@@ -36,7 +37,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			tvCheat.Visible = true;
 
 			// Please wait...
-			var newNode = new TreeNode("Gathering data, please wait...") {ImageIndex = 23, SelectedImageIndex = 23};
+			var newNode = new TreeNode(String.Format("{0}...", Resources.SysInfo_SysInfo_Gathering_data__please_wait)) {ImageIndex = 23, SelectedImageIndex = 23};
 			tvCheat.Nodes.Add(newNode);
 
 			// Wait and then gather data
@@ -50,23 +51,23 @@ namespace DrunkenBakery.OWAtray.GUI
 			tvOptions.Nodes.Clear();
 
 			// Top level branches
-			var newNode = new TreeNode("Operating System") {ImageIndex = 10, SelectedImageIndex = 10};
+			var newNode = new TreeNode(Resources.SysInfo_BuildTree_Operating_System) {ImageIndex = 10, SelectedImageIndex = 10};
 			tvOptions.Nodes.Add(newNode);
 			GetOs(newNode);
 
-			newNode = new TreeNode("Computer") {ImageIndex = 0, SelectedImageIndex = 0};
+			newNode = new TreeNode(Resources.SysInfo_BuildTree_Computer) {ImageIndex = 0, SelectedImageIndex = 0};
 			tvOptions.Nodes.Add(newNode);
 			GetComputer(newNode);
 
-			newNode = new TreeNode("Owner") {ImageIndex = 12, SelectedImageIndex = 12};
+			newNode = new TreeNode(Resources.SysInfo_BuildTree_Owner) {ImageIndex = 12, SelectedImageIndex = 12};
 			tvOptions.Nodes.Add(newNode);
 			GetOwner(newNode);
 
-			newNode = new TreeNode("Network") {ImageIndex = 11, SelectedImageIndex = 11};
+			newNode = new TreeNode(Resources.SysInfo_BuildTree_Network) {ImageIndex = 11, SelectedImageIndex = 11};
 			tvOptions.Nodes.Add(newNode);
 			GetNetwork(newNode);
 
-			newNode = new TreeNode("Storage") {ImageIndex = 6, SelectedImageIndex = 6};
+			newNode = new TreeNode(Resources.SysInfo_BuildTree_Storage) {ImageIndex = 6, SelectedImageIndex = 6};
 			tvOptions.Nodes.Add(newNode);
 			GetStorage(newNode);
 
@@ -87,21 +88,20 @@ namespace DrunkenBakery.OWAtray.GUI
 				var queryCollection1 = query1.Get();
 				foreach (ManagementObject mo in queryCollection1)
 				{
-					var childNode = new TreeNode(mo["Manufacturer"].ToString());
-					childNode.ImageIndex = 14;
-					childNode.SelectedImageIndex = 14;
-					newNode.Nodes.Add(childNode);
+				    var childNode = new TreeNode(mo["Manufacturer"].ToString()) {ImageIndex = 14, SelectedImageIndex = 14};
+				    newNode.Nodes.Add(childNode);
 					childNode = new TreeNode(mo["Model"].ToString()) {ImageIndex = 13, SelectedImageIndex = 13};
-					newNode.Nodes.Add(childNode);
+				    newNode.Nodes.Add(childNode);
 				}
 
 				// Processor details
 				query1 = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
 				queryCollection1 = query1.Get();
 				var count = 1;
-				foreach (var childNode in from ManagementObject mo in queryCollection1 select new TreeNode("CPU " + count++ + ": " + Regex.Replace(mo["Name"].ToString(), @"^\s+|\s+$", "") + " (" +
-				            mo["AddressWidth"].ToString() + " " + "bit)")
-							{ImageIndex = 17, SelectedImageIndex = 17})
+                foreach (var childNode in from ManagementObject mo in queryCollection1
+                                          select new TreeNode(
+                                          String.Format("{0} {1}: {2} ({3} {4})", Resources.SysInfo_GetComputer_CPU, count++, Regex.Replace(mo["Name"].ToString(), @"^\s+|\s+$", ""), mo["AddressWidth"].ToString(), Resources.SysInfo_GetComputer_bit)) { ImageIndex = 17, SelectedImageIndex = 17 })
+                    
 				{
 					newNode.Nodes.Add(childNode);
 				}
@@ -110,9 +110,10 @@ namespace DrunkenBakery.OWAtray.GUI
 				query1 = new ManagementObjectSearcher("SELECT * FROM Win32_PhysicalMemory");
 				queryCollection1 = query1.Get();
 				var totalCapacity = queryCollection1.Cast<ManagementObject>().Aggregate<ManagementObject, ulong>(0, (current, mo) => current + System.Convert.ToUInt64(mo["Capacity"]));
-				var memNode = new TreeNode("Memory: " + (totalCapacity/1073741824) + " Gb")
-								{ImageIndex = 19, SelectedImageIndex = 19};
-				newNode.Nodes.Add(memNode);
+			    var memNode = new TreeNode(
+			        String.Format("{0}: {1} {2}", Resources.SysInfo_GetComputer_Memory, (totalCapacity/1073741824), Resources.SysInfo_GetComputer_GB))
+			                      {ImageIndex = 19, SelectedImageIndex = 19};
+			    newNode.Nodes.Add(memNode);
 			}
 			catch (Exception)
 			{
@@ -201,9 +202,11 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				var query1 = new ManagementObjectSearcher("select FreeSpace,Size,Name from Win32_LogicalDisk where DriveType=3");
 				var queryCollection1 = query1.Get();
-				foreach (var childNode in from ManagementObject mo in queryCollection1 let freeSpace = System.Convert.ToUInt64(mo["FreeSpace"]) let size = System.Convert.ToUInt64(mo["Size"]) select new TreeNode(mo["Name"].ToString() + ": " + (size/1073741824) + " " + "Gb (" +
-							(freeSpace/1073741824) + " " + "Gb free)")
-							{ImageIndex = 15, SelectedImageIndex = 15})
+                foreach (var childNode in from ManagementObject mo in queryCollection1
+                                          let freeSpace = System.Convert.ToUInt64(mo["FreeSpace"])
+                                          let size = System.Convert.ToUInt64(mo["Size"])
+                                          select new TreeNode(
+                                              String.Format("{0}: {1} {2} ({3} {4} {5})", mo["Name"].ToString(), (size / 1073741824), Resources.SysInfo_GetStorage_GB, (freeSpace / 1073741824), Resources.SysInfo_GetStorage_GB, Resources.SysInfo_GetStorage_free)) { ImageIndex = 15, SelectedImageIndex = 15 })
 				{
 					newNode.Nodes.Add(childNode);
 				}
