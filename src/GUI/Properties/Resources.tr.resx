@@ -1,0 +1,588 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutBox1_AboutBox1_About" xml:space="preserve">
+    <value>Hakkında</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Version" xml:space="preserve">
+    <value>Versiyon</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Compiled_on__NET" xml:space="preserve">
+    <value>.Net ile derlendi</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Running_on__NET_v" xml:space="preserve">
+    <value>Çalışan .Net versiyonu</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_About_OWA_Tray_Monitor" xml:space="preserve">
+    <value>OWA Tray Monitor hakkında</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Product_Name" xml:space="preserve">
+    <value>Ürün Adı</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Version" xml:space="preserve">
+    <value>Versiyon</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Copyright" xml:space="preserve">
+    <value>Telif Hakkı</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Company_Name" xml:space="preserve">
+    <value>Şirket Adı</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Description" xml:space="preserve">
+    <value>Tanım</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_OK" xml:space="preserve">
+    <value>Tamam</value>
+  </data>
+  <data name="AssemblyHelpers_ProductName_Unknown" xml:space="preserve">
+    <value>Bilinmiyor</value>
+  </data>
+  <data name="ChangeLog_InitializeComponent_OK" xml:space="preserve">
+    <value>Tamam</value>
+  </data>
+  <data name="ChangeLog_InitializeComponent_Change_Log" xml:space="preserve">
+    <value>Değişiklikler</value>
+  </data>
+  <data name="ContactUs_ContactUs_Catalan" xml:space="preserve">
+    <value>Katalan</value>
+  </data>
+  <data name="ContactUs_ContactUs_German" xml:space="preserve">
+    <value>Almanca</value>
+  </data>
+  <data name="ContactUs_ContactUs_Spanish" xml:space="preserve">
+    <value>İspanyolca</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Translations" xml:space="preserve">
+    <value>Diğer diller</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Language" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Author" xml:space="preserve">
+    <value>Yazar</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_OK" xml:space="preserve">
+    <value>Tamam</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Contact_Details" xml:space="preserve">
+    <value>Kişi Ayrıntılı Bilgileri</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Support_Information" xml:space="preserve">
+    <value>Destek Bilgisi</value>
+  </data>
+  <data name="MdaCversions_MdaCversions_Major_Version" xml:space="preserve">
+    <value>Ana Sürüm</value>
+  </data>
+  <data name="MdaCversions_MdaCversions_Revision" xml:space="preserve">
+    <value>Sürüm</value>
+  </data>
+  <data name="MdaCversions_InitializeComponent_Installed_MDAC_Versions" xml:space="preserve">
+    <value>Yüklü MDAC Sürümleri</value>
+  </data>
+  <data name="MdaCversions_InitializeComponent_OK" xml:space="preserve">
+    <value>Tamam</value>
+  </data>
+  <data name="MdaCversions_InitializeComponent_MDAC_Inspector" xml:space="preserve">
+    <value>MDAC Durumu</value>
+  </data>
+  <data name="NeTversions_NeTversions_Major_Version" xml:space="preserve">
+    <value>Ana Sürüm</value>
+  </data>
+  <data name="NeTversions_NeTversions_Revision" xml:space="preserve">
+    <value>Sürüm</value>
+  </data>
+  <data name="NeTversions_InitializeComponent_Installed__NET_Versions" xml:space="preserve">
+    <value>Yüklü .NET Sürümleri</value>
+  </data>
+  <data name="NeTversions_InitializeComponent_OK" xml:space="preserve">
+    <value>Tamam</value>
+  </data>
+  <data name="NeTversions_InitializeComponent__NET_Inspector" xml:space="preserve">
+    <value>.NET Sorgulama</value>
+  </data>
+  <data name="SysInfo_SysInfo_Gathering_data__please_wait" xml:space="preserve">
+    <value>Veri toplanıyor, lütfen bekleyin</value>
+  </data>
+  <data name="SysInfo_BuildTree_Operating_System" xml:space="preserve">
+    <value>İşletim Sistemi</value>
+  </data>
+  <data name="SysInfo_BuildTree_Computer" xml:space="preserve">
+    <value>Bilgisayar</value>
+  </data>
+  <data name="SysInfo_BuildTree_Owner" xml:space="preserve">
+    <value>Sahibi</value>
+  </data>
+  <data name="SysInfo_BuildTree_Network" xml:space="preserve">
+    <value>Ağ</value>
+  </data>
+  <data name="SysInfo_BuildTree_Storage" xml:space="preserve">
+    <value>Depolama</value>
+  </data>
+  <data name="SysInfo_GetComputer_bit" xml:space="preserve">
+    <value>işaret</value>
+  </data>
+  <data name="SysInfo_GetComputer_Memory" xml:space="preserve">
+    <value>Bellek</value>
+  </data>
+  <data name="SysInfo_GetStorage_free" xml:space="preserve">
+    <value>boş</value>
+  </data>
+  <data name="SysInfo_InitializeComponent_Detected_System_Settings" xml:space="preserve">
+    <value>Keşfedilen Sistem Ayarları</value>
+  </data>
+  <data name="SysInfo_InitializeComponent_OK" xml:space="preserve">
+    <value>Tamam</value>
+  </data>
+  <data name="SysInfo_InitializeComponent_System_Information" xml:space="preserve">
+    <value>Sistem Bilgisi</value>
+  </data>
+  <data name="Form1_Form1_Welcome_to_the" xml:space="preserve">
+    <value>Hoşgeldiniz</value>
+  </data>
+  <data name="Form1_Form1_Ready" xml:space="preserve">
+    <value>Hazır</value>
+  </data>
+  <data name="Form1_WindowDressing_freshly_baked_at" xml:space="preserve">
+    <value>taptaze</value>
+  </data>
+  <data name="Form1_WindowDressing_Not_Connected_to_Exchange" xml:space="preserve">
+    <value>Exchange bağlantısı yok</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connection_Failure" xml:space="preserve">
+    <value>Bağlantı Başarısız</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Check_log_file_for_details" xml:space="preserve">
+    <value>Ayrıntı için log dosyasına bak</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connected_to" xml:space="preserve">
+    <value>Bağlanılan yer</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_User_Name" xml:space="preserve">
+    <value>Bulunan kullanıcı adı</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_Mailbox_Server" xml:space="preserve">
+    <value>Posta Sunucusu bulundu</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_OWA_Url" xml:space="preserve">
+    <value>OWA adresi bulundu</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_EWS_Url" xml:space="preserve">
+    <value>EWS adresi bulundu</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connected_to_Exchange" xml:space="preserve">
+    <value>Exchange'e Bağlanıldı</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_New_Mail_from" xml:space="preserve">
+    <value>Yeni ileti gönderen</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_You_have_an_appointment_in" xml:space="preserve">
+    <value>Randevunuz var:</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_minutes" xml:space="preserve">
+    <value>dakika(lar)</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_minute" xml:space="preserve">
+    <value>dakika</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_You_have" xml:space="preserve">
+    <value>Sizin</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_unread_email" xml:space="preserve">
+    <value>okunmamış e-posta</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_in_your_inbox" xml:space="preserve">
+    <value>posta kutunuzda</value>
+  </data>
+  <data name="Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_Always_use_IE_switched_" xml:space="preserve">
+    <value>IE'yi kullanımı daima</value>
+  </data>
+  <data name="Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON" xml:space="preserve">
+    <value>AÇIK</value>
+  </data>
+  <data name="Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF" xml:space="preserve">
+    <value>KAPALI</value>
+  </data>
+  <data name="Form1_balloonToolStripMenuItem_CheckStateChanged_Balloon_notifications_switched" xml:space="preserve">
+    <value>Balon bilgilendirmeler değiştirildi</value>
+  </data>
+  <data name="Form1_RunAtStartup_OWAtray_will" xml:space="preserve">
+    <value>OWATray şimdi</value>
+  </data>
+  <data name="Form1_RunAtStartup__not" xml:space="preserve">
+    <value>yok</value>
+  </data>
+  <data name="Form1_RunAtStartup_autostart_with_Windows" xml:space="preserve">
+    <value>Windows ile beraber başlat</value>
+  </data>
+  <data name="Form1_ConnectToExchange_Already_connected" xml:space="preserve">
+    <value>Zaten bağlı.</value>
+  </data>
+  <data name="Form1_ConnectToExchange_Transitioning_state" xml:space="preserve">
+    <value>Geçiş durumu</value>
+  </data>
+  <data name="Form1_ConnectToExchange_please_wait" xml:space="preserve">
+    <value>lütfen bekleyin</value>
+  </data>
+  <data name="Form1_DisconnectFromExchange_Already_disconnected" xml:space="preserve">
+    <value>Bağlantı zaten kesik.</value>
+  </data>
+  <data name="Form1_DisconnectFromExchange_Transitioning_state" xml:space="preserve">
+    <value>Geçiş durumu</value>
+  </data>
+  <data name="Form1_DisconnectFromExchange_please_wait" xml:space="preserve">
+    <value>lütfen bekleyin</value>
+  </data>
+  <data name="Form1_ShellOwaUrl_Error" xml:space="preserve">
+    <value>Hata</value>
+  </data>
+  <data name="Form1_disableCalendarToolStripMenuItem_CheckStateChanged_Calendar_notifications_switched" xml:space="preserve">
+    <value>Takvim uyarıları değiştirildi</value>
+  </data>
+  <data name="Form1_Form1_FormClosed_Terminating" xml:space="preserve">
+    <value>Sonlandırılıyor</value>
+  </data>
+  <data name="Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched" xml:space="preserve">
+    <value>Growl bilgilendirme değiştirildi</value>
+  </data>
+  <data name="Form1_InitEventView_Time" xml:space="preserve">
+    <value>Zaman</value>
+  </data>
+  <data name="Form1_InitEventView_Event_Details" xml:space="preserve">
+    <value>Etkinlik Detayları</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_You_are_not_an_Admin_user" xml:space="preserve">
+    <value>Yetkili kullanıcı değilsiniz</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Operation_may_fail" xml:space="preserve">
+    <value>İşlem başarısız olabilir</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Setting_up_Mail_handlers" xml:space="preserve">
+    <value>Posta işleyiciler hazırlanıyor</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Mail_functions_will_now_be_handled_by_OWA" xml:space="preserve">
+    <value>Posta işlevleri OWA'ya devredildi</value>
+  </data>
+  <data name="Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched" xml:space="preserve">
+    <value>SSL sertifika uyarısı değiştirildi</value>
+  </data>
+  <data name="Form1_playSoundToolStripMenuItem_CheckStateChanged_Audible_notifications_switched" xml:space="preserve">
+    <value>Sesli uyarılar değiştirildi</value>
+  </data>
+  <data name="Form1_PopToast_No_Title" xml:space="preserve">
+    <value>Başlık Yok</value>
+  </data>
+  <data name="Form1_PopToast_No_Subject" xml:space="preserve">
+    <value>Konu Yok</value>
+  </data>
+  <data name="Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched" xml:space="preserve">
+    <value>Snarl bilgilendirmeleri değiştirildi</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_You_are_not_an_Admin_user" xml:space="preserve">
+    <value>Yetkili kullanıcı değilsiniz</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_Operation_may_fail" xml:space="preserve">
+    <value>İşlem başarısız olabilir</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_Restoring_Mail_handlers" xml:space="preserve">
+    <value>Posta İşleyiciler Geri Yükleniyor</value>
+  </data>
+  <data name="Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_" xml:space="preserve">
+    <value>Sayısal bir değer girin: 1 ila</value>
+  </data>
+  <data name="Form1_loginAutomaticallyToolStripMenuItem_CheckStateChanged_Automatic_Login_is_switched" xml:space="preserve">
+    <value>Otomatik Giriş Yapma değiştirildi</value>
+  </data>
+  <data name="Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched" xml:space="preserve">
+    <value>OtomatikKeşfetme Doğrulama İptali değiştirildi</value>
+  </data>
+  <data name="Form1_office365LoginOverrideToolStripMenuItem_CheckStateChanged_Office365_login_override" xml:space="preserve">
+    <value>Office365 oturum açmama</value>
+  </data>
+  <data name="Form1_cbOverrideEWS_CheckedChanged_EWS_URL_override_switched" xml:space="preserve">
+    <value>EWS Adresini kendin girme</value>
+  </data>
+  <data name="Form1_chkAutodiscovery_CheckedChanged_Autodiscovery_is_switched" xml:space="preserve">
+    <value>OtomatikKeşfetme durumu değiştirildi</value>
+  </data>
+  <data name="Form1_cbOverrideOWA_CheckedChanged_OWA_URL_override_switched" xml:space="preserve">
+    <value>OWA Adresini dikkate almama durumu</value>
+  </data>
+  <data name="Form1_InitializeComponent_Ready_" xml:space="preserve">
+    <value>Hazır.</value>
+  </data>
+  <data name="Form1_InitializeComponent_OWA_Tray_Monitor" xml:space="preserve">
+    <value>OWA tepsi izleyicisi</value>
+  </data>
+  <data name="Form1_InitializeComponent_Options" xml:space="preserve">
+    <value>Seçenekler</value>
+  </data>
+  <data name="Form1_InitializeComponent_Open_OWA" xml:space="preserve">
+    <value>OWA'yı Aç</value>
+  </data>
+  <data name="Form1_InitializeComponent_Open_Outlook" xml:space="preserve">
+    <value>Outlook'u Aç</value>
+  </data>
+  <data name="Form1_InitializeComponent_Recall_Last_Popup" xml:space="preserve">
+    <value>Son Bilgilendirmeyi Tekrar Göster</value>
+  </data>
+  <data name="Form1_InitializeComponent_Reset_Tray_Icon" xml:space="preserve">
+    <value>Tepsi Simgesini Sıfırla</value>
+  </data>
+  <data name="Form1_InitializeComponent_Exit" xml:space="preserve">
+    <value>Çıkış</value>
+  </data>
+  <data name="Form1_InitializeComponent_File" xml:space="preserve">
+    <value>Dosya</value>
+  </data>
+  <data name="Form1_InitializeComponent_Tools" xml:space="preserve">
+    <value>Araçlar</value>
+  </data>
+  <data name="Form1_InitializeComponent__NET_Versions" xml:space="preserve">
+    <value>.Net Versiyonları</value>
+  </data>
+  <data name="Form1_InitializeComponent_MDAC_Versions" xml:space="preserve">
+    <value>MDAC Sürümü</value>
+  </data>
+  <data name="Form1_InitializeComponent_System_Information" xml:space="preserve">
+    <value>Sistem Bilgisi</value>
+  </data>
+  <data name="Form1_InitializeComponent_Notifications" xml:space="preserve">
+    <value>Bilgilendirmeler</value>
+  </data>
+  <data name="Form1_InitializeComponent_Balloon" xml:space="preserve">
+    <value>Balon</value>
+  </data>
+  <data name="Form1_InitializeComponent_Growl" xml:space="preserve">
+    <value>Growl bilgilendirme</value>
+  </data>
+  <data name="Form1_InitializeComponent_Snarl" xml:space="preserve">
+    <value>Snarl bilgilendirici</value>
+  </data>
+  <data name="Form1_InitializeComponent_Play_Sound" xml:space="preserve">
+    <value>Ses Çalma</value>
+  </data>
+  <data name="Form1_InitializeComponent_Expert" xml:space="preserve">
+    <value>Uzman</value>
+  </data>
+  <data name="Form1_InitializeComponent_Override_Certificate" xml:space="preserve">
+    <value>Sertifikayı pas geç</value>
+  </data>
+  <data name="Form1_InitializeComponent_Always_open_OWA_in_IE" xml:space="preserve">
+    <value>OWA'yı daima IE ile aç</value>
+  </data>
+  <data name="Form1_InitializeComponent_Disable_Calendar" xml:space="preserve">
+    <value>Takvim Devre Dışı</value>
+  </data>
+  <data name="Form1_InitializeComponent_Login_Automatically" xml:space="preserve">
+    <value>Otomatik Oturum aç</value>
+  </data>
+  <data name="Form1_InitializeComponent_Override_Autodiscovery_Validation" xml:space="preserve">
+    <value>OtomatikKeşfetme Doğrulanmasın</value>
+  </data>
+  <data name="Form1_InitializeComponent_Office365_Login_Override" xml:space="preserve">
+    <value>Office365 oturum açmama</value>
+  </data>
+  <data name="Form1_InitializeComponent_Use_Default_Web_Proxy" xml:space="preserve">
+    <value>Varsayılan Web Proxy kullanı</value>
+  </data>
+  <data name="Form1_InitializeComponent_Shell_Integration" xml:space="preserve">
+    <value>Windows menüsüne ekleme</value>
+  </data>
+  <data name="Form1_InitializeComponent_Make_OWA_Default" xml:space="preserve">
+    <value>OWA varsayılanı yap</value>
+  </data>
+  <data name="Form1_InitializeComponent_Switch_Off" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="Form1_InitializeComponent_Help" xml:space="preserve">
+    <value>Yardım</value>
+  </data>
+  <data name="Form1_InitializeComponent_Change_Log" xml:space="preserve">
+    <value>Değişiklikler</value>
+  </data>
+  <data name="Form1_InitializeComponent_Support" xml:space="preserve">
+    <value>Destek</value>
+  </data>
+  <data name="Form1_InitializeComponent_Show_Log_File" xml:space="preserve">
+    <value>Log dosyasını göster</value>
+  </data>
+  <data name="Form1_InitializeComponent_About" xml:space="preserve">
+    <value>Hakkında</value>
+  </data>
+  <data name="Form1_InitializeComponent_Logging" xml:space="preserve">
+    <value>Log izleme</value>
+  </data>
+  <data name="Form1_InitializeComponent_unknown" xml:space="preserve">
+    <value>bilinmiyor</value>
+  </data>
+  <data name="Form1_InitializeComponent_EWS_URL___" xml:space="preserve">
+    <value>EWS Adresi :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Server_Address__" xml:space="preserve">
+    <value>Sunucu Adres :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Stop" xml:space="preserve">
+    <value>Durdur</value>
+  </data>
+  <data name="Form1_InitializeComponent_Start" xml:space="preserve">
+    <value>Başlat</value>
+  </data>
+  <data name="Form1_InitializeComponent_Password__" xml:space="preserve">
+    <value>Şifre :</value>
+  </data>
+  <data name="Form1_InitializeComponent_User_Name__" xml:space="preserve">
+    <value>Kullanıcı Adı :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Basic_Settings" xml:space="preserve">
+    <value>Temel Ayarlar</value>
+  </data>
+  <data name="Form1_InitializeComponent_secs" xml:space="preserve">
+    <value>saniye</value>
+  </data>
+  <data name="Form1_InitializeComponent_Update_Interval__" xml:space="preserve">
+    <value>Güncelleme Aralığı:</value>
+  </data>
+  <data name="Form1_InitializeComponent_Exchange_Version__" xml:space="preserve">
+    <value>Exchange Sürümü:</value>
+  </data>
+  <data name="Form1_InitializeComponent_Run_at_Startup" xml:space="preserve">
+    <value>Windows Başlangıcında Çalıştır</value>
+  </data>
+  <data name="Form1_InitializeComponent_Email_Address__" xml:space="preserve">
+    <value>Eposta Adresi :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Attempt_to_use_Autodiscovery" xml:space="preserve">
+    <value>OtomatikKeşfetmeyi Kullan</value>
+  </data>
+  <data name="Form1_InitializeComponent_Advanced_Settings" xml:space="preserve">
+    <value>Gelişmiş Ayarlar</value>
+  </data>
+  <data name="Form1_InitializeComponent_Use_Windows_Domain_Credentials" xml:space="preserve">
+    <value>Windows Domain Şifresini Kullan</value>
+  </data>
+  <data name="Form1_InitializeComponent_OWA_URL___" xml:space="preserve">
+    <value>OWA Adresi :</value>
+  </data>
+  <data name="Form1_InitializeComponent_URLs" xml:space="preserve">
+    <value>URL'ler</value>
+  </data>
+  <data name="Form1_InitializeComponent_Controls" xml:space="preserve">
+    <value>Denetimler</value>
+  </data>
+</root>

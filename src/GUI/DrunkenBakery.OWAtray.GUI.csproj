@@ -153,10 +153,12 @@
     <EmbeddedResource Include="NETversions.resx">
       <DependentUpon>NETversions.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.de.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.tr.resx" />
     <EmbeddedResource Include="SysInfo.resx">
       <DependentUpon>SysInfo.cs</DependentUpon>
     </EmbeddedResource>

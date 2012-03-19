@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "3.0.4458.36334"
+!define PRODUCT_VERSION "3.0.4461.36827"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray"
@@ -83,15 +83,18 @@ Section "MainSection" SEC01
   CreateShortCut "$SMPROGRAMS\OWAtray\OWAtray.lnk" "$INSTDIR\DrunkenBakery.OWAtray.GUI.exe"
   CreateShortCut "$DESKTOP\OWAtray.lnk" "$INSTDIR\DrunkenBakery.OWAtray.GUI.exe"
 
-;  CreateDirectory "$INSTDIR\ca"
-;  SetOutPath "$INSTDIR\ca"
-;  File "..\bin\ca\DrunkenBakery.OWAtray.GUI.resources.dll"
-;  CreateDirectory "$INSTDIR\de"
-;  SetOutPath "$INSTDIR\de"
-;  File "..\bin\de\DrunkenBakery.OWAtray.GUI.resources.dll"
-;  CreateDirectory "$INSTDIR\es"
-;  SetOutPath "$INSTDIR\es"
-;  File "..\bin\es\DrunkenBakery.OWAtray.GUI.resources.dll"
+  CreateDirectory "$INSTDIR\tr"
+  SetOutPath "$INSTDIR\tr"
+  File "..\bin\tr\DrunkenBakery.OWAtray.Connections.Abstract.resources.dll"
+  File "..\bin\tr\DrunkenBakery.OWAtray.Connections.EWS.resources.dll"
+  File "..\bin\tr\DrunkenBakery.OWAtray.GUI.resources.dll"
+  File "..\bin\tr\DrunkenBakery.OWAtray.Logging.resources.dll"
+  CreateDirectory "$INSTDIR\de"
+  SetOutPath "$INSTDIR\de"
+  File "..\bin\de\DrunkenBakery.OWAtray.Connections.Abstract.resources.dll"
+  File "..\bin\de\DrunkenBakery.OWAtray.Connections.EWS.resources.dll"
+  File "..\bin\de\DrunkenBakery.OWAtray.GUI.resources.dll"
+  File "..\bin\de\DrunkenBakery.OWAtray.Logging.resources.dll"
 SectionEnd
 
 Section -AdditionalIcons

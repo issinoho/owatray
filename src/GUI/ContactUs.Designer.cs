@@ -57,13 +57,13 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.groupBox1.Size = new System.Drawing.Size(327, 220);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = Resources.ContactUs_InitializeComponent_Translations;
+			this.groupBox1.Text = "Translations";
 			// 
 			// lvX
 			// 
 			this.lvX.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-			this.Language,
-			this.Author});
+            this.Language,
+            this.Author});
 			this.lvX.GridLines = true;
 			this.lvX.Location = new System.Drawing.Point(6, 19);
 			this.lvX.Name = "lvX";
@@ -75,12 +75,12 @@ namespace DrunkenBakery.OWAtray.GUI
 			// 
 			// Language
 			// 
-			this.Language.Text = Resources.ContactUs_InitializeComponent_Language;
+			this.Language.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.ContactUs_InitializeComponent_Language;
 			this.Language.Width = 118;
 			// 
 			// Author
 			// 
-			this.Author.Text = Resources.ContactUs_InitializeComponent_Author;
+			this.Author.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.ContactUs_InitializeComponent_Author;
 			this.Author.Width = 190;
 			// 
 			// imLarge
@@ -90,6 +90,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.imLarge.Images.SetKeyName(0, "catalonia.png");
 			this.imLarge.Images.SetKeyName(1, "de.png");
 			this.imLarge.Images.SetKeyName(2, "es.png");
+			this.imLarge.Images.SetKeyName(3, "tr.png");
 			// 
 			// cmdOK
 			// 
@@ -97,7 +98,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.cmdOK.Name = "cmdOK";
 			this.cmdOK.Size = new System.Drawing.Size(75, 23);
 			this.cmdOK.TabIndex = 1;
-			this.cmdOK.Text = Resources.ContactUs_InitializeComponent_OK;
+			this.cmdOK.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.ContactUs_InitializeComponent_OK;
 			this.cmdOK.UseVisualStyleBackColor = true;
 			this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
 			// 
@@ -114,7 +115,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.groupBox2.Size = new System.Drawing.Size(327, 85);
 			this.groupBox2.TabIndex = 2;
 			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = Resources.ContactUs_InitializeComponent_Contact_Details;
+			this.groupBox2.Text = "Contact Details";
 			// 
 			// linkEmail
 			// 
@@ -194,7 +195,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "ContactUs";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = Resources.ContactUs_InitializeComponent_Support_Information;
+			this.Text = "Support Information";
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();

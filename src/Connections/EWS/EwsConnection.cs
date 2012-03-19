@@ -504,13 +504,13 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					if (ex.InnerException.Message != "The operation has timed out")
 					{
 						RaiseLogMessage(ex.ToString(), Severity.Fail);
-						ChangeState(ConnectionState.Failed);
+						//ChangeState(ConnectionState.Failed);
 					}
 				}
 				else
 				{
 					RaiseLogMessage(ex.ToString(), Severity.Fail);
-					ChangeState(ConnectionState.Failed);					
+					//ChangeState(ConnectionState.Failed);					
 				}
 			}
 		}
@@ -547,13 +547,13 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 					if (ex.InnerException.Message != "The operation has timed out")
 					{
 						RaiseLogMessage(ex.ToString(), Severity.Fail);
-						ChangeState(ConnectionState.Failed);
+						//ChangeState(ConnectionState.Failed);
 					}
 				}
 				else
 				{
 					RaiseLogMessage(ex.ToString(), Severity.Fail);
-					ChangeState(ConnectionState.Failed);					
+					//ChangeState(ConnectionState.Failed);					
 				}
 			}
 		}
