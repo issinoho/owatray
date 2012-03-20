@@ -108,7 +108,7 @@ Section "MainSection" SEC01
   File "..\bin\ca\DrunkenBakery.OWAtray.GUI.resources.dll"
   File "..\bin\ca\DrunkenBakery.OWAtray.Logging.resources.dll"
   CreateDirectory "$INSTDIR\fr"
-  SetOutPath "$INSTDIR\fre"
+  SetOutPath "$INSTDIR\fr"
   File "..\bin\fr\DrunkenBakery.OWAtray.Connections.Abstract.resources.dll"
   File "..\bin\fr\DrunkenBakery.OWAtray.Connections.EWS.resources.dll"
   File "..\bin\fr\DrunkenBakery.OWAtray.GUI.resources.dll"
