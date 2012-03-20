@@ -583,7 +583,7 @@ namespace DrunkenBakery.OWAtray.GUI
 									  Resources.Form1_DisconnectFromExchange_please_wait), Severity.Fail);
 					break;
 				default:
-					_connection.DisconnectA();
+					_connection.Disconnect();
 					break;
 			}
 		}
@@ -806,7 +806,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				FormClosing -= Form1_FormClosing;
 				SnarlHelper.Revoke(Handle);
-				Application.Exit(e);
+				DisconnectFromExchange();
 			}
 		}
 

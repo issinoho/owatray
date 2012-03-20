@@ -70,213 +70,228 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		public override void Connect()
 		{
-			// Check input
-			if (EmailAddress.Length == 0)
+			lock (this._locker)
 			{
-				RaiseLogMessage(Resources.EwsConnection_Connect_Please_provide_a_valid_Email_Address, Severity.Fail);
-				return;
-			}
-			if (!OnWindowsDomain && Password.Length == 0)
-			{
-				RaiseLogMessage(Resources.EwsConnection_Connect_Please_provide_a_Password, Severity.Fail);
-				return;
-			}
 
-			if (!UseAutodiscovery)
-			{
-				if (DerivedServiceUrl.Length == 0)
+				// Check input
+				if (EmailAddress.Length == 0)
 				{
-					RaiseLogMessage(Resources.EwsConnection_Connect_Please_provide_a_valid_Server_Address, Severity.Fail);
+					RaiseLogMessage(Resources.EwsConnection_Connect_Please_provide_a_valid_Email_Address, Severity.Fail);
 					return;
 				}
-			}
-
-			try
-			{
-				// State
-				ChangeState(ConnectionState.Connecting);
-
-				// Validate the server certificate
-				ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
-
-				// Define service
-				this._service = ServerVersion == Resources.EwsConnection_Version_Default ? new ExchangeService() : new ExchangeService((ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), ServerVersion));
-
-				// Enable Tracing (if required)
-				if (Settings.Default.UseTracing)
+				if (!OnWindowsDomain && Password.Length == 0)
 				{
-					this._service.TraceListener = new EwsTraceListener();
-					this._service.TraceFlags = TraceFlags.EwsRequest | TraceFlags.EwsResponse;
-					this._service.TraceEnabled = true;
+					RaiseLogMessage(Resources.EwsConnection_Connect_Please_provide_a_Password, Severity.Fail);
+					return;
 				}
 
-				// Are we on a Windows domain?
-				this._service.UseDefaultCredentials = OnWindowsDomain;
-
-				if (!OnWindowsDomain)
+				if (!UseAutodiscovery)
 				{
-					this._service.Credentials = AccountDomain.Length > 0 ? new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password, AccountDomain) : new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password);
+					if (DerivedServiceUrl.Length == 0)
+					{
+						RaiseLogMessage(Resources.EwsConnection_Connect_Please_provide_a_valid_Server_Address, Severity.Fail);
+						return;
+					}
 				}
 
-				// Connect using Autodiscover?
-				if (UseAutodiscovery)
+				try
 				{
-					if (OverrideAutodiscoveryValidation)
-					{
-						this._service.AutodiscoverUrl(EmailAddress, delegate { return true; });
-					}
-					else
-					{
-						this._service.AutodiscoverUrl(EmailAddress);
-					}
+					// State
+					ChangeState(ConnectionState.Connecting);
 
-					// Probe for autodiscover information
-					//var autodiscoverService = new AutodiscoverService((ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), Version));
-					var autodiscoverService = new AutodiscoverService(ExchangeVersion.Exchange2007_SP1);
+					// Validate the server certificate
+					ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallBack;
 
-					// Credentials
-					if (OnWindowsDomain)
+					// Define service
+					this._service = ServerVersion == Resources.EwsConnection_Version_Default
+					                	? new ExchangeService()
+					                	: new ExchangeService((ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), ServerVersion));
+
+					// Enable Tracing (if required)
+					if (Settings.Default.UseTracing)
 					{
-						autodiscoverService.UseDefaultCredentials = true;
-					}
-					else
-					{
-						autodiscoverService.Credentials = AccountDomain.Length > 0 ? new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password, AccountDomain) : new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password);
+						this._service.TraceListener = new EwsTraceListener();
+						this._service.TraceFlags = TraceFlags.EwsRequest | TraceFlags.EwsResponse;
+						this._service.TraceEnabled = true;
 					}
 
-					// Redirection Callback
-					if (OverrideAutodiscoveryValidation)
+					// Are we on a Windows domain?
+					this._service.UseDefaultCredentials = OnWindowsDomain;
+
+					if (!OnWindowsDomain)
 					{
-						autodiscoverService.RedirectionUrlValidationCallback = delegate { return true; };
+						this._service.Credentials = AccountDomain.Length > 0
+						                            	? new WebCredentials(
+						                            	  	(Username.Length == 0 ? EmailAddress : Username), Password, AccountDomain)
+						                            	: new WebCredentials((Username.Length == 0 ? EmailAddress : Username), Password);
 					}
 
-					// Is this Internal or External ?
-					if (autodiscoverService.IsExternal == false)
+					// Connect using Autodiscover?
+					if (UseAutodiscovery)
 					{
-						// Probe for values
-						var userresponse = autodiscoverService.GetUserSettings(EmailAddress,
-																				UserSettingName.InternalWebClientUrls,
-																				UserSettingName.InternalEwsUrl,
-																				UserSettingName.InternalMailboxServer,
-																				UserSettingName.UserDisplayName);
-
-						// OWA Url
-						WebClientUrlCollection webCollection;
-						if (userresponse.TryGetSettingValue(UserSettingName.InternalWebClientUrls, out webCollection))
+						if (OverrideAutodiscoveryValidation)
 						{
-							foreach (var url in webCollection.Urls)
+							this._service.AutodiscoverUrl(EmailAddress, delegate { return true; });
+						}
+						else
+						{
+							this._service.AutodiscoverUrl(EmailAddress);
+						}
+
+						// Probe for autodiscover information
+						//var autodiscoverService = new AutodiscoverService((ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), Version));
+						var autodiscoverService = new AutodiscoverService(ExchangeVersion.Exchange2007_SP1);
+
+						// Credentials
+						if (OnWindowsDomain)
+						{
+							autodiscoverService.UseDefaultCredentials = true;
+						}
+						else
+						{
+							autodiscoverService.Credentials = AccountDomain.Length > 0
+							                                  	? new WebCredentials(
+							                                  	  	(Username.Length == 0 ? EmailAddress : Username), Password, AccountDomain)
+							                                  	: new WebCredentials(
+							                                  	  	(Username.Length == 0 ? EmailAddress : Username), Password);
+						}
+
+						// Redirection Callback
+						if (OverrideAutodiscoveryValidation)
+						{
+							autodiscoverService.RedirectionUrlValidationCallback = delegate { return true; };
+						}
+
+						// Is this Internal or External ?
+						if (autodiscoverService.IsExternal == false)
+						{
+							// Probe for values
+							var userresponse = autodiscoverService.GetUserSettings(
+								EmailAddress,
+								UserSettingName.InternalWebClientUrls,
+								UserSettingName.InternalEwsUrl,
+								UserSettingName.InternalMailboxServer,
+								UserSettingName.UserDisplayName);
+
+							// OWA Url
+							WebClientUrlCollection webCollection;
+							if (userresponse.TryGetSettingValue(UserSettingName.InternalWebClientUrls, out webCollection))
 							{
-								DiscoveredEmailUrl = url.Url;
+								foreach (var url in webCollection.Urls)
+								{
+									DiscoveredEmailUrl = url.Url;
+								}
+							}
+
+							// EWS Url
+							string internalUrl;
+							if (userresponse.TryGetSettingValue(UserSettingName.InternalEwsUrl, out internalUrl))
+							{
+								DiscoveredServiceUrl = internalUrl;
+							}
+
+							// Server
+							string internalServer;
+							if (userresponse.TryGetSettingValue(UserSettingName.InternalMailboxServer, out internalServer))
+							{
+								DiscoveredEmailServer = internalServer;
+							}
+
+							// User Name
+							string userName;
+							if (userresponse.TryGetSettingValue(UserSettingName.UserDisplayName, out userName))
+							{
+								DiscoveredUsername = userName;
 							}
 						}
-
-						// EWS Url
-						string internalUrl;
-						if (userresponse.TryGetSettingValue(UserSettingName.InternalEwsUrl, out internalUrl))
+						else
 						{
-							DiscoveredServiceUrl = internalUrl;
-						}
+							// Probe for values
+							var userresponse = autodiscoverService.GetUserSettings(
+								EmailAddress,
+								UserSettingName.ExternalWebClientUrls,
+								UserSettingName.ExternalEwsUrl,
+								UserSettingName.ExternalMailboxServer,
+								UserSettingName.UserDisplayName);
 
-						// Server
-						string internalServer;
-						if (userresponse.TryGetSettingValue(UserSettingName.InternalMailboxServer, out internalServer))
-						{
-							DiscoveredEmailServer = internalServer;
-						}
+							// OWA Url
+							WebClientUrlCollection webCollection;
+							if (userresponse.TryGetSettingValue(UserSettingName.ExternalWebClientUrls, out webCollection))
+							{
+								foreach (var url in webCollection.Urls)
+								{
+									DiscoveredEmailUrl = url.Url;
+								}
+							}
 
-						// User Name
-						string userName;
-						if (userresponse.TryGetSettingValue(UserSettingName.UserDisplayName, out userName))
-						{
-							DiscoveredUsername = userName;
+							// EWS Url
+							string externalUrl;
+							if (userresponse.TryGetSettingValue(UserSettingName.ExternalEwsUrl, out externalUrl))
+							{
+								DiscoveredServiceUrl = externalUrl;
+							}
+
+							// Server
+							string externalServer;
+							if (userresponse.TryGetSettingValue(UserSettingName.ExternalMailboxServer, out externalServer))
+							{
+								DiscoveredEmailServer = externalServer;
+							}
+
+							// User Name
+							string userName;
+							if (userresponse.TryGetSettingValue(UserSettingName.UserDisplayName, out userName))
+							{
+								DiscoveredUsername = userName;
+							}
 						}
 					}
 					else
 					{
-						// Probe for values
-						var userresponse = autodiscoverService.GetUserSettings(EmailAddress,
-																				UserSettingName.ExternalWebClientUrls,
-																				UserSettingName.ExternalEwsUrl,
-																				UserSettingName.ExternalMailboxServer,
-																				UserSettingName.UserDisplayName);
-
-						// OWA Url
-						WebClientUrlCollection webCollection;
-						if (userresponse.TryGetSettingValue(UserSettingName.ExternalWebClientUrls, out webCollection))
+						if (DerivedServiceUrl.Length > 0)
 						{
-							foreach (var url in webCollection.Urls)
-							{
-								DiscoveredEmailUrl = url.Url;
-							}
-						}
+							var myUri = new Uri(DerivedServiceUrl);
+							_service.Url = myUri;
 
-						// EWS Url
-						string externalUrl;
-						if (userresponse.TryGetSettingValue(UserSettingName.ExternalEwsUrl, out externalUrl))
-						{
-							DiscoveredServiceUrl = externalUrl;
-						}
-
-						// Server
-						string externalServer;
-						if (userresponse.TryGetSettingValue(UserSettingName.ExternalMailboxServer, out externalServer))
-						{
-							DiscoveredEmailServer = externalServer;
-						}
-
-						// User Name
-						string userName;
-						if (userresponse.TryGetSettingValue(UserSettingName.UserDisplayName, out userName))
-						{
-							DiscoveredUsername = userName;
+							// Update properties
+							DiscoveredEmailServer = EmailServer;
+							DiscoveredUsername = (OnWindowsDomain ? "" : (Username.Length == 0 ? EmailAddress : Username));
+							DiscoveredServiceUrl = DerivedServiceUrl;
+							DiscoveredEmailUrl = DerivedEmailUrl;
 						}
 					}
+
+					// Get initial timestamp
+					_timeLastChecked = TimeOfNewestEmail().AddSeconds(1);
+
+					// Initial Message
+					var count = UnreadCount;
+					RaiseMessageCount(count);
+
+					// Timers
+					_backgroundPoll.Interval = (Interval * 1000);
+					_backgroundPoll.Elapsed += backgroundPoll_Elapsed;
+					_backgroundPoll.Start();
+					_appointmentPoll.Interval = (Settings.Default.ApptInterval * 1000);
+					_appointmentPoll.Elapsed += appointmentPoll_Elapsed;
+					_appointmentPoll.Start();
+
+					// Set timeout
+					_service.Timeout = (Interval * 1000) - 500;
+
+					// Initial check
+					_mailCount = -1;
+					CheckForNewMailA();
+					if (!DisableCalendar) CheckForNewAppointmentA();
+
+					// State
+					ChangeState(ConnectionState.Connected);
 				}
-				else
+				catch (Exception ex)
 				{
-					if (DerivedServiceUrl.Length > 0)
-					{
-						var myUri = new Uri(DerivedServiceUrl);
-						_service.Url = myUri;
-
-						// Update properties
-						DiscoveredEmailServer = EmailServer;
-						DiscoveredUsername = (OnWindowsDomain ? "" : (Username.Length == 0 ? EmailAddress : Username));
-						DiscoveredServiceUrl = DerivedServiceUrl;
-						DiscoveredEmailUrl = DerivedEmailUrl;
-					}
+					RaiseLogMessage(ex.Message, Severity.Fail);
+					ChangeState(ConnectionState.Failed);
 				}
-
-				// Get initial timestamp
-				_timeLastChecked = TimeOfNewestEmail().AddSeconds(1);
-
-				// Initial Message
-				var count = UnreadCount;
-				RaiseMessageCount(count);
-
-				// Timers
-				_backgroundPoll.Interval = (Interval * 1000);
-				_backgroundPoll.Elapsed += backgroundPoll_Elapsed;
-				_backgroundPoll.Start();
-				_appointmentPoll.Interval = (Settings.Default.ApptInterval * 1000);
-				_appointmentPoll.Elapsed += appointmentPoll_Elapsed;
-				_appointmentPoll.Start();
-
-				// Set timeout
-				_service.Timeout = (Interval * 1000) - 500;
-
-				// Initial check
-				_mailCount = -1;
-				CheckForNewMailA();
-				if (!DisableCalendar) CheckForNewAppointmentA();
-
-				// State
-				ChangeState(ConnectionState.Connected);
-			}
-			catch (Exception ex)
-			{
-				RaiseLogMessage(ex.Message, Severity.Fail);
-				ChangeState(ConnectionState.Failed);
 			}
 		}
 
@@ -311,50 +326,34 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		public override void ConnectA()
 		{
-			lock (this._locker)
-			{
-				new Thread(Connect).Start();
-			}
+			new Thread(Connect).Start();
 		}
 
 		public override void Disconnect()
 		{
-			if (!IsConnected) return;
+			lock (this._locker)
+			{
+				if (!IsConnected) return;
 
-			try
-			{
-				ChangeState(ConnectionState.Disconnecting);
-				this._backgroundPoll.Stop();
-				this._backgroundPoll.Elapsed -= backgroundPoll_Elapsed;
-				this._appointmentPoll.Stop();
-				this._appointmentPoll.Elapsed -= appointmentPoll_Elapsed;
-				this._service = null;
-				ChangeState(ConnectionState.Disconnected);
-			}
-			catch (Exception ex)
-			{
-				if (ex.InnerException != null)
+				try
 				{
-					if (ex.InnerException.Message != "The operation has timed out")
-					{
-						ChangeState(ConnectionState.Failed);
-						RaiseLogMessage(ex.ToString(), Severity.Fail);
-					}
+					ChangeState(ConnectionState.Disconnecting);
+					this._backgroundPoll.Stop();
+					this._backgroundPoll.Elapsed -= backgroundPoll_Elapsed;
+					this._appointmentPoll.Stop();
+					this._appointmentPoll.Elapsed -= appointmentPoll_Elapsed;
+					this._service = null;
+					ChangeState(ConnectionState.Disconnected);
 				}
-				else
+				catch
 				{
-					RaiseLogMessage(ex.ToString(), Severity.Fail);
-					ChangeState(ConnectionState.Failed);
 				}
 			}
 		}
 
 		public override void DisconnectA()
 		{
-			lock (this._locker)
-			{
-				new Thread(Disconnect).Start();
-			}
+			new Thread(Disconnect).Start();
 		}
 
 		private void backgroundPoll_Elapsed(object sender, EventArgs e)
@@ -369,18 +368,12 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		private void CheckForNewMailA()
 		{
-			lock (this._locker)
-			{
-				new Thread(CheckForNewMail).Start();
-			}
+			new Thread(CheckForNewMail).Start();
 		}
 
 		private void CheckForNewAppointmentA()
 		{
-			lock (this._locker)
-			{
-				new Thread(CheckForNewAppointment).Start();
-			}
+			new Thread(CheckForNewAppointment).Start();
 		}
 
 		private DateTime TimeOfNewestEmail()
@@ -414,173 +407,153 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		private void CheckForNewMail()
 		{
-			try
+			lock (this._locker)
 			{
-				// Belt & braces
-				if (!IsConnected) return;
-
-				// Quick mail count check
-				var count = UnreadCount;
-				if (count != _mailCount)
+				try
 				{
-					_mailCount = count;
-					RaiseMessageCount(count);
-				}
+					// Belt & braces
+					if (!IsConnected) return;
 
-				// Only process further if there is unread email
-				if (count == 0) return;
+					// Quick mail count check
+					var count = UnreadCount;
+					if (count != _mailCount)
+					{
+						_mailCount = count;
+						RaiseMessageCount(count);
+					}
 
-				// Set the offset for the paged search.
-				var offset = 0;
+					// Only process further if there is unread email
+					if (count == 0) return;
 
-				// Set the page size.
-				var pageSize = Settings.Default.BatchAmount;
-
-				// Set the flag that indicates whether to continue iterating through additional pages.
-				var moreItems = true;
-
-				// Continue paging while there are more items to page.
-				while (moreItems)
-				{
 					// Define filters collection
+					//RaiseLogMessage("Checking for mail after " + _timeLastChecked);
 					var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
-					              	{
-					              		new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
-					              		new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, this._timeLastChecked)
-					              	};
+						{
+							new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
+							new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, _timeLastChecked)
+						};
 
-					// Item view
-					var view = new ItemView(pageSize, offset, OffsetBasePoint.Beginning)
-								{
-									PropertySet =
-										new PropertySet(BasePropertySet.IdOnly) { ItemSchema.Subject, ItemSchema.DateTimeReceived }
-								};
-					view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
+					// Set initial flags
+					var offset = 0;
+					var moreItems = true;
 
-					// Now search
-					var findResults = this._service.FindItems(WellKnownFolderName.Inbox, filters, view);
-
-					// Only update timestamp once
-					var isFlagged = false;
-
-					// Process each item.
-					foreach (EmailMessage myItem in findResults.Items)
+					// Continue paging while there are more items to fetch
+					while (moreItems)
 					{
-						// Get the email details
-						var ps = new PropertySet(BasePropertySet.FirstClassProperties);
+						//RaiseLogMessage("Looking for items...");
 
-						myItem.Load(ps);
-						var mySender = myItem.Sender.Name;
-						var mySubject = (myItem.Subject ?? Resources.EwsConnection_CheckForNewMail_No_subject);
-						var myAccessUrl = SupportsDirectMessageAccess ? myItem.WebClientReadFormQueryString : "";
-						var myTime = myItem.DateTimeReceived;
+						// Item view
+						var view = new ItemView(Settings.Default.BatchAmount, offset, OffsetBasePoint.Beginning)
+							{ PropertySet = new PropertySet(BasePropertySet.IdOnly) { ItemSchema.Subject, ItemSchema.DateTimeReceived } };
+						view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Ascending);
 
-						// Pop message
-						RaiseNewMail(myTime, mySubject, mySender, myAccessUrl);
+						// Now search
+						var findResults = this._service.FindItems(WellKnownFolderName.Inbox, filters, view);
+						//RaiseLogMessage("Found " + findResults.Items.Count + " messages");
 
-						// Update flag
-						if (isFlagged) continue;
-						_timeLastChecked = myTime.AddSeconds(1);
-						isFlagged = true;
-					}
+						// Process each item.
+						foreach (EmailMessage myItem in findResults.Items)
+						{
+							//RaiseLogMessage("Processing message");
 
-					// Set the flag to discontinue paging.
-					if (!findResults.MoreAvailable)
-					{
-						moreItems = false;
-					}
+							// Get the email details
+							var ps = new PropertySet(BasePropertySet.FirstClassProperties);
 
-					// Update the offset if there are more items to page.
-					if (moreItems)
-					{
-						offset = offset + pageSize;
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				if (ex.InnerException != null)
-				{
-					if (ex.InnerException.Message != "The operation has timed out")
-					{
-						RaiseLogMessage(ex.ToString(), Severity.Fail);
-						//ChangeState(ConnectionState.Failed);
+							myItem.Load(ps);
+							var mySender = myItem.Sender.Name;
+							var mySubject = (myItem.Subject ?? Resources.EwsConnection_CheckForNewMail_No_subject);
+							var myAccessUrl = SupportsDirectMessageAccess ? myItem.WebClientReadFormQueryString : "";
+							var myTime = myItem.DateTimeReceived;
+
+							// Update timestamp
+							_timeLastChecked = myTime.AddSeconds(1);
+
+							// Pop message
+							RaiseNewMail(myTime, mySubject, mySender, myAccessUrl);
+						}
+
+						// Set the flag to discontinue paging.
+						if (!findResults.MoreAvailable)
+						{
+							moreItems = false;
+						}
+
+						// Update the offset if there are more items to page.
+						if (moreItems)
+						{
+							offset = offset + Settings.Default.BatchAmount;
+						}
 					}
 				}
-				else
+				catch
 				{
-					RaiseLogMessage(ex.ToString(), Severity.Fail);
-					//ChangeState(ConnectionState.Failed);					
 				}
 			}
 		}
 
 		private void CheckForNewAppointment()
 		{
-			try
+			lock (this._locker)
 			{
-				// Interrogate default Calendar
-				var cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Settings.Default.ApptWindow))) { PropertySet = PropertySet.FirstClassProperties };
-				var findResults = this._service.FindAppointments(WellKnownFolderName.Calendar, cView);
 
-				// Process each item.
-				foreach (Appointment myItem in findResults.Items)
+				try
 				{
-					if (myItem == null) continue;
+					// Interrogate default Calendar
+					var cView = new CalendarView(DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Settings.Default.ApptWindow)))
+						{ PropertySet = PropertySet.FirstClassProperties };
+					var findResults = this._service.FindAppointments(WellKnownFolderName.Calendar, cView);
 
-				    var myAppt = myItem;
-					var ps = new PropertySet(BasePropertySet.FirstClassProperties);
-					myAppt.Load(ps);
-					var myLocation = myAppt.Location;
-					var mySubject = (myAppt.Subject ?? Resources.EwsConnection_CheckForNewMail_No_subject);
-					var span = myAppt.Start.Subtract(DateTime.Now);
-					var duration = (int)Math.Floor(span.TotalMinutes);
-					var myTime = myAppt.Start;
-					var myAccessUrl = SupportsDirectMessageAccess ? myItem.WebClientReadFormQueryString : "";
-					if (duration > 0) RaiseNewAppointment(duration, myTime, mySubject, myLocation, myAccessUrl);
-				}
-			}
-			catch (Exception ex)
-			{
-				if (ex.InnerException != null)
-				{
-					if (ex.InnerException.Message != "The operation has timed out")
+					// Process each item.
+					foreach (Appointment myItem in findResults.Items)
 					{
-						RaiseLogMessage(ex.ToString(), Severity.Fail);
-						//ChangeState(ConnectionState.Failed);
+						if (myItem == null) continue;
+
+						var myAppt = myItem;
+						var ps = new PropertySet(BasePropertySet.FirstClassProperties);
+						myAppt.Load(ps);
+						var myLocation = myAppt.Location;
+						var mySubject = (myAppt.Subject ?? Resources.EwsConnection_CheckForNewMail_No_subject);
+						var span = myAppt.Start.Subtract(DateTime.Now);
+						var duration = (int)Math.Floor(span.TotalMinutes);
+						var myTime = myAppt.Start;
+						var myAccessUrl = SupportsDirectMessageAccess ? myItem.WebClientReadFormQueryString : "";
+						if (duration > 0) RaiseNewAppointment(duration, myTime, mySubject, myLocation, myAccessUrl);
 					}
 				}
-				else
+				catch
 				{
-					RaiseLogMessage(ex.ToString(), Severity.Fail);
-					//ChangeState(ConnectionState.Failed);					
 				}
 			}
 		}
 
 		public override void Send(string subject, string recipient)
 		{
-			if (!IsConnected)
+			lock (this._locker)
 			{
-				RaiseLogMessage(Resources.EwsConnection_Send_Unable_to_send__Email_provider_is_disconnected_, Severity.Fail);
-				return;
-			}
 
-			if (recipient.Length == 0)
-			{
-				RaiseLogMessage(Resources.EwsConnection_Send_Unable_to_send__No_recipient_specified_, Severity.Fail);
-				return;
-			}
+				if (!IsConnected)
+				{
+					RaiseLogMessage(Resources.EwsConnection_Send_Unable_to_send__Email_provider_is_disconnected_, Severity.Fail);
+					return;
+				}
 
-			try
-			{
-				var message = new EmailMessage(this._service) { Subject = subject, Body = Resources.EwsConnection_Send_OWAtray_Test_Message };
-				message.ToRecipients.Add(recipient);
-				message.Send();
-			}
-			catch (Exception ex)
-			{
-				RaiseLogMessage(ex.ToString(), Severity.Fail);
+				if (recipient.Length == 0)
+				{
+					RaiseLogMessage(Resources.EwsConnection_Send_Unable_to_send__No_recipient_specified_, Severity.Fail);
+					return;
+				}
+
+				try
+				{
+					var message = new EmailMessage(this._service)
+						{ Subject = subject, Body = Resources.EwsConnection_Send_OWAtray_Test_Message };
+					message.ToRecipients.Add(recipient);
+					message.Send();
+				}
+				catch (Exception ex)
+				{
+					RaiseLogMessage(ex.Message, Severity.Fail);
+				}
 			}
 		}
 
@@ -592,15 +565,12 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		public override void SendA(string subject, string recipient)
 		{
-			lock (this._locker)
-			{
-				var payload = new EmailPayload
-								{
-									Subject = subject,
-									Recipient = recipient
-								};
-				ThreadPool.QueueUserWorkItem(Send, payload);
-			}
+			var payload = new EmailPayload
+							{
+								Subject = subject,
+								Recipient = recipient
+							};
+			ThreadPool.QueueUserWorkItem(Send, payload);
 		}
 	}
 }
