@@ -1,0 +1,543 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutBox1_AboutBox1_About" xml:space="preserve">
+    <value>Acerca de</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Version" xml:space="preserve">
+    <value>Versión</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Compiled_on__NET" xml:space="preserve">
+    <value>Compilado en .NET</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Running_on__NET_v" xml:space="preserve">
+    <value>Ejecutando sobre .NET v</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_About_OWA_Tray_Monitor" xml:space="preserve">
+    <value>Acerca de OWA Tray Monitor</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Product_Name" xml:space="preserve">
+    <value>Nombre del producto</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Version" xml:space="preserve">
+    <value>Versión</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Company_Name" xml:space="preserve">
+    <value>Nombre de la empresa</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Description" xml:space="preserve">
+    <value>Descripción</value>
+  </data>
+  <data name="AssemblyHelpers_ProductName_Unknown" xml:space="preserve">
+    <value>Desconocido</value>
+  </data>
+  <data name="ChangeLog_InitializeComponent_Change_Log" xml:space="preserve">
+    <value>Registro de cambios</value>
+  </data>
+  <data name="ContactUs_ContactUs_Catalan" xml:space="preserve">
+    <value>Catalán</value>
+  </data>
+  <data name="ContactUs_ContactUs_German" xml:space="preserve">
+    <value>Alemán</value>
+  </data>
+  <data name="ContactUs_ContactUs_Spanish" xml:space="preserve">
+    <value>Español</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Translations" xml:space="preserve">
+    <value>Traducciones</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Language" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Author" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Contact_Details" xml:space="preserve">
+    <value>Detalles de contacto</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Support_Information" xml:space="preserve">
+    <value>Información de soporte</value>
+  </data>
+  <data name="MdaCversions_MdaCversions_Major_Version" xml:space="preserve">
+    <value>Versión mayor</value>
+  </data>
+  <data name="MdaCversions_MdaCversions_Revision" xml:space="preserve">
+    <value>Revisión</value>
+  </data>
+  <data name="MdaCversions_InitializeComponent_Installed_MDAC_Versions" xml:space="preserve">
+    <value>Versiones de MDAC instaladas</value>
+  </data>
+  <data name="MdaCversions_InitializeComponent_MDAC_Inspector" xml:space="preserve">
+    <value>Inspector MDAC</value>
+  </data>
+  <data name="NeTversions_NeTversions_Major_Version" xml:space="preserve">
+    <value>Versión mayor</value>
+  </data>
+  <data name="NeTversions_NeTversions_Revision" xml:space="preserve">
+    <value>Revisión</value>
+  </data>
+  <data name="NeTversions_InitializeComponent_Installed__NET_Versions" xml:space="preserve">
+    <value>Versiones de .NET instaladas</value>
+  </data>
+  <data name="SysInfo_SysInfo_Gathering_data__please_wait" xml:space="preserve">
+    <value>Recogiendo información, por favor, espere</value>
+  </data>
+  <data name="SysInfo_BuildTree_Operating_System" xml:space="preserve">
+    <value>Sistema operativo</value>
+  </data>
+  <data name="SysInfo_BuildTree_Computer" xml:space="preserve">
+    <value>Ordenador</value>
+  </data>
+  <data name="SysInfo_BuildTree_Owner" xml:space="preserve">
+    <value>Propietario</value>
+  </data>
+  <data name="SysInfo_BuildTree_Network" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="SysInfo_BuildTree_Storage" xml:space="preserve">
+    <value>Almacenamiento</value>
+  </data>
+  <data name="SysInfo_GetComputer_Memory" xml:space="preserve">
+    <value>Memoria</value>
+  </data>
+  <data name="SysInfo_GetStorage_free" xml:space="preserve">
+    <value>libre</value>
+  </data>
+  <data name="SysInfo_InitializeComponent_Detected_System_Settings" xml:space="preserve">
+    <value>Detectada configuración del sistema</value>
+  </data>
+  <data name="SysInfo_InitializeComponent_System_Information" xml:space="preserve">
+    <value>Información del sistema</value>
+  </data>
+  <data name="Form1_Form1_Welcome_to_the" xml:space="preserve">
+    <value>Bienvenido a</value>
+  </data>
+  <data name="Form1_Form1_Ready" xml:space="preserve">
+    <value>Listo</value>
+  </data>
+  <data name="Form1_WindowDressing_freshly_baked_at" xml:space="preserve">
+    <value>recién hecho en</value>
+  </data>
+  <data name="Form1_WindowDressing_Not_Connected_to_Exchange" xml:space="preserve">
+    <value>No está conectado a Exchange</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connection_Failure" xml:space="preserve">
+    <value>Error en la conexión</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Check_log_file_for_details" xml:space="preserve">
+    <value>Compruebe el fichero de registro para ver detalles</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connected_to" xml:space="preserve">
+    <value>Conectado a</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_User_Name" xml:space="preserve">
+    <value>Descubierto nombre de usuario</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_Mailbox_Server" xml:space="preserve">
+    <value>Descubierto servidor de buzones</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_OWA_Url" xml:space="preserve">
+    <value>Descubierta URL de OWA</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_EWS_Url" xml:space="preserve">
+    <value>Descubierta URL de EWS</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connected_to_Exchange" xml:space="preserve">
+    <value>Conectado a Exchange</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_New_Mail_from" xml:space="preserve">
+    <value>Nuevo correo de</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_You_have_an_appointment_in" xml:space="preserve">
+    <value>Tiene una cita en</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_minutes" xml:space="preserve">
+    <value>minutos</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_minute" xml:space="preserve">
+    <value>minuto</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_You_have" xml:space="preserve">
+    <value>Tiene</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_unread_email" xml:space="preserve">
+    <value>correo electrónico no leído</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_in_your_inbox" xml:space="preserve">
+    <value>en su bandeja de entrada</value>
+  </data>
+  <data name="Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_Always_use_IE_switched_" xml:space="preserve">
+    <value>Cambió el valor de 'Usar siempre IE'</value>
+  </data>
+  <data name="Form1_balloonToolStripMenuItem_CheckStateChanged_Balloon_notifications_switched" xml:space="preserve">
+    <value>Cambió el valor de 'Notificaciones con globo'</value>
+  </data>
+  <data name="Form1_RunAtStartup_OWAtray_will" xml:space="preserve">
+    <value>OWAtray</value>
+  </data>
+  <data name="Form1_RunAtStartup__not" xml:space="preserve">
+    <value>no</value>
+  </data>
+  <data name="Form1_RunAtStartup_autostart_with_Windows" xml:space="preserve">
+    <value>arrancar automáticamente con Windows</value>
+  </data>
+  <data name="Form1_ConnectToExchange_Already_connected" xml:space="preserve">
+    <value>Ya está conectado</value>
+  </data>
+  <data name="Form1_ConnectToExchange_Transitioning_state" xml:space="preserve">
+    <value>Cambiando estado</value>
+  </data>
+  <data name="Form1_ConnectToExchange_please_wait" xml:space="preserve">
+    <value>por favor, espere</value>
+  </data>
+  <data name="Form1_DisconnectFromExchange_Already_disconnected" xml:space="preserve">
+    <value>Ya está desconectado</value>
+  </data>
+  <data name="Form1_DisconnectFromExchange_Transitioning_state" xml:space="preserve">
+    <value>Cambiando estado</value>
+  </data>
+  <data name="Form1_DisconnectFromExchange_please_wait" xml:space="preserve">
+    <value>por favor, espere</value>
+  </data>
+  <data name="Form1_disableCalendarToolStripMenuItem_CheckStateChanged_Calendar_notifications_switched" xml:space="preserve">
+    <value>Cambió el valor de 'Notificaciones de calendario'</value>
+  </data>
+  <data name="Form1_Form1_FormClosed_Terminating" xml:space="preserve">
+    <value>Finalizando</value>
+  </data>
+  <data name="Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched" xml:space="preserve">
+    <value>Cambió el valor de 'Notificaciones de Growl'</value>
+  </data>
+  <data name="Form1_InitEventView_Time" xml:space="preserve">
+    <value>Tiempo</value>
+  </data>
+  <data name="Form1_InitEventView_Event_Details" xml:space="preserve">
+    <value>Detalles del evento</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_You_are_not_an_Admin_user" xml:space="preserve">
+    <value>Usted no es usuario administrador</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Operation_may_fail" xml:space="preserve">
+    <value>La operación puede fallar</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Setting_up_Mail_handlers" xml:space="preserve">
+    <value>Configurando gestores de correo</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Mail_functions_will_now_be_handled_by_OWA" xml:space="preserve">
+    <value>Las funciones de correo serán gestionadas por OWA</value>
+  </data>
+  <data name="Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched" xml:space="preserve">
+    <value>Inhabilitado el certificado SSL</value>
+  </data>
+  <data name="Form1_playSoundToolStripMenuItem_CheckStateChanged_Audible_notifications_switched" xml:space="preserve">
+    <value>Cambió el valor de 'Notificaciones audibles'</value>
+  </data>
+  <data name="Form1_PopToast_No_Title" xml:space="preserve">
+    <value>Sin título</value>
+  </data>
+  <data name="Form1_PopToast_No_Subject" xml:space="preserve">
+    <value>Sin asunto</value>
+  </data>
+  <data name="Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched" xml:space="preserve">
+    <value>Cambió el valor de 'Notificaciones de Snarl'</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_You_are_not_an_Admin_user" xml:space="preserve">
+    <value>Usted no es usuario administrador</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_Operation_may_fail" xml:space="preserve">
+    <value>La operación puede fallar</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_Restoring_Mail_handlers" xml:space="preserve">
+    <value>Restaurando gestores de correo</value>
+  </data>
+  <data name="Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_" xml:space="preserve">
+    <value>Debe ser un valor numérico entre 1 y</value>
+  </data>
+  <data name="Form1_loginAutomaticallyToolStripMenuItem_CheckStateChanged_Automatic_Login_is_switched" xml:space="preserve">
+    <value>Cambió el valor de 'Iniciar sesión automáticamente'</value>
+  </data>
+  <data name="Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched" xml:space="preserve">
+    <value>Cambió el valor de 'Invalidar Auto-descubrimiento'</value>
+  </data>
+  <data name="Form1_office365LoginOverrideToolStripMenuItem_CheckStateChanged_Office365_login_override" xml:space="preserve">
+    <value>Inhabilitar 'Iniciar sesión en Office 365'</value>
+  </data>
+  <data name="Form1_cbOverrideEWS_CheckedChanged_EWS_URL_override_switched" xml:space="preserve">
+    <value>Cambió el valor de 'Inhabilitar URL de EWS'</value>
+  </data>
+  <data name="Form1_chkAutodiscovery_CheckedChanged_Autodiscovery_is_switched" xml:space="preserve">
+    <value>Cambió el valor de 'Auto-descubrimiento'</value>
+  </data>
+  <data name="Form1_cbOverrideOWA_CheckedChanged_OWA_URL_override_switched" xml:space="preserve">
+    <value>Cambió el valor de 'URL de OWA'</value>
+  </data>
+  <data name="Form1_InitializeComponent_Ready_" xml:space="preserve">
+    <value>Listo.</value>
+  </data>
+  <data name="Form1_InitializeComponent_Options" xml:space="preserve">
+    <value>Opciones</value>
+  </data>
+  <data name="Form1_InitializeComponent_Open_OWA" xml:space="preserve">
+    <value>Abrir OWA</value>
+  </data>
+  <data name="Form1_InitializeComponent_Open_Outlook" xml:space="preserve">
+    <value>Abrir Outlook</value>
+  </data>
+  <data name="Form1_InitializeComponent_Recall_Last_Popup" xml:space="preserve">
+    <value>Recuperar último mensaje emergente</value>
+  </data>
+  <data name="Form1_InitializeComponent_Reset_Tray_Icon" xml:space="preserve">
+    <value>Reiniciar icono de la bandeja</value>
+  </data>
+  <data name="Form1_InitializeComponent_Exit" xml:space="preserve">
+    <value>Salir</value>
+  </data>
+  <data name="Form1_InitializeComponent_File" xml:space="preserve">
+    <value>Fichero</value>
+  </data>
+  <data name="Form1_InitializeComponent_Tools" xml:space="preserve">
+    <value>Herramientas</value>
+  </data>
+  <data name="Form1_InitializeComponent__NET_Versions" xml:space="preserve">
+    <value>Versiones .NET</value>
+  </data>
+  <data name="Form1_InitializeComponent_MDAC_Versions" xml:space="preserve">
+    <value>Versiones MDAC</value>
+  </data>
+  <data name="Form1_InitializeComponent_System_Information" xml:space="preserve">
+    <value>Información del sistema</value>
+  </data>
+  <data name="Form1_InitializeComponent_Notifications" xml:space="preserve">
+    <value>Notificaciones</value>
+  </data>
+  <data name="Form1_InitializeComponent_Balloon" xml:space="preserve">
+    <value>Globo</value>
+  </data>
+  <data name="Form1_InitializeComponent_Play_Sound" xml:space="preserve">
+    <value>Reproducir sonido</value>
+  </data>
+  <data name="Form1_InitializeComponent_Expert" xml:space="preserve">
+    <value>Experto</value>
+  </data>
+  <data name="Form1_InitializeComponent_Override_Certificate" xml:space="preserve">
+    <value>Inhabilitar Certificado</value>
+  </data>
+  <data name="Form1_InitializeComponent_Always_open_OWA_in_IE" xml:space="preserve">
+    <value>Abrir siempre en OWA</value>
+  </data>
+  <data name="Form1_InitializeComponent_Disable_Calendar" xml:space="preserve">
+    <value>Inhabilitar calendario</value>
+  </data>
+  <data name="Form1_InitializeComponent_Login_Automatically" xml:space="preserve">
+    <value>Iniciar sesión automáticamente</value>
+  </data>
+  <data name="Form1_InitializeComponent_Override_Autodiscovery_Validation" xml:space="preserve">
+    <value>Inhabilitar 'Validación de auto-descubrimiento'</value>
+  </data>
+  <data name="Form1_InitializeComponent_Office365_Login_Override" xml:space="preserve">
+    <value>Inhabilitar 'Iniciar sesión en Office 365'</value>
+  </data>
+  <data name="Form1_InitializeComponent_Use_Default_Web_Proxy" xml:space="preserve">
+    <value>Usar proxy web predeterminado</value>
+  </data>
+  <data name="Form1_InitializeComponent_Shell_Integration" xml:space="preserve">
+    <value>Integración con línea de comandos</value>
+  </data>
+  <data name="Form1_InitializeComponent_Make_OWA_Default" xml:space="preserve">
+    <value>Usar OWA como predeterminado</value>
+  </data>
+  <data name="Form1_InitializeComponent_Switch_Off" xml:space="preserve">
+    <value>Apagar</value>
+  </data>
+  <data name="Form1_InitializeComponent_Help" xml:space="preserve">
+    <value>Ayuda</value>
+  </data>
+  <data name="Form1_InitializeComponent_Change_Log" xml:space="preserve">
+    <value>Registro de cambios</value>
+  </data>
+  <data name="Form1_InitializeComponent_Support" xml:space="preserve">
+    <value>Soporte</value>
+  </data>
+  <data name="Form1_InitializeComponent_Show_Log_File" xml:space="preserve">
+    <value>Mostrar fichero de registro</value>
+  </data>
+  <data name="Form1_InitializeComponent_About" xml:space="preserve">
+    <value>Acerca de</value>
+  </data>
+  <data name="Form1_InitializeComponent_Logging" xml:space="preserve">
+    <value>Iniciando registro</value>
+  </data>
+  <data name="Form1_InitializeComponent_unknown" xml:space="preserve">
+    <value>desconocido</value>
+  </data>
+  <data name="Form1_InitializeComponent_Windows_Domain__" xml:space="preserve">
+    <value>Dominio Windows :</value>
+  </data>
+  <data name="Form1_InitializeComponent_EWS_URL___" xml:space="preserve">
+    <value>URL de EWS :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Server_Address__" xml:space="preserve">
+    <value>Dirección del servidor :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Stop" xml:space="preserve">
+    <value>Detener</value>
+  </data>
+  <data name="Form1_InitializeComponent_Start" xml:space="preserve">
+    <value>Iniciar</value>
+  </data>
+  <data name="Form1_InitializeComponent_Password__" xml:space="preserve">
+    <value>Contraseña :</value>
+  </data>
+  <data name="Form1_InitializeComponent_User_Name__" xml:space="preserve">
+    <value>Nombre de usuario :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Basic_Settings" xml:space="preserve">
+    <value>Configuración básica</value>
+  </data>
+  <data name="Form1_InitializeComponent_secs" xml:space="preserve">
+    <value>segs</value>
+  </data>
+  <data name="Form1_InitializeComponent_Update_Interval__" xml:space="preserve">
+    <value>Intervalo de actualización :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Exchange_Version__" xml:space="preserve">
+    <value>Versión de Exchange :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Run_at_Startup" xml:space="preserve">
+    <value>Ejecutar al inicio</value>
+  </data>
+  <data name="Form1_InitializeComponent_Email_Address__" xml:space="preserve">
+    <value>Dirección de correo electrónico :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Attempt_to_use_Autodiscovery" xml:space="preserve">
+    <value>Intentar usar auto-descubrimiento</value>
+  </data>
+  <data name="Form1_InitializeComponent_Advanced_Settings" xml:space="preserve">
+    <value>Configuración avanzada</value>
+  </data>
+  <data name="Form1_InitializeComponent_Use_Windows_Domain_Credentials" xml:space="preserve">
+    <value>Usar credenciales de dominio de Windows</value>
+  </data>
+  <data name="Form1_InitializeComponent_OWA_URL___" xml:space="preserve">
+    <value>URL de OWA :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Controls" xml:space="preserve">
+    <value>Controles</value>
+  </data>
+</root>

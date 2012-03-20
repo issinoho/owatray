@@ -27,14 +27,16 @@ namespace DrunkenBakery.OWAtray.GUI
 			InitializeComponent();
 
 			// Flags
-			//lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_Catalan, 0));
-			//lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
+			lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_Catalan, 0));
+			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
 			lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_German, 1));
 			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Christian Treudler");
-			//lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_Spanish, 2));
-			//lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
+			lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_Spanish, 2));
+			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
 			lvX.Items.Add(new ListViewItem("Turkish", 3));
 			lvX.Items[lvX.Items.Count - 1].SubItems.Add("pi511");
+			lvX.Items.Add(new ListViewItem("French", 3));
+			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Marc Lairet");
 		}
 
 		private void cmdOK_Click(object sender, EventArgs e)
