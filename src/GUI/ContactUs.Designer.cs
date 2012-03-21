@@ -92,6 +92,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.imLarge.Images.SetKeyName(2, "es.png");
 			this.imLarge.Images.SetKeyName(3, "tr.png");
 			this.imLarge.Images.SetKeyName(4, "fr.png");
+			this.imLarge.Images.SetKeyName(5, "it.png");
 			// 
 			// cmdOK
 			// 
