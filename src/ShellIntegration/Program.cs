@@ -56,6 +56,12 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
 				// Find IE window and send keys to it
 				var iHandle = NativeWin32.FindWindow(null, Settings.Default.IETitle);
+				Console.WriteLine("Handle1 = " + iHandle);
+				if (iHandle == 0)
+				{
+					iHandle = NativeWin32.FindWindow(null, Settings.Default.IETitle2);
+					Console.WriteLine("Handle2 = " + iHandle);
+				}
 				NativeWin32.SetForegroundWindow(iHandle);
 
 				// Tab stops

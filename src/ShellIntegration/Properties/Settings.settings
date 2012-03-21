@@ -68,5 +68,8 @@
     <Setting Name="URL2010SP2" Type="System.String" Scope="Application">
       <Value Profile="(Default)">&amp;cc=MTQuMi4yNDcuNSxlbi1HQiw0Mjk0OTY3Mjk1LEhUTUwsMSww&amp;smime=SSL%3a1%3bVer%3a14.2.247.1</Value>
     </Setting>
+    <Setting Name="IETitle2" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Untitled Message</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

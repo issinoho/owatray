@@ -6,7 +6,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D3638975-E573-4BBD-9B8D-ED3B91200477}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DrunkenBakery.OWAtray.ShellIntegration</RootNamespace>
     <AssemblyName>DrunkenBakery.OWAtray.ShellIntegration</AssemblyName>
