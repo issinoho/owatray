@@ -331,23 +331,20 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
 		public override void Disconnect()
 		{
-			lock (this._locker)
-			{
-				if (!IsConnected) return;
+			if (!IsConnected) return;
 
-				try
-				{
-					ChangeState(ConnectionState.Disconnecting);
-					this._backgroundPoll.Stop();
-					this._backgroundPoll.Elapsed -= backgroundPoll_Elapsed;
-					this._appointmentPoll.Stop();
-					this._appointmentPoll.Elapsed -= appointmentPoll_Elapsed;
-					this._service = null;
-					ChangeState(ConnectionState.Disconnected);
-				}
-				catch
-				{
-				}
+			try
+			{
+				ChangeState(ConnectionState.Disconnecting);
+				this._backgroundPoll.Stop();
+				this._backgroundPoll.Elapsed -= backgroundPoll_Elapsed;
+				this._appointmentPoll.Stop();
+				this._appointmentPoll.Elapsed -= appointmentPoll_Elapsed;
+				this._service = null;
+				ChangeState(ConnectionState.Disconnected);
+			}
+			catch
+			{
 			}
 		}
 

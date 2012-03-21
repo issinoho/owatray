@@ -731,14 +731,21 @@ namespace DrunkenBakery.OWAtray.GUI
 
 		private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
-			_overRideClose = true;
-			Close();
+			this.Shutdown();
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			this.Shutdown();
+		}
+
+		private void Shutdown()
+		{
 			_overRideClose = true;
-			Close();
+			AddLogEntry(Resources.Form1_Form1_FormClosed_Terminating);
+			SnarlHelper.Revoke(Handle);
+			DisconnectFromExchange();
+			this.Close();			
 		}
 
 		private void FlushOutput()
@@ -789,24 +796,12 @@ namespace DrunkenBakery.OWAtray.GUI
 								}));
 		}
 
-		private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-		{
-			FormClosed -= Form1_FormClosed;
-			AddLogEntry(Resources.Form1_Form1_FormClosed_Terminating);
-		}
-
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			if (WindowState != FormWindowState.Minimized && _overRideClose == false)
 			{
 				e.Cancel = true;
 				WindowState = FormWindowState.Minimized;
-			}
-			else
-			{
-				FormClosing -= Form1_FormClosing;
-				SnarlHelper.Revoke(Handle);
-				DisconnectFromExchange();
 			}
 		}
 

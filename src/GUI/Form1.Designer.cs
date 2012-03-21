@@ -295,7 +295,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			// 
 			this.exitToolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("exitToolStripMenuItem1.Image")));
 			this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-			this.exitToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+			this.exitToolStripMenuItem1.Size = new System.Drawing.Size(92, 22);
 			this.exitToolStripMenuItem1.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Exit;
 			this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
 			// 
@@ -1090,7 +1090,6 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "OWA Tray Monitor";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
 			this.Move += new System.EventHandler(this.Form1_Move);
 			this.statusStrip1.ResumeLayout(false);
 			this.statusStrip1.PerformLayout();
