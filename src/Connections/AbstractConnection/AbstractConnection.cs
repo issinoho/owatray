@@ -106,7 +106,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 			get { return ConnectedState == ConnectionState.Connected; }
 		}
 
-		public bool IsLogEventDefined
+		public bool AreEventsDefined
 		{
 			get { return LogMessage != null; }
 		}
@@ -163,7 +163,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 		// Events
 		public event Action<int> MessageCount;
 		public event Action<string, Severity> LogMessage;
-		public event Action<string, DateTime, string, string, string> NewMail;
+		public event Action<string, string, string> NewMail;
 		public event Action<int, DateTime, string, string, string> NewAppointment;
 
 		public virtual event Action<IEmailInterface, ConnectionState> ConnectedStateChange
@@ -191,7 +191,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		protected virtual void RaiseNewMail(DateTime arrivalTime, string subject, string sender, string accessUrl)
 		{
-			if (NewMail != null) NewMail(EmailAddress, arrivalTime, subject, sender, accessUrl);
+			if (NewMail != null) NewMail(subject, sender, accessUrl);
 		}
 
 		protected virtual void RaiseNewAppointment(int minsToGo, DateTime startTime, string subject, string location, string accessUrl)

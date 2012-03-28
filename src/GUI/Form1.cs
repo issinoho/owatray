@@ -174,6 +174,9 @@ namespace DrunkenBakery.OWAtray.GUI
 				_connection = _scenario.Connections[0];
 			}
 
+			// Set up event handling
+			WireUpConnectionEvents();
+
 			// Update any UI
 			txtEmail.Text = _connection.EmailAddress;
 			txtUser.Text = _connection.Username;
@@ -204,9 +207,6 @@ namespace DrunkenBakery.OWAtray.GUI
 
 			// Update shell handler
 			ConfigureShell();
-
-			// Set up event handling
-			WireUpConnectionEvents();
 		}
 
 		private string EmailAddress
@@ -247,16 +247,11 @@ namespace DrunkenBakery.OWAtray.GUI
 			overrideAutodiscoveryValidationToolStripMenuItem.Enabled = _connection.UseAutodiscovery;
 		}
 
-		private void WireUpConnectionEvents()
+		private void ConnectedStateHandler(IEmailInterface connection, ConnectionState state)
 		{
-			foreach (var item in _scenario.Connections.Where(item => !item.IsLogEventDefined))
+			if (IsHandleCreated)
 			{
-				// Logging event
-				item.LogMessage += AddLogEntry;
-
-				// State change event
-				var itemCopy = item;
-				item.ConnectedStateChange += (connection, state) => Invoke(new Action(() =>
+				Invoke(new Action(() =>
 				{
 					switch (state)
 					{
@@ -282,22 +277,22 @@ namespace DrunkenBakery.OWAtray.GUI
 							Settings.Default.Save();
 
 							// Update discovered properties
-							AddLogEntry(string.Format("{0} {1}", Resources.Form1_WireUpConnectionEvents_Connected_to, _connection.Version));
-							if (_connection.DiscoveredUsername.Length > 0)
+							AddLogEntry(string.Format("{0} {1}", Resources.Form1_WireUpConnectionEvents_Connected_to, connection.Version));
+							if (connection.DiscoveredUsername.Length > 0)
 							{
-								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_User_Name, _connection.DiscoveredUsername), Severity.Success);
+								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_User_Name, connection.DiscoveredUsername), Severity.Success);
 							}
-							if (_connection.DiscoveredEmailServer.Length > 0)
+							if (connection.DiscoveredEmailServer.Length > 0)
 							{
-								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_Mailbox_Server, _connection.DiscoveredEmailServer), Severity.Success);
+								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_Mailbox_Server, connection.DiscoveredEmailServer), Severity.Success);
 							}
-							if (_connection.DiscoveredEmailUrl.Length > 0)
+							if (connection.DiscoveredEmailUrl.Length > 0)
 							{
-								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_OWA_Url, _connection.DiscoveredEmailUrl), Severity.Success);
+								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_OWA_Url, connection.DiscoveredEmailUrl), Severity.Success);
 							}
-							if (_connection.DiscoveredServiceUrl.Length > 0)
+							if (connection.DiscoveredServiceUrl.Length > 0)
 							{
-								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_EWS_Url, _connection.DiscoveredServiceUrl), Severity.Success);
+								AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_EWS_Url, connection.DiscoveredServiceUrl), Severity.Success);
 							}
 
 							// Configure Shell
@@ -315,41 +310,81 @@ namespace DrunkenBakery.OWAtray.GUI
 							break;
 					}
 				}));
+			}
+		}
 
-				// New mail event
-				item.NewMail += (email, arrivalTime, subject, sender, accessUrl) => Invoke(new Action(() =>
-							{
-								_popUrl = accessUrl;
-								PopToast(string.Format("{0} {1}", Resources.Form1_WireUpConnectionEvents_New_Mail_from, sender), subject);
-							}));
+		private void NewMailHandler(string subject, string sender, string accessUrl)
+		{
+			if (IsHandleCreated)
+			{
+				Invoke(new Action(() =>
+				{
+					_popUrl = accessUrl;
+					PopToast(string.Format("{0} {1}", Resources.Form1_WireUpConnectionEvents_New_Mail_from, sender), subject);
+				}));
+			}
+		}
 
-				// New appointment event
-				item.NewAppointment += (minsToGo, startTime, subject, location, accessUrl) => Invoke(new Action(() =>
-							{
-								_popUrl = accessUrl;
-								PopToast(
-									string.Format("{0} {1} {2}", Resources.Form1_WireUpConnectionEvents_You_have_an_appointment_in, minsToGo,
-												  (minsToGo != 1
-													   ? Resources.Form1_WireUpConnectionEvents_minutes
-													   : Resources.Form1_WireUpConnectionEvents_minute)),
-									string.Format("{0} - {1} ({2})", startTime.ToShortTimeString(), subject, location));
-							}));
+		private void NewAppointmentHandler(int minsToGo, DateTime startTime, string subject, string location, string accessUrl)
+		{
+			if (IsHandleCreated)
+			{
+				Invoke(new Action(() =>
+				{
+					_popUrl = accessUrl;
+					PopToast(
+						string.Format("{0} {1} {2}", Resources.Form1_WireUpConnectionEvents_You_have_an_appointment_in, minsToGo,
+									  (minsToGo != 1
+										   ? Resources.Form1_WireUpConnectionEvents_minutes
+										   : Resources.Form1_WireUpConnectionEvents_minute)),
+						string.Format("{0} - {1} ({2})", startTime.ToShortTimeString(), subject, location));
+				}));
+			}
+		}
 
-				// Mail count event
-				item.MessageCount += count => Invoke(new Action(() =>
-							{
-								notifyIcon1.Text = NotificationText(count);
-								notifyIcon1.Icon = new Icon((count > 0 ? _alertIcon : _emailIcon));
+		private void MailCountHandler(int count)
+		{
+			if (IsHandleCreated)
+			{
+				Invoke(new Action(() =>
+				{
+					notifyIcon1.Text = NotificationText(count);
+					notifyIcon1.Icon = new Icon((count > 0 ? _alertIcon : _emailIcon));
 
-								// Special case - pop message at the start if there is any unread email
-								if (!_firstRun) return;
-								if (count <= 0) return;
-								_firstRun = false;
-								PopToast("New Mail",
-										 string.Format("{0} {1} {2}{3}{4}", Resources.Form1_WireUpConnectionEvents_You_have, count,
-													   Resources.Form1_WireUpConnectionEvents_unread_email,
-													   (count != 1 ? "s " : " "), Resources.Form1_WireUpConnectionEvents_in_your_inbox));
-							}));
+					if (!_firstRun) return;
+					if (count <= 0) return;
+					_firstRun = false;
+
+					// Special case - pop message at the start if there is any unread email
+					PopToast("New Mail",
+							 string.Format("{0} {1} {2}{3}{4}", Resources.Form1_WireUpConnectionEvents_You_have, count,
+										   Resources.Form1_WireUpConnectionEvents_unread_email,
+										   (count != 1 ? "s " : " "), Resources.Form1_WireUpConnectionEvents_in_your_inbox));
+				}));
+			}
+		}
+
+		private void UnwireConnectionEvents()
+		{
+			foreach (var item in _scenario.Connections.Where(item => item.AreEventsDefined))
+			{
+				item.LogMessage -= AddLogEntry;
+				item.ConnectedStateChange -= ConnectedStateHandler;
+				item.NewMail -= NewMailHandler;
+				item.NewAppointment -= NewAppointmentHandler;
+				item.MessageCount -= MailCountHandler;
+			}
+		}
+
+		private void WireUpConnectionEvents()
+		{
+			foreach (var item in _scenario.Connections.Where(item => !item.AreEventsDefined))
+			{
+				item.LogMessage += AddLogEntry;
+				item.ConnectedStateChange += ConnectedStateHandler;
+				item.NewMail += NewMailHandler;
+				item.NewAppointment += NewAppointmentHandler;
+				item.MessageCount += MailCountHandler;
 			}
 		}
 
@@ -744,6 +779,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			_overRideClose = true;
 			AddLogEntry(Resources.Form1_Form1_FormClosed_Terminating);
 			SnarlHelper.Revoke(Handle);
+			UnwireConnectionEvents();
 			DisconnectFromExchange();
 			this.Close();			
 		}

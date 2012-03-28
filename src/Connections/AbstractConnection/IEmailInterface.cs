@@ -75,7 +75,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 
 		bool IsConnected { get; }
 
-		bool IsLogEventDefined { get; }
+		bool AreEventsDefined { get; }
 
 		EmailType Type { get; }
 
@@ -102,7 +102,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 		// Events
 		event Action<int> MessageCount;
 		event Action<string, Severity> LogMessage;
-		event Action<string, DateTime, string, string, string> NewMail;
+		event Action<string, string, string> NewMail;
 		event Action<int, DateTime, string, string, string> NewAppointment;
 		event Action<IEmailInterface, ConnectionState> ConnectedStateChange;
 	}
