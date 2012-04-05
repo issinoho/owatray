@@ -366,6 +366,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			foreach (var item in _scenario.Connections.Where(item => item.AreEventsDefined))
 			{
 				item.LogMessage -= AddLogEntry;
+				item.LogException -= AddLogEntry;
 				item.ConnectedStateChange -= ConnectedStateHandler;
 				item.NewMail -= NewMailHandler;
 				item.NewAppointment -= NewAppointmentHandler;
@@ -378,6 +379,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			foreach (var item in _scenario.Connections.Where(item => !item.AreEventsDefined))
 			{
 				item.LogMessage += AddLogEntry;
+				item.LogException += AddLogEntry;
 				item.ConnectedStateChange += ConnectedStateHandler;
 				item.NewMail += NewMailHandler;
 				item.NewAppointment += NewAppointmentHandler;
@@ -502,6 +504,19 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 		}
 
+		private void AddLogEntry(string newEntry, Exception ex)
+		{
+			try
+			{
+				_lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(CultureInfo.InvariantCulture), Convert.ToInt32(Severity.Fail)));
+				_lvBuffer[_lvBuffer.Count - 1].SubItems.Add(newEntry);
+				LoggerProxy.Log(newEntry, ex);
+			}
+			catch (Exception)
+			{
+			}
+		}
+		
 		private void alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
 		{
 			if (_booting) return;
@@ -564,13 +579,13 @@ namespace DrunkenBakery.OWAtray.GUI
 									   AssemblyHelpers.AssemblyTitle,
 									   switchOn);
 				AddLogEntry(
-					String.Format("{0}{1} {2}", Resources.Form1_RunAtStartup_OWAtray_will,
-								  (switchOn ? " " : Resources.Form1_RunAtStartup__not),
+					String.Format("{0} {1} {2}", Resources.Form1_RunAtStartup_OWAtray_will,
+								  (switchOn ? string.Empty : Resources.Form1_RunAtStartup__not),
 								  Resources.Form1_RunAtStartup_autostart_with_Windows));
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(ex.Message, Severity.Fail);
+				AddLogEntry(ex.Message, ex);
 			}
 		}
 
@@ -645,7 +660,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
 			}
 		}
 
@@ -665,7 +680,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
 			}
 		}
 
@@ -685,7 +700,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
 			}
 		}
 
@@ -708,7 +723,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
 			}
 		}
 
@@ -731,7 +746,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
 			}
 		}
 
@@ -904,7 +919,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
 				return;
 			}
 
@@ -945,7 +960,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(ex.Message, Severity.Fail);
+				AddLogEntry(ex.Message, ex);
 			}
 		}
 
@@ -1095,7 +1110,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), Severity.Fail);
+				AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
 				return;
 			}
 
@@ -1353,7 +1368,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			}
 			catch (Exception ex)
 			{
-				AddLogEntry(ex.Message, Severity.Fail);
+				AddLogEntry(ex.Message, ex);
 			}
 		}
 

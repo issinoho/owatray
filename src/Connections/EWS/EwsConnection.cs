@@ -289,7 +289,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				}
 				catch (Exception ex)
 				{
-					RaiseLogMessage(ex.Message, Severity.Fail);
+					RaiseLogMessage(ex.Message, ex);
 					ChangeState(ConnectionState.Failed);
 				}
 			}
@@ -549,7 +549,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 				}
 				catch (Exception ex)
 				{
-					RaiseLogMessage(ex.Message, Severity.Fail);
+					RaiseLogMessage(ex.Message, ex);
 				}
 			}
 		}

@@ -10,6 +10,7 @@
 //
 //------------------------------------------------------------------
 
+using System;
 using NLog;
 using NLog.Layouts;
 using NLog.Targets;
@@ -29,6 +30,11 @@ namespace DrunkenBakery.OWAtray.Logging
         public static void Log(string message, bool success)
         {
             Logger.Log(success ? LogLevel.Info : LogLevel.Error, message);            
+        }
+
+        public static void Log(string message, Exception ex)
+        {
+            Logger.ErrorException(message, ex);
         }
 
         private static string GetTargetFilename(string targetName)

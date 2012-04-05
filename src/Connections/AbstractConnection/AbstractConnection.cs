@@ -163,7 +163,8 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 		// Events
 		public event Action<int> MessageCount;
 		public event Action<string, Severity> LogMessage;
-		public event Action<string, string, string> NewMail;
+        public event Action<string, Exception> LogException;
+        public event Action<string, string, string> NewMail;
 		public event Action<int, DateTime, string, string, string> NewAppointment;
 
 		public virtual event Action<IEmailInterface, ConnectionState> ConnectedStateChange
@@ -184,7 +185,17 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
 			RaiseLogMessage(message, Severity.Info);
 		}
 
-		protected virtual void RaiseLogMessage(string message, Severity severity)
+        protected virtual void RaiseLogMessage(string message, Exception ex)
+        {
+            RaiseException(message, ex);
+        }
+
+        protected virtual void RaiseException(string message, Exception ex)
+        {
+            if (LogException != null) LogException(string.Format("[{0}] - {1}", EmailAddress, message), ex);
+        }
+
+        protected virtual void RaiseLogMessage(string message, Severity severity)
 		{
 			if (LogMessage != null) LogMessage(string.Format("[{0}] - {1}", EmailAddress, message), severity);
 		}
