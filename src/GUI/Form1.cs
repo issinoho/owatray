@@ -68,9 +68,6 @@ namespace DrunkenBakery.OWAtray.GUI
 			// Set up look & feel
 			WindowDressing();
 
-			// Start Logging
-			Logger.Execute();
-
 			// Welcome message
 			AddLogEntry(string.Format("{0} {1} v{2}", Resources.Form1_Form1_Welcome_to_the, AssemblyHelpers.AssemblyTitle,
 									  AssemblyHelpers.UpgradeSettings()));
@@ -498,10 +495,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				_lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(CultureInfo.InvariantCulture), Convert.ToInt32(severity)));
 				_lvBuffer[_lvBuffer.Count - 1].SubItems.Add(newEntry);
-				if (severity == Severity.Fail)
-					Logger.Error(GetType(), newEntry);
-				else
-					Logger.Info(GetType(), newEntry);
+				LoggerProxy.Log(newEntry, severity != Severity.Fail);
 			}
 			catch (Exception)
 			{
@@ -1355,7 +1349,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			try
 			{
-				Process.Start(Logger.Filename);
+				Process.Start(LoggerProxy.Filename);
 			}
 			catch (Exception ex)
 			{
