@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "3.0.4470.38369"
+!define PRODUCT_VERSION "3.0.4478.35599"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray"
@@ -66,8 +66,8 @@ Section "MainSection" SEC01
   File "..\bin\Growl.Connector.dll"
   File "..\bin\Growl.CoreLibrary.dll"
   File "..\bin\License.txt"
-  File "..\bin\Log4Net.config"
-  File "..\bin\log4net.dll"
+  File "..\bin\NLog.config"
+  File "..\bin\NLog.dll"
   File "..\bin\notify.wav"
   File "..\lib\SnarlConnector.dll"
 
@@ -169,8 +169,8 @@ Section Uninstall
   Delete "$INSTDIR\Growl.Connector.dll"
   Delete "$INSTDIR\Growl.CoreLibrary.dll"
   Delete "$INSTDIR\License.txt"
-  Delete "$INSTDIR\Log4Net.config"
-  Delete "$INSTDIR\log4net.dll"
+  Delete "$INSTDIR\NLog.config"
+  Delete "$INSTDIR\Nlog.dll"
   Delete "$INSTDIR\Microsoft.Exchange.WebServices.dll"
   Delete "$INSTDIR\notify.wav"
   Delete "$INSTDIR\SnarlConnector.dll"
