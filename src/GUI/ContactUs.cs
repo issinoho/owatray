@@ -39,6 +39,8 @@ namespace DrunkenBakery.OWAtray.GUI
 			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Marc Lairet");
 			lvX.Items.Add(new ListViewItem("Italian", 5));
 			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Marco Procida");
+			lvX.Items.Add(new ListViewItem("Russian", 6));
+			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Aleksandr Bembel");
 		}
 
 		private void cmdOK_Click(object sender, EventArgs e)

@@ -1,0 +1,555 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutBox1_AboutBox1_About" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Version" xml:space="preserve">
+    <value>Версия</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Compiled_on__NET" xml:space="preserve">
+    <value>Скомпилирован на .NET v</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Running_on__NET_v" xml:space="preserve">
+    <value>Запущен на .NET v</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_About_OWA_Tray_Monitor" xml:space="preserve">
+    <value>Об OWA Tray Monitor</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Product_Name" xml:space="preserve">
+    <value>Наименование</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Version" xml:space="preserve">
+    <value>Версия</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Company_Name" xml:space="preserve">
+    <value>Имя компании</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="AssemblyHelpers_ProductName_Unknown" xml:space="preserve">
+    <value>Неизвестный</value>
+  </data>
+  <data name="ChangeLog_InitializeComponent_Change_Log" xml:space="preserve">
+    <value>История изменений</value>
+  </data>
+  <data name="ContactUs_ContactUs_Catalan" xml:space="preserve">
+    <value>Каталонский</value>
+  </data>
+  <data name="ContactUs_ContactUs_German" xml:space="preserve">
+    <value>Немецкий</value>
+  </data>
+  <data name="ContactUs_ContactUs_Spanish" xml:space="preserve">
+    <value>Испанский</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Translations" xml:space="preserve">
+    <value>Переводы</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Author" xml:space="preserve">
+    <value>Автор</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Contact_Details" xml:space="preserve">
+    <value>Контактная информация</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Support_Information" xml:space="preserve">
+    <value>Информация о поддержке</value>
+  </data>
+  <data name="MdaCversions_MdaCversions_Major_Version" xml:space="preserve">
+    <value>Основная версия</value>
+  </data>
+  <data name="MdaCversions_MdaCversions_Revision" xml:space="preserve">
+    <value>Ревизия</value>
+  </data>
+  <data name="MdaCversions_InitializeComponent_Installed_MDAC_Versions" xml:space="preserve">
+    <value>Установленная версия MDAC</value>
+  </data>
+  <data name="MdaCversions_InitializeComponent_MDAC_Inspector" xml:space="preserve">
+    <value>MDAC Инспектор</value>
+  </data>
+  <data name="NeTversions_NeTversions_Major_Version" xml:space="preserve">
+    <value>Основная версия</value>
+  </data>
+  <data name="NeTversions_NeTversions_Revision" xml:space="preserve">
+    <value>Ревизия</value>
+  </data>
+  <data name="NeTversions_InitializeComponent_Installed__NET_Versions" xml:space="preserve">
+    <value>Установленная версия .NET</value>
+  </data>
+  <data name="NeTversions_InitializeComponent__NET_Inspector" xml:space="preserve">
+    <value>.NET Инспектор</value>
+  </data>
+  <data name="SysInfo_SysInfo_Gathering_data__please_wait" xml:space="preserve">
+    <value>Сбор данных, пожалуйста подожди</value>
+  </data>
+  <data name="SysInfo_BuildTree_Operating_System" xml:space="preserve">
+    <value>Операционная система</value>
+  </data>
+  <data name="SysInfo_BuildTree_Computer" xml:space="preserve">
+    <value>Компьютер</value>
+  </data>
+  <data name="SysInfo_BuildTree_Owner" xml:space="preserve">
+    <value>Владелец</value>
+  </data>
+  <data name="SysInfo_BuildTree_Network" xml:space="preserve">
+    <value>Сеть</value>
+  </data>
+  <data name="SysInfo_BuildTree_Storage" xml:space="preserve">
+    <value>Хранилище</value>
+  </data>
+  <data name="SysInfo_GetComputer_Memory" xml:space="preserve">
+    <value>Память</value>
+  </data>
+  <data name="SysInfo_GetComputer_GB" xml:space="preserve">
+    <value>Гб</value>
+  </data>
+  <data name="SysInfo_GetStorage_GB" xml:space="preserve">
+    <value>Гб</value>
+  </data>
+  <data name="SysInfo_GetStorage_free" xml:space="preserve">
+    <value>свободно</value>
+  </data>
+  <data name="SysInfo_InitializeComponent_Detected_System_Settings" xml:space="preserve">
+    <value>Обнаруженные параметры системы</value>
+  </data>
+  <data name="SysInfo_InitializeComponent_System_Information" xml:space="preserve">
+    <value>Информация о системе</value>
+  </data>
+  <data name="Form1_Form1_Welcome_to_the" xml:space="preserve">
+    <value>Добро пожаловать</value>
+  </data>
+  <data name="Form1_Form1_Ready" xml:space="preserve">
+    <value>Готов</value>
+  </data>
+  <data name="Form1_WindowDressing_freshly_baked_at" xml:space="preserve">
+    <value>свежевыпечена в</value>
+  </data>
+  <data name="Form1_WindowDressing_Not_Connected_to_Exchange" xml:space="preserve">
+    <value>Не подключен к Exchange</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connection_Failure" xml:space="preserve">
+    <value>Ошибка подключения</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Check_log_file_for_details" xml:space="preserve">
+    <value>Проверьте файл журнала для подробностей.</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connected_to" xml:space="preserve">
+    <value>Подключен к</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_User_Name" xml:space="preserve">
+    <value>Обнаруженное имя пользователя</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_Mailbox_Server" xml:space="preserve">
+    <value>Обнаруженный почтовый сервер</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_OWA_Url" xml:space="preserve">
+    <value>Обрануженный OWA URL</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_EWS_Url" xml:space="preserve">
+    <value>Обнаруженный EWS URL</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connected_to_Exchange" xml:space="preserve">
+    <value>Подключен к Exchange</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_New_Mail_from" xml:space="preserve">
+    <value>Новое письмо от</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_You_have_an_appointment_in" xml:space="preserve">
+    <value>У вас есть назначение в</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_minutes" xml:space="preserve">
+    <value>минут(ы)</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_minute" xml:space="preserve">
+    <value>минута</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_You_have" xml:space="preserve">
+    <value>У вас</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_unread_email" xml:space="preserve">
+    <value>непрочитанных письма</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_in_your_inbox" xml:space="preserve">
+    <value>во входящих</value>
+  </data>
+  <data name="Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_Always_use_IE_switched_" xml:space="preserve">
+    <value>Всегда открывать в IE</value>
+  </data>
+  <data name="Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON" xml:space="preserve">
+    <value>ВКЛ.</value>
+  </data>
+  <data name="Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF" xml:space="preserve">
+    <value>ВЫКЛ.</value>
+  </data>
+  <data name="Form1_balloonToolStripMenuItem_CheckStateChanged_Balloon_notifications_switched" xml:space="preserve">
+    <value>Всплывающие подсказки</value>
+  </data>
+  <data name="Form1_RunAtStartup_OWAtray_will" xml:space="preserve">
+    <value>OWAtray будет</value>
+  </data>
+  <data name="Form1_RunAtStartup__not" xml:space="preserve">
+    <value>не</value>
+  </data>
+  <data name="Form1_RunAtStartup_autostart_with_Windows" xml:space="preserve">
+    <value>автоматически запускаться с Windows</value>
+  </data>
+  <data name="Form1_ConnectToExchange_Already_connected" xml:space="preserve">
+    <value>Уже подключен</value>
+  </data>
+  <data name="Form1_ConnectToExchange_Transitioning_state" xml:space="preserve">
+    <value>Переход состояния</value>
+  </data>
+  <data name="Form1_ConnectToExchange_please_wait" xml:space="preserve">
+    <value>пожалуйста подождите</value>
+  </data>
+  <data name="Form1_DisconnectFromExchange_Already_disconnected" xml:space="preserve">
+    <value>Уже отключен</value>
+  </data>
+  <data name="Form1_DisconnectFromExchange_Transitioning_state" xml:space="preserve">
+    <value>Переход состояния</value>
+  </data>
+  <data name="Form1_DisconnectFromExchange_please_wait" xml:space="preserve">
+    <value>пожалуйста подождите</value>
+  </data>
+  <data name="Form1_ShellOwaUrl_Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="Form1_disableCalendarToolStripMenuItem_CheckStateChanged_Calendar_notifications_switched" xml:space="preserve">
+    <value>Оповещения календаря</value>
+  </data>
+  <data name="Form1_Form1_FormClosed_Terminating" xml:space="preserve">
+    <value>Завершение</value>
+  </data>
+  <data name="Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched" xml:space="preserve">
+    <value>Оповещение Growl</value>
+  </data>
+  <data name="Form1_InitEventView_Time" xml:space="preserve">
+    <value>Время</value>
+  </data>
+  <data name="Form1_InitEventView_Event_Details" xml:space="preserve">
+    <value>Подробности события</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_You_are_not_an_Admin_user" xml:space="preserve">
+    <value>Вы не являетесь администратором</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Operation_may_fail" xml:space="preserve">
+    <value>Операция может не</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Setting_up_Mail_handlers" xml:space="preserve">
+    <value>Установка обработчика почты</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Mail_functions_will_now_be_handled_by_OWA" xml:space="preserve">
+    <value>Почта теперь будет обрабатываться OWA</value>
+  </data>
+  <data name="Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched" xml:space="preserve">
+    <value>Переопределение SSL сертификата</value>
+  </data>
+  <data name="Form1_playSoundToolStripMenuItem_CheckStateChanged_Audible_notifications_switched" xml:space="preserve">
+    <value>Звуковые оповещения</value>
+  </data>
+  <data name="Form1_PopToast_No_Title" xml:space="preserve">
+    <value>Без заголовка</value>
+  </data>
+  <data name="Form1_PopToast_No_Subject" xml:space="preserve">
+    <value>Без темы</value>
+  </data>
+  <data name="Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched" xml:space="preserve">
+    <value>Оповещения Snarl</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_You_are_not_an_Admin_user" xml:space="preserve">
+    <value>Вы не являетесь администратором</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_Operation_may_fail" xml:space="preserve">
+    <value>Операция может не</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_Restoring_Mail_handlers" xml:space="preserve">
+    <value>Восстановление обработчика почты</value>
+  </data>
+  <data name="Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_" xml:space="preserve">
+    <value>Должно быть числовое значение от 1 до</value>
+  </data>
+  <data name="Form1_loginAutomaticallyToolStripMenuItem_CheckStateChanged_Automatic_Login_is_switched" xml:space="preserve">
+    <value>Автоматический вход</value>
+  </data>
+  <data name="Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched" xml:space="preserve">
+    <value>Проверка автообнаружения</value>
+  </data>
+  <data name="Form1_office365LoginOverrideToolStripMenuItem_CheckStateChanged_Office365_login_override" xml:space="preserve">
+    <value>Переопределение входа Office365</value>
+  </data>
+  <data name="Form1_cbOverrideEWS_CheckedChanged_EWS_URL_override_switched" xml:space="preserve">
+    <value>Переопределение EWS URL</value>
+  </data>
+  <data name="Form1_chkAutodiscovery_CheckedChanged_Autodiscovery_is_switched" xml:space="preserve">
+    <value>Autodiscovery</value>
+  </data>
+  <data name="Form1_cbOverrideOWA_CheckedChanged_OWA_URL_override_switched" xml:space="preserve">
+    <value>Переопределение OWA URL</value>
+  </data>
+  <data name="Form1_InitializeComponent_Ready_" xml:space="preserve">
+    <value>Готов.</value>
+  </data>
+  <data name="Form1_InitializeComponent_Options" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Form1_InitializeComponent_Open_OWA" xml:space="preserve">
+    <value>Открыть OWA</value>
+  </data>
+  <data name="Form1_InitializeComponent_Open_Outlook" xml:space="preserve">
+    <value>Открыть Outlook</value>
+  </data>
+  <data name="Form1_InitializeComponent_Recall_Last_Popup" xml:space="preserve">
+    <value>Повторить последнее уведомление</value>
+  </data>
+  <data name="Form1_InitializeComponent_Reset_Tray_Icon" xml:space="preserve">
+    <value>Сбросить иконку в трее</value>
+  </data>
+  <data name="Form1_InitializeComponent_Exit" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="Form1_InitializeComponent_File" xml:space="preserve">
+    <value>Файл</value>
+  </data>
+  <data name="Form1_InitializeComponent_Tools" xml:space="preserve">
+    <value>Инструменты</value>
+  </data>
+  <data name="Form1_InitializeComponent__NET_Versions" xml:space="preserve">
+    <value>Версии .NET</value>
+  </data>
+  <data name="Form1_InitializeComponent_MDAC_Versions" xml:space="preserve">
+    <value>Версии MDAC</value>
+  </data>
+  <data name="Form1_InitializeComponent_System_Information" xml:space="preserve">
+    <value>Информация о системе</value>
+  </data>
+  <data name="Form1_InitializeComponent_Notifications" xml:space="preserve">
+    <value>Оповещения</value>
+  </data>
+  <data name="Form1_InitializeComponent_Balloon" xml:space="preserve">
+    <value>Всплывающая подсказка</value>
+  </data>
+  <data name="Form1_InitializeComponent_Play_Sound" xml:space="preserve">
+    <value>Проигрывать звуки</value>
+  </data>
+  <data name="Form1_InitializeComponent_Expert" xml:space="preserve">
+    <value>Эксперт</value>
+  </data>
+  <data name="Form1_InitializeComponent_Override_Certificate" xml:space="preserve">
+    <value>Переопределить сертификат</value>
+  </data>
+  <data name="Form1_InitializeComponent_Always_open_OWA_in_IE" xml:space="preserve">
+    <value>Всегда открывать OWA в IE</value>
+  </data>
+  <data name="Form1_InitializeComponent_Disable_Calendar" xml:space="preserve">
+    <value>Отключить календарь</value>
+  </data>
+  <data name="Form1_InitializeComponent_Login_Automatically" xml:space="preserve">
+    <value>Войти автоматически</value>
+  </data>
+  <data name="Form1_InitializeComponent_Override_Autodiscovery_Validation" xml:space="preserve">
+    <value>Переопределить проверку автообнаружения</value>
+  </data>
+  <data name="Form1_InitializeComponent_Office365_Login_Override" xml:space="preserve">
+    <value>Переопределить вход Office365</value>
+  </data>
+  <data name="Form1_InitializeComponent_Use_Default_Web_Proxy" xml:space="preserve">
+    <value>Ипользовать прокси по умолчанию</value>
+  </data>
+  <data name="Form1_InitializeComponent_Make_OWA_Default" xml:space="preserve">
+    <value>Использовать OWA по умолчанию</value>
+  </data>
+  <data name="Form1_InitializeComponent_Switch_Off" xml:space="preserve">
+    <value>Выключить</value>
+  </data>
+  <data name="Form1_InitializeComponent_Help" xml:space="preserve">
+    <value>Помощь</value>
+  </data>
+  <data name="Form1_InitializeComponent_Change_Log" xml:space="preserve">
+    <value>История изменений</value>
+  </data>
+  <data name="Form1_InitializeComponent_Support" xml:space="preserve">
+    <value>Поддержка</value>
+  </data>
+  <data name="Form1_InitializeComponent_Show_Log_File" xml:space="preserve">
+    <value>Показать файл журнала</value>
+  </data>
+  <data name="Form1_InitializeComponent_About" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="Form1_InitializeComponent_Logging" xml:space="preserve">
+    <value>Журналирование</value>
+  </data>
+  <data name="Form1_InitializeComponent_unknown" xml:space="preserve">
+    <value>неизвестный</value>
+  </data>
+  <data name="Form1_InitializeComponent_Windows_Domain__" xml:space="preserve">
+    <value>Домен Windows :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Server_Address__" xml:space="preserve">
+    <value>Адрес сервера :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Stop" xml:space="preserve">
+    <value>Стоп</value>
+  </data>
+  <data name="Form1_InitializeComponent_Start" xml:space="preserve">
+    <value>Старт</value>
+  </data>
+  <data name="Form1_InitializeComponent_Password__" xml:space="preserve">
+    <value>Пароль :</value>
+  </data>
+  <data name="Form1_InitializeComponent_User_Name__" xml:space="preserve">
+    <value>Имя пользователя :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Basic_Settings" xml:space="preserve">
+    <value>Базовые настройки</value>
+  </data>
+  <data name="Form1_InitializeComponent_secs" xml:space="preserve">
+    <value>сек</value>
+  </data>
+  <data name="Form1_InitializeComponent_Update_Interval__" xml:space="preserve">
+    <value>Интервал обновления :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Exchange_Version__" xml:space="preserve">
+    <value>Версия Exchange :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Run_at_Startup" xml:space="preserve">
+    <value>Автозапуск при старте Windows</value>
+  </data>
+  <data name="Form1_InitializeComponent_Email_Address__" xml:space="preserve">
+    <value>Email адрес :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Attempt_to_use_Autodiscovery" xml:space="preserve">
+    <value>Попытка использовать Autodiscovery</value>
+  </data>
+  <data name="Form1_InitializeComponent_Advanced_Settings" xml:space="preserve">
+    <value>Расширенные настройки</value>
+  </data>
+  <data name="Form1_InitializeComponent_Use_Windows_Domain_Credentials" xml:space="preserve">
+    <value>Использовать учётную запись домена Windows</value>
+  </data>
+  <data name="Form1_InitializeComponent_URLs" xml:space="preserve">
+    <value>URL'ы</value>
+  </data>
+  <data name="Form1_InitializeComponent_Controls" xml:space="preserve">
+    <value>Управление</value>
+  </data>
+</root>

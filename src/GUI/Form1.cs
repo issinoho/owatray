@@ -182,7 +182,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			txtDomain.Text = _connection.AccountDomain;
 			txtURLEdit.Text = _connection.ServiceUrl;
 			txtOWAEdit.Text = _connection.EmailUrl;
-			txtInterval.Text = _connection.Interval.ToString(CultureInfo.InvariantCulture);
+			txtInterval.Text = _connection.Interval.ToString();
 			cbOverrideEWS.Checked = _connection.OverrideServiceUrl;
 			txtURLEdit.Enabled = cbOverrideEWS.Checked;
 			cbOverrideOWA.Checked = _connection.OverrideEmailUrl;
@@ -495,7 +495,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			try
 			{
-				_lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(CultureInfo.InvariantCulture), Convert.ToInt32(severity)));
+				_lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(), Convert.ToInt32(severity)));
 				_lvBuffer[_lvBuffer.Count - 1].SubItems.Add(newEntry);
 				LoggerProxy.Log(newEntry, severity != Severity.Fail);
 			}
@@ -508,7 +508,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		{
 			try
 			{
-				_lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(CultureInfo.InvariantCulture), Convert.ToInt32(Severity.Fail)));
+				_lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(), Convert.ToInt32(Severity.Fail)));
 				_lvBuffer[_lvBuffer.Count - 1].SubItems.Add(newEntry);
 				LoggerProxy.Log(newEntry, ex);
 			}
@@ -1149,7 +1149,7 @@ namespace DrunkenBakery.OWAtray.GUI
 				{
 					errorProvider1.SetError(txtInterval,
 											Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_ +
-											MaxInterval.ToString(CultureInfo.InvariantCulture));
+											MaxInterval.ToString());
 					e.Cancel = true;
 				}
 			}
@@ -1157,7 +1157,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			{
 				errorProvider1.SetError(txtInterval,
 										Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_ +
-										MaxInterval.ToString(CultureInfo.InvariantCulture));
+										MaxInterval.ToString());
 				e.Cancel = true;
 			}
 		}
