@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "3.0.4533.34919"
+!define PRODUCT_VERSION "3.0.4533.36871"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray"
@@ -181,6 +181,11 @@ Section Uninstall
   Delete "$INSTDIR\notify.wav"
   Delete "$INSTDIR\SnarlConnector.dll"
 ;
+  Delete "$INSTDIR\Log4Net.config"
+  Delete "$INSTDIR\log4net.dll"
+;
+  Delete "$INSTDIR\scenario.xml"
+;
   Delete "$INSTDIR\de\DrunkenBakery.OWAtray.GUI.resources.dll"
   Delete "$INSTDIR\ca\DrunkenBakery.OWAtray.GUI.resources.dll"
   Delete "$INSTDIR\es\DrunkenBakery.OWAtray.GUI.resources.dll"
@@ -227,6 +232,8 @@ Section Uninstall
   RMDir "$INSTDIR\es"
   RMDir "$INSTDIR\tr"
   RMDir "$INSTDIR\fr"
+  RMDir "$INSTDIR\it"
+  RMDir "$INSTDIR\ru"
   RMDir "$INSTDIR"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"

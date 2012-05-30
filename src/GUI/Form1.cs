@@ -176,13 +176,6 @@ namespace DrunkenBakery.OWAtray.GUI
                 filePath = args[1];
             }
 
-            if (!File.Exists(filePath))
-            {
-                throw new Exception("Scenario file not found!");
-            }
-
-            ////AddLogEntry(filePath);
-
             // Create our whole universe
             _scenario = ScenarioFactory.CreateScenario(filePath);
 
