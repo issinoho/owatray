@@ -1,61 +1,99 @@
-﻿//------------------------------------------------------------------
-// DrunkenBakery OWA Tray Monitor
-// ContactUs Form
-//
-// <copyright file="ContactUs.cs" company="The Drunken Bakery">
-//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
-// </copyright>
-//
-// Form to provide contact information for Cygnet to the user.
-//
-//------------------------------------------------------------------
-
-using System;
-using System.Diagnostics;
-using System.Windows.Forms;
-using DrunkenBakery.OWAtray.GUI.Properties;
+﻿// ------------------------------------------------------------------
+//  DrunkenBakery OWA Tray Monitor
+//  OWAtray.DrunkenBakery.OWAtray.GUI
+// 
+//  <copyright file="ContactUs.cs" company="The Drunken Bakery”>
+//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//  </copyright>
+// 
+//  Author: IRS
+// ------------------------------------------------------------------
 
 namespace DrunkenBakery.OWAtray.GUI
 {
-	/// <summary>
-	/// Provides contact information to the user.
-	/// </summary>
-	public partial class ContactUs : Form
-	{
-		public ContactUs()
-		{
-			InitializeComponent();
+    using System;
+    using System.Diagnostics;
+    using System.Windows.Forms;
 
-			// Flags
-			lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_Catalan, 0));
-			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
-			lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_German, 1));
-			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Christian Treudler");
-			lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_Spanish, 2));
-			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
-			lvX.Items.Add(new ListViewItem("Turkish", 3));
-			lvX.Items[lvX.Items.Count - 1].SubItems.Add("pi511");
-			lvX.Items.Add(new ListViewItem("French", 4));
-			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Marc Lairet");
-			lvX.Items.Add(new ListViewItem("Italian", 5));
-			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Marco Procida");
-			lvX.Items.Add(new ListViewItem("Russian", 6));
-			lvX.Items[lvX.Items.Count - 1].SubItems.Add("Aleksandr Bembel");
-		}
+    using DrunkenBakery.OWAtray.GUI.Properties;
 
-		private void cmdOK_Click(object sender, EventArgs e)
-		{
-			this.Close();
-		}
+    /// <summary>
+    /// Provides contact information to the user.
+    /// </summary>
+    public partial class ContactUs : Form
+    {
+        #region Constructors and Destructors
 
-		private void linkBakery_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			Process.Start(linkBakery.Text);
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContactUs"/> class.
+        /// </summary>
+        public ContactUs()
+        {
+            this.InitializeComponent();
 
-		private void linkEmail_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			Process.Start(@"mailto:" + linkEmail.Text);
-		}
-	}
+            // Flags
+            this.lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_Catalan, 0));
+            this.lvX.Items[this.lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
+            this.lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_German, 1));
+            this.lvX.Items[this.lvX.Items.Count - 1].SubItems.Add("Christian Treudler");
+            this.lvX.Items.Add(new ListViewItem(Resources.ContactUs_ContactUs_Spanish, 2));
+            this.lvX.Items[this.lvX.Items.Count - 1].SubItems.Add("Daniel Sabater");
+            this.lvX.Items.Add(new ListViewItem("Turkish", 3));
+            this.lvX.Items[this.lvX.Items.Count - 1].SubItems.Add("pi511");
+            this.lvX.Items.Add(new ListViewItem("French", 4));
+            this.lvX.Items[this.lvX.Items.Count - 1].SubItems.Add("Marc Lairet");
+            this.lvX.Items.Add(new ListViewItem("Italian", 5));
+            this.lvX.Items[this.lvX.Items.Count - 1].SubItems.Add("Marco Procida");
+            this.lvX.Items.Add(new ListViewItem("Russian", 6));
+            this.lvX.Items[this.lvX.Items.Count - 1].SubItems.Add("Aleksandr Bembel");
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The cmd o k_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void CmdOkClick(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        /// <summary>
+        /// The link bakery_ link clicked.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void LinkBakeryLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(this.linkBakery.Text);
+        }
+
+        /// <summary>
+        /// The link email_ link clicked.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void LinkEmailLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"mailto:" + this.linkEmail.Text);
+        }
+
+        #endregion
+    }
 }

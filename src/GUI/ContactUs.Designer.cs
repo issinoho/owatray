@@ -103,7 +103,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.cmdOK.TabIndex = 1;
 			this.cmdOK.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.ContactUs_InitializeComponent_OK;
 			this.cmdOK.UseVisualStyleBackColor = true;
-			this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
+			this.cmdOK.Click += new System.EventHandler(this.CmdOkClick);
 			// 
 			// groupBox2
 			// 
@@ -130,7 +130,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.linkEmail.TabIndex = 12;
 			this.linkEmail.TabStop = true;
 			this.linkEmail.Text = "support@owatray.com";
-			this.linkEmail.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkEmail_LinkClicked);
+			this.linkEmail.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkEmailLinkClicked);
 			// 
 			// button4
 			// 
@@ -162,7 +162,7 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.linkBakery.TabIndex = 6;
 			this.linkBakery.TabStop = true;
 			this.linkBakery.Text = "http://www.owatray.com";
-			this.linkBakery.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkBakery_LinkClicked);
+			this.linkBakery.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkBakeryLinkClicked);
 			// 
 			// button3
 			// 

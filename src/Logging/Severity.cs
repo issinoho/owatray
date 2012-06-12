@@ -1,21 +1,34 @@
-﻿//------------------------------------------------------------------
-// DrunkenBakery OWA Tray Monitor
-// Severity
-//
-// <copyright file="Severity.cs" company="The Drunken Bakery">
-//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
-// </copyright>
-//
-// Defines the logging levels supported by the application.
-//
-//------------------------------------------------------------------
+﻿// ------------------------------------------------------------------
+//  DrunkenBakery OWA Tray Monitor
+//  OWAtray.DrunkenBakery.OWAtray.Logging
+// 
+//  <copyright file="Severity.cs" company="The Drunken Bakery”>
+//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//  </copyright>
+// 
+//  Author: IRS
+// ------------------------------------------------------------------
 
 namespace DrunkenBakery.OWAtray.Logging
 {
-	public enum Severity
-	{
-		Success,
-		Fail,
-		Info
-	}
+    /// <summary>
+    /// The severity.
+    /// </summary>
+    public enum Severity
+    {
+        /// <summary>
+        /// The success.
+        /// </summary>
+        Success, 
+
+        /// <summary>
+        /// The fail.
+        /// </summary>
+        Fail, 
+
+        /// <summary>
+        /// The info.
+        /// </summary>
+        Info
+    }
 }

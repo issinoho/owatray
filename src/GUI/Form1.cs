@@ -1,456 +1,272 @@
-﻿//------------------------------------------------------------------
-// DrunkenBakery OWA Tray Monitor
-// Main Form
-//
-// <copyright file="Form1.cs" company="The Drunken Bakery">
-//     Copyright (c) 2009-2011 The Drunken Bakery. All rights reserved.
-// </copyright>
-//
-// Monitors Exchange email for OWA users
-// Main application form which drives all functionality.
-//
-//------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Security.Principal;
-using System.Threading;
-using System.Windows.Forms;
-using DrunkenBakery.OWAtray.Audio;
-using DrunkenBakery.OWAtray.Connections.Abstract;
-using DrunkenBakery.OWAtray.Connections.Proxy;
-using DrunkenBakery.OWAtray.Framework;
-using DrunkenBakery.OWAtray.Growl;
-using DrunkenBakery.OWAtray.GUI.Properties;
-using DrunkenBakery.OWAtray.Logging;
-using DrunkenBakery.OWAtray.Snarl;
+﻿// ------------------------------------------------------------------
+//  DrunkenBakery OWA Tray Monitor
+//  OWAtray.DrunkenBakery.OWAtray.GUI
+// 
+//  <copyright file="Form1.cs" company="The Drunken Bakery”>
+//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//  </copyright>
+// 
+//  Author: IRS
+// ------------------------------------------------------------------
 
 namespace DrunkenBakery.OWAtray.GUI
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Drawing;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Reflection;
+    using System.Security.Principal;
+    using System.Threading;
+    using System.Windows.Forms;
+
+    using DrunkenBakery.OWAtray.Audio;
+    using DrunkenBakery.OWAtray.Connections.Abstract;
+    using DrunkenBakery.OWAtray.Connections.Proxy;
+    using DrunkenBakery.OWAtray.Framework;
+    using DrunkenBakery.OWAtray.Growl;
+    using DrunkenBakery.OWAtray.GUI.Properties;
+    using DrunkenBakery.OWAtray.Logging;
+    using DrunkenBakery.OWAtray.Snarl;
+
+    /// <summary>
+    /// The form 1.
+    /// </summary>
     public partial class Form1 : Form
     {
+        #region Static Fields
+
+        /// <summary>
+        /// The _over ride close.
+        /// </summary>
+        private static bool overRideClose;
+
+        #endregion
+
+        #region Constants and Fields
+
+        /// <summary>
+        /// The max interval.
+        /// </summary>
         private const int MaxInterval = 3600;
 
-        private readonly List<ListViewItem> _lvBuffer = new List<ListViewItem>();
-        private static bool _overRideClose;
-        private string _alertIcon;
-        private string _emailIcon;
-        private string _graphicPath;
-        private string _shellPath;
-        private string _audioPath;
-        private bool _booting;
-        private Form _frmAbout;
-        private Form _frmChangeLog;
-        private Form _frmContact;
-        private Form _frmInfo;
-        private Form _frmMdac;
-        private Form _frmNet;
-        private string _lastPopMessage = "";
-        private string _lastPopTitle = "";
-        private string _lastPopUrl = "";
-        private string _popUrl = "";
-        private Scenario _scenario;
-        private IEmailInterface _connection;
-        private bool _firstRun = true;
+        /// <summary>
+        /// The _lv buffer.
+        /// </summary>
+        private readonly List<ListViewItem> logBuffer = new List<ListViewItem>();
 
-        private bool _bootOk;
+        /// <summary>
+        /// The _alert icon.
+        /// </summary>
+        private string alertIcon;
 
+        /// <summary>
+        /// The _audio path.
+        /// </summary>
+        private string audioPath;
+
+        /// <summary>
+        /// The _boot ok.
+        /// </summary>
+        private bool bootOk;
+
+        /// <summary>
+        /// The _booting.
+        /// </summary>
+        private bool booting;
+
+        /// <summary>
+        /// The _connection.
+        /// </summary>
+        private IEmailInterface connection;
+
+        /// <summary>
+        /// The _email icon.
+        /// </summary>
+        private string emailIcon;
+
+        /// <summary>
+        /// The _first run.
+        /// </summary>
+        private bool firstRun = true;
+
+        /// <summary>
+        /// The _frm about.
+        /// </summary>
+        private Form frmAbout;
+
+        /// <summary>
+        /// The _frm change log.
+        /// </summary>
+        private Form frmChangeLog;
+
+        /// <summary>
+        /// The _frm contact.
+        /// </summary>
+        private Form frmContact;
+
+        /// <summary>
+        /// The _frm info.
+        /// </summary>
+        private Form frmInfo;
+
+        /// <summary>
+        /// The _frm mdac.
+        /// </summary>
+        private Form frmMdac;
+
+        /// <summary>
+        /// The _frm net.
+        /// </summary>
+        private Form frmNet;
+
+        /// <summary>
+        /// The _graphic path.
+        /// </summary>
+        private string graphicPath;
+
+        /// <summary>
+        /// The _last pop message.
+        /// </summary>
+        private string lastPopMessage = string.Empty;
+
+        /// <summary>
+        /// The _last pop title.
+        /// </summary>
+        private string lastPopTitle = string.Empty;
+
+        /// <summary>
+        /// The _last pop url.
+        /// </summary>
+        private string lastPopUrl = string.Empty;
+
+        /// <summary>
+        /// The _pop url.
+        /// </summary>
+        private string popUrl = string.Empty;
+
+        /// <summary>
+        /// The _scenario.
+        /// </summary>
+        private Scenario scenario;
+
+        /// <summary>
+        /// The _shell path.
+        /// </summary>
+        private string shellPath;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form1"/> class.
+        /// </summary>
         public Form1()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             // Set up look & feel
-            WindowDressing();
+            this.WindowDressing();
 
             // Welcome message
-            AddLogEntry(string.Format("{0} {1} v{2}", Resources.Form1_Form1_Welcome_to_the, AssemblyHelpers.AssemblyTitle,
-                                      AssemblyHelpers.UpgradeSettings()));
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1} v{2}", 
+                    Resources.Form1_Form1_Welcome_to_the, 
+                    AssemblyHelpers.AssemblyTitle, 
+                    AssemblyHelpers.UpgradeSettings()));
 
             // The rest gets kicked off an a timer
-            AddLogEntry(String.Format("{0}.", Resources.Form1_Form1_Ready));
-            timer1.Start();
+            this.AddLogEntry(string.Format("{0}.", Resources.Form1_Form1_Ready));
+            this.timer1.Start();
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                timer1.Enabled = false;
-                timerLogging.Enabled = true;
+        #endregion
 
-                // Interlock for booting up
-                _booting = true;
+        #region Properties
 
-                // Boot the various subsystems
-                BootEnvironment();
-                BootShell();
-                BootAudio();
-                BootScenario();
-                BootIcons();
-                BootHelpers();
-
-                // Connect if autostart is good to go
-                if (Settings.Default.Autostart)
-                {
-                    ConnectToExchange();
-                }
-
-                // Only getting here means we've booted up ok
-                _bootOk = true;
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry(string.Format("{0}", ex.Message), Severity.Fail);
-            }
-            finally
-            {
-                // Release boot interlock
-                _booting = false;                
-            }
-        }
-
-        private void BootHelpers()
-        {
-            GrowlHelper.RegisterGrowl(AssemblyHelpers.AssemblyTitle, _graphicPath, "NEWMAIL", "New Mail");
-            SnarlHelper.RegisterSnarl(AssemblyHelpers.AssemblyTitle, _graphicPath, Handle);
-        }
-
-        private void BootShell()
-        {
-            _shellPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                      Settings.Default.ShellIntegration);
-        }
-
-        private void BootAudio()
-        {
-            _audioPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                              Settings.Default.SoundFile);
-        }
-
-        private void BootIcons()
-        {
-            _graphicPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                        Settings.Default.EmailGraphic);
-            _emailIcon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.EmailIcon);
-            _alertIcon = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.AlertIcon);
-
-            // Tray icon
-            notifyIcon1.Icon = new Icon(_emailIcon);
-        }
-
-        private void BootEnvironment()
-        {
-            // Startup Flag
-            chkRunOnStartup.Checked = WindowsShortcut.Exists(Environment.SpecialFolder.Startup,
-                                                             AssemblyHelpers.AssemblyTitle);
-
-            // Notifications
-            balloonToolStripMenuItem.Checked = Settings.Default.Balloon;
-            growlToolStripMenuItem.Checked = Settings.Default.Growl;
-            snarlToolStripMenuItem.Checked = Settings.Default.Snarl;
-            playSoundToolStripMenuItem.Checked = Settings.Default.Bell;
-
-            // Web Proxy
-            useDefaultWebProxyToolStripMenuItem.Checked = Settings.Default.UseWebProxy;
-            UpdateWebProxySettings();
-
-            // Lockdown mode
-            restoreToolStripMenuItem.Enabled = (!Settings.Default.LockDown);
-        }
-
-        private void BootScenario()
-        {
-            // Has a file been passed in?
-            string filePath = Settings.Default.ScenarioFile;
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Count() > 1)
-            {
-                filePath = args[1];
-            }
-
-            // Create our whole universe
-            _scenario = ScenarioFactory.CreateScenario(filePath);
-
-            // TODO: Special case for single connection use only
-            if (_scenario.Connections.Count == 0)
-            {
-                // Create the new entry
-                _connection = ConnectionFactory.CreateConnection(EmailType.Exchange);
-                _scenario.Connections.Add(_connection);
-                _scenario.Save();
-            }
-            else
-            {
-                // Retrieve all the settings
-                _connection = _scenario.Connections[0];
-            }
-
-            // Set up event handling
-            WireUpConnectionEvents();
-
-            // Update any UI
-            txtEmail.Text = _connection.EmailAddress;
-            txtUser.Text = _connection.Username;
-            txtPwd.Text = _connection.Password;
-            txtServer.Text = _connection.EmailServer;
-            txtDomain.Text = _connection.AccountDomain;
-            txtURLEdit.Text = _connection.ServiceUrl;
-            txtOWAEdit.Text = _connection.EmailUrl;
-            txtInterval.Text = _connection.Interval.ToString();
-            cbOverrideEWS.Checked = _connection.OverrideServiceUrl;
-            txtURLEdit.Enabled = cbOverrideEWS.Checked;
-            cbOverrideOWA.Checked = _connection.OverrideEmailUrl;
-            txtOWAEdit.Enabled = cbOverrideOWA.Checked;
-            chkAutodiscovery.Checked = _connection.UseAutodiscovery;
-            SelectAutodiscoveryOptions();
-            chkOnDomain.Checked = _connection.OnWindowsDomain;
-            SelectDomainOptions();
-            overrideCertificateToolStripMenuItem.Checked = _connection.OverrideCertificate;
-            alwaysOpenOWAInIEToolStripMenuItem.Checked = _connection.AlwaysUseInternetExplorer;
-            disableCalendarToolStripMenuItem.Checked = _connection.DisableCalendar;
-            loginAutomaticallyToolStripMenuItem.Checked = _connection.AutoLogin;
-            office365LoginOverrideToolStripMenuItem.Checked = _connection.OverrideOffice365Login;
-            overrideAutodiscoveryValidationToolStripMenuItem.Checked = _connection.OverrideAutodiscoveryValidation;
-            cmbExchangeVersion.SelectedIndex = cmbExchangeVersion.FindStringExact(_connection.ServerVersion);
-            UpdateServiceUrl();
-            UpdateOwaUrl();
-            UpdateEmail();
-
-            // Update shell handler
-            ConfigureShell();
-        }
-
+        /// <summary>
+        /// Gets EmailAddress.
+        /// </summary>
         private string EmailAddress
         {
             get
             {
-                var email = (txtEmail.Text.Length > 0) ? txtEmail.Text : txtUser.Text;
+                string email = (this.txtEmail.Text.Length > 0) ? this.txtEmail.Text : this.txtUser.Text;
                 if (email.Length > 0 && !email.Contains("@"))
                 {
-                    email = email + "@" + GetSubDomain(txtServer.Text);
+                    email = email + "@" + GetSubDomain(this.txtServer.Text);
                 }
 
                 return email;
             }
         }
 
-        private void WindowDressing()
-        {
-            Text = string.Format("{0} {1} {2}", AssemblyHelpers.AssemblyTitle, Resources.Form1_WindowDressing_freshly_baked_at, AssemblyHelpers.AssemblyCompany);
-            notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Resources.Form1_WindowDressing_Not_Connected_to_Exchange;
-            foreach (TabPage tab in tabMain.TabPages) tab.BackColor = SystemColors.Control;
-            InitEventView(lvStatus);
-        }
+        #endregion
 
-        private void SelectDomainOptions()
-        {
-            txtDomain.Enabled = !_connection.OnWindowsDomain;
-            txtPwd.Enabled = !_connection.OnWindowsDomain;
-            txtUser.Enabled = !_connection.OnWindowsDomain;
-        }
+        #region Methods
 
-        private void SelectAutodiscoveryOptions()
+        /// <summary>
+        /// The get sub domain.
+        /// </summary>
+        /// <param name="domain">
+        /// The domain. 
+        /// </param>
+        /// <returns>
+        /// The sub domain. 
+        /// </returns>
+        private static string GetSubDomain(string domain)
         {
-            txtServer.Enabled = !_connection.UseAutodiscovery;
-            cbOverrideEWS.Enabled = !_connection.UseAutodiscovery;
-            cbOverrideOWA.Enabled = !_connection.UseAutodiscovery;
-            txtDomain.Enabled = !_connection.UseAutodiscovery;
-            overrideAutodiscoveryValidationToolStripMenuItem.Enabled = _connection.UseAutodiscovery;
-        }
+            string result = string.Empty;
 
-        private void ConnectedStateHandler(IEmailInterface connection, ConnectionState state)
-        {
-            if (IsHandleCreated)
+            string[] parts = domain.Split('.');
+
+            if (parts.Length > 1)
             {
-                Invoke(new Action(() =>
+                for (int f = 1; f < parts.Length; ++f)
                 {
-                    switch (state)
+                    result = result + parts[f];
+                    if (f != (parts.Length - 1))
                     {
-                        case ConnectionState.Connecting:
-                            break;
-
-                        case ConnectionState.Disconnecting:
-                            break;
-
-                        case ConnectionState.Failed:
-                            // Switch off autostart if there has been an issue
-                            Settings.Default.Autostart = false;
-                            Settings.Default.Save();
-
-                            // Show failure message in tray & pop balloon
-                            notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + String.Format("{0}!", Resources.Form1_WireUpConnectionEvents_Connection_Failure);
-                            PopToast(string.Format("[{0}] - {1}!", connection.EmailAddress, Resources.Form1_WireUpConnectionEvents_Connection_Failure), Resources.Form1_WireUpConnectionEvents_Check_log_file_for_details);
-                            break;
-
-                        case ConnectionState.Connected:
-                            // After a successful connection then next time we can autostart
-                            Settings.Default.Autostart = true;
-                            Settings.Default.Save();
-
-                            // Update discovered properties
-                            AddLogEntry(string.Format("{0} {1}", Resources.Form1_WireUpConnectionEvents_Connected_to, connection.Version));
-                            if (connection.DiscoveredUsername.Length > 0)
-                            {
-                                AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_User_Name, connection.DiscoveredUsername), Severity.Success);
-                            }
-                            if (connection.DiscoveredEmailServer.Length > 0)
-                            {
-                                AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_Mailbox_Server, connection.DiscoveredEmailServer), Severity.Success);
-                            }
-                            if (connection.DiscoveredEmailUrl.Length > 0)
-                            {
-                                AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_OWA_Url, connection.DiscoveredEmailUrl), Severity.Success);
-                            }
-                            if (connection.DiscoveredServiceUrl.Length > 0)
-                            {
-                                AddLogEntry(String.Format("{0}: {1}", Resources.Form1_WireUpConnectionEvents_Discovered_EWS_Url, connection.DiscoveredServiceUrl), Severity.Success);
-                            }
-
-                            // Configure Shell
-                            UpdateOwaUrl();
-                            UpdateServiceUrl();
-                            ShellExchangeVersion();
-
-                            // Minimize
-                            WindowState = FormWindowState.Minimized;
-                            notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Resources.Form1_WireUpConnectionEvents_Connected_to_Exchange;
-                            break;
-
-                        case ConnectionState.Disconnected:
-                            notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine + Resources.Form1_WindowDressing_Not_Connected_to_Exchange;
-                            break;
+                        result = result + ".";
                     }
-                }));
+                }
             }
+
+            return result;
         }
 
-        private void NewMailHandler(string subject, string sender, string accessUrl)
+        /// <summary>
+        /// The init event view.
+        /// </summary>
+        /// <param name="lvX">
+        /// The lv x. 
+        /// </param>
+        private static void InitEventView(ListView lvX)
         {
-            if (IsHandleCreated)
-            {
-                Invoke(new Action(() =>
-                {
-                    _popUrl = accessUrl;
-                    PopToast(string.Format("{0} {1}", Resources.Form1_WireUpConnectionEvents_New_Mail_from, sender), subject);
-                }));
-            }
+            lvX.Columns.Add(Resources.Form1_InitEventView_Time, 140, HorizontalAlignment.Left);
+            lvX.Columns.Add(Resources.Form1_InitEventView_Event_Details, 1000, HorizontalAlignment.Left);
+            lvX.Items.Clear();
         }
 
-        private void NewAppointmentHandler(int minsToGo, DateTime startTime, string subject, string location, string accessUrl)
+        /// <summary>
+        /// The is user administrator.
+        /// </summary>
+        /// <returns>
+        /// True if user is administrator. 
+        /// </returns>
+        private static bool IsUserAdministrator()
         {
-            if (IsHandleCreated)
-            {
-                Invoke(new Action(() =>
-                {
-                    _popUrl = accessUrl;
-                    PopToast(
-                        string.Format("{0} {1} {2}", Resources.Form1_WireUpConnectionEvents_You_have_an_appointment_in, minsToGo,
-                                      (minsToGo != 1
-                                           ? Resources.Form1_WireUpConnectionEvents_minutes
-                                           : Resources.Form1_WireUpConnectionEvents_minute)),
-                        string.Format("{0} - {1} ({2})", startTime.ToShortTimeString(), subject, location));
-                }));
-            }
-        }
-
-        private void MailCountHandler(int count)
-        {
-            if (IsHandleCreated)
-            {
-                Invoke(new Action(() =>
-                {
-                    notifyIcon1.Text = NotificationText(count);
-                    notifyIcon1.Icon = new Icon((count > 0 ? _alertIcon : _emailIcon));
-
-                    if (!_firstRun) return;
-                    if (count <= 0) return;
-                    _firstRun = false;
-
-                    // Special case - pop message at the start if there is any unread email
-                    PopToast("New Mail",
-                             string.Format("{0} {1} {2}{3}{4}", Resources.Form1_WireUpConnectionEvents_You_have, count,
-                                           Resources.Form1_WireUpConnectionEvents_unread_email,
-                                           (count != 1 ? "s " : " "), Resources.Form1_WireUpConnectionEvents_in_your_inbox));
-                }));
-            }
-        }
-
-        private void UnwireConnectionEvents()
-        {
-            foreach (var item in _scenario.Connections.Where(item => item.AreEventsDefined))
-            {
-                item.LogMessage -= AddLogEntry;
-                item.LogException -= AddLogEntry;
-                item.ConnectedStateChange -= ConnectedStateHandler;
-                item.NewMail -= NewMailHandler;
-                item.NewAppointment -= NewAppointmentHandler;
-                item.MessageCount -= MailCountHandler;
-            }
-        }
-
-        private void WireUpConnectionEvents()
-        {
-            foreach (var item in _scenario.Connections.Where(item => !item.AreEventsDefined))
-            {
-                item.LogMessage += AddLogEntry;
-                item.LogException += AddLogEntry;
-                item.ConnectedStateChange += ConnectedStateHandler;
-                item.NewMail += NewMailHandler;
-                item.NewAppointment += NewAppointmentHandler;
-                item.MessageCount += MailCountHandler;
-            }
-        }
-
-        private void UpdateOwaUrl()
-        {
-            if (_connection.OverrideOffice365Login)
-            {
-                lblOWAUrl.Text = Settings.Default.Office365OwaUrl + StripEmailDomain(lblEmail.Text);
-            }
-            else if (_connection.UseAutodiscovery && _connection.DiscoveredEmailUrl.Length > 0)
-            {
-                lblOWAUrl.Text = _connection.DiscoveredEmailUrl;
-            }
-            else if (_connection.OverrideEmailUrl && txtOWAEdit.Text.Length > 0)
-            {
-                lblOWAUrl.Text = txtOWAEdit.Text;
-            }
-            else if (txtServer.Text.Length > 0)
-            {
-                lblOWAUrl.Text = string.Format("{0}{1}{2}", "https://", txtServer.Text, "/owa/");
-            }
-            else
-            {
-                lblOWAUrl.Text = "";
-            }
-
-            _connection.DerivedEmailUrl = lblOWAUrl.Text;
-            ShellOwaUrl();
-        }
-
-        private static string StripEmailDomain(string email)
-        {
-            var sub = "";
-            var start = email.IndexOf("@", StringComparison.Ordinal);
-            if (start > 0) sub = email.Substring(start + 1);
-            return sub;
-        }
-
-        public bool IsUserAdministrator()
-        {
-            var isAdmin = false;
+            bool isAdmin = false;
             try
             {
-                //get the currently logged in user
-                var user = WindowsIdentity.GetCurrent();
+                // get the currently logged in user
+                WindowsIdentity user = WindowsIdentity.GetCurrent();
                 if (user != null)
                 {
                     var principal = new WindowsPrincipal(user);
@@ -467,58 +283,99 @@ namespace DrunkenBakery.OWAtray.GUI
                 isAdmin = false;
                 MessageBox.Show(ex.Message);
             }
+
             return isAdmin;
         }
 
-        private static string GetSubDomain(string domain)
+        /// <summary>
+        /// The strip email domain.
+        /// </summary>
+        /// <param name="email">
+        /// The email. 
+        /// </param>
+        /// <returns>
+        /// The email domain. 
+        /// </returns>
+        private static string StripEmailDomain(string email)
         {
-            var result = "";
-
-            var parts = domain.Split('.');
-
-            if (parts.Length > 1)
+            string sub = string.Empty;
+            int start = email.IndexOf("@", StringComparison.Ordinal);
+            if (start > 0)
             {
-                for (var f = 1; f < parts.Length; ++f)
-                {
-                    result = result + parts[f];
-                    if (f != (parts.Length - 1)) result = result + ".";
-                }
+                sub = email.Substring(start + 1);
             }
 
-            return result;
+            return sub;
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The update web proxy settings.
+        /// </summary>
+        private static void UpdateWebProxySettings()
         {
-            if (_frmAbout == null) _frmAbout = new AboutBox1();
-            _frmAbout.ShowDialog();
+            WebRequest.DefaultWebProxy.Credentials = Settings.Default.UseWebProxy
+                                                         ? CredentialCache.DefaultCredentials
+                                                         : null;
         }
 
+        /// <summary>
+        /// The about tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void AboutToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this.frmAbout == null)
+            {
+                this.frmAbout = new AboutBox1();
+            }
+
+            this.frmAbout.ShowDialog();
+        }
+
+        /// <summary>
+        /// The activate owa.
+        /// </summary>
         private void ActivateOwa()
         {
-            var runSvc = new ProcessStartInfo(_shellPath) { WindowStyle = ProcessWindowStyle.Hidden };
+            var runSvc = new ProcessStartInfo(this.shellPath) { WindowStyle = ProcessWindowStyle.Hidden };
 
-            if (_connection.AlwaysUseInternetExplorer)
+            if (this.connection.AlwaysUseInternetExplorer)
             {
-                runSvc.Arguments = "owa" + ((_popUrl.Length > 0) ? " " + _popUrl : "");
+                runSvc.Arguments = "owa" + ((this.popUrl.Length > 0) ? " " + this.popUrl : string.Empty);
             }
             else
             {
-                runSvc.Arguments = "shell" + ((_popUrl.Length > 0) ? " " + _popUrl : "");
+                runSvc.Arguments = "shell" + ((this.popUrl.Length > 0) ? " " + this.popUrl : string.Empty);
             }
 
-            var serviceProcess = Process.Start(runSvc);
+            Process serviceProcess = Process.Start(runSvc);
 
-            if (office365LoginOverrideToolStripMenuItem.CheckState == CheckState.Checked)
-                office365LoginOverrideToolStripMenuItem.CheckState = CheckState.Unchecked;
+            if (this.office365LoginOverrideToolStripMenuItem.CheckState == CheckState.Checked)
+            {
+                this.office365LoginOverrideToolStripMenuItem.CheckState = CheckState.Unchecked;
+            }
         }
 
+        /// <summary>
+        /// The add log entry.
+        /// </summary>
+        /// <param name="newEntry">
+        /// The new entry. 
+        /// </param>
+        /// <param name="severity">
+        /// The severity. 
+        /// </param>
         private void AddLogEntry(string newEntry, Severity severity = Severity.Info)
         {
             try
             {
-                _lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(), Convert.ToInt32(severity)));
-                _lvBuffer[_lvBuffer.Count - 1].SubItems.Add(newEntry);
+                this.logBuffer.Add(new ListViewItem(DateTime.Now.ToString(), Convert.ToInt32(severity)));
+                this.logBuffer[this.logBuffer.Count - 1].SubItems.Add(newEntry);
                 LoggerProxy.Log(newEntry, severity != Severity.Fail);
             }
             catch (Exception)
@@ -526,417 +383,966 @@ namespace DrunkenBakery.OWAtray.GUI
             }
         }
 
+        /// <summary>
+        /// The add log entry.
+        /// </summary>
+        /// <param name="newEntry">
+        /// The new entry. 
+        /// </param>
+        /// <param name="ex">
+        /// The ex. 
+        /// </param>
         private void AddLogEntry(string newEntry, Exception ex)
         {
             try
             {
-                _lvBuffer.Add(new ListViewItem(DateTime.Now.ToString(), Convert.ToInt32(Severity.Fail)));
-                _lvBuffer[_lvBuffer.Count - 1].SubItems.Add(newEntry);
+                this.logBuffer.Add(new ListViewItem(DateTime.Now.ToString(), Convert.ToInt32(Severity.Fail)));
+                this.logBuffer[this.logBuffer.Count - 1].SubItems.Add(newEntry);
                 LoggerProxy.Log(newEntry, ex);
             }
             catch (Exception)
             {
             }
         }
-        
-        private void alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+
+        /// <summary>
+        /// The always open owa in ie tool strip menu item_ check state changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void AlwaysOpenOwainIeToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
         {
-            if (_booting) return;
+            if (this.booting)
+            {
+                return;
+            }
 
-            _connection.AlwaysUseInternetExplorer = alwaysOpenOWAInIEToolStripMenuItem.Checked;
-            _scenario.Save();
-            ShellBrowserVersion();
+            this.connection.AlwaysUseInternetExplorer = this.alwaysOpenOWAInIEToolStripMenuItem.Checked;
+            this.scenario.Save();
+            this.ShellBrowserVersion();
 
-            AddLogEntry(String.Format("{0} {1}",
-                                      Resources.
-                                          Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_Always_use_IE_switched_,
-                                      (_connection.AlwaysUseInternetExplorer
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_Always_use_IE_switched_, 
+                    this.connection.AlwaysUseInternetExplorer
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
         }
 
-        private void balloonToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The balloon tool strip menu item_ check state changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void BalloonToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
         {
-            if (_booting) return;
+            if (this.booting)
+            {
+                return;
+            }
 
-            Settings.Default.Balloon = balloonToolStripMenuItem.Checked;
+            Settings.Default.Balloon = this.balloonToolStripMenuItem.Checked;
             Settings.Default.Save();
-            AddLogEntry(String.Format("{0} {1}",
-                                      Resources.
-                                          Form1_balloonToolStripMenuItem_CheckStateChanged_Balloon_notifications_switched,
-                                      (Settings.Default.Balloon
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.Form1_balloonToolStripMenuItem_CheckStateChanged_Balloon_notifications_switched, 
+                    Settings.Default.Balloon
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
         }
 
-        private void changeLogToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The boot audio.
+        /// </summary>
+        private void BootAudio()
         {
-            if (_frmChangeLog == null) _frmChangeLog = new ChangeLog(Settings.Default.RSSFeed);
-            _frmChangeLog.ShowDialog();
+            this.audioPath = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.SoundFile);
         }
 
-        private void chkOnDomain_CheckedChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The boot environment.
+        /// </summary>
+        private void BootEnvironment()
         {
-            if (_booting) return;
+            // Startup Flag
+            this.chkRunOnStartup.Checked = WindowsShortcut.Exists(
+                Environment.SpecialFolder.Startup, AssemblyHelpers.AssemblyTitle);
 
-            _connection.OnWindowsDomain = chkOnDomain.Checked;
-            _scenario.Save();
+            // Notifications
+            this.balloonToolStripMenuItem.Checked = Settings.Default.Balloon;
+            this.growlToolStripMenuItem.Checked = Settings.Default.Growl;
+            this.snarlToolStripMenuItem.Checked = Settings.Default.Snarl;
+            this.playSoundToolStripMenuItem.Checked = Settings.Default.Bell;
+
+            // Web Proxy
+            this.useDefaultWebProxyToolStripMenuItem.Checked = Settings.Default.UseWebProxy;
+            UpdateWebProxySettings();
+
+            // Lockdown mode
+            this.restoreToolStripMenuItem.Enabled = !Settings.Default.LockDown;
+        }
+
+        /// <summary>
+        /// The boot helpers.
+        /// </summary>
+        private void BootHelpers()
+        {
+            GrowlHelper.RegisterGrowl(AssemblyHelpers.AssemblyTitle, this.graphicPath, "NEWMAIL", "New Mail");
+            SnarlHelper.RegisterSnarl(AssemblyHelpers.AssemblyTitle, this.graphicPath, this.Handle);
+        }
+
+        /// <summary>
+        /// The boot icons.
+        /// </summary>
+        private void BootIcons()
+        {
+            this.graphicPath = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.EmailGraphic);
+            this.emailIcon = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.EmailIcon);
+            this.alertIcon = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.AlertIcon);
+
+            // Tray icon
+            this.notifyIcon1.Icon = new Icon(this.emailIcon);
+        }
+
+        /// <summary>
+        /// The boot scenario.
+        /// </summary>
+        private void BootScenario()
+        {
+            // Has a file been passed in?
+            string filePath = Settings.Default.ScenarioFile;
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Count() > 1)
+            {
+                filePath = args[1];
+            }
+
+            // Create our whole universe
+            this.scenario = ScenarioFactory.CreateScenario(filePath);
+
+            // TODO: Special case for single theConnection use only
+            if (this.scenario.Connections.Count == 0)
+            {
+                // Create the new entry
+                this.connection = ConnectionFactory.CreateConnection(EmailType.Exchange);
+                this.scenario.Connections.Add(this.connection);
+                this.scenario.Save();
+            }
+            else
+            {
+                // Retrieve all the settings
+                this.connection = this.scenario.Connections[0];
+            }
+
+            // Set up event handling
+            this.WireUpConnectionEvents();
+
+            // Update any UI
+            this.txtEmail.Text = this.connection.EmailAddress;
+            this.txtUser.Text = this.connection.Username;
+            this.txtPwd.Text = this.connection.Password;
+            this.txtServer.Text = this.connection.EmailServer;
+            this.txtDomain.Text = this.connection.AccountDomain;
+            this.txtURLEdit.Text = this.connection.ServiceUrl;
+            this.txtOWAEdit.Text = this.connection.EmailUrl;
+            this.txtInterval.Text = this.connection.Interval.ToString();
+            this.cbOverrideEWS.Checked = this.connection.OverrideServiceUrl;
+            this.txtURLEdit.Enabled = this.cbOverrideEWS.Checked;
+            this.cbOverrideOWA.Checked = this.connection.OverrideEmailUrl;
+            this.txtOWAEdit.Enabled = this.cbOverrideOWA.Checked;
+            this.chkAutodiscovery.Checked = this.connection.UseAutodiscovery;
+            this.SelectAutodiscoveryOptions();
+            this.chkOnDomain.Checked = this.connection.OnWindowsDomain;
+            this.SelectDomainOptions();
+            this.overrideCertificateToolStripMenuItem.Checked = this.connection.OverrideCertificate;
+            this.alwaysOpenOWAInIEToolStripMenuItem.Checked = this.connection.AlwaysUseInternetExplorer;
+            this.disableCalendarToolStripMenuItem.Checked = this.connection.DisableCalendar;
+            this.loginAutomaticallyToolStripMenuItem.Checked = this.connection.AutoLogin;
+            this.office365LoginOverrideToolStripMenuItem.Checked = this.connection.OverrideOffice365Login;
+            this.overrideAutodiscoveryValidationToolStripMenuItem.Checked =
+                this.connection.OverrideAutodiscoveryValidation;
+            this.cmbExchangeVersion.SelectedIndex =
+                this.cmbExchangeVersion.FindStringExact(this.connection.ServerVersion);
+            this.UpdateServiceUrl();
+            this.UpdateOwaUrl();
+            this.UpdateEmail();
+
+            // Update shell handler
+            this.ConfigureShell();
+        }
+
+        /// <summary>
+        /// The boot shell.
+        /// </summary>
+        private void BootShell()
+        {
+            this.shellPath = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.ShellIntegration);
+        }
+
+        /// <summary>
+        /// The cb override ew s_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void CbOverrideEwsCheckedChanged(object sender, EventArgs e)
+        {
+            if (this.booting)
+            {
+                return;
+            }
+
+            this.txtURLEdit.Enabled = this.cbOverrideEWS.Checked;
+
+            this.connection.OverrideServiceUrl = this.cbOverrideEWS.Checked;
+            this.scenario.Save();
+
+            this.UpdateServiceUrl();
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.Form1_cbOverrideEWS_CheckedChanged_EWS_URL_override_switched, 
+                    this.connection.OverrideServiceUrl
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+        }
+
+        /// <summary>
+        /// The cb override ew s_ enabled changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void CbOverrideEwsEnabledChanged(object sender, EventArgs e)
+        {
+            if (!this.cbOverrideEWS.Enabled)
+            {
+                this.txtURLEdit.Enabled = false;
+            }
+            else
+            {
+                if (this.cbOverrideEWS.Checked)
+                {
+                    this.txtURLEdit.Enabled = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The cb override ow a_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void CbOverrideOwaCheckedChanged(object sender, EventArgs e)
+        {
+            if (this.booting)
+            {
+                return;
+            }
+
+            this.txtOWAEdit.Enabled = this.cbOverrideOWA.Checked;
+
+            this.connection.OverrideEmailUrl = this.cbOverrideOWA.Checked;
+            this.scenario.Save();
+
+            this.UpdateOwaUrl();
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.Form1_cbOverrideOWA_CheckedChanged_OWA_URL_override_switched, 
+                    this.connection.OverrideEmailUrl
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+        }
+
+        /// <summary>
+        /// The cb override ow a_ enabled changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void CbOverrideOwaEnabledChanged(object sender, EventArgs e)
+        {
+            if (!this.cbOverrideOWA.Enabled)
+            {
+                this.txtOWAEdit.Enabled = false;
+            }
+            else
+            {
+                if (this.cbOverrideOWA.Checked)
+                {
+                    this.txtOWAEdit.Enabled = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The change log tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void ChangeLogToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this.frmChangeLog == null)
+            {
+                this.frmChangeLog = new ChangeLog(Settings.Default.RSSFeed);
+            }
+
+            this.frmChangeLog.ShowDialog();
+        }
+
+        /// <summary>
+        /// The chk autodiscovery_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void ChkAutodiscoveryCheckedChanged(object sender, EventArgs e)
+        {
+            if (this.booting)
+            {
+                return;
+            }
+
+            this.connection.UseAutodiscovery = this.chkAutodiscovery.Checked;
+            this.scenario.Save();
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.Form1_chkAutodiscovery_CheckedChanged_Autodiscovery_is_switched, 
+                    this.chkAutodiscovery.Checked
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+
+            // Switch off some options when Autodiscovery is checked
+            this.SelectAutodiscoveryOptions();
+
+            // Re-evaluate settings
+            this.UpdateServiceUrl();
+            this.UpdateOwaUrl();
+            this.UpdateEmail();
+        }
+
+        /// <summary>
+        /// The chk on domain_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void ChkOnDomainCheckedChanged(object sender, EventArgs e)
+        {
+            if (this.booting)
+            {
+                return;
+            }
+
+            this.connection.OnWindowsDomain = this.chkOnDomain.Checked;
+            this.scenario.Save();
 
             // Switch off some options when domain authentication selected
-            SelectDomainOptions();
+            this.SelectDomainOptions();
         }
 
-        private void chkRunOnStartup_CheckedChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The chk run on startup_ checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void ChkRunOnStartupCheckedChanged(object sender, EventArgs e)
         {
-            if (_booting) return;
+            if (this.booting)
+            {
+                return;
+            }
 
-            RunAtStartup(chkRunOnStartup.Checked);
+            this.RunAtStartup(this.chkRunOnStartup.Checked);
         }
 
-        private void RunAtStartup(bool switchOn)
+        /// <summary>
+        /// The cmb exchange version_ selected index changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void CmbExchangeVersionSelectedIndexChanged(object sender, EventArgs e)
         {
-            try
+            if (this.booting)
             {
-                WindowsShortcut.Update(Environment.SpecialFolder.Startup, Application.ExecutablePath,
-                                       AssemblyHelpers.AssemblyTitle,
-                                       switchOn);
-                AddLogEntry(
-                    String.Format("{0} {1} {2}", Resources.Form1_RunAtStartup_OWAtray_will,
-                                  (switchOn ? string.Empty : Resources.Form1_RunAtStartup__not),
-                                  Resources.Form1_RunAtStartup_autostart_with_Windows));
+                return;
             }
-            catch (Exception ex)
-            {
-                AddLogEntry(ex.Message, ex);
-            }
+
+            this.connection.ServerVersion = this.cmbExchangeVersion.Text;
+            this.scenario.Save();
         }
 
-        private void cmdStart_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The cmd start_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void CmdStartClick(object sender, EventArgs e)
         {
-            ConnectToExchange();
+            this.ConnectToExchange();
         }
 
-        private void ConnectToExchange()
+        /// <summary>
+        /// The cmd stop_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void CmdStopClick(object sender, EventArgs e)
         {
-            switch (_connection.ConnectedState)
-            {
-                case ConnectionState.Connected:
-                    AddLogEntry(String.Format("{0}", Resources.Form1_ConnectToExchange_Already_connected), Severity.Fail);
-                    break;
-                case ConnectionState.Disconnecting:
-                case ConnectionState.Connecting:
-                    AddLogEntry(
-                        String.Format("{0}, {1}...", Resources.Form1_ConnectToExchange_Transitioning_state,
-                                      Resources.Form1_ConnectToExchange_please_wait), Severity.Fail);
-                    break;
-                default:
-                    _connection.ConnectA();
-                    break;
-            }
+            this.DisconnectFromExchange();
         }
 
-        private void DisconnectFromExchange()
-        {
-            switch (_connection.ConnectedState)
-            {
-                case ConnectionState.Disconnected:
-                    AddLogEntry(string.Format("{0}", Resources.Form1_DisconnectFromExchange_Already_disconnected));
-                    break;
-                case ConnectionState.Disconnecting:
-                case ConnectionState.Connecting:
-                    AddLogEntry(
-                        string.Format("{0}, {1}...", Resources.Form1_DisconnectFromExchange_Transitioning_state,
-                                      Resources.Form1_DisconnectFromExchange_please_wait), Severity.Fail);
-                    break;
-                default:
-                    _connection.Disconnect();
-                    break;
-            }
-        }
-
-        private void cmdStop_Click(object sender, EventArgs e)
-        {
-            DisconnectFromExchange();
-        }
-
-        private static void UpdateWebProxySettings()
-        {
-            WebRequest.DefaultWebProxy.Credentials = Properties.Settings.Default.UseWebProxy
-                                                         ? CredentialCache.DefaultCredentials
-                                                         : null;
-        }
-
-        private void ShellOwaUrl()
-        {
-            try
-            {
-                var runSvc = new ProcessStartInfo(_shellPath)
-                                 {Arguments = "url " + _connection.DerivedEmailUrl, WindowStyle = ProcessWindowStyle.Hidden};
-                var serviceProcess = Process.Start(runSvc);
-
-                while (!serviceProcess.HasExited)
-                {
-                    Thread.Sleep(100);
-                    Application.DoEvents();
-                }
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
-            }
-        }
-
-        private void ShellExchangeVersion()
-        {
-            try
-            {
-                var runSvc = new ProcessStartInfo(_shellPath)
-                                 {Arguments = "exchange " + _connection.Version, WindowStyle = ProcessWindowStyle.Hidden};
-                var serviceProcess = Process.Start(runSvc);
-
-                while (!serviceProcess.HasExited)
-                {
-                    Thread.Sleep(100);
-                    Application.DoEvents();
-                }
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
-            }
-        }
-
-        private void ShellPassword()
-        {
-            try
-            {
-                var runSvc = new ProcessStartInfo(_shellPath)
-                                 {Arguments = "password " + _connection.Password, WindowStyle = ProcessWindowStyle.Hidden};
-                var serviceProcess = Process.Start(runSvc);
-
-                while (!serviceProcess.HasExited)
-                {
-                    Thread.Sleep(100);
-                    Application.DoEvents();
-                }
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
-            }
-        }
-
-        private void ShellAutologin()
-        {
-            try
-            {
-                var runSvc = new ProcessStartInfo(_shellPath)
-                {
-                    Arguments = "autologin " + (_connection.AutoLogin ? "Yes" : "No"),
-                    WindowStyle = ProcessWindowStyle.Hidden
-                };
-                var serviceProcess = Process.Start(runSvc);
-
-                while (!serviceProcess.HasExited)
-                {
-                    Thread.Sleep(100);
-                    Application.DoEvents();
-                }
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
-            }
-        }
-
-        private void ShellBrowserVersion()
-        {
-            try
-            {
-                var runSvc = new ProcessStartInfo(_shellPath)
-                {
-                    Arguments = "browser " + (_connection.AlwaysUseInternetExplorer ? "Yes" : "No"),
-                    WindowStyle = ProcessWindowStyle.Hidden
-                };
-                var serviceProcess = Process.Start(runSvc);
-
-                while (!serviceProcess.HasExited)
-                {
-                    Thread.Sleep(100);
-                    Application.DoEvents();
-                }
-            }
-            catch (Exception ex)
-            {
-                AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
-            }
-        }
-
+        /// <summary>
+        /// The configure shell.
+        /// </summary>
         private void ConfigureShell()
         {
-            ShellAutologin();
-            ShellBrowserVersion();
-            ShellExchangeVersion();
-            ShellOwaUrl();
-            ShellPassword();
+            this.ShellAutologin();
+            this.ShellBrowserVersion();
+            this.ShellExchangeVersion();
+            this.ShellOwaUrl();
+            this.ShellPassword();
         }
 
-        private void disableCalendarToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The connect to exchange.
+        /// </summary>
+        private void ConnectToExchange()
         {
-            if (_booting) return;
-
-            _connection.DisableCalendar = disableCalendarToolStripMenuItem.Checked;
-            _scenario.Save();
-
-            AddLogEntry(String.Format("{0} {1}",
-                                      Resources.Form1_disableCalendarToolStripMenuItem_CheckStateChanged_Calendar_notifications_switched,
-                                      (_connection.DisableCalendar
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON)));
-        }
-
-        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            this.Shutdown();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Shutdown();
-        }
-
-        private void Shutdown()
-        {
-            _overRideClose = true;
-            AddLogEntry(Resources.Form1_Form1_FormClosed_Terminating);
-
-            if (_bootOk)
+            switch (this.connection.ConnectedState)
             {
-                SnarlHelper.Revoke(Handle);
-                UnwireConnectionEvents();
-                DisconnectFromExchange();
+                case ConnectionState.Connected:
+                    this.AddLogEntry(
+                        string.Format("{0}", Resources.Form1_ConnectToExchange_Already_connected), Severity.Fail);
+                    break;
+                case ConnectionState.Disconnecting:
+                case ConnectionState.Connecting:
+                    this.AddLogEntry(
+                        string.Format(
+                            "{0}, {1}...", 
+                            Resources.Form1_ConnectToExchange_Transitioning_state, 
+                            Resources.Form1_ConnectToExchange_please_wait), 
+                        Severity.Fail);
+                    break;
+                default:
+                    this.connection.ConnectA();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// The connected state handler.
+        /// </summary>
+        /// <param name="theConnection">
+        /// The theConnection. 
+        /// </param>
+        /// <param name="state">
+        /// The state. 
+        /// </param>
+        private void ConnectedStateHandler(IEmailInterface theConnection, ConnectionState state)
+        {
+            if (this.IsHandleCreated)
+            {
+                this.Invoke(
+                    new Action(
+                        () =>
+                            {
+                                switch (state)
+                                {
+                                    case ConnectionState.Connecting:
+                                        break;
+
+                                    case ConnectionState.Disconnecting:
+                                        break;
+
+                                    case ConnectionState.Failed:
+
+                                        // Switch off autostart if there has been an issue
+                                        Settings.Default.Autostart = false;
+                                        Settings.Default.Save();
+
+                                        // Show failure message in tray & pop balloon
+                                        this.notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine
+                                                                +
+                                                                string.Format(
+                                                                    "{0}!", 
+                                                                    Resources.
+                                                                    Form1_WireUpConnectionEvents_Connection_Failure);
+                                        this.PopToast(
+                                            string.Format(
+                                                "[{0}] - {1}!", 
+                                                theConnection.EmailAddress, 
+                                                Resources.Form1_WireUpConnectionEvents_Connection_Failure), 
+                                            Resources.Form1_WireUpConnectionEvents_Check_log_file_for_details);
+                                        break;
+
+                                    case ConnectionState.Connected:
+
+                                        // After a successful theConnection then next time we can autostart
+                                        Settings.Default.Autostart = true;
+                                        Settings.Default.Save();
+
+                                        // Update discovered properties
+                                        this.AddLogEntry(
+                                            string.Format(
+                                                "{0} {1}", 
+                                                Resources.Form1_WireUpConnectionEvents_Connected_to, 
+                                                theConnection.Version));
+                                        if (theConnection.DiscoveredUsername.Length > 0)
+                                        {
+                                            this.AddLogEntry(
+                                                string.Format(
+                                                    "{0}: {1}", 
+                                                    Resources.Form1_WireUpConnectionEvents_Discovered_User_Name, 
+                                                    theConnection.DiscoveredUsername), 
+                                                Severity.Success);
+                                        }
+
+                                        if (theConnection.DiscoveredEmailServer.Length > 0)
+                                        {
+                                            this.AddLogEntry(
+                                                string.Format(
+                                                    "{0}: {1}", 
+                                                    Resources.Form1_WireUpConnectionEvents_Discovered_Mailbox_Server, 
+                                                    theConnection.DiscoveredEmailServer), 
+                                                Severity.Success);
+                                        }
+
+                                        if (theConnection.DiscoveredEmailUrl.Length > 0)
+                                        {
+                                            this.AddLogEntry(
+                                                string.Format(
+                                                    "{0}: {1}", 
+                                                    Resources.Form1_WireUpConnectionEvents_Discovered_OWA_Url, 
+                                                    theConnection.DiscoveredEmailUrl), 
+                                                Severity.Success);
+                                        }
+
+                                        if (theConnection.DiscoveredServiceUrl.Length > 0)
+                                        {
+                                            this.AddLogEntry(
+                                                string.Format(
+                                                    "{0}: {1}", 
+                                                    Resources.Form1_WireUpConnectionEvents_Discovered_EWS_Url, 
+                                                    theConnection.DiscoveredServiceUrl), 
+                                                Severity.Success);
+                                        }
+
+                                        // Configure Shell
+                                        this.UpdateOwaUrl();
+                                        this.UpdateServiceUrl();
+                                        this.ShellExchangeVersion();
+
+                                        // Minimize
+                                        this.WindowState = FormWindowState.Minimized;
+                                        this.notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine
+                                                                +
+                                                                Resources.
+                                                                    Form1_WireUpConnectionEvents_Connected_to_Exchange;
+                                        break;
+
+                                    case ConnectionState.Disconnected:
+                                        this.notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine
+                                                                +
+                                                                Resources.Form1_WindowDressing_Not_Connected_to_Exchange;
+                                        break;
+                                }
+                            }));
+            }
+        }
+
+        /// <summary>
+        /// The disable calendar tool strip menu item_ check state changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void DisableCalendarToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
+        {
+            if (this.booting)
+            {
+                return;
             }
 
-            this.Close();			
+            this.connection.DisableCalendar = this.disableCalendarToolStripMenuItem.Checked;
+            this.scenario.Save();
+
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.Form1_disableCalendarToolStripMenuItem_CheckStateChanged_Calendar_notifications_switched, 
+                    this.connection.DisableCalendar
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON));
         }
 
+        /// <summary>
+        /// The disconnect from exchange.
+        /// </summary>
+        private void DisconnectFromExchange()
+        {
+            switch (this.connection.ConnectedState)
+            {
+                case ConnectionState.Disconnected:
+                    this.AddLogEntry(string.Format("{0}", Resources.Form1_DisconnectFromExchange_Already_disconnected));
+                    break;
+                case ConnectionState.Disconnecting:
+                case ConnectionState.Connecting:
+                    this.AddLogEntry(
+                        string.Format(
+                            "{0}, {1}...", 
+                            Resources.Form1_DisconnectFromExchange_Transitioning_state, 
+                            Resources.Form1_DisconnectFromExchange_please_wait), 
+                        Severity.Fail);
+                    break;
+                default:
+                    this.connection.Disconnect();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// The exit tool strip menu item 1_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void ExitToolStripMenuItem1Click(object sender, EventArgs e)
+        {
+            this.Shutdown();
+        }
+
+        /// <summary>
+        /// The exit tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void ExitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            this.Shutdown();
+        }
+
+        /// <summary>
+        /// The flush output.
+        /// </summary>
         private void FlushOutput()
         {
             // Avoid Illegal Cross Thread Calls
-            Invoke(new Action(() =>
+            this.Invoke(
+                new Action(
+                    () =>
+                        {
+                            if (this.logBuffer.Count <= 0)
+                            {
+                                return;
+                            }
+
+                            // Avoid buffer overflows by trimming log after n entries
+                            if (this.lvStatus.Items.Count >= Settings.Default.ScreenLines)
+                            {
+                                this.lvStatus.Items.Clear();
+                            }
+
+                            try
+                            {
+                                // Copy from buffer to screen control
+                                this.lvStatus.BeginUpdate();
+
+                                // Note that .AddRange has a bug so avoid
+                                foreach (ListViewItem lv in this.logBuffer.Where(lv => lv != null))
                                 {
-                                    if (_lvBuffer.Count <= 0) return;
-
-                                    // Avoid buffer overflows by trimming log after n entries
-                                    if (lvStatus.Items.Count >= Settings.Default.ScreenLines) lvStatus.Items.Clear();
-
+                                    this.lvStatus.Items.Add(lv);
+                                }
+                            }
+                            catch (Exception)
+                            {
+                            }
+                            finally
+                            {
+                                // Make newest item visible
+                                // We don't care about any spurious errors raised here
+                                if (this.lvStatus.Items.Count > 0)
+                                {
                                     try
                                     {
-                                        // Copy from buffer to screen control
-                                        lvStatus.BeginUpdate();
-                                        // Note that .AddRange has a bug so avoid
-                                        foreach (ListViewItem lv in _lvBuffer.Where(lv => lv != null))
-                                            lvStatus.Items.Add(lv);
+                                        this.lvStatus.EnsureVisible(this.lvStatus.Items.Count - 1);
+                                        ListViewItem lv = this.lvStatus.Items[this.lvStatus.Items.Count - 1];
+                                        string txt = lv.SubItems[1].Text;
+                                        this.slStatus.Text = txt.Substring(0, txt.Length < 100 ? txt.Length : 100);
                                     }
                                     catch (Exception)
                                     {
                                     }
-                                    finally
-                                    {
-                                        // Make newest item visible
-                                        // We don't care about any spurious errors raised here
-                                        if (lvStatus.Items.Count > 0)
-                                        {
-                                            try
-                                            {
-                                                lvStatus.EnsureVisible(lvStatus.Items.Count - 1);
-                                                var lv = lvStatus.Items[lvStatus.Items.Count - 1];
-                                                var txt = lv.SubItems[1].Text;
-                                                slStatus.Text = txt.Substring(0, txt.Length < 100 ? txt.Length : 100);
-                                            }
-                                            catch (Exception)
-                                            {
-                                            }
-                                        }
+                                }
 
-                                        // Tidy up
-                                        _lvBuffer.Clear();
-                                        lvStatus.EndUpdate();
-                                        lvStatus.Refresh();
-                                        Refresh();
-                                    }
-                                }));
+                                // Tidy up
+                                this.logBuffer.Clear();
+                                this.lvStatus.EndUpdate();
+                                this.lvStatus.Refresh();
+                                this.Refresh();
+                            }
+                        }));
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        /// <summary>
+        /// The form 1_ form closing.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void Form1FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (WindowState != FormWindowState.Minimized && _overRideClose == false)
+            if (this.WindowState != FormWindowState.Minimized && overRideClose == false)
             {
                 e.Cancel = true;
-                WindowState = FormWindowState.Minimized;
+                this.WindowState = FormWindowState.Minimized;
             }
         }
 
-        private void Form1_Move(object sender, EventArgs e)
+        /// <summary>
+        /// The form 1_ move.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void Form1Move(object sender, EventArgs e)
         {
-            if (WindowState == FormWindowState.Minimized)
+            if (this.WindowState == FormWindowState.Minimized)
             {
-                Hide();
+                this.Hide();
             }
             else
             {
-                Show();
+                this.Show();
             }
         }
 
-        private string NotificationText(int myCount)
+        /// <summary>
+        /// The growl tool strip menu item_ check state changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void GrowlToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
         {
-            const int maxTipLength = 63;
-            var text1 = string.Format("{0}{1}{1}{2} {3}{4}", AssemblyHelpers.AssemblyTitle, Environment.NewLine, myCount, Resources.Form1_WireUpConnectionEvents_unread_email, (myCount != 1 ? "s " : " "));
-            var charsLeft = maxTipLength - text1.Length;
-            var domainText = string.Format("{0}\\{1}", _connection.DiscoveredEmailServer, _connection.DiscoveredUsername);
-            if (domainText.Length > charsLeft) domainText = domainText.Substring(0, charsLeft);
-            var finalText = string.Format("{0}{1}{2}{1}{3} {4}{5}", AssemblyHelpers.AssemblyTitle, Environment.NewLine, domainText, myCount, Resources.Form1_WireUpConnectionEvents_unread_email, (myCount != 1 ? "s " : " "));
-            return finalText;
-        }
+            if (this.booting)
+            {
+                return;
+            }
 
-        private void growlToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
-        {
-            if (_booting) return;
-
-            Settings.Default.Growl = growlToolStripMenuItem.Checked;
+            Settings.Default.Growl = this.growlToolStripMenuItem.Checked;
             Settings.Default.Save();
-            AddLogEntry(String.Format("{0} {1}", Resources.Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched,
-                                      (Settings.Default.Growl
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched, 
+                    Settings.Default.Growl
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
         }
 
-        private static void InitEventView(ListView lvX)
+        /// <summary>
+        /// The login automatically tool strip menu item_ check state changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void LoginAutomaticallyToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
         {
-            lvX.Columns.Add(Resources.Form1_InitEventView_Time, 140, HorizontalAlignment.Left);
-            lvX.Columns.Add(Resources.Form1_InitEventView_Event_Details, 1000, HorizontalAlignment.Left);
-            lvX.Items.Clear();
+            if (this.booting)
+            {
+                return;
+            }
+
+            this.connection.AutoLogin = this.loginAutomaticallyToolStripMenuItem.Checked;
+            this.scenario.Save();
+            this.ShellAutologin();
+
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.Form1_loginAutomaticallyToolStripMenuItem_CheckStateChanged_Automatic_Login_is_switched, 
+                    this.connection.AutoLogin
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
         }
 
-        private void makeOWADefaultToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The m dac versions tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void MDacVersionsToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this.frmMdac == null)
+            {
+                this.frmMdac = new MdaCversions();
+            }
+
+            this.frmMdac.ShowDialog();
+        }
+
+        /// <summary>
+        /// The mail count handler.
+        /// </summary>
+        /// <param name="count">
+        /// The count. 
+        /// </param>
+        private void MailCountHandler(int count)
+        {
+            if (this.IsHandleCreated)
+            {
+                this.Invoke(
+                    new Action(
+                        () =>
+                            {
+                                this.notifyIcon1.Text = this.NotificationText(count);
+                                this.notifyIcon1.Icon = new Icon(count > 0 ? this.alertIcon : this.emailIcon);
+
+                                if (!this.firstRun)
+                                {
+                                    return;
+                                }
+
+                                if (count <= 0)
+                                {
+                                    return;
+                                }
+
+                                this.firstRun = false;
+
+                                // Special case - pop message at the start if there is any unread email
+                                this.PopToast(
+                                    "New Mail", 
+                                    string.Format(
+                                        "{0} {1} {2}{3}{4}", 
+                                        Resources.Form1_WireUpConnectionEvents_You_have, 
+                                        count, 
+                                        Resources.Form1_WireUpConnectionEvents_unread_email, 
+                                        count != 1 ? "s " : " ", 
+                                        Resources.Form1_WireUpConnectionEvents_in_your_inbox));
+                            }));
+            }
+        }
+
+        /// <summary>
+        /// The make owa default tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void MakeOwaDefaultToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (!IsUserAdministrator())
             {
-                AddLogEntry(
-                    String.Format("{0}. {1}.", Resources.Form1_makeOWADefaultToolStripMenuItem_Click_You_are_not_an_Admin_user,
-                                  Resources.Form1_makeOWADefaultToolStripMenuItem_Click_Operation_may_fail), Severity.Fail);
+                this.AddLogEntry(
+                    string.Format(
+                        "{0}. {1}.", 
+                        Resources.Form1_makeOWADefaultToolStripMenuItem_Click_You_are_not_an_Admin_user, 
+                        Resources.Form1_makeOWADefaultToolStripMenuItem_Click_Operation_may_fail), 
+                    Severity.Fail);
             }
 
             // Configure registry
-            AddLogEntry(Resources.Form1_makeOWADefaultToolStripMenuItem_Click_Setting_up_Mail_handlers);
+            this.AddLogEntry(Resources.Form1_makeOWADefaultToolStripMenuItem_Click_Setting_up_Mail_handlers);
 
             try
             {
-                var runSvc = new ProcessStartInfo(_shellPath) { Arguments = "registry", WindowStyle = ProcessWindowStyle.Hidden };
+                var runSvc = new ProcessStartInfo(this.shellPath)
+                    {
+                       Arguments = "registry", WindowStyle = ProcessWindowStyle.Hidden 
+                    };
                 if (Environment.OSVersion.Version.Major >= 6)
+                {
                     runSvc.Verb = "runas";
-                var serviceProcess = Process.Start(runSvc);
+                }
+
+                Process serviceProcess = Process.Start(runSvc);
 
                 while (!serviceProcess.HasExited)
                 {
@@ -946,40 +1352,217 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
+                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
                 return;
             }
 
-            AddLogEntry(Resources.Form1_makeOWADefaultToolStripMenuItem_Click_Mail_functions_will_now_be_handled_by_OWA, Severity.Success);
+            this.AddLogEntry(
+                Resources.Form1_makeOWADefaultToolStripMenuItem_Click_Mail_functions_will_now_be_handled_by_OWA, 
+                Severity.Success);
         }
 
-        private void mDACVersionsToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The net versions tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void NetVersionsToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (_frmMdac == null) _frmMdac = new MdaCversions();
-            _frmMdac.ShowDialog();
+            if (this.frmNet == null)
+            {
+                this.frmNet = new NeTversions();
+            }
+
+            this.frmNet.ShowDialog();
         }
 
-        private void nETVersionsToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The new appointment handler.
+        /// </summary>
+        /// <param name="minsToGo">
+        /// The mins to go. 
+        /// </param>
+        /// <param name="startTime">
+        /// The start time. 
+        /// </param>
+        /// <param name="subject">
+        /// The subject. 
+        /// </param>
+        /// <param name="location">
+        /// The location. 
+        /// </param>
+        /// <param name="accessUrl">
+        /// The access url. 
+        /// </param>
+        private void NewAppointmentHandler(
+            int minsToGo, DateTime startTime, string subject, string location, string accessUrl)
         {
-            if (_frmNet == null) _frmNet = new NeTversions();
-            _frmNet.ShowDialog();
+            if (this.IsHandleCreated)
+            {
+                this.Invoke(
+                    new Action(
+                        () =>
+                            {
+                                this.popUrl = accessUrl;
+                                this.PopToast(
+                                    string.Format(
+                                        "{0} {1} {2}", 
+                                        Resources.Form1_WireUpConnectionEvents_You_have_an_appointment_in, 
+                                        minsToGo, 
+                                        minsToGo != 1
+                                            ? Resources.Form1_WireUpConnectionEvents_minutes
+                                            : Resources.Form1_WireUpConnectionEvents_minute), 
+                                    string.Format("{0} - {1} ({2})", startTime.ToShortTimeString(), subject, location));
+                            }));
+            }
         }
 
-        private void notifyIcon1_BalloonTipClicked(object sender, EventArgs e)
+        /// <summary>
+        /// The new mail handler.
+        /// </summary>
+        /// <param name="subject">
+        /// The subject. 
+        /// </param>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="accessUrl">
+        /// The access url. 
+        /// </param>
+        private void NewMailHandler(string subject, string sender, string accessUrl)
         {
-            if (MouseButtons != MouseButtons.Left) return;
-
-            ActivateOwa();
-            _popUrl = "";
+            if (this.IsHandleCreated)
+            {
+                this.Invoke(
+                    new Action(
+                        () =>
+                            {
+                                this.popUrl = accessUrl;
+                                this.PopToast(
+                                    string.Format(
+                                        "{0} {1}", Resources.Form1_WireUpConnectionEvents_New_Mail_from, sender), 
+                                    subject);
+                            }));
+            }
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        /// <summary>
+        /// The notification text.
+        /// </summary>
+        /// <param name="myCount">
+        /// The my count. 
+        /// </param>
+        /// <returns>
+        /// The text. 
+        /// </returns>
+        private string NotificationText(int myCount)
         {
-            _popUrl = "";
-            ActivateOwa();
+            const int MaxTipLength = 63;
+            string text1 = string.Format(
+                "{0}{1}{1}{2} {3}{4}", 
+                AssemblyHelpers.AssemblyTitle, 
+                Environment.NewLine, 
+                myCount, 
+                Resources.Form1_WireUpConnectionEvents_unread_email, 
+                myCount != 1 ? "s " : " ");
+            int charsLeft = MaxTipLength - text1.Length;
+            string domainText = string.Format(
+                "{0}\\{1}", this.connection.DiscoveredEmailServer, this.connection.DiscoveredUsername);
+            if (domainText.Length > charsLeft)
+            {
+                domainText = domainText.Substring(0, charsLeft);
+            }
+
+            string finalText = string.Format(
+                "{0}{1}{2}{1}{3} {4}{5}", 
+                AssemblyHelpers.AssemblyTitle, 
+                Environment.NewLine, 
+                domainText, 
+                myCount, 
+                Resources.Form1_WireUpConnectionEvents_unread_email, 
+                myCount != 1 ? "s " : " ");
+            return finalText;
         }
 
-        private void openOutlookToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The notify icon 1_ balloon tip clicked.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void NotifyIcon1BalloonTipClicked(object sender, EventArgs e)
+        {
+            if (MouseButtons != MouseButtons.Left)
+            {
+                return;
+            }
+
+            this.ActivateOwa();
+            this.popUrl = string.Empty;
+        }
+
+        /// <summary>
+        /// The notify icon 1_ mouse double click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void NotifyIcon1MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.popUrl = string.Empty;
+            this.ActivateOwa();
+        }
+
+        /// <summary>
+        /// The office 365 login override tool strip menu item_ check state changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void Office365LoginOverrideToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
+        {
+            if (this.booting)
+            {
+                return;
+            }
+
+            this.connection.OverrideOffice365Login = this.office365LoginOverrideToolStripMenuItem.Checked;
+            this.scenario.Save();
+
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.Form1_office365LoginOverrideToolStripMenuItem_CheckStateChanged_Office365_login_override, 
+                    this.connection.OverrideOffice365Login
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+
+            this.UpdateOwaUrl();
+        }
+
+        /// <summary>
+        /// The open outlook tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void OpenOutlookToolStripMenuItemClick(object sender, EventArgs e)
         {
             try
             {
@@ -991,59 +1574,141 @@ namespace DrunkenBakery.OWAtray.GUI
             }
         }
 
-        private void openOWAToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The open owa tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void OpenOwaToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _popUrl = "";
-            ActivateOwa();
+            this.popUrl = string.Empty;
+            this.ActivateOwa();
         }
 
-        private void overrideCertificateToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The override autodiscovery validation tool strip menu item_ check state changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void OverrideAutodiscoveryValidationToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
         {
-            if (_booting) return;
+            if (this.booting)
+            {
+                return;
+            }
 
-            _connection.OverrideCertificate = overrideCertificateToolStripMenuItem.Checked;
-            _scenario.Save();
+            this.connection.OverrideAutodiscoveryValidation =
+                this.overrideAutodiscoveryValidationToolStripMenuItem.Checked;
+            this.scenario.Save();
 
-            AddLogEntry(String.Format("{0} {1}",
-                                      Resources.
-                                          Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched,
-                                      (_connection.OverrideCertificate
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.
+                        Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched, 
+                    this.connection.OverrideAutodiscoveryValidation
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
         }
 
-        private void playSoundToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The override certificate tool strip menu item_ check state changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void OverrideCertificateToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
         {
-            if (_booting) return;
+            if (this.booting)
+            {
+                return;
+            }
 
-            Settings.Default.Bell = playSoundToolStripMenuItem.Checked;
+            this.connection.OverrideCertificate = this.overrideCertificateToolStripMenuItem.Checked;
+            this.scenario.Save();
+
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.
+                        Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched, 
+                    this.connection.OverrideCertificate
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+        }
+
+        /// <summary>
+        /// The play sound tool strip menu item_ check state changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void PlaySoundToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
+        {
+            if (this.booting)
+            {
+                return;
+            }
+
+            Settings.Default.Bell = this.playSoundToolStripMenuItem.Checked;
             Settings.Default.Save();
-            AddLogEntry(String.Format("{0} {1}",
-                                      Resources.
-                                          Form1_playSoundToolStripMenuItem_CheckStateChanged_Audible_notifications_switched,
-                                      (Settings.Default.Bell
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.Form1_playSoundToolStripMenuItem_CheckStateChanged_Audible_notifications_switched, 
+                    Settings.Default.Bell
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
         }
 
+        /// <summary>
+        /// The pop toast.
+        /// </summary>
+        /// <param name="myTitle">
+        /// The my title. 
+        /// </param>
+        /// <param name="myMessage">
+        /// The my message. 
+        /// </param>
         private void PopToast(string myTitle, string myMessage)
         {
             // Belt & Braces
-            if (myTitle.Length == 0) myTitle = String.Format("<{0}>", Resources.Form1_PopToast_No_Title);
-            if (myMessage.Length == 0) myMessage = String.Format("<{0}>", Resources.Form1_PopToast_No_Subject);
+            if (myTitle.Length == 0)
+            {
+                myTitle = string.Format("<{0}>", Resources.Form1_PopToast_No_Title);
+            }
 
-            AddLogEntry(myTitle);
+            if (myMessage.Length == 0)
+            {
+                myMessage = string.Format("<{0}>", Resources.Form1_PopToast_No_Subject);
+            }
+
+            this.AddLogEntry(myTitle);
 
             // Store for recall
-            _lastPopTitle = myTitle;
-            _lastPopMessage = myMessage;
-            _lastPopUrl = _popUrl;
+            this.lastPopTitle = myTitle;
+            this.lastPopMessage = myMessage;
+            this.lastPopUrl = this.popUrl;
 
-            //Balloon
+            // Balloon
             if (Settings.Default.Balloon)
             {
-                notifyIcon1.Tag = _popUrl;
-                notifyIcon1.ShowBalloonTip(5000, myTitle, myMessage, ToolTipIcon.Info);
+                this.notifyIcon1.Tag = this.popUrl;
+                this.notifyIcon1.ShowBalloonTip(5000, myTitle, myMessage, ToolTipIcon.Info);
             }
 
             // Growl
@@ -1055,78 +1720,134 @@ namespace DrunkenBakery.OWAtray.GUI
             // Snarl
             if (Settings.Default.Snarl)
             {
-                SnarlHelper.PopSnarl(myTitle, myMessage, _graphicPath, Handle);
+                SnarlHelper.PopSnarl(myTitle, myMessage, this.graphicPath, this.Handle);
             }
 
             // Audible
             if (Settings.Default.Bell)
             {
-                AudioHelper.Play(_audioPath);
+                AudioHelper.Play(this.audioPath);
             }
         }
 
-        private void recallLastPopupToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The recall last popup tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void RecallLastPopupToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (_lastPopMessage.Length <= 0 || _lastPopTitle.Length <= 0) return;
-
-            _popUrl = _lastPopUrl;
-            PopToast(_lastPopTitle, _lastPopMessage);
-        }
-
-        private void resetTrayIconToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            notifyIcon1.Icon = new Icon(_emailIcon);
-        }
-
-        private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (WindowState == FormWindowState.Minimized)
+            if (this.lastPopMessage.Length <= 0 || this.lastPopTitle.Length <= 0)
             {
-                Show();
-                WindowState = FormWindowState.Normal;
+                return;
+            }
+
+            this.popUrl = this.lastPopUrl;
+            this.PopToast(this.lastPopTitle, this.lastPopMessage);
+        }
+
+        /// <summary>
+        /// The reset tray icon tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void ResetTrayIconToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            this.notifyIcon1.Icon = new Icon(this.emailIcon);
+        }
+
+        /// <summary>
+        /// The restore tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void RestoreToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.Show();
+                this.WindowState = FormWindowState.Normal;
             }
 
             // Activate the form.
-            Activate();
-            Focus();
+            this.Activate();
+            this.Focus();
         }
 
-        private void snarlToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The run at startup.
+        /// </summary>
+        /// <param name="switchOn">
+        /// The switch on. 
+        /// </param>
+        private void RunAtStartup(bool switchOn)
         {
-            if (_booting) return;
-
-            Settings.Default.Snarl = snarlToolStripMenuItem.Checked;
-            Settings.Default.Save();
-            AddLogEntry(String.Format("{0} {1}",
-                                      Resources.Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched,
-                                      (Settings.Default.Snarl
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
-        }
-
-        private void supportToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (_frmContact == null) _frmContact = new ContactUs();
-            _frmContact.ShowDialog();
-        }
-
-        private void switchOffToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!IsUserAdministrator())
-            {
-                AddLogEntry(
-                    String.Format("{0}. {1}.", Resources.Form1_switchOffToolStripMenuItem_Click_You_are_not_an_Admin_user,
-                                  Resources.Form1_switchOffToolStripMenuItem_Click_Operation_may_fail), Severity.Fail);
-            }
-
-            // Configure registry
-            AddLogEntry(Resources.Form1_switchOffToolStripMenuItem_Click_Restoring_Mail_handlers);
-
             try
             {
-                var runSvc = new ProcessStartInfo(_shellPath) { Arguments = "restore", WindowStyle = ProcessWindowStyle.Hidden };
-                if (Environment.OSVersion.Version.Major >= 6)
-                    runSvc.Verb = "runas";
+                WindowsShortcut.Update(
+                    Environment.SpecialFolder.Startup, 
+                    Application.ExecutablePath, 
+                    AssemblyHelpers.AssemblyTitle, 
+                    switchOn);
+                this.AddLogEntry(
+                    string.Format(
+                        "{0} {1} {2}", 
+                        Resources.Form1_RunAtStartup_OWAtray_will, 
+                        switchOn ? string.Empty : Resources.Form1_RunAtStartup__not, 
+                        Resources.Form1_RunAtStartup_autostart_with_Windows));
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// The select autodiscovery options.
+        /// </summary>
+        private void SelectAutodiscoveryOptions()
+        {
+            this.txtServer.Enabled = !this.connection.UseAutodiscovery;
+            this.cbOverrideEWS.Enabled = !this.connection.UseAutodiscovery;
+            this.cbOverrideOWA.Enabled = !this.connection.UseAutodiscovery;
+            this.txtDomain.Enabled = !this.connection.UseAutodiscovery;
+            this.overrideAutodiscoveryValidationToolStripMenuItem.Enabled = this.connection.UseAutodiscovery;
+        }
+
+        /// <summary>
+        /// The select domain options.
+        /// </summary>
+        private void SelectDomainOptions()
+        {
+            this.txtDomain.Enabled = !this.connection.OnWindowsDomain;
+            this.txtPwd.Enabled = !this.connection.OnWindowsDomain;
+            this.txtUser.Enabled = !this.connection.OnWindowsDomain;
+        }
+
+        /// <summary>
+        /// The shell autologin.
+        /// </summary>
+        private void ShellAutologin()
+        {
+            try
+            {
+                var runSvc = new ProcessStartInfo(this.shellPath)
+                    {
+                        Arguments = "autologin " + (this.connection.AutoLogin ? "Yes" : "No"), 
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    };
                 Process serviceProcess = Process.Start(runSvc);
 
                 while (!serviceProcess.HasExited)
@@ -1137,257 +1858,121 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(String.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
-                return;
+                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
             }
-
-            AddLogEntry("Mail handler restored to system default", Severity.Success);
         }
 
-        private void systemInformationToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The shell browser version.
+        /// </summary>
+        private void ShellBrowserVersion()
         {
-            if (_frmInfo == null) _frmInfo = new SysInfo();
-            _frmInfo.ShowDialog();
-        }
-
-        private void timerLogging_Tick(object sender, EventArgs e)
-        {
-            FlushOutput();
-        }
-
-        private void txtInterval_Validated(object sender, EventArgs e)
-        {
-            _connection.Interval = Convert.ToInt32(txtInterval.Text);
-            _scenario.Save();
-        }
-
-        private void txtInterval_Validating(object sender, CancelEventArgs e)
-        {
-            int result;
-
-            if (int.TryParse(txtInterval.Text, out result))
+            try
             {
-                if (result >= 1 && result <= MaxInterval)
+                var runSvc = new ProcessStartInfo(this.shellPath)
+                    {
+                        Arguments = "browser " + (this.connection.AlwaysUseInternetExplorer ? "Yes" : "No"), 
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    };
+                Process serviceProcess = Process.Start(runSvc);
+
+                while (!serviceProcess.HasExited)
                 {
-                    errorProvider1.SetError(txtInterval, "");
-                    e.Cancel = false;
-                }
-                else
-                {
-                    errorProvider1.SetError(txtInterval,
-                                            Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_ +
-                                            MaxInterval.ToString());
-                    e.Cancel = true;
+                    Thread.Sleep(100);
+                    Application.DoEvents();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                errorProvider1.SetError(txtInterval,
-                                        Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_ +
-                                        MaxInterval.ToString());
-                e.Cancel = true;
+                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
             }
         }
 
-        private void UpdateServiceUrl()
+        /// <summary>
+        /// The shell exchange version.
+        /// </summary>
+        private void ShellExchangeVersion()
         {
-            if (_connection.UseAutodiscovery && _connection.DiscoveredServiceUrl.Length > 0)
+            try
             {
-                lblServiceUrl.Text = _connection.DiscoveredServiceUrl;
+                var runSvc = new ProcessStartInfo(this.shellPath)
+                    {
+                       Arguments = "exchange " + this.connection.Version, WindowStyle = ProcessWindowStyle.Hidden 
+                    };
+                Process serviceProcess = Process.Start(runSvc);
+
+                while (!serviceProcess.HasExited)
+                {
+                    Thread.Sleep(100);
+                    Application.DoEvents();
+                }
             }
-            else if (_connection.OverrideServiceUrl && txtURLEdit.Text.Length > 0)
+            catch (Exception ex)
             {
-                lblServiceUrl.Text = txtURLEdit.Text;
-            }
-            else if (txtServer.Text.Length > 0)
-            {
-                lblServiceUrl.Text = string.Format("{0}{1}{2}", "https://", txtServer.Text, "/ews/exchange.asmx");
-            }
-            else
-            {
-                lblServiceUrl.Text = "";
-            }
-
-            _connection.DerivedServiceUrl = lblServiceUrl.Text;
-        }
-
-        private void UpdateEmail()
-        {
-            lblEmail.Text = EmailAddress;
-        }
-
-        private void loginAutomaticallyToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
-        {
-            if (_booting) return;
-
-            _connection.AutoLogin = loginAutomaticallyToolStripMenuItem.Checked;
-            _scenario.Save();
-            ShellAutologin();
-
-            AddLogEntry(String.Format("{0} {1}",
-                                      Resources.
-                                          Form1_loginAutomaticallyToolStripMenuItem_CheckStateChanged_Automatic_Login_is_switched,
-                                      (_connection.AutoLogin
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
-        }
-
-        private void txtDomain_Validated(object sender, EventArgs e)
-        {
-            _connection.AccountDomain = txtDomain.Text;
-            _scenario.Save();
-        }
-
-        private void txtPwd_Validated(object sender, EventArgs e)
-        {
-            _connection.Password = txtPwd.Text;
-            _scenario.Save();
-            ShellPassword();
-        }
-
-        private void txtServer_Validated(object sender, EventArgs e)
-        {
-            _connection.EmailServer = txtServer.Text;
-            _scenario.Save();
-            UpdateServiceUrl();
-            UpdateOwaUrl();
-        }
-
-        private void txtUser_Validated(object sender, EventArgs e)
-        {
-            _connection.Username = txtUser.Text;
-            _scenario.Save();
-            UpdateEmail();
-        }
-
-        private void txtEmail_Validated(object sender, EventArgs e)
-        {
-            _connection.EmailAddress = txtEmail.Text;
-            _scenario.Save();
-            UpdateEmail();
-        }
-
-        private void overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
-        {
-            if (_booting) return;
-
-            _connection.OverrideAutodiscoveryValidation = overrideAutodiscoveryValidationToolStripMenuItem.Checked;
-            _scenario.Save();
-
-            AddLogEntry(String.Format("{0} {1}",
-                                      Resources.
-                                          Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched,
-                                      (_connection.OverrideAutodiscoveryValidation
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
-        }
-
-        private void office365LoginOverrideToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
-        {
-            if (_booting) return;
-
-            _connection.OverrideOffice365Login = office365LoginOverrideToolStripMenuItem.Checked;
-            _scenario.Save();
-
-            AddLogEntry(String.Format("{0} {1}",
-                                      Resources.
-                                          Form1_office365LoginOverrideToolStripMenuItem_CheckStateChanged_Office365_login_override,
-                                      (_connection.OverrideOffice365Login
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
-
-            UpdateOwaUrl();
-        }
-
-        private void txtURLEdit_Validated(object sender, EventArgs e)
-        {
-            _connection.ServiceUrl = txtURLEdit.Text;
-            _scenario.Save();
-            UpdateServiceUrl();
-        }
-
-        private void cbOverrideEWS_CheckedChanged(object sender, EventArgs e)
-        {
-            if (_booting) return;
-
-            txtURLEdit.Enabled = cbOverrideEWS.Checked;
-
-            _connection.OverrideServiceUrl = cbOverrideEWS.Checked;
-            _scenario.Save();
-
-            UpdateServiceUrl();
-            AddLogEntry(String.Format("{0} {1}", Resources.Form1_cbOverrideEWS_CheckedChanged_EWS_URL_override_switched,
-                                      (_connection.OverrideServiceUrl
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
-        }
-
-        private void chkAutodiscovery_CheckedChanged(object sender, EventArgs e)
-        {
-            if (_booting) return;
-
-            _connection.UseAutodiscovery = chkAutodiscovery.Checked;
-            _scenario.Save();
-            AddLogEntry(String.Format("{0} {1}", Resources.Form1_chkAutodiscovery_CheckedChanged_Autodiscovery_is_switched,
-                                      (chkAutodiscovery.Checked
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
-
-            // Switch off some options when Autodiscovery is checked
-            SelectAutodiscoveryOptions();
-
-            // Re-evaluate settings
-            UpdateServiceUrl();
-            UpdateOwaUrl();
-            UpdateEmail();
-        }
-
-        private void cbOverrideOWA_CheckedChanged(object sender, EventArgs e)
-        {
-            if (_booting) return;
-
-            txtOWAEdit.Enabled = cbOverrideOWA.Checked;
-
-            _connection.OverrideEmailUrl = cbOverrideOWA.Checked;
-            _scenario.Save();
-
-            UpdateOwaUrl();
-            AddLogEntry(String.Format("{0} {1}", Resources.Form1_cbOverrideOWA_CheckedChanged_OWA_URL_override_switched,
-                                      (_connection.OverrideEmailUrl
-                                           ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                                           : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF)));
-        }
-
-        private void txtOWAEdit_Validated(object sender, EventArgs e)
-        {
-            _connection.EmailUrl = txtOWAEdit.Text;
-            _scenario.Save();
-            UpdateOwaUrl();
-        }
-
-        private void cbOverrideEWS_EnabledChanged(object sender, EventArgs e)
-        {
-            if (!cbOverrideEWS.Enabled)
-                txtURLEdit.Enabled = false;
-            else
-            {
-                if (cbOverrideEWS.Checked)
-                    txtURLEdit.Enabled = true;
+                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
             }
         }
 
-        private void cbOverrideOWA_EnabledChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The shell owa url.
+        /// </summary>
+        private void ShellOwaUrl()
         {
-            if (!cbOverrideOWA.Enabled)
-                txtOWAEdit.Enabled = false;
-            else
+            try
             {
-                if (cbOverrideOWA.Checked)
-                    txtOWAEdit.Enabled = true;
+                var runSvc = new ProcessStartInfo(this.shellPath)
+                    {
+                       Arguments = "url " + this.connection.DerivedEmailUrl, WindowStyle = ProcessWindowStyle.Hidden 
+                    };
+                Process serviceProcess = Process.Start(runSvc);
+
+                while (!serviceProcess.HasExited)
+                {
+                    Thread.Sleep(100);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
             }
         }
 
-        private void showLogFileToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The shell password.
+        /// </summary>
+        private void ShellPassword()
+        {
+            try
+            {
+                var runSvc = new ProcessStartInfo(this.shellPath)
+                    {
+                       Arguments = "password " + this.connection.Password, WindowStyle = ProcessWindowStyle.Hidden 
+                    };
+                Process serviceProcess = Process.Start(runSvc);
+
+                while (!serviceProcess.HasExited)
+                {
+                    Thread.Sleep(100);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
+            }
+        }
+
+        /// <summary>
+        /// The show log file tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void ShowLogFileToolStripMenuItemClick(object sender, EventArgs e)
         {
             try
             {
@@ -1399,22 +1984,506 @@ namespace DrunkenBakery.OWAtray.GUI
             }
         }
 
-        private void useDefaultWebProxyToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// The shutdown.
+        /// </summary>
+        private void Shutdown()
         {
-            if (_booting) return;
+            overRideClose = true;
+            this.AddLogEntry(Resources.Form1_Form1_FormClosed_Terminating);
 
-            Settings.Default.UseWebProxy = useDefaultWebProxyToolStripMenuItem.Checked;
+            if (this.bootOk)
+            {
+                SnarlHelper.Revoke(this.Handle);
+                this.UnwireConnectionEvents();
+                this.DisconnectFromExchange();
+            }
+
+            this.Close();
+        }
+
+        /// <summary>
+        /// The snarl tool strip menu item_ check state changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void SnarlToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
+        {
+            if (this.booting)
+            {
+                return;
+            }
+
+            Settings.Default.Snarl = this.snarlToolStripMenuItem.Checked;
+            Settings.Default.Save();
+            this.AddLogEntry(
+                string.Format(
+                    "{0} {1}", 
+                    Resources.Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched, 
+                    Settings.Default.Snarl
+                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+        }
+
+        /// <summary>
+        /// The support tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void SupportToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this.frmContact == null)
+            {
+                this.frmContact = new ContactUs();
+            }
+
+            this.frmContact.ShowDialog();
+        }
+
+        /// <summary>
+        /// The switch off tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void SwitchOffToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (!IsUserAdministrator())
+            {
+                this.AddLogEntry(
+                    string.Format(
+                        "{0}. {1}.", 
+                        Resources.Form1_switchOffToolStripMenuItem_Click_You_are_not_an_Admin_user, 
+                        Resources.Form1_switchOffToolStripMenuItem_Click_Operation_may_fail), 
+                    Severity.Fail);
+            }
+
+            // Configure registry
+            this.AddLogEntry(Resources.Form1_switchOffToolStripMenuItem_Click_Restoring_Mail_handlers);
+
+            try
+            {
+                var runSvc = new ProcessStartInfo(this.shellPath)
+                    {
+                       Arguments = "restore", WindowStyle = ProcessWindowStyle.Hidden 
+                    };
+                if (Environment.OSVersion.Version.Major >= 6)
+                {
+                    runSvc.Verb = "runas";
+                }
+
+                Process serviceProcess = Process.Start(runSvc);
+
+                while (!serviceProcess.HasExited)
+                {
+                    Thread.Sleep(100);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
+                return;
+            }
+
+            this.AddLogEntry("Mail handler restored to system default", Severity.Success);
+        }
+
+        /// <summary>
+        /// The system information tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void SystemInformationToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this.frmInfo == null)
+            {
+                this.frmInfo = new SysInfo();
+            }
+
+            this.frmInfo.ShowDialog();
+        }
+
+        /// <summary>
+        /// The timer 1_ tick.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void Timer1Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                this.timer1.Enabled = false;
+                this.timerLogging.Enabled = true;
+
+                // Interlock for booting up
+                this.booting = true;
+
+                // Boot the various subsystems
+                this.BootEnvironment();
+                this.BootShell();
+                this.BootAudio();
+                this.BootScenario();
+                this.BootIcons();
+                this.BootHelpers();
+
+                // Connect if autostart is good to go
+                if (Settings.Default.Autostart)
+                {
+                    this.ConnectToExchange();
+                }
+
+                // Only getting here means we've booted up ok
+                this.bootOk = true;
+            }
+            catch (Exception ex)
+            {
+                this.AddLogEntry(string.Format("{0}", ex.Message), Severity.Fail);
+            }
+            finally
+            {
+                // Release boot interlock
+                this.booting = false;
+            }
+        }
+
+        /// <summary>
+        /// The timer logging_ tick.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void TimerLoggingTick(object sender, EventArgs e)
+        {
+            this.FlushOutput();
+        }
+
+        /// <summary>
+        /// The txt domain_ validated.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void TxtDomainValidated(object sender, EventArgs e)
+        {
+            this.connection.AccountDomain = this.txtDomain.Text;
+            this.scenario.Save();
+        }
+
+        /// <summary>
+        /// The txt email_ validated.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void TxtEmailValidated(object sender, EventArgs e)
+        {
+            this.connection.EmailAddress = this.txtEmail.Text;
+            this.scenario.Save();
+            this.UpdateEmail();
+        }
+
+        /// <summary>
+        /// The txt interval_ validated.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void TxtIntervalValidated(object sender, EventArgs e)
+        {
+            this.connection.Interval = Convert.ToInt32(this.txtInterval.Text);
+            this.scenario.Save();
+        }
+
+        /// <summary>
+        /// The txt interval_ validating.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void TxtIntervalValidating(object sender, CancelEventArgs e)
+        {
+            int result;
+
+            if (int.TryParse(this.txtInterval.Text, out result))
+            {
+                if (result >= 1 && result <= MaxInterval)
+                {
+                    this.errorProvider1.SetError(this.txtInterval, string.Empty);
+                    e.Cancel = false;
+                }
+                else
+                {
+                    this.errorProvider1.SetError(
+                        this.txtInterval, 
+                        Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_
+                        + MaxInterval.ToString());
+                    e.Cancel = true;
+                }
+            }
+            else
+            {
+                this.errorProvider1.SetError(
+                    this.txtInterval, 
+                    Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_
+                    + MaxInterval.ToString());
+                e.Cancel = true;
+            }
+        }
+
+        /// <summary>
+        /// The txt owa edit_ validated.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void TxtOwaEditValidated(object sender, EventArgs e)
+        {
+            this.connection.EmailUrl = this.txtOWAEdit.Text;
+            this.scenario.Save();
+            this.UpdateOwaUrl();
+        }
+
+        /// <summary>
+        /// The txt pwd_ validated.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void TxtPwdValidated(object sender, EventArgs e)
+        {
+            this.connection.Password = this.txtPwd.Text;
+            this.scenario.Save();
+            this.ShellPassword();
+        }
+
+        /// <summary>
+        /// The txt server_ validated.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void TxtServerValidated(object sender, EventArgs e)
+        {
+            this.connection.EmailServer = this.txtServer.Text;
+            this.scenario.Save();
+            this.UpdateServiceUrl();
+            this.UpdateOwaUrl();
+        }
+
+        /// <summary>
+        /// The txt url edit_ validated.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void TxtUrlEditValidated(object sender, EventArgs e)
+        {
+            this.connection.ServiceUrl = this.txtURLEdit.Text;
+            this.scenario.Save();
+            this.UpdateServiceUrl();
+        }
+
+        /// <summary>
+        /// The unwire theConnection events.
+        /// </summary>
+        private void UnwireConnectionEvents()
+        {
+            foreach (IEmailInterface item in this.scenario.Connections.Where(item => item.AreEventsDefined))
+            {
+                item.LogMessage -= AddLogEntry;
+                item.LogException -= AddLogEntry;
+                item.ConnectedStateChange -= this.ConnectedStateHandler;
+                item.NewMail -= this.NewMailHandler;
+                item.NewAppointment -= this.NewAppointmentHandler;
+                item.MessageCount -= this.MailCountHandler;
+            }
+        }
+
+        /// <summary>
+        /// The update email.
+        /// </summary>
+        private void UpdateEmail()
+        {
+            this.lblEmail.Text = this.EmailAddress;
+        }
+
+        /// <summary>
+        /// The update owa url.
+        /// </summary>
+        private void UpdateOwaUrl()
+        {
+            if (this.connection.OverrideOffice365Login)
+            {
+                this.lblOWAUrl.Text = Settings.Default.Office365OwaUrl + StripEmailDomain(this.lblEmail.Text);
+            }
+            else if (this.connection.UseAutodiscovery && this.connection.DiscoveredEmailUrl.Length > 0)
+            {
+                this.lblOWAUrl.Text = this.connection.DiscoveredEmailUrl;
+            }
+            else if (this.connection.OverrideEmailUrl && this.txtOWAEdit.Text.Length > 0)
+            {
+                this.lblOWAUrl.Text = this.txtOWAEdit.Text;
+            }
+            else if (this.txtServer.Text.Length > 0)
+            {
+                this.lblOWAUrl.Text = string.Format("{0}{1}{2}", "https://", this.txtServer.Text, "/owa/");
+            }
+            else
+            {
+                this.lblOWAUrl.Text = string.Empty;
+            }
+
+            this.connection.DerivedEmailUrl = this.lblOWAUrl.Text;
+            this.ShellOwaUrl();
+        }
+
+        /// <summary>
+        /// The update service url.
+        /// </summary>
+        private void UpdateServiceUrl()
+        {
+            if (this.connection.UseAutodiscovery && this.connection.DiscoveredServiceUrl.Length > 0)
+            {
+                this.lblServiceUrl.Text = this.connection.DiscoveredServiceUrl;
+            }
+            else if (this.connection.OverrideServiceUrl && this.txtURLEdit.Text.Length > 0)
+            {
+                this.lblServiceUrl.Text = this.txtURLEdit.Text;
+            }
+            else if (this.txtServer.Text.Length > 0)
+            {
+                this.lblServiceUrl.Text = string.Format(
+                    "{0}{1}{2}", "https://", this.txtServer.Text, "/ews/exchange.asmx");
+            }
+            else
+            {
+                this.lblServiceUrl.Text = string.Empty;
+            }
+
+            this.connection.DerivedServiceUrl = this.lblServiceUrl.Text;
+        }
+
+        /// <summary>
+        /// The use default web proxy tool strip menu item_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void UseDefaultWebProxyToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (this.booting)
+            {
+                return;
+            }
+
+            Settings.Default.UseWebProxy = this.useDefaultWebProxyToolStripMenuItem.Checked;
             Settings.Default.Save();
 
             UpdateWebProxySettings();
         }
 
-        private void cmbExchangeVersion_SelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The window dressing.
+        /// </summary>
+        private void WindowDressing()
         {
-            if (_booting) return;
+            this.Text = string.Format(
+                "{0} {1} {2}", 
+                AssemblyHelpers.AssemblyTitle, 
+                Resources.Form1_WindowDressing_freshly_baked_at, 
+                AssemblyHelpers.AssemblyCompany);
+            this.notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine
+                                    + Resources.Form1_WindowDressing_Not_Connected_to_Exchange;
+            foreach (TabPage tab in this.tabMain.TabPages)
+            {
+                tab.BackColor = SystemColors.Control;
+            }
 
-            _connection.ServerVersion = cmbExchangeVersion.Text;
-            _scenario.Save();
+            InitEventView(this.lvStatus);
         }
+
+        /// <summary>
+        /// The wire up theConnection events.
+        /// </summary>
+        private void WireUpConnectionEvents()
+        {
+            foreach (IEmailInterface item in this.scenario.Connections.Where(item => !item.AreEventsDefined))
+            {
+                item.LogMessage += AddLogEntry;
+                item.LogException += AddLogEntry;
+                item.ConnectedStateChange += this.ConnectedStateHandler;
+                item.NewMail += this.NewMailHandler;
+                item.NewAppointment += this.NewAppointmentHandler;
+                item.MessageCount += this.MailCountHandler;
+            }
+        }
+
+        /// <summary>
+        /// The txt user_ validated.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void txtUser_Validated(object sender, EventArgs e)
+        {
+            this.connection.Username = this.txtUser.Text;
+            this.scenario.Save();
+            this.UpdateEmail();
+        }
+
+        #endregion
     }
 }

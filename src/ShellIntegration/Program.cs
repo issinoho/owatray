@@ -1,423 +1,541 @@
-﻿//------------------------------------------------------------------
-// DrunkenBakery OWA Tray Monitor
-// ShellIntegration
-//
-// <copyright file="Program.cs" company="The Drunken Bakery">
-//     Copyright (c) 2009-2011 The Drunken Bakery. All rights reserved.
-// </copyright>
-//
-// Provides Windows shell integration for OWA
-//
-//------------------------------------------------------------------
-
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
-using DrunkenBakery.OWAtray.ShellIntegration.Properties;
-using Microsoft.Win32;
+﻿// ------------------------------------------------------------------
+//  DrunkenBakery OWA Tray Monitor
+//  OWAtray.DrunkenBakery.OWAtray.ShellIntegration
+// 
+//  <copyright file="Program.cs" company="The Drunken Bakery”>
+//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//  </copyright>
+// 
+//  Author: IRS
+// ------------------------------------------------------------------
 
 namespace DrunkenBakery.OWAtray.ShellIntegration
 {
-	internal static class Program
-	{
-		private static readonly byte[] Entropy = Encoding.Unicode.GetBytes("Salt Is Not A Password");
+    using System;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Reflection;
+    using System.Text;
+    using System.Threading;
+    using System.Windows.Forms;
 
-		private static void DoMapi(string target)
-		{
-			// Loop round each file and add to Clipboard
-			var fileEntries = Directory.GetFiles(target, "*");
-			var numFiles = fileEntries.Length;
-			var files = new string[numFiles];
+    using DrunkenBakery.OWAtray.ShellIntegration.Properties;
 
-			var count = 0;
-			foreach (var fileName in fileEntries)
-			{
-				files[count++] = Path.Combine(target, fileName);
-			}
+    using Microsoft.Win32;
 
-			var d = new DataObject();
-			d.SetData(DataFormats.FileDrop, files);
-			Clipboard.SetDataObject(d, true);
+    /// <summary>
+    /// The program.
+    /// </summary>
+    internal static class Program
+    {
+        #region Static Fields
 
-			// Spawn IE
-			var myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + @"/?ae=Item&a=New&t=IPM.Note" +
-						   Settings.Default.MimeURL;
-			try
-			{
-				Console.WriteLine("Browsing to " + myUrl);
-				Process.Start("IEXPLORE.EXE", myUrl);
+        /// <summary>
+        /// The entropy.
+        /// </summary>
+        private static readonly byte[] entropy = Encoding.Unicode.GetBytes("Salt Is Not A Password");
 
-				// Wait for it to pop
-				Thread.Sleep(Convert.ToInt32(Settings.Default.PopupDelay));
+        #endregion
 
-				// Find IE window and send keys to it
-				var iHandle = NativeWin32.FindWindow(null, Settings.Default.IETitle);
-				Console.WriteLine("Handle1 = " + iHandle);
-				if (iHandle == 0)
-				{
-					iHandle = NativeWin32.FindWindow(null, Settings.Default.IETitle2);
-					Console.WriteLine("Handle2 = " + iHandle);
-				}
-				NativeWin32.SetForegroundWindow(iHandle);
+        #region Methods
 
-				// Tab stops
-				for (var f = 0; f < Convert.ToInt32(Settings.Default.TabStops); ++f)
-				{
-					SendKeys.SendWait("{TAB}");
-					Thread.Sleep(100);
-				}
+        /// <summary>
+        /// The auto login.
+        /// </summary>
+        private static void AutoLogin()
+        {
+            if (Settings.Default.AutoLogin == "Yes")
+            {
+                // Wait for it to load the page
+                Thread.Sleep(Convert.ToInt32(Settings.Default.PopupDelay));
 
-				// Then the paste
-				SendKeys.SendWait("^v");
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-			}
-		}
+                // Find IE window and send keys to it
+                int handle = NativeWin32.FindWindow(null, Settings.Default.LoginTitle);
+                NativeWin32.SetForegroundWindow(handle);
 
-		private static void InitRegistry()
-		{
-			var bridge = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-										 Settings.Default.MAPIBridge);
-			var shell = Assembly.GetExecutingAssembly().Location;
+                // Tab stops
+                SendKeys.SendWait(Settings.Default.Password.Decrypt());
+                Thread.Sleep(Convert.ToInt32(Settings.Default.SmallWait));
 
-			try
-			{
-				// Define a class root for us
-				Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "", "URL:MailTo Protocol");
-				Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "URL Protocol", "");
-				Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "EditFlags", new byte[] { 0x2, 0x0, 0x0, 0x0 });
-				Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto\DefaultIcon", "", "\"" + shell + "\",0");
-				Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto\shell\open\command", "", "\"" + shell + "\" mailto %1");
+                // Then the paste
+                SendKeys.SendWait("{ENTER}");
+            }
+        }
 
-				// Tell windows to use us for mailto links
-				Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", "", "\"" + shell + "\",0");
-				Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", "", "\"" + shell + "\" mailto %1");
-				Registry.SetValue(
-					@"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", "Progid",
-					Settings.Default.MailtoClass);
+        /// <summary>
+        /// The do mapi.
+        /// </summary>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        private static void DoMapi(string target)
+        {
+            // Loop round each file and add to Clipboard
+            string[] fileEntries = Directory.GetFiles(target, "*");
+            int numFiles = fileEntries.Length;
+            var files = new string[numFiles];
 
-				// Set up a mail handler
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "", "Outlook Web Access");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "DLLPath", bridge);
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "EXE", "\"" + shell + "\"");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "Parameters", "mapi %1");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities", "ApplicationDescription",
-								  "Integrate Outlook Web Access into the desktop.");
-				Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Clients\Mail\OWAMapi\Capabilities\FileAssociations");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities\Start Menu", "Mail", "OWA");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities\URLAssociations", "mailto",
-								  Settings.Default.MailtoClass);
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", "", "URL:MailTo Protocol");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", "EditFlags",
-								  new byte[] { 0x2, 0x0, 0x0, 0x0 });
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", "URL Protocol", "");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\DefaultIcon", "",
-								  "\"" + shell + "\",0");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\shell\open\command", "",
-								  "\"" + shell + "\" mailto %1");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\shell\open\command", "",
-								  "\"" + shell + "\" owa");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\DefaultIcon", "", "\"" + shell + "\",0");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "HideIconsCommand",
-								  "\"" + shell + "\" restore");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "ReinstallCommand",
-								  "\"" + shell + "\" registry");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "ShowIconsCommand",
-								  "\"" + shell + "\" registry");
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "IconsVisible", 1,
-								  RegistryValueKind.DWord);
+            int count = 0;
+            foreach (string fileName in fileEntries)
+            {
+                files[count++] = Path.Combine(target, fileName);
+            }
 
-				// Register the application
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\RegisteredApplications", "OWA",
-								  @"Software\Clients\Mail\OWAMapi\Capabilities");
+            var d = new DataObject();
+            d.SetData(DataFormats.FileDrop, files);
+            Clipboard.SetDataObject(d, true);
 
-				// Set default mail handler
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", "", "OWAMapi");
-				Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Clients\Mail", "", "OWAMapi");
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-			}
-		}
+            // Spawn IE
+            string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + @"/?ae=Item&a=New&t=IPM.Note"
+                           + Settings.Default.MimeURL;
+            try
+            {
+                Console.WriteLine("Browsing to " + myUrl);
+                Process.Start("IEXPLORE.EXE", myUrl);
 
-		[STAThread]
-		private static void Main(string[] args)
-		{
-			// Check for arguments
-			if (args.Length < 1)
-			{
-				Console.WriteLine("Error - minimum of 1 argument required.");
-				return;
-			}
+                // Wait for it to pop
+                Thread.Sleep(Convert.ToInt32(Settings.Default.PopupDelay));
 
-			// Which command?
-			Console.WriteLine("Received command: " + args[0]);
-			switch (args[0].ToUpper())
-			{
-				case "OWA":
-					if (args.Length > 1)
-					{
-						StartOwAinIe(args[1]);
-					}
-					else
-					{
-						StartOwAinIe();
-					}
-					break;
+                // Find IE window and send keys to it
+                int handle = NativeWin32.FindWindow(null, Settings.Default.IETitle);
+                Console.WriteLine("Handle1 = " + handle);
+                if (handle == 0)
+                {
+                    handle = NativeWin32.FindWindow(null, Settings.Default.IETitle2);
+                    Console.WriteLine("Handle2 = " + handle);
+                }
 
-				case "SHELL":
-					if (args.Length > 1)
-					{
-						ShellOwa(args[1]);
-					}
-					else
-					{
-						ShellOwa();
-					}
-					break;
+                NativeWin32.SetForegroundWindow(handle);
 
-				case "AUTOLOGIN":
-					if (args.Length > 1)
-					{
-						Settings.Default.AutoLogin = args[1];
-						Settings.Default.Save();
-					}
-					break;
+                // Tab stops
+                for (int f = 0; f < Convert.ToInt32(Settings.Default.TabStops); ++f)
+                {
+                    SendKeys.SendWait("{TAB}");
+                    Thread.Sleep(100);
+                }
 
-				case "BROWSER":
-					if (args.Length > 1)
-					{
-						Settings.Default.Browser = args[1];
-						Settings.Default.Save();
-					}
-					break;
+                // Then the paste
+                SendKeys.SendWait("^v");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
 
-				case "REGISTRY":
-					SaveCurrentKey();
-					InitRegistry();
-					break;
+        /// <summary>
+        /// The init registry.
+        /// </summary>
+        private static void InitRegistry()
+        {
+            string bridge = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.MAPIBridge);
+            string shell = Assembly.GetExecutingAssembly().Location;
 
-				case "MAILTO":
-					if (args.Length > 1)
-					{
-						SpawnUrl(args[1]);
-					}
-					break;
+            try
+            {
+                // Define a class root for us
+                Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", string.Empty, "URL:MailTo Protocol");
+                Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "URL Protocol", string.Empty);
+                Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "EditFlags", new byte[] { 0x2, 0x0, 0x0, 0x0 });
+                Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto\DefaultIcon", string.Empty, "\"" + shell + "\",0");
+                Registry.SetValue(
+                    @"HKEY_CLASSES_ROOT\OWA.Url.Mailto\shell\open\command", string.Empty, "\"" + shell + "\" mailto %1");
 
-				case "MAPI":
-					if (args.Length > 1)
-					{
-						DoMapi(args[1]);
-					}
-					break;
+                // Tell windows to use us for mailto links
+                Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", string.Empty, "\"" + shell + "\",0");
+                Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, "\"" + shell + "\" mailto %1");
+                Registry.SetValue(
+                    @"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", 
+                    "Progid", 
+                    Settings.Default.MailtoClass);
 
-				case "SAVE":
-					SaveCurrentKey();
-					break;
+                // Set up a mail handler
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", string.Empty, "Outlook Web Access");
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "DLLPath", bridge);
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "EXE", "\"" + shell + "\"");
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "Parameters", "mapi %1");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities", 
+                    "ApplicationDescription", 
+                    "Integrate Outlook Web Access into the desktop.");
+                Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Clients\Mail\OWAMapi\Capabilities\FileAssociations");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities\Start Menu", "Mail", "OWA");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities\URLAssociations", 
+                    "mailto", 
+                    Settings.Default.MailtoClass);
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", string.Empty, "URL:MailTo Protocol");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", 
+                    "EditFlags", 
+                    new byte[] { 0x2, 0x0, 0x0, 0x0 });
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", "URL Protocol", string.Empty);
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\DefaultIcon", 
+                    string.Empty, 
+                    "\"" + shell + "\",0");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\shell\open\command", 
+                    string.Empty, 
+                    "\"" + shell + "\" mailto %1");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\shell\open\command", string.Empty, "\"" + shell + "\" owa");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\DefaultIcon", string.Empty, "\"" + shell + "\",0");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", 
+                    "HideIconsCommand", 
+                    "\"" + shell + "\" restore");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", 
+                    "ReinstallCommand", 
+                    "\"" + shell + "\" registry");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", 
+                    "ShowIconsCommand", 
+                    "\"" + shell + "\" registry");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", 
+                    "IconsVisible", 
+                    1, 
+                    RegistryValueKind.DWord);
 
-				case "RESTORE":
-					RestoreKey();
-					break;
+                // Register the application
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\RegisteredApplications", 
+                    "OWA", 
+                    @"Software\Clients\Mail\OWAMapi\Capabilities");
 
-				case "URL":
-					if (args.Length > 1)
-					{
-						var myPath = args[1];
-						myPath = myPath.TrimEnd(new char[] { '\\', '/' });
-						Settings.Default.OwaUrl = myPath;
-						Settings.Default.Save();
-					}
-					break;
+                // Set default mail handler
+                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", string.Empty, "OWAMapi");
+                Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Clients\Mail", string.Empty, "OWAMapi");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
 
-				case "ACCOUNT":
-					Settings.Default.UserAccount = args.Length > 1 ? args[1] : "";
-					Settings.Default.Save();
-					break;
+        /// <summary>
+        /// The main.
+        /// </summary>
+        /// <param name="args">
+        /// The args.
+        /// </param>
+        [STAThread]
+        private static void Main(string[] args)
+        {
+            // Check for arguments
+            if (args.Length < 1)
+            {
+                Console.WriteLine("Error - minimum of 1 argument required.");
+                return;
+            }
 
-				case "PASSWORD":
-					if (args.Length > 1)
-					{
-						Settings.Default.Password = (args[1].Length > 0 ? args[1].Encrypt() : "");
-						Settings.Default.Save();
-					}
-					break;
+            // Which command?
+            Console.WriteLine("Received command: " + args[0]);
+            switch (args[0].ToUpper())
+            {
+                case "OWA":
+                    if (args.Length > 1)
+                    {
+                        StartOwAinIe(args[1]);
+                    }
+                    else
+                    {
+                        StartOwAinIe();
+                    }
 
-				case "EXCHANGE":
-					if (args.Length > 1)
-					{
-						switch (args[1])
-						{
-							case "Exchange2010":
-								Settings.Default.MimeURL = Settings.Default.URL2010;
-								break;
-							case "Exchange2010_SP1":
-								Settings.Default.MimeURL = Settings.Default.URL2010SP1;
-								break;
-							case "Exchange2010_SP2":
-								Settings.Default.MimeURL = Settings.Default.URL2010SP2;
-								break;
-							default:
-								Settings.Default.MimeURL = "";
-								break;
-						}
-						Settings.Default.Save();
-					}
-					break;
+                    break;
 
-				default:
-					Console.WriteLine("Unknown command");
-					break;
-			}
+                case "SHELL":
+                    if (args.Length > 1)
+                    {
+                        ShellOwa(args[1]);
+                    }
+                    else
+                    {
+                        ShellOwa();
+                    }
 
-			Console.WriteLine("Completed.");
-		}
+                    break;
 
-		private static void RestoreKey()
-		{
-			try
-			{
-				if (Settings.Default.CurrentKey.Length > 0)
-					Registry.SetValue(
-						@"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", "Progid",
-						Settings.Default.CurrentKey);
-				if (Settings.Default.DefaultMail.Length > 0)
-					Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", "", Settings.Default.DefaultMail);
-				if (Settings.Default.DefaultMailUser.Length > 0)
-					Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Clients\Mail", "", Settings.Default.DefaultMailUser);
-				if (Settings.Default.DefaultIcon.Length > 0)
-					Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", "", Settings.Default.DefaultIcon);
-				if (Settings.Default.DefaultOpen.Length > 0)
-					Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", "", Settings.Default.DefaultOpen);
+                case "AUTOLOGIN":
+                    if (args.Length > 1)
+                    {
+                        Settings.Default.AutoLogin = args[1];
+                        Settings.Default.Save();
+                    }
 
-				Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", "IconsVisible", 0,
-								  RegistryValueKind.DWord);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-			}
-		}
+                    break;
 
-		private static void SaveCurrentKey()
-		{
-			var bridge = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-										 Settings.Default.MAPIBridge);
-			var shell = Assembly.GetExecutingAssembly().Location;
+                case "BROWSER":
+                    if (args.Length > 1)
+                    {
+                        Settings.Default.Browser = args[1];
+                        Settings.Default.Save();
+                    }
 
-			try
-			{
-				// Get current mailto and store for use later
-				var currentKey =
-					Registry.GetValue(
-						@"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", "Progid",
-						Settings.Default.MailtoClass).ToString();
-				if (currentKey != Settings.Default.MailtoClass)
-				{
-					Settings.Default.CurrentKey = currentKey;
-					Settings.Default.Save();
-				}
+                    break;
 
-				// Get current default mail and store for use later
-				var mailKey = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", "", "OWAMapi").ToString();
-				if (mailKey != "OWAMapi")
-				{
-					Settings.Default.DefaultMail = mailKey;
-					Settings.Default.Save();
-				}
+                case "REGISTRY":
+                    SaveCurrentKey();
+                    InitRegistry();
+                    break;
 
-				// Get current default user mail and store for use later
-				var userMailKey = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Clients\Mail", "", "OWAMapi").ToString();
-				if (userMailKey != "OWAMapi")
-				{
-					Settings.Default.DefaultMailUser = userMailKey;
-					Settings.Default.Save();
-				}
+                case "MAILTO":
+                    if (args.Length > 1)
+                    {
+                        SpawnUrl(args[1]);
+                    }
 
-				// Get current default icon and store for use later
-				var defIconKey = "\"" + shell + "\",0";
-				var iconKey = Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", "", defIconKey).ToString();
-				if (userMailKey != defIconKey)
-				{
-					Settings.Default.DefaultIcon = iconKey;
-					Settings.Default.Save();
-				}
+                    break;
 
-				// Get current default cmd path and store for use later
-				var defPathKey = "\"" + shell + "\" mailto %1";
-				var pathKey = Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", "", defPathKey).ToString();
-				if (pathKey != defPathKey)
-				{
-					Settings.Default.DefaultOpen = pathKey;
-					Settings.Default.Save();
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-			}
-		}
+                case "MAPI":
+                    if (args.Length > 1)
+                    {
+                        DoMapi(args[1]);
+                    }
 
-		private static void SpawnUrl(string target)
-		{
-			if (target.Substring(0, 7) == @"mailto:")
-			{
-				target = target.Substring(7, target.Length - 7);
-			}
-			var myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note" +
-						   Settings.Default.MimeURL + "&to=" + target;
-			if (Settings.Default.Browser == "Yes")
-			{
-				Process.Start("IEXPLORE.EXE", myUrl);
-			}
-			else
-			{
-				Process.Start(myUrl);
-			}
+                    break;
 
-			Console.WriteLine("Browsing to " + myUrl);
-		}
+                case "SAVE":
+                    SaveCurrentKey();
+                    break;
 
-		private static void StartOwAinIe(string url = "")
-		{
-			var myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + (url.Length > 0 ? "/" + url : "");
-			Process.Start("IEXPLORE.EXE", myUrl);
-			Console.WriteLine("Browsing to " + myUrl);
-			AutoLogin();
-		}
+                case "RESTORE":
+                    RestoreKey();
+                    break;
 
-		private static void ShellOwa(string url = "")
-		{
-			var myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + (url.Length > 0 ? "/" + url : "");
-			Process.Start(myUrl);
-			Console.WriteLine("Browsing to " + myUrl);
-			AutoLogin();
-		}
+                case "URL":
+                    if (args.Length > 1)
+                    {
+                        string myPath = args[1];
+                        myPath = myPath.TrimEnd(new[] { '\\', '/' });
+                        Settings.Default.OwaUrl = myPath;
+                        Settings.Default.Save();
+                    }
 
-		private static void AutoLogin()
-		{
-			if (Settings.Default.AutoLogin == "Yes")
-			{
-				// Wait for it to load the page
-				Thread.Sleep(Convert.ToInt32(Settings.Default.PopupDelay));
+                    break;
 
-				// Find IE window and send keys to it
-				var iHandle = NativeWin32.FindWindow(null, Settings.Default.LoginTitle);
-				NativeWin32.SetForegroundWindow(iHandle);
+                case "ACCOUNT":
+                    Settings.Default.UserAccount = args.Length > 1 ? args[1] : string.Empty;
+                    Settings.Default.Save();
+                    break;
 
-				// Tab stops
-				SendKeys.SendWait(Settings.Default.Password.Decrypt());
-				Thread.Sleep(Convert.ToInt32(Settings.Default.SmallWait));
+                case "PASSWORD":
+                    if (args.Length > 1)
+                    {
+                        Settings.Default.Password = args[1].Length > 0 ? args[1].Encrypt() : string.Empty;
+                        Settings.Default.Save();
+                    }
 
-				// Then the paste
-				SendKeys.SendWait("{ENTER}");
-			}
-		}
-	}
+                    break;
+
+                case "EXCHANGE":
+                    if (args.Length > 1)
+                    {
+                        switch (args[1])
+                        {
+                            case "Exchange2010":
+                                Settings.Default.MimeURL = Settings.Default.URL2010;
+                                break;
+                            case "Exchange2010_SP1":
+                                Settings.Default.MimeURL = Settings.Default.URL2010SP1;
+                                break;
+                            case "Exchange2010_SP2":
+                                Settings.Default.MimeURL = Settings.Default.URL2010SP2;
+                                break;
+                            default:
+                                Settings.Default.MimeURL = string.Empty;
+                                break;
+                        }
+
+                        Settings.Default.Save();
+                    }
+
+                    break;
+
+                default:
+                    Console.WriteLine("Unknown command");
+                    break;
+            }
+
+            Console.WriteLine("Completed.");
+        }
+
+        /// <summary>
+        /// The restore key.
+        /// </summary>
+        private static void RestoreKey()
+        {
+            try
+            {
+                if (Settings.Default.CurrentKey.Length > 0)
+                {
+                    Registry.SetValue(
+                        @"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", 
+                        "Progid", 
+                        Settings.Default.CurrentKey);
+                }
+
+                if (Settings.Default.DefaultMail.Length > 0)
+                {
+                    Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", string.Empty, Settings.Default.DefaultMail);
+                }
+
+                if (Settings.Default.DefaultMailUser.Length > 0)
+                {
+                    Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Clients\Mail", string.Empty, Settings.Default.DefaultMailUser);
+                }
+
+                if (Settings.Default.DefaultIcon.Length > 0)
+                {
+                    Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", string.Empty, Settings.Default.DefaultIcon);
+                }
+
+                if (Settings.Default.DefaultOpen.Length > 0)
+                {
+                    Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, Settings.Default.DefaultOpen);
+                }
+
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", 
+                    "IconsVisible", 
+                    0, 
+                    RegistryValueKind.DWord);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// The save current key.
+        /// </summary>
+        private static void SaveCurrentKey()
+        {
+            string bridge = Path.Combine(
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.MAPIBridge);
+            string shell = Assembly.GetExecutingAssembly().Location;
+
+            try
+            {
+                // Get current mailto and store for use later
+                string currentKey =
+                    Registry.GetValue(
+                        @"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", 
+                        "Progid", 
+                        Settings.Default.MailtoClass).ToString();
+                if (currentKey != Settings.Default.MailtoClass)
+                {
+                    Settings.Default.CurrentKey = currentKey;
+                    Settings.Default.Save();
+                }
+
+                // Get current default mail and store for use later
+                string mailKey =
+                    Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", string.Empty, "OWAMapi").ToString();
+                if (mailKey != "OWAMapi")
+                {
+                    Settings.Default.DefaultMail = mailKey;
+                    Settings.Default.Save();
+                }
+
+                // Get current default user mail and store for use later
+                string userMailKey =
+                    Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Clients\Mail", string.Empty, "OWAMapi").ToString();
+                if (userMailKey != "OWAMapi")
+                {
+                    Settings.Default.DefaultMailUser = userMailKey;
+                    Settings.Default.Save();
+                }
+
+                // Get current default icon and store for use later
+                string defIconKey = "\"" + shell + "\",0";
+                string iconKey = Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", string.Empty, defIconKey).ToString();
+                if (userMailKey != defIconKey)
+                {
+                    Settings.Default.DefaultIcon = iconKey;
+                    Settings.Default.Save();
+                }
+
+                // Get current default cmd path and store for use later
+                string defPathKey = "\"" + shell + "\" mailto %1";
+                string pathKey =
+                    Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, defPathKey).ToString();
+                if (pathKey != defPathKey)
+                {
+                    Settings.Default.DefaultOpen = pathKey;
+                    Settings.Default.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// The shell owa.
+        /// </summary>
+        /// <param name="url">
+        /// The url.
+        /// </param>
+        private static void ShellOwa(string url = "")
+        {
+            string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + (url.Length > 0 ? "/" + url : string.Empty);
+            Process.Start(myUrl);
+            Console.WriteLine("Browsing to " + myUrl);
+            AutoLogin();
+        }
+
+        /// <summary>
+        /// The spawn url.
+        /// </summary>
+        /// <param name="target">
+        /// The target.
+        /// </param>
+        private static void SpawnUrl(string target)
+        {
+            if (target.Substring(0, 7) == @"mailto:")
+            {
+                target = target.Substring(7, target.Length - 7);
+            }
+
+            string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note"
+                           + Settings.Default.MimeURL + "&to=" + target;
+            if (Settings.Default.Browser == "Yes")
+            {
+                Process.Start("IEXPLORE.EXE", myUrl);
+            }
+            else
+            {
+                Process.Start(myUrl);
+            }
+
+            Console.WriteLine("Browsing to " + myUrl);
+        }
+
+        /// <summary>
+        /// The start ow ain ie.
+        /// </summary>
+        /// <param name="url">
+        /// The url.
+        /// </param>
+        private static void StartOwAinIe(string url = "")
+        {
+            string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + (url.Length > 0 ? "/" + url : string.Empty);
+            Process.Start("IEXPLORE.EXE", myUrl);
+            Console.WriteLine("Browsing to " + myUrl);
+            AutoLogin();
+        }
+
+        #endregion
+    }
 }

@@ -186,8 +186,8 @@ namespace DrunkenBakery.OWAtray.GUI
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
             this.notifyIcon1.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_OWA_Tray_Monitor;
             this.notifyIcon1.Visible = true;
-            this.notifyIcon1.BalloonTipClicked += new System.EventHandler(this.notifyIcon1_BalloonTipClicked);
-            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            this.notifyIcon1.BalloonTipClicked += new System.EventHandler(this.NotifyIcon1BalloonTipClicked);
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon1MouseDoubleClick);
             // 
             // contextMenuStrip1
             // 
@@ -210,7 +210,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
             this.restoreToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.restoreToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Options;
-            this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
+            this.restoreToolStripMenuItem.Click += new System.EventHandler(this.RestoreToolStripMenuItemClick);
             // 
             // blankToolStripMenuItem1
             // 
@@ -223,7 +223,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.openOWAToolStripMenuItem.Name = "openOWAToolStripMenuItem";
             this.openOWAToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.openOWAToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Open_OWA;
-            this.openOWAToolStripMenuItem.Click += new System.EventHandler(this.openOWAToolStripMenuItem_Click);
+            this.openOWAToolStripMenuItem.Click += new System.EventHandler(this.OpenOwaToolStripMenuItemClick);
             // 
             // openOutlookToolStripMenuItem
             // 
@@ -231,7 +231,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.openOutlookToolStripMenuItem.Name = "openOutlookToolStripMenuItem";
             this.openOutlookToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.openOutlookToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Open_Outlook;
-            this.openOutlookToolStripMenuItem.Click += new System.EventHandler(this.openOutlookToolStripMenuItem_Click);
+            this.openOutlookToolStripMenuItem.Click += new System.EventHandler(this.OpenOutlookToolStripMenuItemClick);
             // 
             // dividerToolStripMenuItem
             // 
@@ -244,7 +244,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.recallLastPopupToolStripMenuItem.Name = "recallLastPopupToolStripMenuItem";
             this.recallLastPopupToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.recallLastPopupToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Recall_Last_Popup;
-            this.recallLastPopupToolStripMenuItem.Click += new System.EventHandler(this.recallLastPopupToolStripMenuItem_Click);
+            this.recallLastPopupToolStripMenuItem.Click += new System.EventHandler(this.RecallLastPopupToolStripMenuItemClick);
             // 
             // resetTrayIconToolStripMenuItem
             // 
@@ -252,7 +252,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.resetTrayIconToolStripMenuItem.Name = "resetTrayIconToolStripMenuItem";
             this.resetTrayIconToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.resetTrayIconToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Reset_Tray_Icon;
-            this.resetTrayIconToolStripMenuItem.Click += new System.EventHandler(this.resetTrayIconToolStripMenuItem_Click);
+            this.resetTrayIconToolStripMenuItem.Click += new System.EventHandler(this.ResetTrayIconToolStripMenuItemClick);
             // 
             // blankToolStripMenuItem
             // 
@@ -265,7 +265,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.exitToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Exit;
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
             // menuStrip1
             // 
@@ -297,7 +297,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
             this.exitToolStripMenuItem1.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem1.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Exit;
-            this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
+            this.exitToolStripMenuItem1.Click += new System.EventHandler(this.ExitToolStripMenuItem1Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -316,7 +316,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.nETVersionsToolStripMenuItem.Name = "nETVersionsToolStripMenuItem";
             this.nETVersionsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.nETVersionsToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent__NET_Versions;
-            this.nETVersionsToolStripMenuItem.Click += new System.EventHandler(this.nETVersionsToolStripMenuItem_Click);
+            this.nETVersionsToolStripMenuItem.Click += new System.EventHandler(this.NetVersionsToolStripMenuItemClick);
             // 
             // mDACVersionsToolStripMenuItem
             // 
@@ -324,7 +324,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.mDACVersionsToolStripMenuItem.Name = "mDACVersionsToolStripMenuItem";
             this.mDACVersionsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.mDACVersionsToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_MDAC_Versions;
-            this.mDACVersionsToolStripMenuItem.Click += new System.EventHandler(this.mDACVersionsToolStripMenuItem_Click);
+            this.mDACVersionsToolStripMenuItem.Click += new System.EventHandler(this.MDacVersionsToolStripMenuItemClick);
             // 
             // systemInformationToolStripMenuItem
             // 
@@ -332,7 +332,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.systemInformationToolStripMenuItem.Name = "systemInformationToolStripMenuItem";
             this.systemInformationToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.systemInformationToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_System_Information;
-            this.systemInformationToolStripMenuItem.Click += new System.EventHandler(this.systemInformationToolStripMenuItem_Click);
+            this.systemInformationToolStripMenuItem.Click += new System.EventHandler(this.SystemInformationToolStripMenuItemClick);
             // 
             // notificationsToolStripMenuItem
             // 
@@ -355,7 +355,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.balloonToolStripMenuItem.Name = "balloonToolStripMenuItem";
             this.balloonToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.balloonToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Balloon;
-            this.balloonToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.balloonToolStripMenuItem_CheckStateChanged);
+            this.balloonToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.BalloonToolStripMenuItemCheckStateChanged);
             // 
             // growlToolStripMenuItem
             // 
@@ -364,7 +364,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.growlToolStripMenuItem.Name = "growlToolStripMenuItem";
             this.growlToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.growlToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Growl;
-            this.growlToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.growlToolStripMenuItem_CheckStateChanged);
+            this.growlToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.GrowlToolStripMenuItemCheckStateChanged);
             // 
             // snarlToolStripMenuItem
             // 
@@ -373,7 +373,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.snarlToolStripMenuItem.Name = "snarlToolStripMenuItem";
             this.snarlToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.snarlToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Snarl;
-            this.snarlToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.snarlToolStripMenuItem_CheckStateChanged);
+            this.snarlToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.SnarlToolStripMenuItemCheckStateChanged);
             // 
             // playSoundToolStripMenuItem
             // 
@@ -384,7 +384,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.playSoundToolStripMenuItem.Name = "playSoundToolStripMenuItem";
             this.playSoundToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.playSoundToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Play_Sound;
-            this.playSoundToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.playSoundToolStripMenuItem_CheckStateChanged);
+            this.playSoundToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.PlaySoundToolStripMenuItemCheckStateChanged);
             // 
             // advancedToolStripMenuItem
             // 
@@ -408,7 +408,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.overrideCertificateToolStripMenuItem.Name = "overrideCertificateToolStripMenuItem";
             this.overrideCertificateToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.overrideCertificateToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Override_Certificate;
-            this.overrideCertificateToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideCertificateToolStripMenuItem_CheckStateChanged);
+            this.overrideCertificateToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.OverrideCertificateToolStripMenuItemCheckStateChanged);
             // 
             // alwaysOpenOWAInIEToolStripMenuItem
             // 
@@ -417,7 +417,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.alwaysOpenOWAInIEToolStripMenuItem.Name = "alwaysOpenOWAInIEToolStripMenuItem";
             this.alwaysOpenOWAInIEToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.alwaysOpenOWAInIEToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Always_open_OWA_in_IE;
-            this.alwaysOpenOWAInIEToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged);
+            this.alwaysOpenOWAInIEToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.AlwaysOpenOwainIeToolStripMenuItemCheckStateChanged);
             // 
             // disableCalendarToolStripMenuItem
             // 
@@ -426,7 +426,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.disableCalendarToolStripMenuItem.Name = "disableCalendarToolStripMenuItem";
             this.disableCalendarToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.disableCalendarToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Disable_Calendar;
-            this.disableCalendarToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.disableCalendarToolStripMenuItem_CheckStateChanged);
+            this.disableCalendarToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.DisableCalendarToolStripMenuItemCheckStateChanged);
             // 
             // loginAutomaticallyToolStripMenuItem
             // 
@@ -435,7 +435,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.loginAutomaticallyToolStripMenuItem.Name = "loginAutomaticallyToolStripMenuItem";
             this.loginAutomaticallyToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.loginAutomaticallyToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Login_Automatically;
-            this.loginAutomaticallyToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.loginAutomaticallyToolStripMenuItem_CheckStateChanged);
+            this.loginAutomaticallyToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.LoginAutomaticallyToolStripMenuItemCheckStateChanged);
             // 
             // overrideAutodiscoveryValidationToolStripMenuItem
             // 
@@ -444,7 +444,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.overrideAutodiscoveryValidationToolStripMenuItem.Name = "overrideAutodiscoveryValidationToolStripMenuItem";
             this.overrideAutodiscoveryValidationToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.overrideAutodiscoveryValidationToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Override_Autodiscovery_Validation;
-            this.overrideAutodiscoveryValidationToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged);
+            this.overrideAutodiscoveryValidationToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.OverrideAutodiscoveryValidationToolStripMenuItemCheckStateChanged);
             // 
             // office365LoginOverrideToolStripMenuItem
             // 
@@ -453,7 +453,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.office365LoginOverrideToolStripMenuItem.Name = "office365LoginOverrideToolStripMenuItem";
             this.office365LoginOverrideToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.office365LoginOverrideToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Office365_Login_Override;
-            this.office365LoginOverrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.office365LoginOverrideToolStripMenuItem_CheckStateChanged);
+            this.office365LoginOverrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.Office365LoginOverrideToolStripMenuItemCheckStateChanged);
             // 
             // useDefaultWebProxyToolStripMenuItem
             // 
@@ -462,7 +462,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.useDefaultWebProxyToolStripMenuItem.Name = "useDefaultWebProxyToolStripMenuItem";
             this.useDefaultWebProxyToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.useDefaultWebProxyToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Use_Default_Web_Proxy;
-            this.useDefaultWebProxyToolStripMenuItem.Click += new System.EventHandler(this.useDefaultWebProxyToolStripMenuItem_Click);
+            this.useDefaultWebProxyToolStripMenuItem.Click += new System.EventHandler(this.UseDefaultWebProxyToolStripMenuItemClick);
             // 
             // shellIntegrationToolStripMenuItem
             // 
@@ -480,7 +480,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.makeOWADefaultToolStripMenuItem.Name = "makeOWADefaultToolStripMenuItem";
             this.makeOWADefaultToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.makeOWADefaultToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Make_OWA_Default;
-            this.makeOWADefaultToolStripMenuItem.Click += new System.EventHandler(this.makeOWADefaultToolStripMenuItem_Click);
+            this.makeOWADefaultToolStripMenuItem.Click += new System.EventHandler(this.MakeOwaDefaultToolStripMenuItemClick);
             // 
             // switchOffToolStripMenuItem
             // 
@@ -488,7 +488,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.switchOffToolStripMenuItem.Name = "switchOffToolStripMenuItem";
             this.switchOffToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.switchOffToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Switch_Off;
-            this.switchOffToolStripMenuItem.Click += new System.EventHandler(this.switchOffToolStripMenuItem_Click);
+            this.switchOffToolStripMenuItem.Click += new System.EventHandler(this.SwitchOffToolStripMenuItemClick);
             // 
             // helpToolStripMenuItem
             // 
@@ -508,7 +508,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.changeLogToolStripMenuItem.Name = "changeLogToolStripMenuItem";
             this.changeLogToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.changeLogToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Change_Log;
-            this.changeLogToolStripMenuItem.Click += new System.EventHandler(this.changeLogToolStripMenuItem_Click);
+            this.changeLogToolStripMenuItem.Click += new System.EventHandler(this.ChangeLogToolStripMenuItemClick);
             // 
             // supportToolStripMenuItem
             // 
@@ -516,7 +516,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.supportToolStripMenuItem.Name = "supportToolStripMenuItem";
             this.supportToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.supportToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Support;
-            this.supportToolStripMenuItem.Click += new System.EventHandler(this.supportToolStripMenuItem_Click);
+            this.supportToolStripMenuItem.Click += new System.EventHandler(this.SupportToolStripMenuItemClick);
             // 
             // showLogFileToolStripMenuItem
             // 
@@ -524,7 +524,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.showLogFileToolStripMenuItem.Name = "showLogFileToolStripMenuItem";
             this.showLogFileToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.showLogFileToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Show_Log_File;
-            this.showLogFileToolStripMenuItem.Click += new System.EventHandler(this.showLogFileToolStripMenuItem_Click);
+            this.showLogFileToolStripMenuItem.Click += new System.EventHandler(this.ShowLogFileToolStripMenuItemClick);
             // 
             // aboutToolStripMenuItem
             // 
@@ -532,7 +532,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.aboutToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_About;
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
             // 
             // groupBox3
             // 
@@ -581,7 +581,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtURLEdit.Name = "txtURLEdit";
             this.txtURLEdit.Size = new System.Drawing.Size(362, 21);
             this.txtURLEdit.TabIndex = 10;
-            this.txtURLEdit.Validated += new System.EventHandler(this.txtURLEdit_Validated);
+            this.txtURLEdit.Validated += new System.EventHandler(this.TxtUrlEditValidated);
             // 
             // txtDomain
             // 
@@ -589,7 +589,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtDomain.Name = "txtDomain";
             this.txtDomain.Size = new System.Drawing.Size(134, 21);
             this.txtDomain.TabIndex = 4;
-            this.txtDomain.Validated += new System.EventHandler(this.txtDomain_Validated);
+            this.txtDomain.Validated += new System.EventHandler(this.TxtDomainValidated);
             // 
             // label5
             // 
@@ -617,7 +617,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtServer.Name = "txtServer";
             this.txtServer.Size = new System.Drawing.Size(362, 21);
             this.txtServer.TabIndex = 1;
-            this.txtServer.Validated += new System.EventHandler(this.txtServer_Validated);
+            this.txtServer.Validated += new System.EventHandler(this.TxtServerValidated);
             // 
             // label1
             // 
@@ -635,7 +635,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(350, 21);
             this.txtEmail.TabIndex = 4;
-            this.txtEmail.Validated += new System.EventHandler(this.txtEmail_Validated);
+            this.txtEmail.Validated += new System.EventHandler(this.TxtEmailValidated);
             // 
             // cmdStop
             // 
@@ -646,7 +646,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.cmdStop.TabIndex = 1;
             this.cmdStop.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Stop;
             this.cmdStop.UseVisualStyleBackColor = true;
-            this.cmdStop.Click += new System.EventHandler(this.cmdStop_Click);
+            this.cmdStop.Click += new System.EventHandler(this.CmdStopClick);
             // 
             // cmdStart
             // 
@@ -657,7 +657,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.cmdStart.TabIndex = 0;
             this.cmdStart.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Start;
             this.cmdStart.UseVisualStyleBackColor = true;
-            this.cmdStart.Click += new System.EventHandler(this.cmdStart_Click);
+            this.cmdStart.Click += new System.EventHandler(this.CmdStartClick);
             // 
             // txtPwd
             // 
@@ -666,7 +666,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtPwd.PasswordChar = '*';
             this.txtPwd.Size = new System.Drawing.Size(144, 21);
             this.txtPwd.TabIndex = 8;
-            this.txtPwd.Validated += new System.EventHandler(this.txtPwd_Validated);
+            this.txtPwd.Validated += new System.EventHandler(this.TxtPwdValidated);
             // 
             // label3
             // 
@@ -698,12 +698,12 @@ namespace DrunkenBakery.OWAtray.GUI
             // 
             // timer1
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
             // 
             // timerLogging
             // 
             this.timerLogging.Interval = 500;
-            this.timerLogging.Tick += new System.EventHandler(this.timerLogging_Tick);
+            this.timerLogging.Tick += new System.EventHandler(this.TimerLoggingTick);
             // 
             // errorProvider1
             // 
@@ -765,8 +765,8 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtInterval.Size = new System.Drawing.Size(48, 21);
             this.txtInterval.TabIndex = 2;
             this.txtInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.txtInterval.Validating += new System.ComponentModel.CancelEventHandler(this.txtInterval_Validating);
-            this.txtInterval.Validated += new System.EventHandler(this.txtInterval_Validated);
+            this.txtInterval.Validating += new System.ComponentModel.CancelEventHandler(this.TxtIntervalValidating);
+            this.txtInterval.Validated += new System.EventHandler(this.TxtIntervalValidated);
             // 
             // label8
             // 
@@ -801,7 +801,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.cmbExchangeVersion.Name = "cmbExchangeVersion";
             this.cmbExchangeVersion.Size = new System.Drawing.Size(200, 21);
             this.cmbExchangeVersion.TabIndex = 10;
-            this.cmbExchangeVersion.SelectedIndexChanged += new System.EventHandler(this.cmbExchangeVersion_SelectedIndexChanged);
+            this.cmbExchangeVersion.SelectedIndexChanged += new System.EventHandler(this.CmbExchangeVersionSelectedIndexChanged);
             // 
             // label11
             // 
@@ -833,7 +833,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.chkRunOnStartup.TabIndex = 11;
             this.chkRunOnStartup.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Run_at_Startup;
             this.chkRunOnStartup.UseVisualStyleBackColor = true;
-            this.chkRunOnStartup.CheckedChanged += new System.EventHandler(this.chkRunOnStartup_CheckedChanged);
+            this.chkRunOnStartup.CheckedChanged += new System.EventHandler(this.ChkRunOnStartupCheckedChanged);
             // 
             // pictureBox14
             // 
@@ -873,7 +873,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.chkAutodiscovery.TabIndex = 0;
             this.chkAutodiscovery.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Attempt_to_use_Autodiscovery;
             this.chkAutodiscovery.UseVisualStyleBackColor = true;
-            this.chkAutodiscovery.CheckedChanged += new System.EventHandler(this.chkAutodiscovery_CheckedChanged);
+            this.chkAutodiscovery.CheckedChanged += new System.EventHandler(this.ChkAutodiscoveryCheckedChanged);
             // 
             // pictureBox3
             // 
@@ -919,7 +919,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.chkOnDomain.TabIndex = 2;
             this.chkOnDomain.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Use_Windows_Domain_Credentials;
             this.chkOnDomain.UseVisualStyleBackColor = true;
-            this.chkOnDomain.CheckedChanged += new System.EventHandler(this.chkOnDomain_CheckedChanged);
+            this.chkOnDomain.CheckedChanged += new System.EventHandler(this.ChkOnDomainCheckedChanged);
             // 
             // cbOverrideOWA
             // 
@@ -929,8 +929,8 @@ namespace DrunkenBakery.OWAtray.GUI
             this.cbOverrideOWA.Size = new System.Drawing.Size(15, 14);
             this.cbOverrideOWA.TabIndex = 5;
             this.cbOverrideOWA.UseVisualStyleBackColor = true;
-            this.cbOverrideOWA.CheckedChanged += new System.EventHandler(this.cbOverrideOWA_CheckedChanged);
-            this.cbOverrideOWA.EnabledChanged += new System.EventHandler(this.cbOverrideOWA_EnabledChanged);
+            this.cbOverrideOWA.CheckedChanged += new System.EventHandler(this.CbOverrideOwaCheckedChanged);
+            this.cbOverrideOWA.EnabledChanged += new System.EventHandler(this.CbOverrideOwaEnabledChanged);
             // 
             // txtOWAEdit
             // 
@@ -938,7 +938,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtOWAEdit.Name = "txtOWAEdit";
             this.txtOWAEdit.Size = new System.Drawing.Size(362, 21);
             this.txtOWAEdit.TabIndex = 7;
-            this.txtOWAEdit.Validated += new System.EventHandler(this.txtOWAEdit_Validated);
+            this.txtOWAEdit.Validated += new System.EventHandler(this.TxtOwaEditValidated);
             // 
             // label7
             // 
@@ -958,8 +958,8 @@ namespace DrunkenBakery.OWAtray.GUI
             this.cbOverrideEWS.Size = new System.Drawing.Size(15, 14);
             this.cbOverrideEWS.TabIndex = 8;
             this.cbOverrideEWS.UseVisualStyleBackColor = true;
-            this.cbOverrideEWS.CheckedChanged += new System.EventHandler(this.cbOverrideEWS_CheckedChanged);
-            this.cbOverrideEWS.EnabledChanged += new System.EventHandler(this.cbOverrideEWS_EnabledChanged);
+            this.cbOverrideEWS.CheckedChanged += new System.EventHandler(this.CbOverrideEwsCheckedChanged);
+            this.cbOverrideEWS.EnabledChanged += new System.EventHandler(this.CbOverrideEwsEnabledChanged);
             // 
             // pictureBox5
             // 
@@ -1089,8 +1089,8 @@ namespace DrunkenBakery.OWAtray.GUI
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "OWA Tray Monitor";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.Move += new System.EventHandler(this.Form1_Move);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1FormClosing);
+            this.Move += new System.EventHandler(this.Form1Move);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
