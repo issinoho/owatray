@@ -38,15 +38,6 @@ namespace DrunkenBakery.OWAtray.GUI
     /// </summary>
     public partial class Form1 : Form
     {
-        #region Static Fields
-
-        /// <summary>
-        /// The _over ride close.
-        /// </summary>
-        private static bool overRideClose;
-
-        #endregion
-
         #region Constants and Fields
 
         /// <summary>
@@ -63,6 +54,16 @@ namespace DrunkenBakery.OWAtray.GUI
         /// The _alert icon.
         /// </summary>
         private string alertIcon;
+
+        /// <summary>
+        /// ContextMenu's Exit command used
+        /// </summary>
+        private bool allowClose;
+
+        /// <summary>
+        /// ContextMenu's Show command used
+        /// </summary>
+        private bool allowVisible;
 
         /// <summary>
         /// The _audio path.
@@ -210,6 +211,39 @@ namespace DrunkenBakery.OWAtray.GUI
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Forms.Form.FormClosing"/> event.
+        /// </summary>
+        /// <param name="e">
+        /// A <see cref="T:System.Windows.Forms.FormClosingEventArgs"/> that contains the event data. 
+        /// </param>
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (!this.allowClose)
+            {
+                this.Hide();
+                e.Cancel = true;
+            }
+
+            base.OnFormClosing(e);
+        }
+
+        /// <summary>
+        /// Overrides the windows form logic
+        /// </summary>
+        /// <param name="value">
+        /// true to make the control visible; otherwise, false. 
+        /// </param>
+        protected override void SetVisibleCore(bool value)
+        {
+            if (!this.allowVisible)
+            {
+                value = false;
+            }
+
+            base.SetVisibleCore(value);
+        }
 
         /// <summary>
         /// The get sub domain.
@@ -1094,90 +1128,75 @@ namespace DrunkenBakery.OWAtray.GUI
         private void FlushOutput()
         {
             // Avoid Illegal Cross Thread Calls
-            this.Invoke(
-                new Action(
-                    () =>
-                        {
-                            if (this.logBuffer.Count <= 0)
-                            {
-                                return;
-                            }
-
-                            // Avoid buffer overflows by trimming log after n entries
-                            if (this.lvStatus.Items.Count >= Settings.Default.ScreenLines)
-                            {
-                                this.lvStatus.Items.Clear();
-                            }
-
-                            try
-                            {
-                                // Copy from buffer to screen control
-                                this.lvStatus.BeginUpdate();
-
-                                // Note that .AddRange has a bug so avoid
-                                foreach (ListViewItem lv in this.logBuffer.Where(lv => lv != null))
-                                {
-                                    this.lvStatus.Items.Add(lv);
-                                }
-                            }
-                            catch (Exception)
-                            {
-                            }
-                            finally
-                            {
-                                // Make newest item visible
-                                // We don't care about any spurious errors raised here
-                                if (this.lvStatus.Items.Count > 0)
-                                {
-                                    try
-                                    {
-                                        this.lvStatus.EnsureVisible(this.lvStatus.Items.Count - 1);
-                                        ListViewItem lv = this.lvStatus.Items[this.lvStatus.Items.Count - 1];
-                                        string txt = lv.SubItems[1].Text;
-                                        this.slStatus.Text = txt.Substring(0, txt.Length < 100 ? txt.Length : 100);
-                                    }
-                                    catch (Exception)
-                                    {
-                                    }
-                                }
-
-                                // Tidy up
-                                this.logBuffer.Clear();
-                                this.lvStatus.EndUpdate();
-                                this.lvStatus.Refresh();
-                                this.Refresh();
-                            }
-                        }));
-        }
-
-        /// <summary>
-        /// The form 1_ form closing.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender. 
-        /// </param>
-        /// <param name="e">
-        /// The e. 
-        /// </param>
-        private void Form1FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (this.WindowState != FormWindowState.Minimized && overRideClose == false)
+            if (this.IsHandleCreated)
             {
-                e.Cancel = true;
-                this.WindowState = FormWindowState.Minimized;
+                this.Invoke(
+                    new Action(
+                        () =>
+                            {
+                                if (this.logBuffer.Count <= 0)
+                                {
+                                    return;
+                                }
+
+                                // Avoid buffer overflows by trimming log after n entries
+                                if (this.lvStatus.Items.Count >= Settings.Default.ScreenLines)
+                                {
+                                    this.lvStatus.Items.Clear();
+                                }
+
+                                try
+                                {
+                                    // Copy from buffer to screen control
+                                    this.lvStatus.BeginUpdate();
+
+                                    // Note that .AddRange has a bug so avoid
+                                    foreach (ListViewItem lv in this.logBuffer.Where(lv => lv != null))
+                                    {
+                                        this.lvStatus.Items.Add(lv);
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                }
+                                finally
+                                {
+                                    // Make newest item visible
+                                    // We don't care about any spurious errors raised here
+                                    if (this.lvStatus.Items.Count > 0)
+                                    {
+                                        try
+                                        {
+                                            this.lvStatus.EnsureVisible(this.lvStatus.Items.Count - 1);
+                                            ListViewItem lv = this.lvStatus.Items[this.lvStatus.Items.Count - 1];
+                                            string txt = lv.SubItems[1].Text;
+                                            this.slStatus.Text = txt.Substring(0, txt.Length < 100 ? txt.Length : 100);
+                                        }
+                                        catch (Exception)
+                                        {
+                                        }
+                                    }
+
+                                    // Tidy up
+                                    this.logBuffer.Clear();
+                                    this.lvStatus.EndUpdate();
+                                    this.lvStatus.Refresh();
+                                    this.Refresh();
+                                }
+                            }));
             }
         }
 
         /// <summary>
-        /// The form 1_ move.
+        /// Handles the Move event of the Form1 control.
         /// </summary>
         /// <param name="sender">
-        /// The sender. 
+        /// The source of the event. 
         /// </param>
         /// <param name="e">
-        /// The e. 
+        /// The <see cref="System.EventArgs"/> instance containing the event data. 
         /// </param>
-        private void Form1Move(object sender, EventArgs e)
+        private void Form1_Move(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized)
             {
@@ -1775,15 +1794,9 @@ namespace DrunkenBakery.OWAtray.GUI
         /// </param>
         private void RestoreToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                this.Show();
-                this.WindowState = FormWindowState.Normal;
-            }
-
-            // Activate the form.
-            this.Activate();
-            this.Focus();
+            this.allowVisible = true;
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
         }
 
         /// <summary>
@@ -1989,9 +2002,9 @@ namespace DrunkenBakery.OWAtray.GUI
         /// </summary>
         private void Shutdown()
         {
-            overRideClose = true;
-            this.AddLogEntry(Resources.Form1_Form1_FormClosed_Terminating);
+            this.allowClose = this.allowVisible = true;
 
+            this.AddLogEntry(Resources.Form1_Form1_FormClosed_Terminating);
             if (this.bootOk)
             {
                 SnarlHelper.Revoke(this.Handle);
@@ -2150,6 +2163,11 @@ namespace DrunkenBakery.OWAtray.GUI
                 if (Settings.Default.Autostart)
                 {
                     this.ConnectToExchange();
+                }
+                else
+                {
+                    this.allowVisible = true;
+                    this.Show();
                 }
 
                 // Only getting here means we've booted up ok

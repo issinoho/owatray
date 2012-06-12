@@ -1089,8 +1089,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "OWA Tray Monitor";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1FormClosing);
-            this.Move += new System.EventHandler(this.Form1Move);
+            this.Move += new System.EventHandler(this.Form1_Move);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
