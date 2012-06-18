@@ -81,7 +81,6 @@ namespace DrunkenBakery.OWAtray.GUI
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.lvStatus = new System.Windows.Forms.ListView();
-            this.lblServiceUrl = new System.Windows.Forms.Label();
             this.txtURLEdit = new System.Windows.Forms.TextBox();
             this.txtDomain = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -124,12 +123,15 @@ namespace DrunkenBakery.OWAtray.GUI
             this.pictureBox17 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.lblOWAUrl = new System.Windows.Forms.Label();
+            this.lblOWAUrl = new System.Windows.Forms.LinkLabel();
+            this.lblServiceUrl = new System.Windows.Forms.LinkLabel();
+            this.lblEmail = new System.Windows.Forms.LinkLabel();
             this.label13 = new System.Windows.Forms.Label();
-            this.lblEmail = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.txtDescription = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -565,22 +567,12 @@ namespace DrunkenBakery.OWAtray.GUI
             this.lvStatus.UseCompatibleStateImageBehavior = false;
             this.lvStatus.View = System.Windows.Forms.View.Details;
             // 
-            // lblServiceUrl
-            // 
-            this.lblServiceUrl.AutoSize = true;
-            this.lblServiceUrl.ForeColor = System.Drawing.Color.Black;
-            this.lblServiceUrl.Location = new System.Drawing.Point(115, 61);
-            this.lblServiceUrl.Name = "lblServiceUrl";
-            this.lblServiceUrl.Size = new System.Drawing.Size(50, 13);
-            this.lblServiceUrl.TabIndex = 3;
-            this.lblServiceUrl.Text = "unknown";
-            // 
             // txtURLEdit
             // 
             this.txtURLEdit.Location = new System.Drawing.Point(158, 110);
             this.txtURLEdit.Name = "txtURLEdit";
             this.txtURLEdit.Size = new System.Drawing.Size(362, 21);
-            this.txtURLEdit.TabIndex = 10;
+            this.txtURLEdit.TabIndex = 12;
             this.txtURLEdit.Validated += new System.EventHandler(this.TxtUrlEditValidated);
             // 
             // txtDomain
@@ -588,7 +580,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtDomain.Location = new System.Drawing.Point(386, 47);
             this.txtDomain.Name = "txtDomain";
             this.txtDomain.Size = new System.Drawing.Size(134, 21);
-            this.txtDomain.TabIndex = 4;
+            this.txtDomain.TabIndex = 6;
             this.txtDomain.Validated += new System.EventHandler(this.TxtDomainValidated);
             // 
             // label5
@@ -598,7 +590,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.label5.Location = new System.Drawing.Point(285, 50);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(95, 13);
-            this.label5.TabIndex = 3;
+            this.label5.TabIndex = 5;
             this.label5.Text = "Windows Domain :";
             // 
             // label4
@@ -608,14 +600,14 @@ namespace DrunkenBakery.OWAtray.GUI
             this.label4.Location = new System.Drawing.Point(63, 113);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(58, 13);
-            this.label4.TabIndex = 9;
+            this.label4.TabIndex = 11;
             this.label4.Text = "EWS URL :";
             // 
             // txtServer
             // 
-            this.txtServer.Location = new System.Drawing.Point(158, 17);
+            this.txtServer.Location = new System.Drawing.Point(113, 17);
             this.txtServer.Name = "txtServer";
-            this.txtServer.Size = new System.Drawing.Size(362, 21);
+            this.txtServer.Size = new System.Drawing.Size(155, 21);
             this.txtServer.TabIndex = 1;
             this.txtServer.Validated += new System.EventHandler(this.TxtServerValidated);
             // 
@@ -625,9 +617,9 @@ namespace DrunkenBakery.OWAtray.GUI
             this.label1.ForeColor = System.Drawing.Color.Blue;
             this.label1.Location = new System.Drawing.Point(61, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(88, 13);
+            this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Server Address :";
+            this.label1.Text = "Server :";
             // 
             // txtEmail
             // 
@@ -684,7 +676,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(125, 21);
             this.txtUser.TabIndex = 6;
-            this.txtUser.Validated += new System.EventHandler(this.txtUser_Validated);
+            this.txtUser.Validated += new System.EventHandler(this.TxtUserValidated);
             // 
             // label2
             // 
@@ -886,6 +878,8 @@ namespace DrunkenBakery.OWAtray.GUI
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.txtDescription);
+            this.tabPage2.Controls.Add(this.label14);
             this.tabPage2.Controls.Add(this.chkOnDomain);
             this.tabPage2.Controls.Add(this.cbOverrideOWA);
             this.tabPage2.Controls.Add(this.txtOWAEdit);
@@ -915,8 +909,8 @@ namespace DrunkenBakery.OWAtray.GUI
             this.chkOnDomain.ForeColor = System.Drawing.Color.Blue;
             this.chkOnDomain.Location = new System.Drawing.Point(46, 50);
             this.chkOnDomain.Name = "chkOnDomain";
-            this.chkOnDomain.Size = new System.Drawing.Size(186, 17);
-            this.chkOnDomain.TabIndex = 2;
+            this.chkOnDomain.Size = new System.Drawing.Size(185, 17);
+            this.chkOnDomain.TabIndex = 4;
             this.chkOnDomain.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Use_Windows_Domain_Credentials;
             this.chkOnDomain.UseVisualStyleBackColor = true;
             this.chkOnDomain.CheckedChanged += new System.EventHandler(this.ChkOnDomainCheckedChanged);
@@ -927,7 +921,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.cbOverrideOWA.Location = new System.Drawing.Point(46, 82);
             this.cbOverrideOWA.Name = "cbOverrideOWA";
             this.cbOverrideOWA.Size = new System.Drawing.Size(15, 14);
-            this.cbOverrideOWA.TabIndex = 5;
+            this.cbOverrideOWA.TabIndex = 7;
             this.cbOverrideOWA.UseVisualStyleBackColor = true;
             this.cbOverrideOWA.CheckedChanged += new System.EventHandler(this.CbOverrideOwaCheckedChanged);
             this.cbOverrideOWA.EnabledChanged += new System.EventHandler(this.CbOverrideOwaEnabledChanged);
@@ -937,7 +931,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtOWAEdit.Location = new System.Drawing.Point(158, 79);
             this.txtOWAEdit.Name = "txtOWAEdit";
             this.txtOWAEdit.Size = new System.Drawing.Size(362, 21);
-            this.txtOWAEdit.TabIndex = 7;
+            this.txtOWAEdit.TabIndex = 9;
             this.txtOWAEdit.Validated += new System.EventHandler(this.TxtOwaEditValidated);
             // 
             // label7
@@ -947,7 +941,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.label7.Location = new System.Drawing.Point(63, 82);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(61, 13);
-            this.label7.TabIndex = 6;
+            this.label7.TabIndex = 8;
             this.label7.Text = "OWA URL :";
             // 
             // cbOverrideEWS
@@ -956,7 +950,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.cbOverrideEWS.Location = new System.Drawing.Point(46, 114);
             this.cbOverrideEWS.Name = "cbOverrideEWS";
             this.cbOverrideEWS.Size = new System.Drawing.Size(15, 14);
-            this.cbOverrideEWS.TabIndex = 8;
+            this.cbOverrideEWS.TabIndex = 10;
             this.cbOverrideEWS.UseVisualStyleBackColor = true;
             this.cbOverrideEWS.CheckedChanged += new System.EventHandler(this.CbOverrideEwsCheckedChanged);
             this.cbOverrideEWS.EnabledChanged += new System.EventHandler(this.CbOverrideEwsEnabledChanged);
@@ -1000,11 +994,11 @@ namespace DrunkenBakery.OWAtray.GUI
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.lblOWAUrl);
-            this.tabPage3.Controls.Add(this.label13);
+            this.tabPage3.Controls.Add(this.lblServiceUrl);
             this.tabPage3.Controls.Add(this.lblEmail);
+            this.tabPage3.Controls.Add(this.label13);
             this.tabPage3.Controls.Add(this.label6);
             this.tabPage3.Controls.Add(this.label10);
-            this.tabPage3.Controls.Add(this.lblServiceUrl);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(540, 140);
@@ -1015,37 +1009,50 @@ namespace DrunkenBakery.OWAtray.GUI
             // lblOWAUrl
             // 
             this.lblOWAUrl.AutoSize = true;
-            this.lblOWAUrl.ForeColor = System.Drawing.Color.Black;
             this.lblOWAUrl.Location = new System.Drawing.Point(115, 82);
             this.lblOWAUrl.Name = "lblOWAUrl";
             this.lblOWAUrl.Size = new System.Drawing.Size(50, 13);
-            this.lblOWAUrl.TabIndex = 5;
+            this.lblOWAUrl.TabIndex = 8;
+            this.lblOWAUrl.TabStop = true;
             this.lblOWAUrl.Text = "unknown";
+            this.lblOWAUrl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LblOwaUrlLinkClicked);
+            // 
+            // lblServiceUrl
+            // 
+            this.lblServiceUrl.AutoSize = true;
+            this.lblServiceUrl.Location = new System.Drawing.Point(115, 61);
+            this.lblServiceUrl.Name = "lblServiceUrl";
+            this.lblServiceUrl.Size = new System.Drawing.Size(50, 13);
+            this.lblServiceUrl.TabIndex = 7;
+            this.lblServiceUrl.TabStop = true;
+            this.lblServiceUrl.Text = "unknown";
+            this.lblServiceUrl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LblServiceUrlLinkClicked);
+            // 
+            // lblEmail
+            // 
+            this.lblEmail.AutoSize = true;
+            this.lblEmail.Location = new System.Drawing.Point(115, 40);
+            this.lblEmail.Name = "lblEmail";
+            this.lblEmail.Size = new System.Drawing.Size(50, 13);
+            this.lblEmail.TabIndex = 6;
+            this.lblEmail.TabStop = true;
+            this.lblEmail.Text = "unknown";
+            this.lblEmail.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LblEmailLinkClicked);
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.ForeColor = System.Drawing.Color.Blue;
+            this.label13.ForeColor = System.Drawing.Color.Black;
             this.label13.Location = new System.Drawing.Point(24, 82);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(61, 13);
             this.label13.TabIndex = 4;
             this.label13.Text = "OWA URL :";
             // 
-            // lblEmail
-            // 
-            this.lblEmail.AutoSize = true;
-            this.lblEmail.ForeColor = System.Drawing.Color.Black;
-            this.lblEmail.Location = new System.Drawing.Point(115, 40);
-            this.lblEmail.Name = "lblEmail";
-            this.lblEmail.Size = new System.Drawing.Size(50, 13);
-            this.lblEmail.TabIndex = 1;
-            this.lblEmail.Text = "unknown";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.Color.Blue;
+            this.label6.ForeColor = System.Drawing.Color.Black;
             this.label6.Location = new System.Drawing.Point(24, 40);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(80, 13);
@@ -1055,7 +1062,7 @@ namespace DrunkenBakery.OWAtray.GUI
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.ForeColor = System.Drawing.Color.Blue;
+            this.label10.ForeColor = System.Drawing.Color.Black;
             this.label10.Location = new System.Drawing.Point(24, 61);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(58, 13);
@@ -1072,6 +1079,24 @@ namespace DrunkenBakery.OWAtray.GUI
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Controls";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.Color.Blue;
+            this.label14.Location = new System.Drawing.Point(285, 20);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(67, 13);
+            this.label14.TabIndex = 2;
+            this.label14.Text = "Description :";
+            // 
+            // txtDescription
+            // 
+            this.txtDescription.Location = new System.Drawing.Point(386, 17);
+            this.txtDescription.Name = "txtDescription";
+            this.txtDescription.Size = new System.Drawing.Size(134, 21);
+            this.txtDescription.TabIndex = 3;
+            this.txtDescription.Validated += new System.EventHandler(this.txtDescription_Validated);
             // 
             // Form1
             // 
@@ -1145,8 +1170,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		private System.Windows.Forms.TextBox txtUser;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox txtServer;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label lblServiceUrl;
+        private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox txtDomain;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Button cmdStart;
@@ -1190,10 +1214,8 @@ namespace DrunkenBakery.OWAtray.GUI
 		private System.Windows.Forms.PictureBox pictureBox2;
 		private System.Windows.Forms.PictureBox pictureBox17;
 		private System.Windows.Forms.PictureBox pictureBox1;
-		private System.Windows.Forms.TabPage tabPage3;
-		private System.Windows.Forms.Label lblOWAUrl;
-		private System.Windows.Forms.Label label13;
-		private System.Windows.Forms.Label lblEmail;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Label label13;
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.ToolStripMenuItem overrideAutodiscoveryValidationToolStripMenuItem;
@@ -1215,6 +1237,11 @@ namespace DrunkenBakery.OWAtray.GUI
 		private System.Windows.Forms.ComboBox cmbExchangeVersion;
 		private System.Windows.Forms.CheckBox chkOnDomain;
 		private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.LinkLabel lblOWAUrl;
+        private System.Windows.Forms.LinkLabel lblServiceUrl;
+        private System.Windows.Forms.LinkLabel lblEmail;
+        private System.Windows.Forms.TextBox txtDescription;
+        private System.Windows.Forms.Label label14;
 	}
 }
 

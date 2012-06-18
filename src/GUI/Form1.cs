@@ -146,6 +146,11 @@ namespace DrunkenBakery.OWAtray.GUI
         private string lastPopUrl = string.Empty;
 
         /// <summary>
+        /// The last read mail count
+        /// </summary>
+        private int mailCount;
+
+        /// <summary>
         /// The _pop url.
         /// </summary>
         private string popUrl = string.Empty;
@@ -591,6 +596,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtPwd.Text = this.connection.Password;
             this.txtServer.Text = this.connection.EmailServer;
             this.txtDomain.Text = this.connection.AccountDomain;
+            this.txtDescription.Text = this.connection.Description;
             this.txtURLEdit.Text = this.connection.ServiceUrl;
             this.txtOWAEdit.Text = this.connection.EmailUrl;
             this.txtInterval.Text = this.connection.Interval.ToString();
@@ -1236,6 +1242,48 @@ namespace DrunkenBakery.OWAtray.GUI
         }
 
         /// <summary>
+        /// The lbl email_ link clicked.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void LblEmailLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(this.lblEmail.Text);
+        }
+
+        /// <summary>
+        /// The lbl owa url_ link clicked.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void LblOwaUrlLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(this.lblOWAUrl.Text);
+        }
+
+        /// <summary>
+        /// The lbl service url_ link clicked.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void LblServiceUrlLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(this.lblServiceUrl.Text);
+        }
+
+        /// <summary>
         /// The login automatically tool strip menu item_ check state changed.
         /// </summary>
         /// <param name="sender">
@@ -1297,6 +1345,8 @@ namespace DrunkenBakery.OWAtray.GUI
                     new Action(
                         () =>
                             {
+                                this.mailCount = count;
+
                                 this.notifyIcon1.Text = this.NotificationText(count);
                                 this.notifyIcon1.Icon = new Icon(count > 0 ? this.alertIcon : this.emailIcon);
 
@@ -1470,6 +1520,17 @@ namespace DrunkenBakery.OWAtray.GUI
         }
 
         /// <summary>
+        /// Notifications the text.
+        /// </summary>
+        /// <returns>
+        /// The text 
+        /// </returns>
+        private string NotificationText()
+        {
+            return this.NotificationText(this.mailCount);
+        }
+
+        /// <summary>
         /// The notification text.
         /// </summary>
         /// <param name="myCount">
@@ -1488,9 +1549,16 @@ namespace DrunkenBakery.OWAtray.GUI
                 myCount, 
                 Resources.Form1_WireUpConnectionEvents_unread_email, 
                 myCount != 1 ? "s " : " ");
+
             int charsLeft = MaxTipLength - text1.Length;
             string domainText = string.Format(
                 "{0}\\{1}", this.connection.DiscoveredEmailServer, this.connection.DiscoveredUsername);
+
+            if (this.connection.Description.Length > 0)
+            {
+                domainText = this.connection.Description;
+            }
+
             if (domainText.Length > charsLeft)
             {
                 domainText = domainText.Substring(0, charsLeft);
@@ -1504,6 +1572,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 myCount, 
                 Resources.Form1_WireUpConnectionEvents_unread_email, 
                 myCount != 1 ? "s " : " ");
+
             return finalText;
         }
 
@@ -2349,6 +2418,22 @@ namespace DrunkenBakery.OWAtray.GUI
         }
 
         /// <summary>
+        /// The txt user_ validated.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender. 
+        /// </param>
+        /// <param name="e">
+        /// The e. 
+        /// </param>
+        private void TxtUserValidated(object sender, EventArgs e)
+        {
+            this.connection.Username = this.txtUser.Text;
+            this.scenario.Save();
+            this.UpdateEmail();
+        }
+
+        /// <summary>
         /// The unwire theConnection events.
         /// </summary>
         private void UnwireConnectionEvents()
@@ -2477,8 +2562,8 @@ namespace DrunkenBakery.OWAtray.GUI
         {
             foreach (IEmailInterface item in this.scenario.Connections.Where(item => !item.AreEventsDefined))
             {
-                item.LogMessage += AddLogEntry;
-                item.LogException += AddLogEntry;
+                item.LogMessage += this.AddLogEntry;
+                item.LogException += this.AddLogEntry;
                 item.ConnectedStateChange += this.ConnectedStateHandler;
                 item.NewMail += this.NewMailHandler;
                 item.NewAppointment += this.NewAppointmentHandler;
@@ -2487,19 +2572,19 @@ namespace DrunkenBakery.OWAtray.GUI
         }
 
         /// <summary>
-        /// The txt user_ validated.
+        /// The txt description_ validated.
         /// </summary>
         /// <param name="sender">
-        /// The sender. 
+        /// The sender.
         /// </param>
         /// <param name="e">
-        /// The e. 
+        /// The e.
         /// </param>
-        private void txtUser_Validated(object sender, EventArgs e)
+        private void txtDescription_Validated(object sender, EventArgs e)
         {
-            this.connection.Username = this.txtUser.Text;
+            this.connection.Description = this.txtDescription.Text;
             this.scenario.Save();
-            this.UpdateEmail();
+            this.notifyIcon1.Text = this.NotificationText();
         }
 
         #endregion

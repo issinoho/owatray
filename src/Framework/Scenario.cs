@@ -42,6 +42,11 @@ namespace DrunkenBakery.OWAtray.Framework
         private const string ElementAutoLogin = "AutoLogin";
 
         /// <summary>
+        /// The description.
+        /// </summary>
+        private const string ElementDescription = "Description";
+
+        /// <summary>
         /// The element disable calendar.
         /// </summary>
         private const string ElementDisableCalendar = "DisableCalendar";
@@ -192,41 +197,142 @@ namespace DrunkenBakery.OWAtray.Framework
             doc.Load(filename);
 
             // Connections
-            XmlNodeList connections = doc.SelectNodes(SearchConnection);
-            if (connections != null)
+            var connections = doc.SelectNodes(SearchConnection);
+            if (connections == null)
             {
-                foreach (XmlNode node in connections)
+                return;
+            }
+
+            foreach (XmlNode node in connections)
+            {
+                var item =
+                    ConnectionFactory.CreateConnection(
+                        (EmailType)Enum.Parse(typeof(EmailType), node[ElementType].InnerText));
+
+                var xmlElementEmailAddress = node[ElementEmailAddress];
+                if (ElementEmailAddress != null)
                 {
-                    IEmailInterface item =
-                        ConnectionFactory.CreateConnection(
-                            (EmailType)Enum.Parse(typeof(EmailType), node[ElementType].InnerText));
-                    item.EmailAddress = node[ElementEmailAddress].InnerText;
-                    item.EncryptedPassword = node[ElementPassword].InnerText;
-                    item.Username = node[ElementUsername].InnerText;
-                    item.Interval = Convert.ToInt32(node[ElementInterval].InnerText);
-                    item.EmailServer = node[ElementEmailServer].InnerText;
-                    item.AccountDomain = node[ElementAccountDomain].InnerText;
-                    item.OverrideServiceUrl = node[ElementOverrideServiceUrl].InnerText == "0" ? false : true;
-                    item.ServiceUrl = node[ElementServiceUrl].InnerText;
-                    item.OverrideEmailUrl = node[ElementOverrideEmailUrl].InnerText == "0" ? false : true;
-                    item.EmailUrl = node[ElementEmailUrl].InnerText;
-                    item.UseAutodiscovery = node[ElementUseAutodiscovery].InnerText == "0" ? false : true;
-                    item.OnWindowsDomain = node[ElementOnWindowsDomain].InnerText == "0" ? false : true;
-                    item.OverrideCertificate = node[ElementOverrideCertificate].InnerText == "0" ? false : true;
-                    item.AlwaysUseInternetExplorer = node[ElementAlwaysUseInternetExplorer].InnerText == "0"
-                                                         ? false
-                                                         : true;
-                    item.DisableCalendar = node[ElementDisableCalendar].InnerText == "0" ? false : true;
-                    item.AutoLogin = node[ElementAutoLogin].InnerText == "0" ? false : true;
-                    item.OverrideOffice365Login = node[ElementOverrideOffice365Login].InnerText == "0" ? false : true;
-                    item.OverrideAutodiscoveryValidation = node[ElementOverrideAutodiscoveryValidation].InnerText == "0"
-                                                               ? false
-                                                               : true;
-                    item.ServerVersion = node[ElementServerVersion].InnerText == "Autodetect"
+                    item.EmailAddress = xmlElementEmailAddress.InnerText;
+                }
+
+                var xmlElementPassword = node[ElementPassword];
+                if (xmlElementPassword != null)
+                {
+                    item.EncryptedPassword = xmlElementPassword.InnerText;
+                }
+
+                var xmlElementUsername = node[ElementUsername];
+                if (xmlElementUsername != null)
+                {
+                    item.Username = xmlElementUsername.InnerText;
+                }
+
+                var xmlElementInterval = node[ElementInterval];
+                if (xmlElementInterval != null)
+                {
+                    item.Interval = Convert.ToInt32(xmlElementInterval.InnerText);
+                }
+
+                var xmlElementEmailServer = node[ElementEmailServer];
+                if (xmlElementEmailServer != null)
+                {
+                    item.EmailServer = xmlElementEmailServer.InnerText;
+                }
+
+                var xmlElementAccountDomain = node[ElementAccountDomain];
+                if (xmlElementAccountDomain != null)
+                {
+                    item.AccountDomain = xmlElementAccountDomain.InnerText;
+                }
+
+                var xmlElementOverrideServiceUrl = node[ElementOverrideServiceUrl];
+                if (xmlElementOverrideServiceUrl != null)
+                {
+                    item.OverrideServiceUrl = xmlElementOverrideServiceUrl.InnerText != "0";
+                }
+
+                var xmlElementServiceUrl = node[ElementServiceUrl];
+                if (xmlElementServiceUrl != null)
+                {
+                    item.ServiceUrl = xmlElementServiceUrl.InnerText;
+                }
+
+                var xmlElementOverrideEmailUrl = node[ElementOverrideEmailUrl];
+                if (xmlElementOverrideEmailUrl != null)
+                {
+                    item.OverrideEmailUrl = xmlElementOverrideEmailUrl.InnerText != "0";
+                }
+
+                var xmlElementEmailUrl = node[ElementEmailUrl];
+                if (xmlElementEmailUrl != null)
+                {
+                    item.EmailUrl = xmlElementEmailUrl.InnerText;
+                }
+
+                var xmlElementDescription = node[ElementDescription];
+                if (xmlElementDescription != null)
+                {
+                    item.Description = xmlElementDescription.InnerText;
+                }
+
+                var xmlElementUseAutodiscovery = node[ElementUseAutodiscovery];
+                if (xmlElementUseAutodiscovery != null)
+                {
+                    item.UseAutodiscovery = xmlElementUseAutodiscovery.InnerText != "0";
+                }
+
+                var xmlElementOnWindowsDomain = node[ElementOnWindowsDomain];
+                if (xmlElementOnWindowsDomain != null)
+                {
+                    item.OnWindowsDomain = xmlElementOnWindowsDomain.InnerText != "0";
+                }
+
+                var xmlElementOverrideCertificate = node[ElementOverrideCertificate];
+                if (xmlElementOverrideCertificate != null)
+                {
+                    item.OverrideCertificate = xmlElementOverrideCertificate.InnerText != "0";
+                }
+
+                var xmlElementAlwaysUseInternetExplorer = node[ElementAlwaysUseInternetExplorer];
+                if (xmlElementAlwaysUseInternetExplorer != null)
+                {
+                    item.AlwaysUseInternetExplorer = xmlElementAlwaysUseInternetExplorer.InnerText != "0";
+                }
+
+                var xmlElementDisableCalendar = node[ElementDisableCalendar];
+                if (xmlElementDisableCalendar != null)
+                {
+                    item.DisableCalendar = xmlElementDisableCalendar.InnerText != "0";
+                }
+
+                var xmlElementAutoLogin = node[ElementAutoLogin];
+                if (xmlElementAutoLogin != null)
+                {
+                    item.AutoLogin = xmlElementAutoLogin.InnerText != "0";
+                }
+
+                var xmlElementOverrideOffice365Login = node[ElementOverrideOffice365Login];
+                if (xmlElementOverrideOffice365Login != null)
+                {
+                    item.OverrideOffice365Login = xmlElementOverrideOffice365Login.InnerText != "0";
+                }
+
+                var xmlElementOverrideAutodiscoveryValidation = node[ElementOverrideAutodiscoveryValidation];
+                if (xmlElementOverrideAutodiscoveryValidation != null)
+                {
+                    item.OverrideAutodiscoveryValidation = xmlElementOverrideAutodiscoveryValidation.InnerText != "0";
+                }
+
+                var xmlElementServerVersion = node[ElementServerVersion];
+                if (xmlElementServerVersion != null)
+                {
+                    item.ServerVersion = xmlElementServerVersion.InnerText == "Autodetect"
                                              ? "Default"
                                              : node[ElementServerVersion].InnerText;
-                    this.Connections.Add(item);
                 }
+
+                // Add to collection
+                this.Connections.Add(item);
             }
         }
 
@@ -271,6 +377,7 @@ namespace DrunkenBakery.OWAtray.Framework
                     writer.WriteElementString(ElementServiceUrl, item.ServiceUrl);
                     writer.WriteElementString(ElementOverrideEmailUrl, item.OverrideEmailUrl ? "1" : "0");
                     writer.WriteElementString(ElementEmailUrl, item.EmailUrl);
+                    writer.WriteElementString(ElementDescription, item.Description);
                     writer.WriteElementString(ElementUseAutodiscovery, item.UseAutodiscovery ? "1" : "0");
                     writer.WriteElementString(ElementOnWindowsDomain, item.OnWindowsDomain ? "1" : "0");
                     writer.WriteElementString(ElementOverrideCertificate, item.OverrideCertificate ? "1" : "0");
