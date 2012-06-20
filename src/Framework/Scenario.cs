@@ -2,7 +2,7 @@
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.Framework
 // 
-//  <copyright file="Scenario.cs" company="The Drunken Bakery”>
+//  <copyright file="Scenario.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
 // 
@@ -181,7 +181,7 @@ namespace DrunkenBakery.OWAtray.Framework
         /// The load.
         /// </summary>
         /// <param name="filename">
-        /// The filename.
+        /// The filename. 
         /// </param>
         public void Load(string filename)
         {
@@ -197,7 +197,7 @@ namespace DrunkenBakery.OWAtray.Framework
             doc.Load(filename);
 
             // Connections
-            var connections = doc.SelectNodes(SearchConnection);
+            XmlNodeList connections = doc.SelectNodes(SearchConnection);
             if (connections == null)
             {
                 return;
@@ -205,125 +205,125 @@ namespace DrunkenBakery.OWAtray.Framework
 
             foreach (XmlNode node in connections)
             {
-                var item =
+                IEmailInterface item =
                     ConnectionFactory.CreateConnection(
                         (EmailType)Enum.Parse(typeof(EmailType), node[ElementType].InnerText));
 
-                var xmlElementEmailAddress = node[ElementEmailAddress];
+                XmlElement xmlElementEmailAddress = node[ElementEmailAddress];
                 if (ElementEmailAddress != null)
                 {
                     item.EmailAddress = xmlElementEmailAddress.InnerText;
                 }
 
-                var xmlElementPassword = node[ElementPassword];
+                XmlElement xmlElementPassword = node[ElementPassword];
                 if (xmlElementPassword != null)
                 {
                     item.EncryptedPassword = xmlElementPassword.InnerText;
                 }
 
-                var xmlElementUsername = node[ElementUsername];
+                XmlElement xmlElementUsername = node[ElementUsername];
                 if (xmlElementUsername != null)
                 {
                     item.Username = xmlElementUsername.InnerText;
                 }
 
-                var xmlElementInterval = node[ElementInterval];
+                XmlElement xmlElementInterval = node[ElementInterval];
                 if (xmlElementInterval != null)
                 {
                     item.Interval = Convert.ToInt32(xmlElementInterval.InnerText);
                 }
 
-                var xmlElementEmailServer = node[ElementEmailServer];
+                XmlElement xmlElementEmailServer = node[ElementEmailServer];
                 if (xmlElementEmailServer != null)
                 {
                     item.EmailServer = xmlElementEmailServer.InnerText;
                 }
 
-                var xmlElementAccountDomain = node[ElementAccountDomain];
+                XmlElement xmlElementAccountDomain = node[ElementAccountDomain];
                 if (xmlElementAccountDomain != null)
                 {
                     item.AccountDomain = xmlElementAccountDomain.InnerText;
                 }
 
-                var xmlElementOverrideServiceUrl = node[ElementOverrideServiceUrl];
+                XmlElement xmlElementOverrideServiceUrl = node[ElementOverrideServiceUrl];
                 if (xmlElementOverrideServiceUrl != null)
                 {
                     item.OverrideServiceUrl = xmlElementOverrideServiceUrl.InnerText != "0";
                 }
 
-                var xmlElementServiceUrl = node[ElementServiceUrl];
+                XmlElement xmlElementServiceUrl = node[ElementServiceUrl];
                 if (xmlElementServiceUrl != null)
                 {
                     item.ServiceUrl = xmlElementServiceUrl.InnerText;
                 }
 
-                var xmlElementOverrideEmailUrl = node[ElementOverrideEmailUrl];
+                XmlElement xmlElementOverrideEmailUrl = node[ElementOverrideEmailUrl];
                 if (xmlElementOverrideEmailUrl != null)
                 {
                     item.OverrideEmailUrl = xmlElementOverrideEmailUrl.InnerText != "0";
                 }
 
-                var xmlElementEmailUrl = node[ElementEmailUrl];
+                XmlElement xmlElementEmailUrl = node[ElementEmailUrl];
                 if (xmlElementEmailUrl != null)
                 {
                     item.EmailUrl = xmlElementEmailUrl.InnerText;
                 }
 
-                var xmlElementDescription = node[ElementDescription];
+                XmlElement xmlElementDescription = node[ElementDescription];
                 if (xmlElementDescription != null)
                 {
                     item.Description = xmlElementDescription.InnerText;
                 }
 
-                var xmlElementUseAutodiscovery = node[ElementUseAutodiscovery];
+                XmlElement xmlElementUseAutodiscovery = node[ElementUseAutodiscovery];
                 if (xmlElementUseAutodiscovery != null)
                 {
                     item.UseAutodiscovery = xmlElementUseAutodiscovery.InnerText != "0";
                 }
 
-                var xmlElementOnWindowsDomain = node[ElementOnWindowsDomain];
+                XmlElement xmlElementOnWindowsDomain = node[ElementOnWindowsDomain];
                 if (xmlElementOnWindowsDomain != null)
                 {
                     item.OnWindowsDomain = xmlElementOnWindowsDomain.InnerText != "0";
                 }
 
-                var xmlElementOverrideCertificate = node[ElementOverrideCertificate];
+                XmlElement xmlElementOverrideCertificate = node[ElementOverrideCertificate];
                 if (xmlElementOverrideCertificate != null)
                 {
                     item.OverrideCertificate = xmlElementOverrideCertificate.InnerText != "0";
                 }
 
-                var xmlElementAlwaysUseInternetExplorer = node[ElementAlwaysUseInternetExplorer];
+                XmlElement xmlElementAlwaysUseInternetExplorer = node[ElementAlwaysUseInternetExplorer];
                 if (xmlElementAlwaysUseInternetExplorer != null)
                 {
                     item.AlwaysUseInternetExplorer = xmlElementAlwaysUseInternetExplorer.InnerText != "0";
                 }
 
-                var xmlElementDisableCalendar = node[ElementDisableCalendar];
+                XmlElement xmlElementDisableCalendar = node[ElementDisableCalendar];
                 if (xmlElementDisableCalendar != null)
                 {
                     item.DisableCalendar = xmlElementDisableCalendar.InnerText != "0";
                 }
 
-                var xmlElementAutoLogin = node[ElementAutoLogin];
+                XmlElement xmlElementAutoLogin = node[ElementAutoLogin];
                 if (xmlElementAutoLogin != null)
                 {
                     item.AutoLogin = xmlElementAutoLogin.InnerText != "0";
                 }
 
-                var xmlElementOverrideOffice365Login = node[ElementOverrideOffice365Login];
+                XmlElement xmlElementOverrideOffice365Login = node[ElementOverrideOffice365Login];
                 if (xmlElementOverrideOffice365Login != null)
                 {
                     item.OverrideOffice365Login = xmlElementOverrideOffice365Login.InnerText != "0";
                 }
 
-                var xmlElementOverrideAutodiscoveryValidation = node[ElementOverrideAutodiscoveryValidation];
+                XmlElement xmlElementOverrideAutodiscoveryValidation = node[ElementOverrideAutodiscoveryValidation];
                 if (xmlElementOverrideAutodiscoveryValidation != null)
                 {
                     item.OverrideAutodiscoveryValidation = xmlElementOverrideAutodiscoveryValidation.InnerText != "0";
                 }
 
-                var xmlElementServerVersion = node[ElementServerVersion];
+                XmlElement xmlElementServerVersion = node[ElementServerVersion];
                 if (xmlElementServerVersion != null)
                 {
                     item.ServerVersion = xmlElementServerVersion.InnerText == "Autodetect"
@@ -352,7 +352,7 @@ namespace DrunkenBakery.OWAtray.Framework
         /// The save.
         /// </summary>
         /// <param name="filename">
-        /// The filename.
+        /// The filename. 
         /// </param>
         private void Save(string filename)
         {

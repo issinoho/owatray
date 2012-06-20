@@ -2,7 +2,7 @@
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.Connections.Abstract
 // 
-//  <copyright file="AbstractConnection.cs" company="The Drunken Bakery”>
+//  <copyright file="AbstractConnection.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
 // 
@@ -331,10 +331,10 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The connect.
         /// </summary>
         /// <param name="email">
-        /// The email.
+        /// The email. 
         /// </param>
         /// <param name="password">
-        /// The password.
+        /// The password. 
         /// </param>
         public virtual void Connect(string email, string password)
         {
@@ -347,13 +347,13 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The connect.
         /// </summary>
         /// <param name="username">
-        /// The username.
+        /// The username. 
         /// </param>
         /// <param name="email">
-        /// The email.
+        /// The email. 
         /// </param>
         /// <param name="password">
-        /// The password.
+        /// The password. 
         /// </param>
         public virtual void Connect(string username, string email, string password)
         {
@@ -382,10 +382,10 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The send.
         /// </summary>
         /// <param name="subject">
-        /// The subject.
+        /// The subject. 
         /// </param>
         /// <param name="recipient">
-        /// The recipient.
+        /// The recipient. 
         /// </param>
         public abstract void Send(string subject, string recipient);
 
@@ -393,10 +393,10 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The send a.
         /// </summary>
         /// <param name="subject">
-        /// The subject.
+        /// The subject. 
         /// </param>
         /// <param name="recipient">
-        /// The recipient.
+        /// The recipient. 
         /// </param>
         public abstract void SendA(string subject, string recipient);
 
@@ -408,10 +408,10 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The raise exception.
         /// </summary>
         /// <param name="message">
-        /// The message.
+        /// The message. 
         /// </param>
         /// <param name="ex">
-        /// The ex.
+        /// The ex. 
         /// </param>
         protected virtual void RaiseException(string message, Exception ex)
         {
@@ -427,7 +427,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The raise log message.
         /// </summary>
         /// <param name="message">
-        /// The message.
+        /// The message. 
         /// </param>
         protected virtual void RaiseLogMessage(string message)
         {
@@ -438,10 +438,10 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The raise log message.
         /// </summary>
         /// <param name="message">
-        /// The message.
+        /// The message. 
         /// </param>
         /// <param name="ex">
-        /// The ex.
+        /// The ex. 
         /// </param>
         protected virtual void RaiseLogMessage(string message, Exception ex)
         {
@@ -452,10 +452,10 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The raise log message.
         /// </summary>
         /// <param name="message">
-        /// The message.
+        /// The message. 
         /// </param>
         /// <param name="severity">
-        /// The severity.
+        /// The severity. 
         /// </param>
         protected virtual void RaiseLogMessage(string message, Severity severity)
         {
@@ -469,7 +469,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The raise message count.
         /// </summary>
         /// <param name="count">
-        /// The count.
+        /// The count. 
         /// </param>
         protected virtual void RaiseMessageCount(int count)
         {
@@ -483,19 +483,19 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The raise new appointment.
         /// </summary>
         /// <param name="minsToGo">
-        /// The mins to go.
+        /// The mins to go. 
         /// </param>
         /// <param name="startTime">
-        /// The start time.
+        /// The start time. 
         /// </param>
         /// <param name="subject">
-        /// The subject.
+        /// The subject. 
         /// </param>
         /// <param name="location">
-        /// The location.
+        /// The location. 
         /// </param>
         /// <param name="accessUrl">
-        /// The access url.
+        /// The access url. 
         /// </param>
         protected virtual void RaiseNewAppointment(
             int minsToGo, DateTime startTime, string subject, string location, string accessUrl)
@@ -510,16 +510,16 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The raise new mail.
         /// </summary>
         /// <param name="arrivalTime">
-        /// The arrival time.
+        /// The arrival time. 
         /// </param>
         /// <param name="subject">
-        /// The subject.
+        /// The subject. 
         /// </param>
         /// <param name="sender">
-        /// The sender.
+        /// The sender. 
         /// </param>
         /// <param name="accessUrl">
-        /// The access url.
+        /// The access url. 
         /// </param>
         protected virtual void RaiseNewMail(DateTime arrivalTime, string subject, string sender, string accessUrl)
         {

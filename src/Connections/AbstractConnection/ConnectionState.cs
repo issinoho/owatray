@@ -1,54 +1,91 @@
-﻿//------------------------------------------------------------------
-// DrunkenBakery OWA Tray Monitor
-// ConnectionState Class
-//
-// <copyright file="ConnectionState.cs" company="The Drunken Bakery">
-//     Copyright (c) 2012 The Drunken Bakery. All rights reserved.
-// </copyright>
-//
-// Defines the discrete states that a connection must be in
-//
-//------------------------------------------------------------------
-
-using DrunkenBakery.OWAtray.Connections.Abstract.Properties;
+﻿// ------------------------------------------------------------------
+//  DrunkenBakery OWA Tray Monitor
+//  OWAtray.DrunkenBakery.OWAtray.Connections.Abstract
+// 
+//  <copyright file="ConnectionState.cs" company="The Drunken Bakery">
+//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//  </copyright>
+// 
+//  Author: IRS
+// ------------------------------------------------------------------
 
 namespace DrunkenBakery.OWAtray.Connections.Abstract
 {
-	public enum ConnectionState
-	{
-		Disconnected,
-		Connecting,
-		Connected,
-		Disconnecting,
-		Failed
-	}
+    using DrunkenBakery.OWAtray.Connections.Abstract.Properties;
 
-	public static partial class EnumExtensions
-	{
-		public static string Description(this ConnectionState e)
-		{
-			var state = "";
+    /// <summary>
+    /// The connection state.
+    /// </summary>
+    public enum ConnectionState
+    {
+        /// <summary>
+        /// The disconnected.
+        /// </summary>
+        Disconnected, 
 
-			switch (e)
-			{
-				case ConnectionState.Disconnected:
-					state = Resources.EnumExtensions_Description_Disconnected;
-					break;
-				case ConnectionState.Connecting:
-					state = Resources.EnumExtensions_Description_Connecting;
-					break;
-				case ConnectionState.Connected:
-					state = Resources.EnumExtensions_Description_Connected;
-					break;
-				case ConnectionState.Disconnecting:
-					state = Resources.EnumExtensions_Description_Disconnecting;
-					break;
-				case ConnectionState.Failed:
-					state = Resources.EnumExtensions_Description_Failed;
-					break;
-			}
+        /// <summary>
+        /// The connecting.
+        /// </summary>
+        Connecting, 
 
-			return state;
-		}
-	}
+        /// <summary>
+        /// The connected.
+        /// </summary>
+        Connected, 
+
+        /// <summary>
+        /// The disconnecting.
+        /// </summary>
+        Disconnecting, 
+
+        /// <summary>
+        /// The failed.
+        /// </summary>
+        Failed
+    }
+
+    /// <summary>
+    /// The enum extensions.
+    /// </summary>
+    public static partial class EnumExtensions
+    {
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The description.
+        /// </summary>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        /// <returns>
+        /// The description.
+        /// </returns>
+        public static string Description(this ConnectionState e)
+        {
+            string state = string.Empty;
+
+            switch (e)
+            {
+                case ConnectionState.Disconnected:
+                    state = Resources.EnumExtensions_Description_Disconnected;
+                    break;
+                case ConnectionState.Connecting:
+                    state = Resources.EnumExtensions_Description_Connecting;
+                    break;
+                case ConnectionState.Connected:
+                    state = Resources.EnumExtensions_Description_Connected;
+                    break;
+                case ConnectionState.Disconnecting:
+                    state = Resources.EnumExtensions_Description_Disconnecting;
+                    break;
+                case ConnectionState.Failed:
+                    state = Resources.EnumExtensions_Description_Failed;
+                    break;
+            }
+
+            return state;
+        }
+
+        #endregion
+    }
 }

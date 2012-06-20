@@ -2,7 +2,7 @@
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.GUI
 // 
-//  <copyright file="Form1.cs" company="The Drunken Bakery”>
+//  <copyright file="Form1.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
 // 
@@ -203,7 +203,7 @@ namespace DrunkenBakery.OWAtray.GUI
         {
             get
             {
-                string email = (this.txtEmail.Text.Length > 0) ? this.txtEmail.Text : this.txtUser.Text;
+                var email = (this.txtEmail.Text.Length > 0) ? this.txtEmail.Text : this.txtUser.Text;
                 if (email.Length > 0 && !email.Contains("@"))
                 {
                     email = email + "@" + GetSubDomain(this.txtServer.Text);
@@ -305,7 +305,7 @@ namespace DrunkenBakery.OWAtray.GUI
             try
             {
                 // get the currently logged in user
-                WindowsIdentity user = WindowsIdentity.GetCurrent();
+                var user = WindowsIdentity.GetCurrent();
                 if (user != null)
                 {
                     var principal = new WindowsPrincipal(user);
@@ -1406,12 +1406,13 @@ namespace DrunkenBakery.OWAtray.GUI
                     {
                        Arguments = "registry", WindowStyle = ProcessWindowStyle.Hidden 
                     };
+
                 if (Environment.OSVersion.Version.Major >= 6)
                 {
                     runSvc.Verb = "runas";
                 }
 
-                Process serviceProcess = Process.Start(runSvc);
+                var serviceProcess = Process.Start(runSvc);
 
                 while (!serviceProcess.HasExited)
                 {
@@ -1421,7 +1422,7 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
+                this.AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
                 return;
             }
 
@@ -1550,8 +1551,8 @@ namespace DrunkenBakery.OWAtray.GUI
                 Resources.Form1_WireUpConnectionEvents_unread_email, 
                 myCount != 1 ? "s " : " ");
 
-            int charsLeft = MaxTipLength - text1.Length;
-            string domainText = string.Format(
+            var charsLeft = MaxTipLength - text1.Length;
+            var domainText = string.Format(
                 "{0}\\{1}", this.connection.DiscoveredEmailServer, this.connection.DiscoveredUsername);
 
             if (this.connection.Description.Length > 0)
@@ -1564,7 +1565,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 domainText = domainText.Substring(0, charsLeft);
             }
 
-            string finalText = string.Format(
+            var finalText = string.Format(
                 "{0}{1}{2}{1}{3} {4}{5}", 
                 AssemblyHelpers.AssemblyTitle, 
                 Environment.NewLine, 
@@ -1658,7 +1659,7 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(ex.Message, ex);
+                this.AddLogEntry(ex.Message, ex);
             }
         }
 
@@ -1700,8 +1701,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.AddLogEntry(
                 string.Format(
                     "{0} {1}", 
-                    Resources.
-                        Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched, 
+                    Resources.Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched, 
                     this.connection.OverrideAutodiscoveryValidation
                         ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
                         : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
@@ -1729,8 +1729,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.AddLogEntry(
                 string.Format(
                     "{0} {1}", 
-                    Resources.
-                        Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched, 
+                    Resources.Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched, 
                     this.connection.OverrideCertificate
                         ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
                         : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
@@ -1892,7 +1891,7 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(ex.Message, ex);
+                this.AddLogEntry(ex.Message, ex);
             }
         }
 
@@ -1930,7 +1929,8 @@ namespace DrunkenBakery.OWAtray.GUI
                         Arguments = "autologin " + (this.connection.AutoLogin ? "Yes" : "No"), 
                         WindowStyle = ProcessWindowStyle.Hidden
                     };
-                Process serviceProcess = Process.Start(runSvc);
+
+                var serviceProcess = Process.Start(runSvc);
 
                 while (!serviceProcess.HasExited)
                 {
@@ -1940,7 +1940,7 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
+                this.AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
             }
         }
 
@@ -1956,7 +1956,8 @@ namespace DrunkenBakery.OWAtray.GUI
                         Arguments = "browser " + (this.connection.AlwaysUseInternetExplorer ? "Yes" : "No"), 
                         WindowStyle = ProcessWindowStyle.Hidden
                     };
-                Process serviceProcess = Process.Start(runSvc);
+
+                var serviceProcess = Process.Start(runSvc);
 
                 while (!serviceProcess.HasExited)
                 {
@@ -1966,7 +1967,7 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
+                this.AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
             }
         }
 
@@ -1981,7 +1982,8 @@ namespace DrunkenBakery.OWAtray.GUI
                     {
                        Arguments = "exchange " + this.connection.Version, WindowStyle = ProcessWindowStyle.Hidden 
                     };
-                Process serviceProcess = Process.Start(runSvc);
+
+                var serviceProcess = Process.Start(runSvc);
 
                 while (!serviceProcess.HasExited)
                 {
@@ -1991,7 +1993,7 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
+                this.AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
             }
         }
 
@@ -2006,7 +2008,8 @@ namespace DrunkenBakery.OWAtray.GUI
                     {
                        Arguments = "url " + this.connection.DerivedEmailUrl, WindowStyle = ProcessWindowStyle.Hidden 
                     };
-                Process serviceProcess = Process.Start(runSvc);
+
+                var serviceProcess = Process.Start(runSvc);
 
                 while (!serviceProcess.HasExited)
                 {
@@ -2016,7 +2019,7 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
+                this.AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
             }
         }
 
@@ -2031,7 +2034,8 @@ namespace DrunkenBakery.OWAtray.GUI
                     {
                        Arguments = "password " + this.connection.Password, WindowStyle = ProcessWindowStyle.Hidden 
                     };
-                Process serviceProcess = Process.Start(runSvc);
+
+                var serviceProcess = Process.Start(runSvc);
 
                 while (!serviceProcess.HasExited)
                 {
@@ -2041,7 +2045,7 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
+                this.AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
             }
         }
 
@@ -2062,7 +2066,7 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(ex.Message, ex);
+                this.AddLogEntry(ex.Message, ex);
             }
         }
 
@@ -2175,7 +2179,7 @@ namespace DrunkenBakery.OWAtray.GUI
             }
             catch (Exception ex)
             {
-                AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
+                this.AddLogEntry(string.Format("{0}: {1}", Resources.Form1_ShellOwaUrl_Error, ex.Message), ex);
                 return;
             }
 
@@ -2337,8 +2341,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 {
                     this.errorProvider1.SetError(
                         this.txtInterval, 
-                        Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_
-                        + MaxInterval.ToString());
+                        Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_ + MaxInterval.ToString());
                     e.Cancel = true;
                 }
             }
@@ -2346,8 +2349,7 @@ namespace DrunkenBakery.OWAtray.GUI
             {
                 this.errorProvider1.SetError(
                     this.txtInterval, 
-                    Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_
-                    + MaxInterval.ToString());
+                    Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_ + MaxInterval.ToString());
                 e.Cancel = true;
             }
         }
@@ -2440,8 +2442,8 @@ namespace DrunkenBakery.OWAtray.GUI
         {
             foreach (IEmailInterface item in this.scenario.Connections.Where(item => item.AreEventsDefined))
             {
-                item.LogMessage -= AddLogEntry;
-                item.LogException -= AddLogEntry;
+                item.LogMessage -= this.AddLogEntry;
+                item.LogException -= this.AddLogEntry;
                 item.ConnectedStateChange -= this.ConnectedStateHandler;
                 item.NewMail -= this.NewMailHandler;
                 item.NewAppointment -= this.NewAppointmentHandler;
@@ -2575,12 +2577,12 @@ namespace DrunkenBakery.OWAtray.GUI
         /// The txt description_ validated.
         /// </summary>
         /// <param name="sender">
-        /// The sender.
+        /// The sender. 
         /// </param>
         /// <param name="e">
-        /// The e.
+        /// The e. 
         /// </param>
-        private void txtDescription_Validated(object sender, EventArgs e)
+        private void TxtDescriptionValidated(object sender, EventArgs e)
         {
             this.connection.Description = this.txtDescription.Text;
             this.scenario.Save();

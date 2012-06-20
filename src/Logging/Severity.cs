@@ -2,7 +2,7 @@
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.Logging
 // 
-//  <copyright file="Severity.cs" company="The Drunken Bakery”>
+//  <copyright file="Severity.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
 // 

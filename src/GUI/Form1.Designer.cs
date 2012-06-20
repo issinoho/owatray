@@ -1096,7 +1096,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.Size = new System.Drawing.Size(134, 21);
             this.txtDescription.TabIndex = 3;
-            this.txtDescription.Validated += new System.EventHandler(this.txtDescription_Validated);
+            this.txtDescription.Validated += new System.EventHandler(this.TxtDescriptionValidated);
             // 
             // Form1
             // 

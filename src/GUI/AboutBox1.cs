@@ -1,58 +1,92 @@
-//------------------------------------------------------------------
-// DrunkenBakery OWA Tray Monitor
-// AboutBox Form
-//
-// <copyright file="AboutBox1.cs" company="The Drunken Bakery">
-//     Copyright (c) 2009, 2010 The Drunken Bakery. All rights reserved.
-// </copyright>
-//
-// Standard About box.
-// Uses the Assembly details to populate the various fields.
-// Also reports the name and version of all dependent assemblies.
-//
-//------------------------------------------------------------------
-
-using DrunkenBakery.OWAtray.GUI.Properties;
+// ------------------------------------------------------------------
+//  DrunkenBakery OWA Tray Monitor
+//  OWAtray.DrunkenBakery.OWAtray.GUI
+// 
+//  <copyright file="AboutBox1.cs" company="The Drunken Bakery">
+//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//  </copyright>
+// 
+//  Author: IRS
+// ------------------------------------------------------------------
 
 namespace DrunkenBakery.OWAtray.GUI
 {
-	using System;
-	using System.Windows.Forms;
+    using System;
+    using System.Windows.Forms;
 
-	partial class AboutBox1 : Form
-	{
-		public AboutBox1()
-		{
-			this.InitializeComponent();
+    using DrunkenBakery.OWAtray.GUI.Properties;
 
-			Text = String.Format("{0} {1}", Resources.AboutBox1_AboutBox1_About, AssemblyHelpers.AssemblyTitle);
-			labelProductName.Text = String.Format("{0} - {1}", AssemblyHelpers.AssemblyProduct, AssemblyHelpers.AssemblyTitle);
-			labelVersion.Text = String.Format("{0} {1}", Resources.AboutBox1_AboutBox1_Version, AssemblyHelpers.AssemblyVersion);
-			labelCopyright.Text = AssemblyHelpers.AssemblyCopyright;
-			labelCompanyName.Text = AssemblyHelpers.AssemblyCompany;
-			textBoxDescription.Text = AssemblyHelpers.AssemblyDescription +
-									  Environment.NewLine +
-									  Environment.NewLine +
-									  Resources.AboutBox1_AboutBox1_Compiled_on__NET + AssemblyHelpers.DotNetRuntimeVersion +
-									  Environment.NewLine +
-									  Resources.AboutBox1_AboutBox1_Running_on__NET_v + Environment.Version +
-									  Environment.NewLine;
+    /// <summary>
+    /// The about box 1.
+    /// </summary>
+    internal partial class AboutBox1 : Form
+    {
+        #region Constructors and Destructors
 
-			foreach (var myRef in AssemblyHelpers.DependentAssemblies())
-			{
-				textBoxDescription.AppendText(Environment.NewLine + myRef);
-			}
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AboutBox1"/> class.
+        /// </summary>
+        public AboutBox1()
+        {
+            this.InitializeComponent();
 
-		public override sealed string Text
-		{
-			get { return base.Text; }
-			set { base.Text = value; }
-		}
+            this.Text = string.Format("{0} {1}", Resources.AboutBox1_AboutBox1_About, AssemblyHelpers.AssemblyTitle);
+            this.labelProductName.Text = string.Format(
+                "{0} - {1}", AssemblyHelpers.AssemblyProduct, AssemblyHelpers.AssemblyTitle);
+            this.labelVersion.Text = string.Format(
+                "{0} {1}", Resources.AboutBox1_AboutBox1_Version, AssemblyHelpers.AssemblyVersion);
+            this.labelCopyright.Text = AssemblyHelpers.AssemblyCopyright;
+            this.labelCompanyName.Text = AssemblyHelpers.AssemblyCompany;
+            this.textBoxDescription.Text = AssemblyHelpers.AssemblyDescription + Environment.NewLine
+                                           + Environment.NewLine + Resources.AboutBox1_AboutBox1_Compiled_on__NET
+                                           + AssemblyHelpers.DotNetRuntimeVersion + Environment.NewLine
+                                           + Resources.AboutBox1_AboutBox1_Running_on__NET_v + Environment.Version
+                                           + Environment.NewLine;
 
-		private void OkButton_Click(object sender, EventArgs e)
-		{
-			this.Close();
-		}
-	}
+            foreach (string myRef in AssemblyHelpers.DependentAssemblies())
+            {
+                this.textBoxDescription.AppendText(Environment.NewLine + myRef);
+            }
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets or sets Text.
+        /// </summary>
+        public override sealed string Text
+        {
+            get
+            {
+                return base.Text;
+            }
+
+            set
+            {
+                base.Text = value;
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The ok button_ click.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void OkButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        #endregion
+    }
 }

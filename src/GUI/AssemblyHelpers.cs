@@ -1,113 +1,178 @@
-﻿//------------------------------------------------------------------
-// DrunkenBakery OWA Tray Monitor
-// AssemblyHelpers Class
-//
-// <copyright file="AssemblyHelpers.cs" company="The Drunken Bakery">
-//     Copyright (c) 2012 The Drunken Bakery. All rights reserved.
-// </copyright>
-//
-// Class to supply helper methods related to the Assembly
-//
-//------------------------------------------------------------------
-
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using DrunkenBakery.OWAtray.GUI.Properties;
+﻿// ------------------------------------------------------------------
+//  DrunkenBakery OWA Tray Monitor
+//  OWAtray.DrunkenBakery.OWAtray.GUI
+// 
+//  <copyright file="AssemblyHelpers.cs" company="The Drunken Bakery">
+//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//  </copyright>
+// 
+//  Author: IRS
+// ------------------------------------------------------------------
 
 namespace DrunkenBakery.OWAtray.GUI
 {
-	public static class AssemblyHelpers
-	{
-		public static string ProductName
-		{
-			get
-			{
-				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof (AssemblyProductAttribute), false);
-				return attributes.Length > 0 ? ((AssemblyProductAttribute) attributes[0]).Product : Resources.AssemblyHelpers_ProductName_Unknown;
-			}
-		}
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
 
-		public static string AssemblyCompany
-		{
-			get
-			{
-				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof (AssemblyCompanyAttribute), false);
-				return (attributes.Length > 0 ? ((AssemblyCompanyAttribute) attributes[0]).Company : string.Empty);
-			}
-		}
+    using DrunkenBakery.OWAtray.GUI.Properties;
 
-		public static string AssemblyCopyright
-		{
-			get
-			{
-				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof (AssemblyCopyrightAttribute), false);
-				return (attributes.Length > 0 ? ((AssemblyCopyrightAttribute) attributes[0]).Copyright : string.Empty);
-			}
-		}
+    /// <summary>
+    /// The assembly helpers.
+    /// </summary>
+    public static class AssemblyHelpers
+    {
+        #region Public Properties
 
-		public static string AssemblyDescription
-		{
-			get
-			{
-				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof (AssemblyDescriptionAttribute),
-				                                                                          false);
-				return (attributes.Length > 0 ? ((AssemblyDescriptionAttribute) attributes[0]).Description : string.Empty);
-			}
-		}
+        /// <summary>
+        /// Gets AssemblyCompany.
+        /// </summary>
+        public static string AssemblyCompany
+        {
+            get
+            {
+                object[] attributes =
+                    Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
+                return attributes.Length > 0 ? ((AssemblyCompanyAttribute)attributes[0]).Company : string.Empty;
+            }
+        }
 
-		public static string AssemblyProduct
-		{
-			get
-			{
-				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof (AssemblyProductAttribute), false);
-				return (attributes.Length > 0 ? ((AssemblyProductAttribute) attributes[0]).Product : string.Empty);
-			}
-		}
+        /// <summary>
+        /// Gets AssemblyCopyright.
+        /// </summary>
+        public static string AssemblyCopyright
+        {
+            get
+            {
+                object[] attributes =
+                    Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+                return attributes.Length > 0 ? ((AssemblyCopyrightAttribute)attributes[0]).Copyright : string.Empty;
+            }
+        }
 
-		public static string AssemblyTitle
-		{
-			get
-			{
-				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof (AssemblyTitleAttribute), false);
-				if (attributes.Length > 0)
-				{
-					var titleAttribute = (AssemblyTitleAttribute) attributes[0];
-					if (titleAttribute.Title != string.Empty) return titleAttribute.Title;
-				}
-				return Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
-			}
-		}
+        /// <summary>
+        /// Gets AssemblyDescription.
+        /// </summary>
+        public static string AssemblyDescription
+        {
+            get
+            {
+                object[] attributes =
+                    Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
+                return attributes.Length > 0 ? ((AssemblyDescriptionAttribute)attributes[0]).Description : string.Empty;
+            }
+        }
 
-		public static string AssemblyVersion
-		{
-			get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
-		}
+        /// <summary>
+        /// Gets AssemblyProduct.
+        /// </summary>
+        public static string AssemblyProduct
+        {
+            get
+            {
+                object[] attributes =
+                    Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+                return attributes.Length > 0 ? ((AssemblyProductAttribute)attributes[0]).Product : string.Empty;
+            }
+        }
 
-		public static string DotNetRuntimeVersion
-		{
-			get { return Assembly.GetExecutingAssembly().ImageRuntimeVersion; }
-		}
+        /// <summary>
+        /// Gets AssemblyTitle.
+        /// </summary>
+        public static string AssemblyTitle
+        {
+            get
+            {
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(
+                    typeof(AssemblyTitleAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    var titleAttribute = (AssemblyTitleAttribute)attributes[0];
+                    if (titleAttribute.Title != string.Empty)
+                    {
+                        return titleAttribute.Title;
+                    }
+                }
 
-		public static string UpgradeSettings()
-		{
-			var appVersion = Assembly.GetExecutingAssembly().GetName().Version;
-			var appVersionString = appVersion.ToString();
+                return Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+            }
+        }
 
-			if (Properties.Settings.Default.ApplicationVersion != appVersion.ToString())
-			{
-				Properties.Settings.Default.Upgrade();
-				Properties.Settings.Default.ApplicationVersion = appVersionString;
-			}
+        /// <summary>
+        /// Gets AssemblyVersion.
+        /// </summary>
+        public static string AssemblyVersion
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+        }
 
-			return appVersionString;
-		}
+        /// <summary>
+        /// Gets DotNetRuntimeVersion.
+        /// </summary>
+        public static string DotNetRuntimeVersion
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly().ImageRuntimeVersion;
+            }
+        }
 
-		public static IEnumerable<string> DependentAssemblies()
-		{
-			var refs = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
-			return refs.OrderBy(x => x.Name).Select(myRef => string.Format("{0} v{1}", myRef.Name, myRef.Version));
-		}
-	}
+        /// <summary>
+        /// Gets ProductName.
+        /// </summary>
+        public static string ProductName
+        {
+            get
+            {
+                object[] attributes =
+                    Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+                return attributes.Length > 0
+                           ? ((AssemblyProductAttribute)attributes[0]).Product
+                           : Resources.AssemblyHelpers_ProductName_Unknown;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// The dependent assemblies.
+        /// </summary>
+        /// <returns>
+        /// A list of dependent assemblies
+        /// </returns>
+        public static IEnumerable<string> DependentAssemblies()
+        {
+            AssemblyName[] refs = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
+            return refs.OrderBy(x => x.Name).Select(myRef => string.Format("{0} v{1}", myRef.Name, myRef.Version));
+        }
+
+        /// <summary>
+        /// The upgrade settings.
+        /// </summary>
+        /// <returns>
+        /// The new version.
+        /// </returns>
+        public static string UpgradeSettings()
+        {
+            Version appVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            string appVersionString = appVersion.ToString();
+
+            if (Settings.Default.ApplicationVersion != appVersion.ToString())
+            {
+                Settings.Default.Upgrade();
+                Settings.Default.ApplicationVersion = appVersionString;
+            }
+
+            return appVersionString;
+        }
+
+        #endregion
+    }
 }

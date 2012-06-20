@@ -2,7 +2,7 @@
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.ShellIntegration
 // 
-//  <copyright file="Program.cs" company="The Drunken Bakery”>
+//  <copyright file="Program.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
 // 
@@ -66,7 +66,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// The do mapi.
         /// </summary>
         /// <param name="target">
-        /// The target.
+        /// The target. 
         /// </param>
         private static void DoMapi(string target)
         {
@@ -144,14 +144,16 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
                 // Tell windows to use us for mailto links
                 Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", string.Empty, "\"" + shell + "\",0");
-                Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, "\"" + shell + "\" mailto %1");
+                Registry.SetValue(
+                    @"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, "\"" + shell + "\" mailto %1");
                 Registry.SetValue(
                     @"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", 
                     "Progid", 
                     Settings.Default.MailtoClass);
 
                 // Set up a mail handler
-                Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", string.Empty, "Outlook Web Access");
+                Registry.SetValue(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", string.Empty, "Outlook Web Access");
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "DLLPath", bridge);
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "EXE", "\"" + shell + "\"");
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "Parameters", "mapi %1");
@@ -167,7 +169,9 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                     "mailto", 
                     Settings.Default.MailtoClass);
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", string.Empty, "URL:MailTo Protocol");
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", 
+                    string.Empty, 
+                    "URL:MailTo Protocol");
                 Registry.SetValue(
                     @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", 
                     "EditFlags", 
@@ -183,7 +187,9 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                     string.Empty, 
                     "\"" + shell + "\" mailto %1");
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\shell\open\command", string.Empty, "\"" + shell + "\" owa");
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\shell\open\command", 
+                    string.Empty, 
+                    "\"" + shell + "\" owa");
                 Registry.SetValue(
                     @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\DefaultIcon", string.Empty, "\"" + shell + "\",0");
                 Registry.SetValue(
@@ -224,7 +230,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// The main.
         /// </summary>
         /// <param name="args">
-        /// The args.
+        /// The args. 
         /// </param>
         [STAThread]
         private static void Main(string[] args)
@@ -385,22 +391,26 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
                 if (Settings.Default.DefaultMail.Length > 0)
                 {
-                    Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", string.Empty, Settings.Default.DefaultMail);
+                    Registry.SetValue(
+                        @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", string.Empty, Settings.Default.DefaultMail);
                 }
 
                 if (Settings.Default.DefaultMailUser.Length > 0)
                 {
-                    Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Clients\Mail", string.Empty, Settings.Default.DefaultMailUser);
+                    Registry.SetValue(
+                        @"HKEY_CURRENT_USER\SOFTWARE\Clients\Mail", string.Empty, Settings.Default.DefaultMailUser);
                 }
 
                 if (Settings.Default.DefaultIcon.Length > 0)
                 {
-                    Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", string.Empty, Settings.Default.DefaultIcon);
+                    Registry.SetValue(
+                        @"HKEY_CLASSES_ROOT\mailto\DefaultIcon", string.Empty, Settings.Default.DefaultIcon);
                 }
 
                 if (Settings.Default.DefaultOpen.Length > 0)
                 {
-                    Registry.SetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, Settings.Default.DefaultOpen);
+                    Registry.SetValue(
+                        @"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, Settings.Default.DefaultOpen);
                 }
 
                 Registry.SetValue(
@@ -458,7 +468,8 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
                 // Get current default icon and store for use later
                 string defIconKey = "\"" + shell + "\",0";
-                string iconKey = Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", string.Empty, defIconKey).ToString();
+                string iconKey =
+                    Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", string.Empty, defIconKey).ToString();
                 if (userMailKey != defIconKey)
                 {
                     Settings.Default.DefaultIcon = iconKey;
@@ -468,7 +479,8 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 // Get current default cmd path and store for use later
                 string defPathKey = "\"" + shell + "\" mailto %1";
                 string pathKey =
-                    Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, defPathKey).ToString();
+                    Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, defPathKey).ToString
+                        ();
                 if (pathKey != defPathKey)
                 {
                     Settings.Default.DefaultOpen = pathKey;
@@ -485,11 +497,12 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// The shell owa.
         /// </summary>
         /// <param name="url">
-        /// The url.
+        /// The url. 
         /// </param>
         private static void ShellOwa(string url = "")
         {
-            string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + (url.Length > 0 ? "/" + url : string.Empty);
+            string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount
+                           + (url.Length > 0 ? "/" + url : string.Empty);
             Process.Start(myUrl);
             Console.WriteLine("Browsing to " + myUrl);
             AutoLogin();
@@ -499,7 +512,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// The spawn url.
         /// </summary>
         /// <param name="target">
-        /// The target.
+        /// The target. 
         /// </param>
         private static void SpawnUrl(string target)
         {
@@ -526,11 +539,12 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// The start ow ain ie.
         /// </summary>
         /// <param name="url">
-        /// The url.
+        /// The url. 
         /// </param>
         private static void StartOwAinIe(string url = "")
         {
-            string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + (url.Length > 0 ? "/" + url : string.Empty);
+            string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount
+                           + (url.Length > 0 ? "/" + url : string.Empty);
             Process.Start("IEXPLORE.EXE", myUrl);
             Console.WriteLine("Browsing to " + myUrl);
             AutoLogin();

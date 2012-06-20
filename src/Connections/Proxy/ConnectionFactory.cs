@@ -1,34 +1,48 @@
-﻿//------------------------------------------------------------------
-// DrunkenBakery OWA Tray Monitor
-// ConnectionFactory Class
-//
-// <copyright file="ConnectionFactory.cs" company="The Drunken Bakery">
-//     Copyright (c) 2012 The Drunken Bakery. All rights reserved.
-// </copyright>
-//
-// Factory that knows how to build concrete connection classes
-//
-//------------------------------------------------------------------
-
-using DrunkenBakery.OWAtray.Connections.Abstract;
-using DrunkenBakery.OWAtray.Connections.EWS;
+﻿// ------------------------------------------------------------------
+//  DrunkenBakery OWA Tray Monitor
+//  OWAtray.DrunkenBakery.OWAtray.Connections.Proxy
+// 
+//  <copyright file="ConnectionFactory.cs" company="The Drunken Bakery">
+//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//  </copyright>
+// 
+//  Author: IRS
+// ------------------------------------------------------------------
 
 namespace DrunkenBakery.OWAtray.Connections.Proxy
 {
-	public static class ConnectionFactory
-	{
-		public static IEmailInterface CreateConnection(EmailType provider)
-		{
-			IEmailInterface connection = null;
+    using DrunkenBakery.OWAtray.Connections.Abstract;
+    using DrunkenBakery.OWAtray.Connections.EWS;
 
-			switch (provider)
-			{
-				case EmailType.Exchange:
-					connection = new EwsConnection();
-					break;
-			}
+    /// <summary>
+    /// The connection factory.
+    /// </summary>
+    public static class ConnectionFactory
+    {
+        #region Public Methods and Operators
 
-			return connection;
-		}
-	}
+        /// <summary>
+        /// The create connection.
+        /// </summary>
+        /// <param name="provider">
+        /// The provider.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public static IEmailInterface CreateConnection(EmailType provider)
+        {
+            IEmailInterface connection = null;
+
+            switch (provider)
+            {
+                case EmailType.Exchange:
+                    connection = new EwsConnection();
+                    break;
+            }
+
+            return connection;
+        }
+
+        #endregion
+    }
 }

@@ -2,7 +2,7 @@
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.Logging
 // 
-//  <copyright file="LoggerProxy.cs" company="The Drunken Bakery”>
+//  <copyright file="LoggerProxy.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
 // 
@@ -61,7 +61,7 @@ namespace DrunkenBakery.OWAtray.Logging
         /// The log.
         /// </summary>
         /// <param name="message">
-        /// The message.
+        /// The message. 
         /// </param>
         public static void Log(string message)
         {
@@ -72,10 +72,10 @@ namespace DrunkenBakery.OWAtray.Logging
         /// The log.
         /// </summary>
         /// <param name="message">
-        /// The message.
+        /// The message. 
         /// </param>
         /// <param name="success">
-        /// The success.
+        /// The success. 
         /// </param>
         public static void Log(string message, bool success)
         {
@@ -86,10 +86,10 @@ namespace DrunkenBakery.OWAtray.Logging
         /// The log.
         /// </summary>
         /// <param name="message">
-        /// The message.
+        /// The message. 
         /// </param>
         /// <param name="ex">
-        /// The ex.
+        /// The ex. 
         /// </param>
         public static void Log(string message, Exception ex)
         {
@@ -104,7 +104,7 @@ namespace DrunkenBakery.OWAtray.Logging
         /// The get target.
         /// </summary>
         /// <param name="targetName">
-        /// The target name.
+        /// The target name. 
         /// </param>
         /// <typeparam name="T">
         /// </typeparam>
@@ -125,10 +125,10 @@ namespace DrunkenBakery.OWAtray.Logging
         /// The get target filename.
         /// </summary>
         /// <param name="targetName">
-        /// The target name.
+        /// The target name. 
         /// </param>
         /// <returns>
-        /// The get target filename.
+        /// The get target filename. 
         /// </returns>
         private static string GetTargetFilename(string targetName)
         {

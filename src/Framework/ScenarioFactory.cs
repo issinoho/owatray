@@ -1,32 +1,49 @@
-﻿//------------------------------------------------------------------
-// DrunkenBakery OWA Tray Monitor
-// ScenarioFactory Class
-//
-// <copyright file="ScenarioFactory.cs" company="The Drunken Bakery">
-//     Copyright (c) 2012 The Drunken Bakery. All rights reserved.
-// </copyright>
-//
-// Factory class that knows how to build a scenario
-//
-//------------------------------------------------------------------
-
-using DrunkenBakery.OWAtray.Connections.Abstract;
+﻿// ------------------------------------------------------------------
+//  DrunkenBakery OWA Tray Monitor
+//  OWAtray.DrunkenBakery.OWAtray.Framework
+// 
+//  <copyright file="ScenarioFactory.cs" company="The Drunken Bakery">
+//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//  </copyright>
+// 
+//  Author: IRS
+// ------------------------------------------------------------------
 
 namespace DrunkenBakery.OWAtray.Framework
 {
-	public static class ScenarioFactory
-	{
-		public static Scenario CreateScenario(string filename)
-		{
-			var scenario = new Scenario {ScenarioFile = filename};
+    using DrunkenBakery.OWAtray.Connections.Abstract;
 
-			// Initialise properties
-			if (scenario.Connections == null) scenario.Connections = new EmailConnections();
+    /// <summary>
+    /// The scenario factory.
+    /// </summary>
+    public static class ScenarioFactory
+    {
+        #region Public Methods and Operators
 
-			// Load from file
-			scenario.Load(filename);
+        /// <summary>
+        /// The create scenario.
+        /// </summary>
+        /// <param name="filename">
+        /// The filename.
+        /// </param>
+        /// <returns>
+        /// </returns>
+        public static Scenario CreateScenario(string filename)
+        {
+            var scenario = new Scenario { ScenarioFile = filename };
 
-			return scenario;
-		}
-	}
+            // Initialise properties
+            if (scenario.Connections == null)
+            {
+                scenario.Connections = new EmailConnections();
+            }
+
+            // Load from file
+            scenario.Load(filename);
+
+            return scenario;
+        }
+
+        #endregion
+    }
 }
