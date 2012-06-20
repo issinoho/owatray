@@ -269,12 +269,12 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         {
             get
             {
-                return this.encryptedPassword.Decrypt();
+                return this.encryptedPassword.Length > 0 ? this.encryptedPassword.Decrypt() : string.Empty;
             }
 
             set
             {
-                this.encryptedPassword = value.Encrypt();
+                this.encryptedPassword = value.Length > 0 ? value.Encrypt() : string.Empty;
             }
         }
 
