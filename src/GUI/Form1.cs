@@ -227,8 +227,12 @@ namespace DrunkenBakery.OWAtray.GUI
         {
             if (!this.allowClose)
             {
-                this.Hide();
-                e.Cancel = true;
+                // Special case if Windows is closing
+                if (e.CloseReason != CloseReason.WindowsShutDown)
+                {
+                    this.Hide();
+                    e.Cancel = true;
+                }
             }
 
             base.OnFormClosing(e);

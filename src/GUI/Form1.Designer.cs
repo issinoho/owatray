@@ -113,6 +113,8 @@ namespace DrunkenBakery.OWAtray.GUI
             this.chkAutodiscovery = new System.Windows.Forms.CheckBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.txtDescription = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.chkOnDomain = new System.Windows.Forms.CheckBox();
             this.cbOverrideOWA = new System.Windows.Forms.CheckBox();
             this.txtOWAEdit = new System.Windows.Forms.TextBox();
@@ -130,8 +132,6 @@ namespace DrunkenBakery.OWAtray.GUI
             this.label6 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.txtDescription = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -903,13 +903,31 @@ namespace DrunkenBakery.OWAtray.GUI
             this.tabPage2.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Advanced_Settings;
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // txtDescription
+            // 
+            this.txtDescription.Location = new System.Drawing.Point(386, 17);
+            this.txtDescription.Name = "txtDescription";
+            this.txtDescription.Size = new System.Drawing.Size(134, 21);
+            this.txtDescription.TabIndex = 3;
+            this.txtDescription.Validated += new System.EventHandler(this.TxtDescriptionValidated);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.Color.Blue;
+            this.label14.Location = new System.Drawing.Point(285, 20);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(67, 13);
+            this.label14.TabIndex = 2;
+            this.label14.Text = "Description :";
+            // 
             // chkOnDomain
             // 
             this.chkOnDomain.AutoSize = true;
             this.chkOnDomain.ForeColor = System.Drawing.Color.Blue;
             this.chkOnDomain.Location = new System.Drawing.Point(46, 50);
             this.chkOnDomain.Name = "chkOnDomain";
-            this.chkOnDomain.Size = new System.Drawing.Size(185, 17);
+            this.chkOnDomain.Size = new System.Drawing.Size(186, 17);
             this.chkOnDomain.TabIndex = 4;
             this.chkOnDomain.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Use_Windows_Domain_Credentials;
             this.chkOnDomain.UseVisualStyleBackColor = true;
@@ -1079,24 +1097,6 @@ namespace DrunkenBakery.OWAtray.GUI
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Controls";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.ForeColor = System.Drawing.Color.Blue;
-            this.label14.Location = new System.Drawing.Point(285, 20);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(67, 13);
-            this.label14.TabIndex = 2;
-            this.label14.Text = "Description :";
-            // 
-            // txtDescription
-            // 
-            this.txtDescription.Location = new System.Drawing.Point(386, 17);
-            this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(134, 21);
-            this.txtDescription.TabIndex = 3;
-            this.txtDescription.Validated += new System.EventHandler(this.TxtDescriptionValidated);
             // 
             // Form1
             // 
