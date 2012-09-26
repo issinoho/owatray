@@ -168,6 +168,7 @@ namespace DrunkenBakery.OWAtray.GUI
             {
                 Settings.Default.Upgrade();
                 Settings.Default.ApplicationVersion = appVersionString;
+                Settings.Default.Save();
             }
 
             return appVersionString;
