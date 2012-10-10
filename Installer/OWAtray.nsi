@@ -48,6 +48,7 @@ RequestExecutionLevel user
 
 Section "MainSection" SEC01
   ${nsProcess::KillProcess} "DrunkenBakery.OWAtray.GUI.exe" $R0
+  sleep 500
 
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
@@ -160,6 +161,7 @@ FunctionEnd
 
 Section Uninstall
   ${nsProcess::KillProcess} "DrunkenBakery.OWAtray.GUI.exe" $R0
+  sleep 500
 
   Delete "$INSTDIR\alert.ico"
   Delete "$INSTDIR\DrunkenBakery.OWAtray.Audio.dll"
