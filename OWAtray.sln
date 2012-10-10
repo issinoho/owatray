@@ -30,6 +30,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Shell
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DrunkenBakery.OWAtray.Mapi", "src\Mapi\MapiDll.vcxproj", "{902675FD-4CCE-4425-803D-D4323A9D50D4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6499F1BB-6668-4E91-A575-238043E62495}"
+	ProjectSection(SolutionItems) = preProject
+		Installer\OWAtray.nsi = Installer\OWAtray.nsi
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -228,7 +228,7 @@ namespace DrunkenBakery.OWAtray.GUI
             if (!this.allowClose)
             {
                 // Special case if Windows is closing
-                if (e.CloseReason != CloseReason.WindowsShutDown)
+                if (e.CloseReason != CloseReason.WindowsShutDown && e.CloseReason != CloseReason.TaskManagerClosing)
                 {
                     this.Hide();
                     e.Cancel = true;

@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "3.0.4609.38665"
+!define PRODUCT_VERSION "3.0.4666.34299"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray"
@@ -12,6 +12,7 @@
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
 !include "x64.nsh"
+!include "nsProcess.nsh"
 
 ; MUI Settings
 !define MUI_ABORTWARNING
@@ -46,6 +47,8 @@ ShowUnInstDetails show
 RequestExecutionLevel user
 
 Section "MainSection" SEC01
+  ${nsProcess::KillProcess} "DrunkenBakery.OWAtray.GUI.exe" $R0
+
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
   File "..\bin\alert.ico"
@@ -156,6 +159,8 @@ Function un.onInit
 FunctionEnd
 
 Section Uninstall
+  ${nsProcess::KillProcess} "DrunkenBakery.OWAtray.GUI.exe" $R0
+
   Delete "$INSTDIR\alert.ico"
   Delete "$INSTDIR\DrunkenBakery.OWAtray.Audio.dll"
   Delete "$INSTDIR\DrunkenBakery.OWAtray.Connections.Abstract.dll"
@@ -218,13 +223,17 @@ Section Uninstall
   Delete "$INSTDIR\it\DrunkenBakery.OWAtray.Logging.resources.dll"
   Delete "$INSTDIR\ru\DrunkenBakery.OWAtray.Logging.resources.dll"
 
+  Delete "$INSTDIR\logs\*"
+
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
 
+  Delete "$SMSTARTUP\OWA Tray Monitor.*"
+
   Delete "$SMPROGRAMS\OWAtray\Uninstall.lnk"
   Delete "$SMPROGRAMS\OWAtray\Website.lnk"
-  Delete "$DESKTOP\OWAtray.lnk"
   Delete "$SMPROGRAMS\OWAtray\OWAtray.lnk"
+  Delete "$DESKTOP\OWAtray.lnk"
 
   RMDir "$SMPROGRAMS\OWAtray"
   RMDir "$INSTDIR\de"
@@ -234,7 +243,10 @@ Section Uninstall
   RMDir "$INSTDIR\fr"
   RMDir "$INSTDIR\it"
   RMDir "$INSTDIR\ru"
+  RMDir "$INSTDIR\logs"
   RMDir "$INSTDIR"
+
+  RMDir /r "$LOCALAPPDATA\The_Drunken_Bakery"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
   DeleteRegKey HKLM "${PRODUCT_DIR_REGKEY}"
