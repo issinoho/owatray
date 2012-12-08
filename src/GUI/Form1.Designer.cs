@@ -927,7 +927,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.chkOnDomain.ForeColor = System.Drawing.Color.Blue;
             this.chkOnDomain.Location = new System.Drawing.Point(46, 50);
             this.chkOnDomain.Name = "chkOnDomain";
-            this.chkOnDomain.Size = new System.Drawing.Size(186, 17);
+            this.chkOnDomain.Size = new System.Drawing.Size(185, 17);
             this.chkOnDomain.TabIndex = 4;
             this.chkOnDomain.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Use_Windows_Domain_Credentials;
             this.chkOnDomain.UseVisualStyleBackColor = true;
