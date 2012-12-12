@@ -46,6 +46,8 @@ namespace DrunkenBakery.OWAtray.GUI
             this.lvX.Items[this.lvX.Items.Count - 1].SubItems.Add("Marco Procida");
             this.lvX.Items.Add(new ListViewItem("Russian", 6));
             this.lvX.Items[this.lvX.Items.Count - 1].SubItems.Add("Aleksandr Bembel");
+            this.lvX.Items.Add(new ListViewItem("Polish", 7));
+            this.lvX.Items[this.lvX.Items.Count - 1].SubItems.Add("Ryszard Ostrowski");
         }
 
         #endregion
