@@ -124,24 +124,24 @@
     <value>Proszę podać poprawny adres Email</value>
   </data>
   <data name="EwsConnection_Connect_Please_provide_a_Password" xml:space="preserve">
-    <value>Proszę podać Hasło</value>
+    <value>Proszę podać hasło</value>
   </data>
   <data name="EwsConnection_Connect_Please_provide_a_valid_Server_Address" xml:space="preserve">
-    <value>Proszę podać prawidłowy Adres Serwera</value>
+    <value>Proszę podać prawidłowy adres Serwera</value>
   </data>
   <data name="EwsConnection_ChangeState_Changed_state_to" xml:space="preserve">
-    <value>Zmieniono stan na</value>
+    <value>Zmieniono stan na :</value>
   </data>
   <data name="EwsConnection_CheckForNewMail_No_subject" xml:space="preserve">
     <value>Brak tematu</value>
   </data>
   <data name="EwsConnection_Send_Unable_to_send__Email_provider_is_disconnected_" xml:space="preserve">
-    <value>Brak możliwości wysłania. Dostawca poczty jest rezłączony</value>
+    <value>Brak możliwości wysłania. Dostawca poczty jest rezłączony.</value>
   </data>
   <data name="EwsConnection_Send_Unable_to_send__No_recipient_specified_" xml:space="preserve">
     <value>Brak możliwości wysłania. Nie wpisano odbiorcy.</value>
   </data>
   <data name="EwsConnection_Send_OWAtray_Test_Message" xml:space="preserve">
-    <value>Testowa Wiadomość OWAtray</value>
+    <value>Testowa wiadomość OWAtray</value>
   </data>
 </root>

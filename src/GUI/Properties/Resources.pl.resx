@@ -127,19 +127,19 @@
     <value>Skompilowano w .NET</value>
   </data>
   <data name="AboutBox1_AboutBox1_Running_on__NET_v" xml:space="preserve">
-    <value>Działa na .NET w.</value>
+    <value>Działa na .NET wer</value>
   </data>
   <data name="AboutBox1_InitializeComponent_About_OWA_Tray_Monitor" xml:space="preserve">
     <value>O OWA Tray Monitor</value>
   </data>
   <data name="AboutBox1_InitializeComponent_Product_Name" xml:space="preserve">
-    <value>Nazwa Produktu</value>
+    <value>Nazwa produktu</value>
   </data>
   <data name="AboutBox1_InitializeComponent_Version" xml:space="preserve">
     <value>Wersja</value>
   </data>
   <data name="AboutBox1_InitializeComponent_Copyright" xml:space="preserve">
-    <value>Prawa Autorskie</value>
+    <value>Prawa autorskie</value>
   </data>
   <data name="AboutBox1_InitializeComponent_Company_Name" xml:space="preserve">
     <value>Nazwa Firmy</value>
@@ -151,7 +151,7 @@
     <value>Nieznany</value>
   </data>
   <data name="ChangeLog_InitializeComponent_Change_Log" xml:space="preserve">
-    <value>Log zmian</value>
+    <value>Dziennik zmian</value>
   </data>
   <data name="ContactUs_ContactUs_Catalan" xml:space="preserve">
     <value>Kataloński</value>
@@ -178,7 +178,7 @@
     <value>Informacje Wsparcia</value>
   </data>
   <data name="MdaCversions_MdaCversions_Major_Version" xml:space="preserve">
-    <value>Główna Wersja</value>
+    <value>Wersja</value>
   </data>
   <data name="MdaCversions_InitializeComponent_Installed_MDAC_Versions" xml:space="preserve">
     <value>Zainstalowane wersje MDAC</value>
@@ -187,7 +187,7 @@
     <value>Inspektor MDAC</value>
   </data>
   <data name="NeTversions_NeTversions_Major_Version" xml:space="preserve">
-    <value>Główna Wersja</value>
+    <value>Wersja</value>
   </data>
   <data name="NeTversions_InitializeComponent_Installed__NET_Versions" xml:space="preserve">
     <value>Zainstalowane wersje .NET</value>
@@ -220,10 +220,10 @@
     <value>wolne</value>
   </data>
   <data name="SysInfo_InitializeComponent_Detected_System_Settings" xml:space="preserve">
-    <value>Wykryte Ustawienia Systemu</value>
+    <value>Wykryte ustawienia systemu</value>
   </data>
   <data name="SysInfo_InitializeComponent_System_Information" xml:space="preserve">
-    <value>Informacje Systemu</value>
+    <value>Informacje o Systemie</value>
   </data>
   <data name="Form1_Form1_Welcome_to_the" xml:space="preserve">
     <value>Zapraszamy do</value>
@@ -235,13 +235,13 @@
     <value>świeżoupieczone w</value>
   </data>
   <data name="Form1_WindowDressing_Not_Connected_to_Exchange" xml:space="preserve">
-    <value>Brak Połączenia do Serwera Exchange</value>
+    <value>Brak połączenia do serwera Exchange</value>
   </data>
   <data name="Form1_WireUpConnectionEvents_Connection_Failure" xml:space="preserve">
-    <value>Niepowodzenie połączenia</value>
+    <value>Błąd połączenia</value>
   </data>
   <data name="Form1_WireUpConnectionEvents_Check_log_file_for_details" xml:space="preserve">
-    <value>Sprawdź szczegóły w pliku loga</value>
+    <value>Sprawdź szczegóły w pliku dziennika</value>
   </data>
   <data name="Form1_WireUpConnectionEvents_Connected_to" xml:space="preserve">
     <value>Podłączono do</value>
@@ -250,7 +250,7 @@
     <value>Wykryto Nazwę Użytkownika</value>
   </data>
   <data name="Form1_WireUpConnectionEvents_Discovered_Mailbox_Server" xml:space="preserve">
-    <value>Wykryto Serwer Skrzynek Pocztowych</value>
+    <value>Wykryto serwer Skrzynek Pocztowych</value>
   </data>
   <data name="Form1_WireUpConnectionEvents_Discovered_OWA_Url" xml:space="preserve">
     <value>Wykryto URL dla OWA</value>
@@ -262,7 +262,7 @@
     <value>Podłączono do Exchange</value>
   </data>
   <data name="Form1_WireUpConnectionEvents_New_Mail_from" xml:space="preserve">
-    <value>Nowa Poczta od</value>
+    <value>Nowa poczta od</value>
   </data>
   <data name="Form1_WireUpConnectionEvents_You_have_an_appointment_in" xml:space="preserve">
     <value>Masz spotkanie w</value>
@@ -277,7 +277,7 @@
     <value>Masz</value>
   </data>
   <data name="Form1_WireUpConnectionEvents_unread_email" xml:space="preserve">
-    <value>nieprzeczytana poczta</value>
+    <value>nieprzeczytany(ch) list(ów)</value>
   </data>
   <data name="Form1_WireUpConnectionEvents_in_your_inbox" xml:space="preserve">
     <value>w Twojej skrzynce odbiorczej</value>
@@ -292,7 +292,7 @@
     <value>WYŁ.</value>
   </data>
   <data name="Form1_balloonToolStripMenuItem_CheckStateChanged_Balloon_notifications_switched" xml:space="preserve">
-    <value>Powiadomienia w dymkach są</value>
+    <value>Powiadomienia w dymkach są :</value>
   </data>
   <data name="Form1_RunAtStartup_OWAtray_will" xml:space="preserve">
     <value>OWAtray będzie</value>
@@ -301,7 +301,7 @@
     <value>nie</value>
   </data>
   <data name="Form1_RunAtStartup_autostart_with_Windows" xml:space="preserve">
-    <value>uuchom wraz z Windows</value>
+    <value>uruchom wraz z Windows</value>
   </data>
   <data name="Form1_ConnectToExchange_Already_connected" xml:space="preserve">
     <value>Już połączono</value>
@@ -325,7 +325,7 @@
     <value>Błąd</value>
   </data>
   <data name="Form1_disableCalendarToolStripMenuItem_CheckStateChanged_Calendar_notifications_switched" xml:space="preserve">
-    <value>Powiadomienia kalendarza są</value>
+    <value>Powiadomienia kalendarza są :</value>
   </data>
   <data name="Form1_Form1_FormClosed_Terminating" xml:space="preserve">
     <value>Kończenie</value>
@@ -352,10 +352,10 @@
     <value>Funkcje poczty będą teraz obsługiwane przez OWA</value>
   </data>
   <data name="Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched" xml:space="preserve">
-    <value>Obejście Ceryfikatu SSL jest</value>
+    <value>Nadpisywanie Ceryfikatu SSL jest :</value>
   </data>
   <data name="Form1_playSoundToolStripMenuItem_CheckStateChanged_Audible_notifications_switched" xml:space="preserve">
-    <value>Powiadomienia dżwiękowe są</value>
+    <value>Powiadomienia dżwiękowe są :</value>
   </data>
   <data name="Form1_PopToast_No_Title" xml:space="preserve">
     <value>Brak Tytułu</value>
@@ -364,7 +364,7 @@
     <value>Brak Tematu</value>
   </data>
   <data name="Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched" xml:space="preserve">
-    <value>Powiadomienia Snarl są</value>
+    <value>Powiadomienia Snarl są :</value>
   </data>
   <data name="Form1_switchOffToolStripMenuItem_Click_You_are_not_an_Admin_user" xml:space="preserve">
     <value>Nie jesteś Adminem</value>
@@ -376,25 +376,25 @@
     <value>Odtwarzanie obsługi Poczty</value>
   </data>
   <data name="Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_" xml:space="preserve">
-    <value>Musi być wartość liczbowa pomiędzy 1 a</value>
+    <value>Wpisz wartość liczbową z zakresu 1..</value>
   </data>
   <data name="Form1_loginAutomaticallyToolStripMenuItem_CheckStateChanged_Automatic_Login_is_switched" xml:space="preserve">
-    <value>Automatyczne logowanie jest</value>
+    <value>Automatyczne logowanie jest :</value>
   </data>
   <data name="Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched" xml:space="preserve">
-    <value>Obejście Uprawnień Autowykrywania jest</value>
+    <value>Ręczne ustawianie uprawnień Autowykrywania jest :</value>
   </data>
   <data name="Form1_office365LoginOverrideToolStripMenuItem_CheckStateChanged_Office365_login_override" xml:space="preserve">
-    <value>Obejście logowania Office365</value>
+    <value>Ręczne logowanie Office365</value>
   </data>
   <data name="Form1_cbOverrideEWS_CheckedChanged_EWS_URL_override_switched" xml:space="preserve">
-    <value>Obejście URL dla EWS jest</value>
+    <value>Ręczne ustawianie URL dla EWS jest</value>
   </data>
   <data name="Form1_chkAutodiscovery_CheckedChanged_Autodiscovery_is_switched" xml:space="preserve">
-    <value>Autowykryiwanie jest</value>
+    <value>Autowykrywanie jest :</value>
   </data>
   <data name="Form1_InitializeComponent_Ready_" xml:space="preserve">
-    <value>Gotów</value>
+    <value>Gotów.</value>
   </data>
   <data name="Form1_InitializeComponent_Options" xml:space="preserve">
     <value>Opcje</value>
@@ -406,13 +406,13 @@
     <value>Otwórz Outlook</value>
   </data>
   <data name="Form1_InitializeComponent_Recall_Last_Popup" xml:space="preserve">
-    <value>Przywołaj ostatnią informacją</value>
+    <value>Przywołaj ostatnią wiadomość</value>
   </data>
   <data name="Form1_InitializeComponent_Reset_Tray_Icon" xml:space="preserve">
-    <value>Resetuj Ikonę w zasobniku</value>
+    <value>Resetuj ikonę w zasobniku</value>
   </data>
   <data name="Form1_InitializeComponent_Exit" xml:space="preserve">
-    <value>Wyjście</value>
+    <value>Zakończ</value>
   </data>
   <data name="Form1_InitializeComponent_File" xml:space="preserve">
     <value>Plik</value>
@@ -427,7 +427,7 @@
     <value>Wersja MDAC</value>
   </data>
   <data name="Form1_InitializeComponent_System_Information" xml:space="preserve">
-    <value>Informacje Systemu</value>
+    <value>Informacje o Systemie</value>
   </data>
   <data name="Form1_InitializeComponent_Notifications" xml:space="preserve">
     <value>Powiadomienia</value>
@@ -442,7 +442,7 @@
     <value>Ekspert</value>
   </data>
   <data name="Form1_InitializeComponent_Override_Certificate" xml:space="preserve">
-    <value>Obejście Certyfikatu</value>
+    <value>Nadpisanie Certyfikatu</value>
   </data>
   <data name="Form1_InitializeComponent_Always_open_OWA_in_IE" xml:space="preserve">
     <value>Zawsze otwieraj OWA w IE</value>
@@ -451,16 +451,16 @@
     <value>Wyłącz Kalendarz</value>
   </data>
   <data name="Form1_InitializeComponent_Login_Automatically" xml:space="preserve">
-    <value>Automatyczne logowanie</value>
+    <value>Autologowanie</value>
   </data>
   <data name="Form1_InitializeComponent_Override_Autodiscovery_Validation" xml:space="preserve">
-    <value>Obejście Uprawnień Autowykrywania</value>
+    <value>Ręczne ustawianie uprawnień Autowykrywania</value>
   </data>
   <data name="Form1_InitializeComponent_Office365_Login_Override" xml:space="preserve">
-    <value>Obejście logowania Office365</value>
+    <value>Ręczne logowanie Office365</value>
   </data>
   <data name="Form1_InitializeComponent_Use_Default_Web_Proxy" xml:space="preserve">
-    <value>Użyj Domyślnego Web Proxy</value>
+    <value>Użyj domyślnego Web Proxy</value>
   </data>
   <data name="Form1_InitializeComponent_Shell_Integration" xml:space="preserve">
     <value>Integracja z Powłoką</value>
@@ -475,34 +475,34 @@
     <value>Pomoc</value>
   </data>
   <data name="Form1_InitializeComponent_Change_Log" xml:space="preserve">
-    <value>Log zmian</value>
+    <value>Dziennik zmian</value>
   </data>
   <data name="Form1_InitializeComponent_Support" xml:space="preserve">
     <value>Wsparcie</value>
   </data>
   <data name="Form1_InitializeComponent_Show_Log_File" xml:space="preserve">
-    <value>Pokaż Plik Zdarzeń</value>
+    <value>Pokaż plik dziennika</value>
   </data>
   <data name="Form1_InitializeComponent_About" xml:space="preserve">
     <value>O programie</value>
   </data>
   <data name="Form1_InitializeComponent_Logging" xml:space="preserve">
-    <value>Zapisywanie</value>
+    <value>Dziennik</value>
   </data>
   <data name="Form1_InitializeComponent_unknown" xml:space="preserve">
     <value>nieznany</value>
   </data>
   <data name="Form1_InitializeComponent_Windows_Domain__" xml:space="preserve">
-    <value>Domena Windows:</value>
+    <value>Domena Windows :</value>
   </data>
   <data name="Form1_InitializeComponent_Server_Address__" xml:space="preserve">
-    <value>Adres Serwera:</value>
+    <value>Adres Serwera :</value>
   </data>
   <data name="Form1_InitializeComponent_Password__" xml:space="preserve">
-    <value>Hasło:</value>
+    <value>Hasło :</value>
   </data>
   <data name="Form1_InitializeComponent_User_Name__" xml:space="preserve">
-    <value>Nazwa Użytkownika:</value>
+    <value>Nazwa Użytkownika :</value>
   </data>
   <data name="Form1_InitializeComponent_Basic_Settings" xml:space="preserve">
     <value>Ustawienia Podstawowe</value>
@@ -511,27 +511,42 @@
     <value>sek.</value>
   </data>
   <data name="Form1_InitializeComponent_Update_Interval__" xml:space="preserve">
-    <value>Częstość Odświeżania:</value>
+    <value>Odświeżanie co :</value>
   </data>
   <data name="Form1_InitializeComponent_Exchange_Version__" xml:space="preserve">
-    <value>Wersja Exchange:</value>
+    <value>Wersja Exchange :</value>
   </data>
   <data name="Form1_InitializeComponent_Run_at_Startup" xml:space="preserve">
-    <value>Uruchom przy starcie</value>
+    <value>Autostart</value>
   </data>
   <data name="Form1_InitializeComponent_Email_Address__" xml:space="preserve">
-    <value>Adres Email:</value>
+    <value>Adres Email :</value>
   </data>
   <data name="Form1_InitializeComponent_Attempt_to_use_Autodiscovery" xml:space="preserve">
-    <value>Próba użycia Autowykrywania</value>
+    <value>Autowykrywanie</value>
   </data>
   <data name="Form1_InitializeComponent_Advanced_Settings" xml:space="preserve">
-    <value>Ustawienia Zaawansowane</value>
+    <value>Ustawienia zaawansowane</value>
   </data>
   <data name="Form1_InitializeComponent_Use_Windows_Domain_Credentials" xml:space="preserve">
     <value>Użyj Poświadczeń Domeny Windows</value>
   </data>
   <data name="Form1_InitializeComponent_Controls" xml:space="preserve">
     <value>Sterowanie</value>
+  </data>
+  <data name="MdaCversions_MdaCversions_Revision" xml:space="preserve">
+    <value>Kompilacja</value>
+  </data>
+  <data name="NeTversions_NeTversions_Revision" xml:space="preserve">
+    <value>Kompilacja</value>
+  </data>
+  <data name="Form1_cbOverrideOWA_CheckedChanged_OWA_URL_override_switched" xml:space="preserve">
+    <value>Ręczne ustawianie URL dla OWA jest :</value>
+  </data>
+  <data name="Form1_InitializeComponent_EWS_URL___" xml:space="preserve">
+    <value>URL dla EWS :</value>
+  </data>
+  <data name="Form1_InitializeComponent_OWA_URL___" xml:space="preserve">
+    <value>URL dla OWA :</value>
   </data>
 </root>
