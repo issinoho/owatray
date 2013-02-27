@@ -1,20 +1,19 @@
 ﻿// ------------------------------------------------------------------
-//  DrunkenBakery OWA Tray Monitor
-//  OWAtray.DrunkenBakery.OWAtray.Connections.Abstract
-// 
+//  OWAtray
+//  DrunkenBakery.OWAtray.Connections.Abstract.ConnectionState.cs
+//  
 //  <copyright file="ConnectionState.cs" company="The Drunken Bakery">
-//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
-//  Author: IRS
+//  
+//  Author: Iain Smith
 // ------------------------------------------------------------------
-
 namespace DrunkenBakery.OWAtray.Connections.Abstract
 {
     using DrunkenBakery.OWAtray.Connections.Abstract.Properties;
 
     /// <summary>
-    /// The connection state.
+    ///     The connection state.
     /// </summary>
     public enum ConnectionState
     {
@@ -58,7 +57,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The e.
         /// </param>
         /// <returns>
-        /// The description.
+        /// The <see cref="string"/>.
         /// </returns>
         public static string Description(this ConnectionState e)
         {

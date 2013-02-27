@@ -32,7 +32,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         #region Public Methods and Operators
 
         /// <summary>
-        /// The description.
+        /// Return the description.
         /// </summary>
         /// <param name="e">
         /// The e.

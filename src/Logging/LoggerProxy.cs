@@ -1,14 +1,13 @@
 ﻿// ------------------------------------------------------------------
-//  DrunkenBakery OWA Tray Monitor
-//  OWAtray.DrunkenBakery.OWAtray.Logging
-// 
+//  OWAtray
+//  DrunkenBakery.OWAtray.Logging.LoggerProxy.cs
+//  
 //  <copyright file="LoggerProxy.cs" company="The Drunken Bakery">
-//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
-//  Author: IRS
+//  
+//  Author: Iain Smith
 // ------------------------------------------------------------------
-
 namespace DrunkenBakery.OWAtray.Logging
 {
     using System;
@@ -18,32 +17,32 @@ namespace DrunkenBakery.OWAtray.Logging
     using NLog.Targets;
 
     /// <summary>
-    /// The logger proxy.
+    ///     The logger proxy.
     /// </summary>
     public static class LoggerProxy
     {
-        #region Static Fields
+        #region Constants
 
         /// <summary>
-        /// The logger.
+        ///     The default target name.
         /// </summary>
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private const string DefaultTargetName = "allTarget";
 
         #endregion
 
-        #region Constants and Fields
+        #region Static Fields
 
         /// <summary>
-        /// The default target name.
+        ///     The logger.
         /// </summary>
-        private const string DefaultTargetName = "allTarget";
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         #endregion
 
         #region Public Properties
 
         /// <summary>
-        /// Gets Filename.
+        ///     Gets Filename.
         /// </summary>
         public static string Filename
         {
@@ -61,39 +60,28 @@ namespace DrunkenBakery.OWAtray.Logging
         /// The log.
         /// </summary>
         /// <param name="message">
-        /// The message. 
-        /// </param>
-        public static void Log(string message)
-        {
-            Log(message, true);
-        }
-
-        /// <summary>
-        /// The log.
-        /// </summary>
-        /// <param name="message">
-        /// The message. 
+        /// The message.
         /// </param>
         /// <param name="success">
-        /// The success. 
+        /// The success.
         /// </param>
-        public static void Log(string message, bool success)
+        public static void Log(string message, bool success = true)
         {
-            logger.Log(success ? LogLevel.Info : LogLevel.Error, message);
+            Logger.Log(success ? LogLevel.Info : LogLevel.Error, message);
         }
 
         /// <summary>
         /// The log.
         /// </summary>
         /// <param name="message">
-        /// The message. 
+        /// The message.
         /// </param>
         /// <param name="ex">
-        /// The ex. 
+        /// The ex.
         /// </param>
         public static void Log(string message, Exception ex)
         {
-            logger.ErrorException(message, ex);
+            Logger.ErrorException(message, ex);
         }
 
         #endregion
@@ -104,11 +92,13 @@ namespace DrunkenBakery.OWAtray.Logging
         /// The get target.
         /// </summary>
         /// <param name="targetName">
-        /// The target name. 
+        /// The target name.
         /// </param>
         /// <typeparam name="T">
+        /// The target type.
         /// </typeparam>
         /// <returns>
+        /// The <see cref="T"/>.
         /// </returns>
         private static T GetTarget<T>(string targetName) where T : Target
         {
@@ -125,10 +115,10 @@ namespace DrunkenBakery.OWAtray.Logging
         /// The get target filename.
         /// </summary>
         /// <param name="targetName">
-        /// The target name. 
+        /// The target name.
         /// </param>
         /// <returns>
-        /// The get target filename. 
+        /// The <see cref="string"/>.
         /// </returns>
         private static string GetTargetFilename(string targetName)
         {

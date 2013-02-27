@@ -71,7 +71,7 @@ namespace DrunkenBakery.OWAtray.GUI
         /// <param name="e">
         /// The e.
         /// </param>
-        private void cmdOK_Click(object sender, EventArgs e)
+        private void CmdOkClick(object sender, EventArgs e)
         {
             this.Close();
         }

@@ -1,21 +1,20 @@
 ﻿// ------------------------------------------------------------------
-//  DrunkenBakery OWA Tray Monitor
-//  OWAtray.DrunkenBakery.OWAtray.Connections.Proxy
-// 
+//  OWAtray
+//  DrunkenBakery.OWAtray.Connections.Proxy.ConnectionFactory.cs
+//  
 //  <copyright file="ConnectionFactory.cs" company="The Drunken Bakery">
-//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
-//  Author: IRS
+//  
+//  Author: Iain Smith
 // ------------------------------------------------------------------
-
 namespace DrunkenBakery.OWAtray.Connections.Proxy
 {
     using DrunkenBakery.OWAtray.Connections.Abstract;
     using DrunkenBakery.OWAtray.Connections.EWS;
 
     /// <summary>
-    /// The connection factory.
+    ///     The connection factory.
     /// </summary>
     public static class ConnectionFactory
     {
@@ -28,6 +27,7 @@ namespace DrunkenBakery.OWAtray.Connections.Proxy
         /// The provider.
         /// </param>
         /// <returns>
+        /// The <see cref="IEmailInterface"/>.
         /// </returns>
         public static IEmailInterface CreateConnection(EmailType provider)
         {

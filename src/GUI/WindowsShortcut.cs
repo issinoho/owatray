@@ -1,14 +1,13 @@
 ﻿// ------------------------------------------------------------------
-//  DrunkenBakery OWA Tray Monitor
-//  OWAtray.DrunkenBakery.OWAtray.GUI
-// 
+//  OWAtray
+//  DrunkenBakery.OWAtray.GUI.WindowsShortcut.cs
+//  
 //  <copyright file="WindowsShortcut.cs" company="The Drunken Bakery">
-//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
-//  Author: IRS
+//  
+//  Author: Iain Smith
 // ------------------------------------------------------------------
-
 namespace DrunkenBakery.OWAtray.GUI
 {
     using System;
@@ -17,7 +16,7 @@ namespace DrunkenBakery.OWAtray.GUI
     using IWshRuntimeLibrary;
 
     /// <summary>
-    /// The windows shortcut.
+    ///     The windows shortcut.
     /// </summary>
     public static class WindowsShortcut
     {
@@ -33,7 +32,7 @@ namespace DrunkenBakery.OWAtray.GUI
         /// The link path name.
         /// </param>
         /// <returns>
-        /// The exists.
+        /// The <see cref="bool"/>.
         /// </returns>
         public static bool Exists(Environment.SpecialFolder folder, string linkPathName)
         {
@@ -75,7 +74,7 @@ namespace DrunkenBakery.OWAtray.GUI
         /// The link path name.
         /// </param>
         /// <returns>
-        /// The exists.
+        /// True if it exists.
         /// </returns>
         private static bool Exists(string directoryPath, string linkPathName)
         {

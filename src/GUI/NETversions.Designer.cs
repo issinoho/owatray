@@ -77,7 +77,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.cmdOK.TabIndex = 1;
             this.cmdOK.Text = Resources.NeTversions_InitializeComponent_OK;
             this.cmdOK.UseVisualStyleBackColor = true;
-            this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
+            this.cmdOK.Click += new System.EventHandler(this.CmdOkClick);
             //
             // NETversions
             //

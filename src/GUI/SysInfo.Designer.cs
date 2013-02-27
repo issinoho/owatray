@@ -326,11 +326,11 @@ namespace DrunkenBakery.OWAtray.GUI
 			this.cmdOK.TabIndex = 1;
 			this.cmdOK.Text = Resources.SysInfo_InitializeComponent_OK;
 			this.cmdOK.UseVisualStyleBackColor = true;
-			this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
+			this.cmdOK.Click += new System.EventHandler(this.CmdOkClick);
 			//
 			// timer1
 			//
-			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+			this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
 			//
 			// SysInfo
 			//

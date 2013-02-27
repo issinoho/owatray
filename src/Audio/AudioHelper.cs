@@ -1,14 +1,13 @@
 ﻿// ------------------------------------------------------------------
-//  DrunkenBakery OWA Tray Monitor
-//  OWAtray.DrunkenBakery.OWAtray.Audio
-// 
+//  OWAtray
+//  DrunkenBakery.OWAtray.Audio.AudioHelper.cs
+//  
 //  <copyright file="AudioHelper.cs" company="The Drunken Bakery">
-//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
-//  Author: IRS
+//  
+//  Author: Iain Smith
 // ------------------------------------------------------------------
-
 namespace DrunkenBakery.OWAtray.Audio
 {
     using System;
@@ -16,55 +15,55 @@ namespace DrunkenBakery.OWAtray.Audio
     using System.Runtime.InteropServices;
 
     /// <summary>
-    /// The audio helper.
+    ///     The audio helper.
     /// </summary>
     public static class AudioHelper
     {
         #region Enums
 
         /// <summary>
-        /// The play sound flags.
+        ///     The play sound flags.
         /// </summary>
         [Flags]
         private enum PlaySoundFlags
         {
             /// <summary>
-            /// The snd sync.
+            ///     The snd sync.
             /// </summary>
             SndSync = 0x0000, 
 
             /// <summary>
-            /// The snd async.
+            ///     The snd async.
             /// </summary>
             SndAsync = 0x0001, 
 
             /// <summary>
-            /// The snd nodefault.
+            ///     The snd nodefault.
             /// </summary>
             SndNodefault = 0x0002, 
 
             /// <summary>
-            /// The snd loop.
+            ///     The snd loop.
             /// </summary>
             SndLoop = 0x0008, 
 
             /// <summary>
-            /// The snd nostop.
+            ///     The snd nostop.
             /// </summary>
             SndNostop = 0x0010, 
 
             /// <summary>
-            /// The snd nowait.
+            ///     The snd nowait.
             /// </summary>
             SndNowait = 0x00002000, 
 
             /// <summary>
-            /// The snd filename.
+            ///     The snd filename.
             /// </summary>
             SndFilename = 0x00020000, 
 
             /// <summary>
-            /// The snd resource.
+            ///     The snd resource.
             /// </summary>
             SndResource = 0x00040004
         }
@@ -77,7 +76,7 @@ namespace DrunkenBakery.OWAtray.Audio
         /// The play.
         /// </summary>
         /// <param name="soundFile">
-        /// The sound file. 
+        /// The sound file.
         /// </param>
         public static void Play(string soundFile)
         {
@@ -94,20 +93,20 @@ namespace DrunkenBakery.OWAtray.Audio
         /// <summary>
         /// The play sound.
         /// </summary>
-        /// <param name="szSound">
-        /// The sz sound. 
+        /// <param name="sound">
+        /// The sound.
         /// </param>
-        /// <param name="hMod">
-        /// The h mod. 
+        /// <param name="mod">
+        /// The h mod.
         /// </param>
         /// <param name="flags">
-        /// The flags. 
+        /// The flags.
         /// </param>
         /// <returns>
-        /// The play sound. 
+        /// The <see cref="bool"/>.
         /// </returns>
         [DllImport("winmm.DLL", EntryPoint = "PlaySound", SetLastError = true)]
-        private static extern bool PlaySound(string szSound, IntPtr hMod, PlaySoundFlags flags);
+        private static extern bool PlaySound(string sound, IntPtr mod, PlaySoundFlags flags);
 
         #endregion
     }

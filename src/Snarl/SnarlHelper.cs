@@ -1,14 +1,13 @@
 ﻿// ------------------------------------------------------------------
-//  DrunkenBakery OWA Tray Monitor
-//  OWAtray.DrunkenBakery.OWAtray.Snarl
-// 
+//  OWAtray
+//  DrunkenBakery.OWAtray.Snarl.SnarlHelper.cs
+//  
 //  <copyright file="SnarlHelper.cs" company="The Drunken Bakery">
-//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
-//  Author: IRS
+//  
+//  Author: Iain Smith
 // ------------------------------------------------------------------
-
 namespace DrunkenBakery.OWAtray.Snarl
 {
     using System;
@@ -16,25 +15,25 @@ namespace DrunkenBakery.OWAtray.Snarl
     using global::Snarl;
 
     /// <summary>
-    /// The snarl helper.
+    ///     The snarl helper.
     /// </summary>
     public static class SnarlHelper
     {
-        #region Static Fields
+        #region Constants
 
         /// <summary>
-        /// The _application.
+        ///     The reply msg.
         /// </summary>
-        private static string application;
+        private const int ReplyMsg = 0x400 + 100;
 
         #endregion
 
-        #region Constants and Fields
+        #region Static Fields
 
         /// <summary>
-        /// The reply msg.
+        ///     The application.
         /// </summary>
-        private const int ReplyMsg = 0x400 + 100;
+        private static string application;
 
         #endregion
 

@@ -1,20 +1,19 @@
 ﻿// ------------------------------------------------------------------
-//  DrunkenBakery OWA Tray Monitor
-//  OWAtray.DrunkenBakery.OWAtray.Framework
-// 
+//  OWAtray
+//  DrunkenBakery.OWAtray.Framework.ScenarioFactory.cs
+//  
 //  <copyright file="ScenarioFactory.cs" company="The Drunken Bakery">
-//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
-//  Author: IRS
+//  
+//  Author: Iain Smith
 // ------------------------------------------------------------------
-
 namespace DrunkenBakery.OWAtray.Framework
 {
     using DrunkenBakery.OWAtray.Connections.Abstract;
 
     /// <summary>
-    /// The scenario factory.
+    ///     The scenario factory.
     /// </summary>
     public static class ScenarioFactory
     {
@@ -27,6 +26,7 @@ namespace DrunkenBakery.OWAtray.Framework
         /// The filename.
         /// </param>
         /// <returns>
+        /// The <see cref="Scenario"/>.
         /// </returns>
         public static Scenario CreateScenario(string filename)
         {

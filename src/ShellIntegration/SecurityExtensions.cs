@@ -23,7 +23,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         #region Public Methods and Operators
 
         /// <summary>
-        /// The decrypt.
+        /// Decrypt a string.
         /// </summary>
         /// <param name="protectedPassword">
         /// The protected password.
@@ -44,7 +44,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         }
 
         /// <summary>
-        /// The encrypt.
+        /// Encrypt a string.
         /// </summary>
         /// <param name="password">
         /// The password.

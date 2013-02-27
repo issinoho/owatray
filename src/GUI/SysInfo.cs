@@ -110,12 +110,10 @@ namespace DrunkenBakery.OWAtray.GUI
                 var memNode =
                     new TreeNode(
                         string.Format(
-                            "{0}: {1} {2}", 
-                            Resources.SysInfo_GetComputer_Memory, 
-                            totalCapacity / 1073741824, 
-                            Resources.SysInfo_GetComputer_GB)) {
-                                                                  ImageIndex = 19, SelectedImageIndex = 19 
-                                                               };
+                            "{0}: {1} {2}",
+                            Resources.SysInfo_GetComputer_Memory,
+                            totalCapacity / 1073741824,
+                            Resources.SysInfo_GetComputer_GB)) { ImageIndex = 19, SelectedImageIndex = 19 };
                 newNode.Nodes.Add(memNode);
             }
             catch (Exception)
@@ -159,8 +157,8 @@ namespace DrunkenBakery.OWAtray.GUI
                 // IP Address
                 string myHost = Dns.GetHostName();
                 string myIp = Dns.GetHostEntry(myHost).AddressList[0].ToString();
-                var ipNode = new TreeNode(myIp) { ImageIndex = 20, SelectedImageIndex = 20 };
-                newNode.Nodes.Add(ipNode);
+                var myNode = new TreeNode(myIp) { ImageIndex = 20, SelectedImageIndex = 20 };
+                newNode.Nodes.Add(myNode);
             }
             catch (Exception)
             {
@@ -305,7 +303,7 @@ namespace DrunkenBakery.OWAtray.GUI
         /// <param name="e">
         /// The e.
         /// </param>
-        private void cmdOK_Click(object sender, EventArgs e)
+        private void CmdOkClick(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -319,7 +317,7 @@ namespace DrunkenBakery.OWAtray.GUI
         /// <param name="e">
         /// The e.
         /// </param>
-        private void timer1_Tick(object sender, EventArgs e)
+        private void Timer1Tick(object sender, EventArgs e)
         {
             // Stop re-entrancy
             this.timer1.Enabled = false;

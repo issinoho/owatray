@@ -33,7 +33,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// <summary>
         /// The entropy.
         /// </summary>
-        private static readonly byte[] entropy = Encoding.Unicode.GetBytes("Salt Is Not A Password");
+        private static readonly byte[] Entropy = Encoding.Unicode.GetBytes("Salt Is Not A Password");
 
         #endregion
 
@@ -479,8 +479,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 // Get current default cmd path and store for use later
                 string defPathKey = "\"" + shell + "\" mailto %1";
                 string pathKey =
-                    Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, defPathKey).ToString
-                        ();
+                    Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, defPathKey).ToString();
                 if (pathKey != defPathKey)
                 {
                     Settings.Default.DefaultOpen = pathKey;

@@ -1,14 +1,13 @@
 ﻿// ------------------------------------------------------------------
-//  DrunkenBakery OWA Tray Monitor
-//  OWAtray.DrunkenBakery.OWAtray.GUI
-// 
+//  OWAtray
+//  DrunkenBakery.OWAtray.GUI.SecurityExtensions.cs
+//  
 //  <copyright file="SecurityExtensions.cs" company="The Drunken Bakery">
-//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
-//  Author: IRS
+//  
+//  Author: Iain Smith
 // ------------------------------------------------------------------
-
 namespace DrunkenBakery.OWAtray.GUI
 {
     using System;
@@ -16,7 +15,7 @@ namespace DrunkenBakery.OWAtray.GUI
     using System.Text;
 
     /// <summary>
-    /// The security extensions.
+    ///     The security extensions.
     /// </summary>
     public static class SecurityExtensions
     {
@@ -29,7 +28,7 @@ namespace DrunkenBakery.OWAtray.GUI
         /// The protected password.
         /// </param>
         /// <returns>
-        /// The decrypt.
+        /// The <see cref="string"/>.
         /// </returns>
         public static string Decrypt(this string protectedPassword)
         {
@@ -50,7 +49,7 @@ namespace DrunkenBakery.OWAtray.GUI
         /// The password.
         /// </param>
         /// <returns>
-        /// The encrypt.
+        /// The <see cref="string"/>.
         /// </returns>
         public static string Encrypt(this string password)
         {
