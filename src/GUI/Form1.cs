@@ -24,17 +24,17 @@ namespace DrunkenBakery.OWAtray.GUI
     using System.Threading;
     using System.Windows.Forms;
 
-    using DrunkenBakery.OWAtray.Audio;
-    using DrunkenBakery.OWAtray.Connections.Abstract;
-    using DrunkenBakery.OWAtray.Connections.Proxy;
-    using DrunkenBakery.OWAtray.Framework;
-    using DrunkenBakery.OWAtray.Growl;
-    using DrunkenBakery.OWAtray.GUI.Properties;
-    using DrunkenBakery.OWAtray.Logging;
-    using DrunkenBakery.OWAtray.Snarl;
+    using Audio;
+    using Connections.Abstract;
+    using Connections.Proxy;
+    using Framework;
+    using Growl;
+    using Properties;
+    using Logging;
+    using Snarl;
 
     /// <summary>
-    /// The form 1.
+    /// The main form.
     /// </summary>
     public partial class Form1 : Form
     {
