@@ -1,6 +1,5 @@
 #include <windows.h>
 #include <tchar.h>
-#include "mapidefs.h"
 #include <mapi.h>
 #include <iostream>
 #include <string>

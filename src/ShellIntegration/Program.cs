@@ -13,9 +13,9 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 {
     using System;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using System.Reflection;
-    using System.Text;
     using System.Threading;
     using System.Windows.Forms;
 
@@ -28,15 +28,6 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
     /// </summary>
     internal static class Program
     {
-        #region Static Fields
-
-        /// <summary>
-        /// The entropy.
-        /// </summary>
-        private static readonly byte[] Entropy = Encoding.Unicode.GetBytes("Salt Is Not A Password");
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -44,22 +35,35 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// </summary>
         private static void AutoLogin()
         {
-            if (Settings.Default.AutoLogin == "Yes")
+            if (Settings.Default.AutoLogin != "Yes")
             {
-                // Wait for it to load the page
-                Thread.Sleep(Convert.ToInt32(Settings.Default.PopupDelay));
+                return;
+            }
 
-                // Find IE window and send keys to it
-                int handle = NativeWin32.FindWindow(null, Settings.Default.LoginTitle);
-                NativeWin32.SetForegroundWindow(handle);
+            // Wait for it to load the page
+            Thread.Sleep(Convert.ToInt32(Settings.Default.PopupDelay));
 
-                // Tab stops
-                SendKeys.SendWait(Settings.Default.Password.Decrypt());
-                Thread.Sleep(Convert.ToInt32(Settings.Default.SmallWait));
+            // Find IE window and send keys to it
+            var windowTitle = Settings.Default.Office365 == "Yes"
+                                  ? Settings.Default.Office365Title
+                                  : Settings.Default.LoginTitle;
+            var handle = NativeWin32.FindWindow(null, windowTitle);
+            NativeWin32.SetForegroundWindow(handle);
 
-                // Then the paste
+            // If this is Office365 then send extra keys
+            if (Settings.Default.Office365 == "Yes")
+            {
+                SendKeys.SendWait("{TAB}");
+                SendKeys.SendWait("{TAB}");
                 SendKeys.SendWait("{ENTER}");
             }
+
+            // Tab stops
+            SendKeys.SendWait(Settings.Default.Password.Decrypt());
+            Thread.Sleep(Convert.ToInt32(Settings.Default.SmallWait));
+
+            // Then the paste
+            SendKeys.SendWait("{ENTER}");
         }
 
         /// <summary>
@@ -128,9 +132,9 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// </summary>
         private static void InitRegistry()
         {
-            string bridge = Path.Combine(
+            var bridge = Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.MAPIBridge);
-            string shell = Assembly.GetExecutingAssembly().Location;
+            var shell = Assembly.GetExecutingAssembly().Location;
 
             try
             {
@@ -274,6 +278,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                     if (args.Length > 1)
                     {
                         Settings.Default.AutoLogin = args[1];
+                        Settings.Default.Office365 = args[2];
                         Settings.Default.Save();
                     }
 
@@ -296,7 +301,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 case "MAILTO":
                     if (args.Length > 1)
                     {
-                        SpawnUrl(args[1]);
+                        HandleMailto(args[1]);
                     }
 
                     break;
@@ -361,6 +366,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                                 break;
                         }
 
+                        Settings.Default.Version = args[1];
                         Settings.Default.Save();
                     }
 
@@ -430,14 +436,14 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// </summary>
         private static void SaveCurrentKey()
         {
-            string bridge = Path.Combine(
+            var bridge = Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.MAPIBridge);
-            string shell = Assembly.GetExecutingAssembly().Location;
+            var shell = Assembly.GetExecutingAssembly().Location;
 
             try
             {
                 // Get current mailto and store for use later
-                string currentKey =
+                var currentKey =
                     Registry.GetValue(
                         @"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", 
                         "Progid", 
@@ -449,7 +455,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 }
 
                 // Get current default mail and store for use later
-                string mailKey =
+                var mailKey =
                     Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", string.Empty, "OWAMapi").ToString();
                 if (mailKey != "OWAMapi")
                 {
@@ -458,7 +464,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 }
 
                 // Get current default user mail and store for use later
-                string userMailKey =
+                var userMailKey =
                     Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Clients\Mail", string.Empty, "OWAMapi").ToString();
                 if (userMailKey != "OWAMapi")
                 {
@@ -467,8 +473,8 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 }
 
                 // Get current default icon and store for use later
-                string defIconKey = "\"" + shell + "\",0";
-                string iconKey =
+                var defIconKey = "\"" + shell + "\",0";
+                var iconKey =
                     Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\DefaultIcon", string.Empty, defIconKey).ToString();
                 if (userMailKey != defIconKey)
                 {
@@ -477,8 +483,8 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 }
 
                 // Get current default cmd path and store for use later
-                string defPathKey = "\"" + shell + "\" mailto %1";
-                string pathKey =
+                var defPathKey = "\"" + shell + "\" mailto %1";
+                var pathKey =
                     Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, defPathKey).ToString();
                 if (pathKey != defPathKey)
                 {
@@ -508,20 +514,33 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         }
 
         /// <summary>
-        /// The spawn url.
+        /// The handle mailto.
         /// </summary>
         /// <param name="target">
-        /// The target. 
+        /// The target.
         /// </param>
-        private static void SpawnUrl(string target)
+        private static void HandleMailto(string target)
         {
+            string myUrl;
+
+            // Strip off protocol header
             if (target.Substring(0, 7) == @"mailto:")
             {
                 target = target.Substring(7, target.Length - 7);
             }
 
-            string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + "/?ae=Item&a=New&t=IPM.Note"
-                           + Settings.Default.MimeURL + "&to=" + target;
+            // Which version of Exchange?
+            if (Settings.Default.Version == "Exchange2013")
+            {
+                myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail2013;
+            }
+            else
+            {
+                myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail
+                        + Settings.Default.MimeURL + "&to=" + target;
+            }
+
+            // Fire up the browser
             if (Settings.Default.Browser == "Yes")
             {
                 Process.Start("IEXPLORE.EXE", myUrl);
@@ -532,6 +551,31 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             }
 
             Console.WriteLine("Browsing to " + myUrl);
+
+            // If Exchange2013 then paste in address
+            if (Settings.Default.Version == "Exchange2013")
+            {
+                // Wait for it to pop
+                Thread.Sleep(Convert.ToInt32(Settings.Default.PopupDelay));
+
+                // Find IE window and send keys to it
+                var handle = NativeWin32.FindWindow(null, Settings.Default.IETitle);
+                Console.WriteLine("Handle1 = " + handle);
+                if (handle == 0)
+                {
+                    handle = NativeWin32.FindWindow(null, Settings.Default.IETitle2);
+                    Console.WriteLine("Handle2 = " + handle);
+                }
+
+                // Focus window
+                NativeWin32.SetForegroundWindow(handle);
+
+                // Send email address character by character to window
+                foreach (var c in target)
+                {
+                    SendKeys.SendWait(c.ToString(CultureInfo.InvariantCulture));
+                }
+            }
         }
 
         /// <summary>

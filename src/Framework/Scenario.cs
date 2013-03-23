@@ -42,6 +42,11 @@ namespace DrunkenBakery.OWAtray.Framework
         private const string ElementAutoLogin = "AutoLogin";
 
         /// <summary>
+        /// The element office 365.
+        /// </summary>
+        private const string ElementOffice365 = "Office365";
+
+        /// <summary>
         /// The description.
         /// </summary>
         private const string ElementDescription = "Description";
@@ -311,6 +316,12 @@ namespace DrunkenBakery.OWAtray.Framework
                     item.AutoLogin = xmlElementAutoLogin.InnerText != "0";
                 }
 
+                XmlElement xmlElementOffice365 = node[ElementOffice365];
+                if (xmlElementOffice365 != null)
+                {
+                    item.Office365 = xmlElementOffice365.InnerText != "0";
+                }
+
                 XmlElement xmlElementOverrideOffice365Login = node[ElementOverrideOffice365Login];
                 if (xmlElementOverrideOffice365Login != null)
                 {
@@ -385,6 +396,7 @@ namespace DrunkenBakery.OWAtray.Framework
                         ElementAlwaysUseInternetExplorer, item.AlwaysUseInternetExplorer ? "1" : "0");
                     writer.WriteElementString(ElementDisableCalendar, item.DisableCalendar ? "1" : "0");
                     writer.WriteElementString(ElementAutoLogin, item.AutoLogin ? "1" : "0");
+                    writer.WriteElementString(ElementOffice365, item.Office365 ? "1" : "0");
                     writer.WriteElementString(ElementOverrideOffice365Login, item.OverrideOffice365Login ? "1" : "0");
                     writer.WriteElementString(
                         ElementOverrideAutodiscoveryValidation, item.OverrideAutodiscoveryValidation ? "1" : "0");

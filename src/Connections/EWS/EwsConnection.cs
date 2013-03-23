@@ -224,7 +224,6 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                         }
 
                         // Probe for autodiscover information
-                        // var autodiscoverService = new AutodiscoverService((ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), Version));
                         var autodiscoverService = new AutodiscoverService(ExchangeVersion.Exchange2007_SP1);
 
                         // Credentials
@@ -663,8 +662,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                         };
 
                     // Set initial flags
-                    int offset = 0;
-                    bool moreItems = true;
+                    var offset = 0;
+                    var moreItems = true;
 
                     // Continue paging while there are more items to fetch
                     while (moreItems)

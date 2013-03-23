@@ -99,6 +99,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.chkOffice365 = new System.Windows.Forms.CheckBox();
             this.label12 = new System.Windows.Forms.Label();
             this.txtInterval = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -455,6 +456,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.office365LoginOverrideToolStripMenuItem.Name = "office365LoginOverrideToolStripMenuItem";
             this.office365LoginOverrideToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.office365LoginOverrideToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Office365_Login_Override;
+            this.office365LoginOverrideToolStripMenuItem.Visible = false;
             this.office365LoginOverrideToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.Office365LoginOverrideToolStripMenuItemCheckStateChanged);
             // 
             // useDefaultWebProxyToolStripMenuItem
@@ -626,7 +628,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtEmail.Location = new System.Drawing.Point(166, 38);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(350, 21);
-            this.txtEmail.TabIndex = 4;
+            this.txtEmail.TabIndex = 5;
             this.txtEmail.Validated += new System.EventHandler(this.TxtEmailValidated);
             // 
             // cmdStop
@@ -657,7 +659,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtPwd.Name = "txtPwd";
             this.txtPwd.PasswordChar = '*';
             this.txtPwd.Size = new System.Drawing.Size(144, 21);
-            this.txtPwd.TabIndex = 8;
+            this.txtPwd.TabIndex = 9;
             this.txtPwd.Validated += new System.EventHandler(this.TxtPwdValidated);
             // 
             // label3
@@ -667,7 +669,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.label3.Location = new System.Drawing.Point(306, 74);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(60, 13);
-            this.label3.TabIndex = 7;
+            this.label3.TabIndex = 8;
             this.label3.Text = "Password :";
             // 
             // txtUser
@@ -675,7 +677,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.txtUser.Location = new System.Drawing.Point(166, 71);
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(125, 21);
-            this.txtUser.TabIndex = 6;
+            this.txtUser.TabIndex = 7;
             this.txtUser.Validated += new System.EventHandler(this.TxtUserValidated);
             // 
             // label2
@@ -685,7 +687,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.label2.Location = new System.Drawing.Point(61, 74);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(66, 13);
-            this.label2.TabIndex = 5;
+            this.label2.TabIndex = 6;
             this.label2.Text = "User Name :";
             // 
             // timer1
@@ -714,6 +716,7 @@ namespace DrunkenBakery.OWAtray.GUI
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.chkOffice365);
             this.tabPage1.Controls.Add(this.label12);
             this.tabPage1.Controls.Add(this.txtInterval);
             this.tabPage1.Controls.Add(this.label8);
@@ -740,6 +743,19 @@ namespace DrunkenBakery.OWAtray.GUI
             this.tabPage1.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Basic_Settings;
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // chkOffice365
+            // 
+            this.chkOffice365.AutoSize = true;
+            this.chkOffice365.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkOffice365.ForeColor = System.Drawing.Color.Blue;
+            this.chkOffice365.Location = new System.Drawing.Point(306, 106);
+            this.chkOffice365.Name = "chkOffice365";
+            this.chkOffice365.Size = new System.Drawing.Size(79, 17);
+            this.chkOffice365.TabIndex = 12;
+            this.chkOffice365.Text = "Office 365 ";
+            this.chkOffice365.UseVisualStyleBackColor = true;
+            this.chkOffice365.CheckedChanged += new System.EventHandler(this.ChkOffice365CheckedChanged);
+            // 
             // label12
             // 
             this.label12.AutoSize = true;
@@ -747,7 +763,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.label12.Location = new System.Drawing.Point(488, 11);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(28, 13);
-            this.label12.TabIndex = 69;
+            this.label12.TabIndex = 3;
             this.label12.Text = "secs";
             // 
             // txtInterval
@@ -773,7 +789,7 @@ namespace DrunkenBakery.OWAtray.GUI
             // pictureBox16
             // 
             this.pictureBox16.Image = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.history;
-            this.pictureBox16.Location = new System.Drawing.Point(302, 11);
+            this.pictureBox16.Location = new System.Drawing.Point(310, 10);
             this.pictureBox16.Name = "pictureBox16";
             this.pictureBox16.Size = new System.Drawing.Size(16, 16);
             this.pictureBox16.TabIndex = 68;
@@ -788,11 +804,12 @@ namespace DrunkenBakery.OWAtray.GUI
             "Exchange2007_SP1",
             "Exchange2010",
             "Exchange2010_SP1",
-            "Exchange2010_SP2"});
+            "Exchange2010_SP2",
+            "Exchange2013"});
             this.cmbExchangeVersion.Location = new System.Drawing.Point(166, 102);
             this.cmbExchangeVersion.Name = "cmbExchangeVersion";
-            this.cmbExchangeVersion.Size = new System.Drawing.Size(200, 21);
-            this.cmbExchangeVersion.TabIndex = 10;
+            this.cmbExchangeVersion.Size = new System.Drawing.Size(125, 21);
+            this.cmbExchangeVersion.TabIndex = 11;
             this.cmbExchangeVersion.SelectedIndexChanged += new System.EventHandler(this.CmbExchangeVersionSelectedIndexChanged);
             // 
             // label11
@@ -802,7 +819,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.label11.Location = new System.Drawing.Point(61, 106);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(99, 13);
-            this.label11.TabIndex = 9;
+            this.label11.TabIndex = 10;
             this.label11.Text = "Exchange Version :";
             // 
             // pictureBox7
@@ -822,7 +839,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.chkRunOnStartup.Location = new System.Drawing.Point(419, 106);
             this.chkRunOnStartup.Name = "chkRunOnStartup";
             this.chkRunOnStartup.Size = new System.Drawing.Size(97, 17);
-            this.chkRunOnStartup.TabIndex = 11;
+            this.chkRunOnStartup.TabIndex = 13;
             this.chkRunOnStartup.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Run_at_Startup;
             this.chkRunOnStartup.UseVisualStyleBackColor = true;
             this.chkRunOnStartup.CheckedChanged += new System.EventHandler(this.ChkRunOnStartupCheckedChanged);
@@ -852,7 +869,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.label9.Location = new System.Drawing.Point(61, 41);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(80, 13);
-            this.label9.TabIndex = 3;
+            this.label9.TabIndex = 4;
             this.label9.Text = "Email Address :";
             // 
             // chkAutodiscovery
@@ -1242,6 +1259,7 @@ namespace DrunkenBakery.OWAtray.GUI
         private System.Windows.Forms.LinkLabel lblEmail;
         private System.Windows.Forms.TextBox txtDescription;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.CheckBox chkOffice365;
 	}
 }
 

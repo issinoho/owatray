@@ -160,7 +160,6 @@
     <ClCompile Include="MapiDll.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="mapidefs.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

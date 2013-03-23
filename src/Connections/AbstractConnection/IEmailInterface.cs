@@ -226,6 +226,11 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// </summary>
         string Version { get; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether office 365.
+        /// </summary>
+        bool Office365 { get; set; }
+
         #endregion
 
         #region Public Methods and Operators

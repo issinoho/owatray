@@ -385,23 +385,51 @@ namespace DrunkenBakery.OWAtray.GUI
         }
 
         /// <summary>
-        ///     The activate owa.
+        /// The activate owa.
         /// </summary>
-        private void ActivateOwa()
+        /// <param name="url">
+        /// The url.
+        /// </param>
+        private void ActivateOwa(string url = "")
         {
-            var runSvc = new ProcessStartInfo(this.shellPath) { WindowStyle = ProcessWindowStyle.Hidden };
+            var targetUrl = string.Empty;
 
-            if (this.connection.AlwaysUseInternetExplorer)
+            // If this is Exchange2013 then we need to process the URL
+            if (this.connection.Version == "Exchange2013")
             {
-                runSvc.Arguments = "owa" + ((this.popUrl.Length > 0) ? " " + this.popUrl : string.Empty);
+                if (url.Length > 0)
+                {
+                    targetUrl =
+                        "#viewmodel=_y.$TX&ItemID=AAMkADM2ZmI4ODcwLWY4YWEtNGQ2YS1hYjMyLTE0M2ZkNDM0MmQ2OABGAAAAAABE";
+                    var temp1 = this.popUrl.Replace("RgAAAABE", string.Empty);
+                    var temp2 = temp1.Replace("J&exvsurl=1", string.Empty);
+                    var temp3 = temp2.Replace("P&exvsurl=1", string.Empty);
+                    var temp4 = temp3.Replace("?ae=Item&a=Open&t=IPM.Note&id=", string.Empty);
+                    var temp5 = temp4.Replace("?ae=Item&t=IPM.Appointment&id=", string.Empty);
+                    targetUrl = targetUrl + temp5 + "%3D";
+                }
             }
             else
             {
-                runSvc.Arguments = "shell" + ((this.popUrl.Length > 0) ? " " + this.popUrl : string.Empty);
+                targetUrl = url;
             }
 
-            Process serviceProcess = Process.Start(runSvc);
+            var runSvc = new ProcessStartInfo(this.shellPath) { WindowStyle = ProcessWindowStyle.Hidden };
 
+            // Choose browser
+            if (this.connection.AlwaysUseInternetExplorer)
+            {
+                runSvc.Arguments = "owa" + ((targetUrl.Length > 0) ? " " + targetUrl : string.Empty);
+            }
+            else
+            {
+                runSvc.Arguments = "shell" + ((targetUrl.Length > 0) ? " " + targetUrl : string.Empty);
+            }
+
+            // Open window
+            Process.Start(runSvc);
+
+            // Switch off this override
             if (this.office365LoginOverrideToolStripMenuItem.CheckState == CheckState.Checked)
             {
                 this.office365LoginOverrideToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -613,6 +641,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.cbOverrideOWA.Checked = this.connection.OverrideEmailUrl;
             this.txtOWAEdit.Enabled = this.cbOverrideOWA.Checked;
             this.chkAutodiscovery.Checked = this.connection.UseAutodiscovery;
+            this.chkOffice365.Checked = this.connection.Office365;
             this.SelectAutodiscoveryOptions();
             this.chkOnDomain.Checked = this.connection.OnWindowsDomain;
             this.SelectDomainOptions();
@@ -1602,8 +1631,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 return;
             }
 
-            this.ActivateOwa();
-            this.popUrl = string.Empty;
+            this.ActivateOwa(this.popUrl);
         }
 
         /// <summary>
@@ -1617,7 +1645,6 @@ namespace DrunkenBakery.OWAtray.GUI
         /// </param>
         private void NotifyIcon1MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            this.popUrl = string.Empty;
             this.ActivateOwa();
         }
 
@@ -1683,7 +1710,6 @@ namespace DrunkenBakery.OWAtray.GUI
         /// </param>
         private void OpenOwaToolStripMenuItemClick(object sender, EventArgs e)
         {
-            this.popUrl = string.Empty;
             this.ActivateOwa();
         }
 
@@ -1939,7 +1965,7 @@ namespace DrunkenBakery.OWAtray.GUI
                                  {
                                      Arguments =
                                          "autologin "
-                                         + (this.connection.AutoLogin ? "Yes" : "No"), 
+                                         + (this.connection.AutoLogin ? "Yes" : "No") + " " + (this.connection.Office365 ? "Yes" : "No"), 
                                      WindowStyle = ProcessWindowStyle.Hidden
                                  };
 
@@ -2613,5 +2639,26 @@ namespace DrunkenBakery.OWAtray.GUI
         }
 
         #endregion
+
+        /// <summary>
+        /// The chk office 365 checked changed.
+        /// </summary>
+        /// <param name="sender">
+        /// The sender.
+        /// </param>
+        /// <param name="e">
+        /// The e.
+        /// </param>
+        private void ChkOffice365CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.booting)
+            {
+                return;
+            }
+
+            this.connection.Office365 = this.chkOffice365.Checked;
+            this.scenario.Save();
+            this.ShellAutologin();
+        }
     }
 }

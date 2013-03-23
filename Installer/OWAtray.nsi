@@ -51,7 +51,7 @@ Section "MainSection" SEC01
   sleep 500
 
   SetOutPath "$INSTDIR"
-  SetOverwrite ifnewer
+  SetOverwrite on
   File "..\bin\alert.ico"
   File "..\bin\Secure\DrunkenBakery.OWAtray.Audio.dll"
   File "..\bin\Secure\DrunkenBakery.OWAtray.Connections.Abstract.dll"
