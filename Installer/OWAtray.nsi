@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "OWA Tray Monitor"
-!define PRODUCT_VERSION "3.0.4765.30358"
+!define PRODUCT_VERSION "3.2"
 !define PRODUCT_PUBLISHER "The Drunken Bakery"
 !define PRODUCT_WEB_SITE "http://www.owatray.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray"
@@ -135,6 +135,12 @@ Section "MainSection" SEC01
   File "..\bin\ru\DrunkenBakery.OWAtray.Connections.EWS.resources.dll"
   File "..\bin\ru\DrunkenBakery.OWAtray.GUI.resources.dll"
   File "..\bin\ru\DrunkenBakery.OWAtray.Logging.resources.dll"
+  CreateDirectory "$INSTDIR\mk"
+  SetOutPath "$INSTDIR\mk"
+  File "..\bin\mk\DrunkenBakery.OWAtray.Connections.Abstract.resources.dll"
+  File "..\bin\mk\DrunkenBakery.OWAtray.Connections.EWS.resources.dll"
+  File "..\bin\mk\DrunkenBakery.OWAtray.GUI.resources.dll"
+  File "..\bin\mk\DrunkenBakery.OWAtray.Logging.resources.dll"
 SectionEnd
 
 Section -AdditionalIcons
@@ -207,6 +213,7 @@ Section Uninstall
   Delete "$INSTDIR\it\DrunkenBakery.OWAtray.GUI.resources.dll"
   Delete "$INSTDIR\ru\DrunkenBakery.OWAtray.GUI.resources.dll"
   Delete "$INSTDIR\pl\DrunkenBakery.OWAtray.GUI.resources.dll"
+  Delete "$INSTDIR\mk\DrunkenBakery.OWAtray.GUI.resources.dll"
 ;
   Delete "$INSTDIR\de\DrunkenBakery.OWAtray.Connections.Abstract.resources.dll"
   Delete "$INSTDIR\ca\DrunkenBakery.OWAtray.Connections.Abstract.resources.dll"
@@ -216,6 +223,7 @@ Section Uninstall
   Delete "$INSTDIR\it\DrunkenBakery.OWAtray.Connections.Abstract.resources.dll"
   Delete "$INSTDIR\ru\DrunkenBakery.OWAtray.Connections.Abstract.resources.dll"
   Delete "$INSTDIR\pl\DrunkenBakery.OWAtray.Connections.Abstract.resources.dll"
+  Delete "$INSTDIR\mk\DrunkenBakery.OWAtray.Connections.Abstract.resources.dll"
 ;
   Delete "$INSTDIR\de\DrunkenBakery.OWAtray.Connections.EWS.resources.dll"
   Delete "$INSTDIR\ca\DrunkenBakery.OWAtray.Connections.EWS.resources.dll"
@@ -225,6 +233,7 @@ Section Uninstall
   Delete "$INSTDIR\it\DrunkenBakery.OWAtray.Connections.EWS.resources.dll"
   Delete "$INSTDIR\ru\DrunkenBakery.OWAtray.Connections.EWS.resources.dll"
   Delete "$INSTDIR\pl\DrunkenBakery.OWAtray.Connections.EWS.resources.dll"
+  Delete "$INSTDIR\mk\DrunkenBakery.OWAtray.Connections.EWS.resources.dll"
 ;
   Delete "$INSTDIR\de\DrunkenBakery.OWAtray.Logging.resources.dll"
   Delete "$INSTDIR\ca\DrunkenBakery.OWAtray.Logging.resources.dll"
@@ -234,6 +243,7 @@ Section Uninstall
   Delete "$INSTDIR\it\DrunkenBakery.OWAtray.Logging.resources.dll"
   Delete "$INSTDIR\ru\DrunkenBakery.OWAtray.Logging.resources.dll"
   Delete "$INSTDIR\pl\DrunkenBakery.OWAtray.Logging.resources.dll"
+  Delete "$INSTDIR\mk\DrunkenBakery.OWAtray.Logging.resources.dll"
 
   Delete "$INSTDIR\logs\*"
 
@@ -256,6 +266,7 @@ Section Uninstall
   RMDir "$INSTDIR\it"
   RMDir "$INSTDIR\ru"
   RMDir "$INSTDIR\pl"
+  RMDir "$INSTDIR\mk"
   RMDir "$INSTDIR\logs"
   RMDir "$INSTDIR"
 
