@@ -40,7 +40,7 @@
 
 Name "${PRODUCT_NAME}"
 OutFile "OWAtray.exe"
-InstallDir "$LOCALAPPDATA\OWAtray"
+InstallDir "$APPDATA\OWAtray"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
@@ -270,7 +270,7 @@ Section Uninstall
   RMDir "$INSTDIR\logs"
   RMDir "$INSTDIR"
 
-  RMDir /r "$LOCALAPPDATA\The_Drunken_Bakery"
+  RMDir /r "$APPDATA\The_Drunken_Bakery"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
   DeleteRegKey HKLM "${PRODUCT_DIR_REGKEY}"
