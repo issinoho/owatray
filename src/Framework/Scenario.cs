@@ -1,9 +1,9 @@
 ﻿// ------------------------------------------------------------------
-//  DrunkenBakery OWA Tray Monitor
-//  OWAtray.DrunkenBakery.OWAtray.Framework
+//  Freshly Baked at the Drunken Bakery
+//  OWAtray::DrunkenBakery.OWAtray.Framework
 // 
 //  <copyright file="Scenario.cs" company="The Drunken Bakery">
-//      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
+//      Copyright (c) 2009-2014 The Drunken Bakery. All rights reserved.
 //  </copyright>
 // 
 //  Author: IRS
@@ -20,153 +20,159 @@ namespace DrunkenBakery.OWAtray.Framework
     using DrunkenBakery.OWAtray.Connections.Proxy;
 
     /// <summary>
-    /// The scenario.
+    ///     The scenario.
     /// </summary>
     public class Scenario
     {
         #region Constants and Fields
 
         /// <summary>
-        /// The element account domain.
+        ///     The element account domain.
         /// </summary>
         private const string ElementAccountDomain = "AccountDomain";
 
         /// <summary>
-        /// The element always use internet explorer.
+        ///     The element always use internet explorer.
         /// </summary>
         private const string ElementAlwaysUseInternetExplorer = "AlwaysUseInternetExplorer";
 
         /// <summary>
-        /// The element auto login.
+        ///     The element auto login.
         /// </summary>
         private const string ElementAutoLogin = "AutoLogin";
 
         /// <summary>
-        /// The element office 365.
-        /// </summary>
-        private const string ElementOffice365 = "Office365";
-
-        /// <summary>
-        /// The description.
+        ///     The description.
         /// </summary>
         private const string ElementDescription = "Description";
 
         /// <summary>
-        /// The element disable calendar.
+        ///     The element disable calendar.
         /// </summary>
         private const string ElementDisableCalendar = "DisableCalendar";
 
         /// <summary>
-        /// The element email address.
+        ///     The element email address.
         /// </summary>
         private const string ElementEmailAddress = "EmailAddress";
 
         /// <summary>
-        /// The element email server.
+        ///     The element email server.
         /// </summary>
         private const string ElementEmailServer = "EmailServer";
 
         /// <summary>
-        /// The element email url.
+        ///     The element email url.
         /// </summary>
         private const string ElementEmailUrl = "EmailUrl";
 
         /// <summary>
-        /// The element interval.
+        ///     The element interval.
         /// </summary>
         private const string ElementInterval = "Interval";
 
         /// <summary>
-        /// The element on windows domain.
+        ///     The element office 365.
+        /// </summary>
+        private const string ElementOffice365 = "Office365";
+
+        /// <summary>
+        ///     The element on windows domain.
         /// </summary>
         private const string ElementOnWindowsDomain = "OnWindowsDomain";
 
         /// <summary>
-        /// The element override autodiscovery validation.
+        ///     The element override autodiscovery validation.
         /// </summary>
         private const string ElementOverrideAutodiscoveryValidation = "OverrideAutodiscoveryValidation";
 
         /// <summary>
-        /// The element override certificate.
+        ///     The element override certificate.
         /// </summary>
         private const string ElementOverrideCertificate = "OverrideCertificate";
 
         /// <summary>
-        /// The element override email url.
+        ///     The element override email url.
         /// </summary>
         private const string ElementOverrideEmailUrl = "OverrideEmailUrl";
 
         /// <summary>
-        /// The element override office 365 login.
+        ///     The element override office 365 login.
         /// </summary>
         private const string ElementOverrideOffice365Login = "OverrideOffice365Login";
 
         /// <summary>
-        /// The element override service url.
+        ///     The element override service url.
         /// </summary>
         private const string ElementOverrideServiceUrl = "OverrideServiceUrl";
 
         /// <summary>
-        /// The element password.
+        ///     The element password.
         /// </summary>
         private const string ElementPassword = "EncryptedPassword";
 
         /// <summary>
-        /// The element server version.
+        ///     The element server version.
         /// </summary>
         private const string ElementServerVersion = "ServerVersion";
 
         /// <summary>
-        /// The element service url.
+        ///     The element service url.
         /// </summary>
         private const string ElementServiceUrl = "ServiceUrl";
 
         /// <summary>
-        /// The element type.
+        ///     The element type.
         /// </summary>
         private const string ElementType = "Type";
 
         /// <summary>
-        /// The element use autodiscovery.
+        ///     The element use autodiscovery.
         /// </summary>
         private const string ElementUseAutodiscovery = "UseAutodiscovery";
 
         /// <summary>
-        /// The element username.
+        ///     The element username.
         /// </summary>
         private const string ElementUsername = "Username";
 
         /// <summary>
-        /// The group connections.
+        ///     The group connections.
         /// </summary>
         private const string GroupConnections = "Connections";
 
         /// <summary>
-        /// The node connection.
+        ///     The node connection.
         /// </summary>
         private const string NodeConnection = "Connection";
 
         /// <summary>
-        /// The root element.
+        ///     The root element.
         /// </summary>
         private const string RootElement = "Scenario";
 
         /// <summary>
-        /// The search connection.
+        ///     The search connection.
         /// </summary>
         private const string SearchConnection = "//Connection";
+
+        #endregion
+
+        #region Public Events
+
+        public event Action<string> ScenarioEvent;
 
         #endregion
 
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets Connections.
+        ///     Gets or sets Connections.
         /// </summary>
         public EmailConnections Connections { get; set; }
 
         /// <summary>
-        /// Gets or sets ScenarioFile.
+        ///     Gets or sets ScenarioFile.
         /// </summary>
         public string ScenarioFile { private get; set; }
 
@@ -175,7 +181,7 @@ namespace DrunkenBakery.OWAtray.Framework
         #region Public Methods and Operators
 
         /// <summary>
-        /// The load.
+        ///     The load.
         /// </summary>
         public void Load()
         {
@@ -183,10 +189,10 @@ namespace DrunkenBakery.OWAtray.Framework
         }
 
         /// <summary>
-        /// The load.
+        ///     The load.
         /// </summary>
         /// <param name="filename">
-        /// The filename. 
+        ///     The filename.
         /// </param>
         public void Load(string filename)
         {
@@ -338,8 +344,8 @@ namespace DrunkenBakery.OWAtray.Framework
                 if (xmlElementServerVersion != null)
                 {
                     item.ServerVersion = xmlElementServerVersion.InnerText == "Autodetect"
-                                             ? "Default"
-                                             : node[ElementServerVersion].InnerText;
+                        ? "Default"
+                        : node[ElementServerVersion].InnerText;
                 }
 
                 // Add to collection
@@ -348,7 +354,7 @@ namespace DrunkenBakery.OWAtray.Framework
         }
 
         /// <summary>
-        /// The save.
+        ///     The save.
         /// </summary>
         public void Save()
         {
@@ -359,55 +365,74 @@ namespace DrunkenBakery.OWAtray.Framework
 
         #region Methods
 
+        private void RaiseEvent(string myEvent)
+        {
+            if (this.ScenarioEvent != null)
+            {
+                this.ScenarioEvent(myEvent);
+            }
+        }
+
         /// <summary>
-        /// The save.
+        ///     The save.
         /// </summary>
         /// <param name="filename">
-        /// The filename. 
+        ///     The filename.
         /// </param>
         private void Save(string filename)
         {
-            using (XmlWriter writer = XmlWriter.Create(filename))
+            try
             {
-                writer.WriteStartDocument();
-                writer.WriteStartElement(RootElement);
-
-                // Connections
-                writer.WriteStartElement(GroupConnections);
-                foreach (IEmailInterface item in this.Connections)
+                using (XmlWriter writer = XmlWriter.Create(filename))
                 {
-                    writer.WriteStartElement(NodeConnection);
-                    writer.WriteElementString(ElementType, item.Type.ToString());
-                    writer.WriteElementString(ElementEmailAddress, item.EmailAddress);
-                    writer.WriteElementString(ElementUsername, item.Username);
-                    writer.WriteElementString(ElementPassword, item.EncryptedPassword);
-                    writer.WriteElementString(ElementInterval, item.Interval.ToString(CultureInfo.InvariantCulture));
-                    writer.WriteElementString(ElementEmailServer, item.EmailServer);
-                    writer.WriteElementString(ElementAccountDomain, item.AccountDomain);
-                    writer.WriteElementString(ElementOverrideServiceUrl, item.OverrideServiceUrl ? "1" : "0");
-                    writer.WriteElementString(ElementServiceUrl, item.ServiceUrl);
-                    writer.WriteElementString(ElementOverrideEmailUrl, item.OverrideEmailUrl ? "1" : "0");
-                    writer.WriteElementString(ElementEmailUrl, item.EmailUrl);
-                    writer.WriteElementString(ElementDescription, item.Description);
-                    writer.WriteElementString(ElementUseAutodiscovery, item.UseAutodiscovery ? "1" : "0");
-                    writer.WriteElementString(ElementOnWindowsDomain, item.OnWindowsDomain ? "1" : "0");
-                    writer.WriteElementString(ElementOverrideCertificate, item.OverrideCertificate ? "1" : "0");
-                    writer.WriteElementString(
-                        ElementAlwaysUseInternetExplorer, item.AlwaysUseInternetExplorer ? "1" : "0");
-                    writer.WriteElementString(ElementDisableCalendar, item.DisableCalendar ? "1" : "0");
-                    writer.WriteElementString(ElementAutoLogin, item.AutoLogin ? "1" : "0");
-                    writer.WriteElementString(ElementOffice365, item.Office365 ? "1" : "0");
-                    writer.WriteElementString(ElementOverrideOffice365Login, item.OverrideOffice365Login ? "1" : "0");
-                    writer.WriteElementString(
-                        ElementOverrideAutodiscoveryValidation, item.OverrideAutodiscoveryValidation ? "1" : "0");
-                    writer.WriteElementString(ElementServerVersion, item.ServerVersion);
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement(RootElement);
+
+                    // Connections
+                    writer.WriteStartElement(GroupConnections);
+                    foreach (IEmailInterface item in this.Connections)
+                    {
+                        writer.WriteStartElement(NodeConnection);
+                        writer.WriteElementString(ElementType, item.Type.ToString());
+                        writer.WriteElementString(ElementEmailAddress, item.EmailAddress);
+                        writer.WriteElementString(ElementUsername, item.Username);
+                        writer.WriteElementString(ElementPassword, item.EncryptedPassword);
+                        writer.WriteElementString(ElementInterval, item.Interval.ToString(CultureInfo.InvariantCulture));
+                        writer.WriteElementString(ElementEmailServer, item.EmailServer);
+                        writer.WriteElementString(ElementAccountDomain, item.AccountDomain);
+                        writer.WriteElementString(ElementOverrideServiceUrl, item.OverrideServiceUrl ? "1" : "0");
+                        writer.WriteElementString(ElementServiceUrl, item.ServiceUrl);
+                        writer.WriteElementString(ElementOverrideEmailUrl, item.OverrideEmailUrl ? "1" : "0");
+                        writer.WriteElementString(ElementEmailUrl, item.EmailUrl);
+                        writer.WriteElementString(ElementDescription, item.Description);
+                        writer.WriteElementString(ElementUseAutodiscovery, item.UseAutodiscovery ? "1" : "0");
+                        writer.WriteElementString(ElementOnWindowsDomain, item.OnWindowsDomain ? "1" : "0");
+                        writer.WriteElementString(ElementOverrideCertificate, item.OverrideCertificate ? "1" : "0");
+                        writer.WriteElementString(
+                            ElementAlwaysUseInternetExplorer,
+                            item.AlwaysUseInternetExplorer ? "1" : "0");
+                        writer.WriteElementString(ElementDisableCalendar, item.DisableCalendar ? "1" : "0");
+                        writer.WriteElementString(ElementAutoLogin, item.AutoLogin ? "1" : "0");
+                        writer.WriteElementString(ElementOffice365, item.Office365 ? "1" : "0");
+                        writer.WriteElementString(
+                            ElementOverrideOffice365Login,
+                            item.OverrideOffice365Login ? "1" : "0");
+                        writer.WriteElementString(
+                            ElementOverrideAutodiscoveryValidation,
+                            item.OverrideAutodiscoveryValidation ? "1" : "0");
+                        writer.WriteElementString(ElementServerVersion, item.ServerVersion);
+                        writer.WriteEndElement();
+                    }
+
                     writer.WriteEndElement();
+
+                    writer.WriteEndElement();
+                    writer.WriteEndDocument();
                 }
-
-                writer.WriteEndElement();
-
-                writer.WriteEndElement();
-                writer.WriteEndDocument();
+            }
+            catch (Exception ex)
+            {
+                this.RaiseEvent(ex.Message);
             }
         }
 
