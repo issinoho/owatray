@@ -188,7 +188,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                     if (Settings.Default.UseTracing)
                     {
                         this.service.TraceListener = new EwsTraceListener();
-                        this.service.TraceFlags = TraceFlags.EwsRequest | TraceFlags.EwsResponse;
+                        this.service.TraceFlags = TraceFlags.All;
                         this.service.TraceEnabled = true;
                     }
 
