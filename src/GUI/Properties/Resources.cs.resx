@@ -1,0 +1,516 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutBox1_AboutBox1_About" xml:space="preserve">
+    <value>O aplikaci</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Version" xml:space="preserve">
+    <value>Verze</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Compiled_on__NET" xml:space="preserve">
+    <value>Zkompilováno na .NET</value>
+  </data>
+  <data name="AboutBox1_AboutBox1_Running_on__NET_v" xml:space="preserve">
+    <value>Běží na .NET v</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_About_OWA_Tray_Monitor" xml:space="preserve">
+    <value>O aplikaci OWA Tray Monitor</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Product_Name" xml:space="preserve">
+    <value>Název produktu</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Version" xml:space="preserve">
+    <value>Verze</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Company_Name" xml:space="preserve">
+    <value>Jméno společnosti</value>
+  </data>
+  <data name="AboutBox1_InitializeComponent_Description" xml:space="preserve">
+    <value>Popis</value>
+  </data>
+  <data name="AssemblyHelpers_ProductName_Unknown" xml:space="preserve">
+    <value>Neznámý</value>
+  </data>
+  <data name="ChangeLog_InitializeComponent_Change_Log" xml:space="preserve">
+    <value>Log změn</value>
+  </data>
+  <data name="ContactUs_ContactUs_Catalan" xml:space="preserve">
+    <value>Katalánština</value>
+  </data>
+  <data name="ContactUs_ContactUs_German" xml:space="preserve">
+    <value>Němčina</value>
+  </data>
+  <data name="ContactUs_ContactUs_Spanish" xml:space="preserve">
+    <value>Španělština</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Translations" xml:space="preserve">
+    <value>Překlady</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Language" xml:space="preserve">
+    <value>Jazyk</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Author" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Contact_Details" xml:space="preserve">
+    <value>Kontaktní informace</value>
+  </data>
+  <data name="ContactUs_InitializeComponent_Support_Information" xml:space="preserve">
+    <value>Informace o podpoře</value>
+  </data>
+  <data name="MdaCversions_MdaCversions_Revision" xml:space="preserve">
+    <value>Revize</value>
+  </data>
+  <data name="MdaCversions_InitializeComponent_Installed_MDAC_Versions" xml:space="preserve">
+    <value>Instalováné verze MDAC</value>
+  </data>
+  <data name="NeTversions_NeTversions_Revision" xml:space="preserve">
+    <value>revize</value>
+  </data>
+  <data name="NeTversions_InitializeComponent_Installed__NET_Versions" xml:space="preserve">
+    <value>Instalováné verze .NET</value>
+  </data>
+  <data name="SysInfo_SysInfo_Gathering_data__please_wait" xml:space="preserve">
+    <value>Shrormažďuji data, prosím čekejte</value>
+  </data>
+  <data name="SysInfo_BuildTree_Operating_System" xml:space="preserve">
+    <value>Operační systém</value>
+  </data>
+  <data name="SysInfo_BuildTree_Computer" xml:space="preserve">
+    <value>Počítač</value>
+  </data>
+  <data name="SysInfo_BuildTree_Owner" xml:space="preserve">
+    <value>Vlastník</value>
+  </data>
+  <data name="SysInfo_BuildTree_Network" xml:space="preserve">
+    <value>Síť</value>
+  </data>
+  <data name="SysInfo_BuildTree_Storage" xml:space="preserve">
+    <value>Úložiště</value>
+  </data>
+  <data name="SysInfo_GetComputer_Memory" xml:space="preserve">
+    <value>Paměť</value>
+  </data>
+  <data name="SysInfo_GetStorage_free" xml:space="preserve">
+    <value>uvolnit</value>
+  </data>
+  <data name="SysInfo_InitializeComponent_Detected_System_Settings" xml:space="preserve">
+    <value>Detekována systémová nastavení</value>
+  </data>
+  <data name="SysInfo_InitializeComponent_System_Information" xml:space="preserve">
+    <value>Systémové informace</value>
+  </data>
+  <data name="Form1_Form1_Welcome_to_the" xml:space="preserve">
+    <value>Vítejte v</value>
+  </data>
+  <data name="Form1_Form1_Ready" xml:space="preserve">
+    <value>Připraven</value>
+  </data>
+  <data name="Form1_WindowDressing_freshly_baked_at" xml:space="preserve">
+    <value>čerstvě upečeno v</value>
+  </data>
+  <data name="Form1_WindowDressing_Not_Connected_to_Exchange" xml:space="preserve">
+    <value>Nepřipojeno k Exchange</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connection_Failure" xml:space="preserve">
+    <value>Připojení selhalo</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Check_log_file_for_details" xml:space="preserve">
+    <value>Zkontrolujte log změn pro podrobnosti</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connected_to" xml:space="preserve">
+    <value>Připojeno k</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_User_Name" xml:space="preserve">
+    <value>Detekováno uživatelské jméno</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_Mailbox_Server" xml:space="preserve">
+    <value>Detekován poštovní server</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_OWA_Url" xml:space="preserve">
+    <value>Detekována OWA URL</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Discovered_EWS_Url" xml:space="preserve">
+    <value>Detekována EWS URL</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_Connected_to_Exchange" xml:space="preserve">
+    <value>Připojeno k Exchange</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_New_Mail_from" xml:space="preserve">
+    <value>Nový e-mail od</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_You_have_an_appointment_in" xml:space="preserve">
+    <value>Máte schůzku v</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_minutes" xml:space="preserve">
+    <value>minut</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_minute" xml:space="preserve">
+    <value>minuta</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_You_have" xml:space="preserve">
+    <value>Máte</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_unread_email" xml:space="preserve">
+    <value>nepřečtených e-mailů</value>
+  </data>
+  <data name="Form1_WireUpConnectionEvents_in_your_inbox" xml:space="preserve">
+    <value>ve Vaši schránce</value>
+  </data>
+  <data name="Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_Always_use_IE_switched_" xml:space="preserve">
+    <value>Vždy použít IE změněno na</value>
+  </data>
+  <data name="Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON" xml:space="preserve">
+    <value>Zapnuto</value>
+  </data>
+  <data name="Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF" xml:space="preserve">
+    <value>Vypnuto</value>
+  </data>
+  <data name="Form1_balloonToolStripMenuItem_CheckStateChanged_Balloon_notifications_switched" xml:space="preserve">
+    <value>Balónové notifikace změněny na</value>
+  </data>
+  <data name="Form1_RunAtStartup_OWAtray_will" xml:space="preserve">
+    <value>OWAtray bude</value>
+  </data>
+  <data name="Form1_RunAtStartup__not" xml:space="preserve">
+    <value>ne</value>
+  </data>
+  <data name="Form1_RunAtStartup_autostart_with_Windows" xml:space="preserve">
+    <value>Automatické spuštění s Windows</value>
+  </data>
+  <data name="Form1_ConnectToExchange_Already_connected" xml:space="preserve">
+    <value>Již připojen</value>
+  </data>
+  <data name="Form1_ConnectToExchange_please_wait" xml:space="preserve">
+    <value>prosím čekejte</value>
+  </data>
+  <data name="Form1_DisconnectFromExchange_Already_disconnected" xml:space="preserve">
+    <value>Již odpojen</value>
+  </data>
+  <data name="Form1_DisconnectFromExchange_please_wait" xml:space="preserve">
+    <value>prosím čekejte</value>
+  </data>
+  <data name="Form1_ShellOwaUrl_Error" xml:space="preserve">
+    <value>Chyba</value>
+  </data>
+  <data name="Form1_disableCalendarToolStripMenuItem_CheckStateChanged_Calendar_notifications_switched" xml:space="preserve">
+    <value>Notifikace kalendáře změněny na</value>
+  </data>
+  <data name="Form1_Form1_FormClosed_Terminating" xml:space="preserve">
+    <value>Ukončuji</value>
+  </data>
+  <data name="Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched" xml:space="preserve">
+    <value>Growl notifikace změněny na</value>
+  </data>
+  <data name="Form1_InitEventView_Time" xml:space="preserve">
+    <value>Čas</value>
+  </data>
+  <data name="Form1_InitEventView_Event_Details" xml:space="preserve">
+    <value>Podrobnosti události</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_You_are_not_an_Admin_user" xml:space="preserve">
+    <value>Nemáte admin oprávnění</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Operation_may_fail" xml:space="preserve">
+    <value>Operace může selhat</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Setting_up_Mail_handlers" xml:space="preserve">
+    <value>Nastavuji obsluhu pošty</value>
+  </data>
+  <data name="Form1_makeOWADefaultToolStripMenuItem_Click_Mail_functions_will_now_be_handled_by_OWA" xml:space="preserve">
+    <value>Poštovní funkce budou nyní obsluhovány OWA</value>
+  </data>
+  <data name="Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched" xml:space="preserve">
+    <value>Přepsání SSL certifikátu změněno na</value>
+  </data>
+  <data name="Form1_playSoundToolStripMenuItem_CheckStateChanged_Audible_notifications_switched" xml:space="preserve">
+    <value>Zvukové notifikace změněny na</value>
+  </data>
+  <data name="Form1_PopToast_No_Title" xml:space="preserve">
+    <value>Bez názvu</value>
+  </data>
+  <data name="Form1_PopToast_No_Subject" xml:space="preserve">
+    <value>Bez předmětu</value>
+  </data>
+  <data name="Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched" xml:space="preserve">
+    <value>Snarl notifikace změněny na</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_You_are_not_an_Admin_user" xml:space="preserve">
+    <value>Nemáte admin oprávnění</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_Operation_may_fail" xml:space="preserve">
+    <value>Operace může selhat</value>
+  </data>
+  <data name="Form1_switchOffToolStripMenuItem_Click_Restoring_Mail_handlers" xml:space="preserve">
+    <value>Obnovuji obsluhu pošty</value>
+  </data>
+  <data name="Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_" xml:space="preserve">
+    <value>Musí být číselná hodnota mezi 1 a</value>
+  </data>
+  <data name="Form1_loginAutomaticallyToolStripMenuItem_CheckStateChanged_Automatic_Login_is_switched" xml:space="preserve">
+    <value>Automatické přihlašování změněno na</value>
+  </data>
+  <data name="Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched" xml:space="preserve">
+    <value>Validace automatické detekce změněna na</value>
+  </data>
+  <data name="Form1_cbOverrideEWS_CheckedChanged_EWS_URL_override_switched" xml:space="preserve">
+    <value>EWS URL změněno</value>
+  </data>
+  <data name="Form1_chkAutodiscovery_CheckedChanged_Autodiscovery_is_switched" xml:space="preserve">
+    <value>Automatická detekce změněna na</value>
+  </data>
+  <data name="Form1_cbOverrideOWA_CheckedChanged_OWA_URL_override_switched" xml:space="preserve">
+    <value>Přepsání OWA URL změněno na</value>
+  </data>
+  <data name="Form1_InitializeComponent_Ready_" xml:space="preserve">
+    <value>Připraven.</value>
+  </data>
+  <data name="Form1_InitializeComponent_Options" xml:space="preserve">
+    <value>Volby</value>
+  </data>
+  <data name="Form1_InitializeComponent_Open_OWA" xml:space="preserve">
+    <value>Spustit OWA</value>
+  </data>
+  <data name="Form1_InitializeComponent_Open_Outlook" xml:space="preserve">
+    <value>Spustit Outlook</value>
+  </data>
+  <data name="Form1_InitializeComponent_Recall_Last_Popup" xml:space="preserve">
+    <value>Zobrazit poslední Popup</value>
+  </data>
+  <data name="Form1_InitializeComponent_Reset_Tray_Icon" xml:space="preserve">
+    <value>Resetovat Tray ikonu</value>
+  </data>
+  <data name="Form1_InitializeComponent_Exit" xml:space="preserve">
+    <value>Konec</value>
+  </data>
+  <data name="Form1_InitializeComponent_File" xml:space="preserve">
+    <value>Soubor</value>
+  </data>
+  <data name="Form1_InitializeComponent_Tools" xml:space="preserve">
+    <value>Nástroje</value>
+  </data>
+  <data name="Form1_InitializeComponent_MDAC_Versions" xml:space="preserve">
+    <value>MDAC verze</value>
+  </data>
+  <data name="Form1_InitializeComponent_System_Information" xml:space="preserve">
+    <value>Systémové informace</value>
+  </data>
+  <data name="Form1_InitializeComponent_Notifications" xml:space="preserve">
+    <value>Notifikace</value>
+  </data>
+  <data name="Form1_InitializeComponent_Balloon" xml:space="preserve">
+    <value>Balónové</value>
+  </data>
+  <data name="Form1_InitializeComponent_Play_Sound" xml:space="preserve">
+    <value>Přehrát zvuk</value>
+  </data>
+  <data name="Form1_InitializeComponent_Override_Certificate" xml:space="preserve">
+    <value>Přepsat certifikát</value>
+  </data>
+  <data name="Form1_InitializeComponent_Always_open_OWA_in_IE" xml:space="preserve">
+    <value>Vždy spouštět OWA v IE</value>
+  </data>
+  <data name="Form1_InitializeComponent_Disable_Calendar" xml:space="preserve">
+    <value>Zakázat kalendář</value>
+  </data>
+  <data name="Form1_InitializeComponent_Login_Automatically" xml:space="preserve">
+    <value>Automatické přihlášení</value>
+  </data>
+  <data name="Form1_InitializeComponent_Override_Autodiscovery_Validation" xml:space="preserve">
+    <value>Validace automatické detekce</value>
+  </data>
+  <data name="Form1_InitializeComponent_Use_Default_Web_Proxy" xml:space="preserve">
+    <value>Použít IE Proxy</value>
+  </data>
+  <data name="Form1_InitializeComponent_Shell_Integration" xml:space="preserve">
+    <value>Integrace</value>
+  </data>
+  <data name="Form1_InitializeComponent_Make_OWA_Default" xml:space="preserve">
+    <value>Nastavit OWA jako výchozí</value>
+  </data>
+  <data name="Form1_InitializeComponent_Switch_Off" xml:space="preserve">
+    <value>Vypnout</value>
+  </data>
+  <data name="Form1_InitializeComponent_Help" xml:space="preserve">
+    <value>Nápověda</value>
+  </data>
+  <data name="Form1_InitializeComponent_Change_Log" xml:space="preserve">
+    <value>Log změn</value>
+  </data>
+  <data name="Form1_InitializeComponent_Support" xml:space="preserve">
+    <value>Podpora</value>
+  </data>
+  <data name="Form1_InitializeComponent_Show_Log_File" xml:space="preserve">
+    <value>Zobrazit soubor logu</value>
+  </data>
+  <data name="Form1_InitializeComponent_About" xml:space="preserve">
+    <value>O aplikaci</value>
+  </data>
+  <data name="Form1_InitializeComponent_Logging" xml:space="preserve">
+    <value>Logování</value>
+  </data>
+  <data name="Form1_InitializeComponent_unknown" xml:space="preserve">
+    <value>neznámý</value>
+  </data>
+  <data name="Form1_InitializeComponent_Windows_Domain__" xml:space="preserve">
+    <value>Windows doména :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Server_Address__" xml:space="preserve">
+    <value>Adresa serveru :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Password__" xml:space="preserve">
+    <value>Heslo :</value>
+  </data>
+  <data name="Form1_InitializeComponent_User_Name__" xml:space="preserve">
+    <value>Uživatelské jméno :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Basic_Settings" xml:space="preserve">
+    <value>Základní nastavení</value>
+  </data>
+  <data name="Form1_InitializeComponent_secs" xml:space="preserve">
+    <value>vteřin</value>
+  </data>
+  <data name="Form1_InitializeComponent_Update_Interval__" xml:space="preserve">
+    <value>Interval obnovy :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Exchange_Version__" xml:space="preserve">
+    <value>Verze Exchange :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Run_at_Startup" xml:space="preserve">
+    <value>Spustit při startu</value>
+  </data>
+  <data name="Form1_InitializeComponent_Email_Address__" xml:space="preserve">
+    <value>E-mailová adresa :</value>
+  </data>
+  <data name="Form1_InitializeComponent_Attempt_to_use_Autodiscovery" xml:space="preserve">
+    <value>Pokusit se o automatickou detekci</value>
+  </data>
+  <data name="Form1_InitializeComponent_Advanced_Settings" xml:space="preserve">
+    <value>Pokročilá nastavení</value>
+  </data>
+  <data name="Form1_InitializeComponent_Use_Windows_Domain_Credentials" xml:space="preserve">
+    <value>Použít doménové přihlášení Windows</value>
+  </data>
+  <data name="Form1_InitializeComponent_URLs" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="Form1_InitializeComponent_Controls" xml:space="preserve">
+    <value>Ovládání</value>
+  </data>
+</root>
