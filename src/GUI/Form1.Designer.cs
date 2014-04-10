@@ -805,7 +805,8 @@ namespace DrunkenBakery.OWAtray.GUI
             "Exchange2010",
             "Exchange2010_SP1",
             "Exchange2010_SP2",
-            "Exchange2013"});
+            "Exchange2013",
+            "Exchange2013_SP1"});
             this.cmbExchangeVersion.Location = new System.Drawing.Point(166, 102);
             this.cmbExchangeVersion.Name = "cmbExchangeVersion";
             this.cmbExchangeVersion.Size = new System.Drawing.Size(125, 21);

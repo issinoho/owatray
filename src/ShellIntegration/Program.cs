@@ -41,7 +41,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             }
 
             // Wait for it to load the page
-            Thread.Sleep(Convert.ToInt32(Settings.Default.PopupDelay));
+            Thread.Sleep(Settings.Default.PopupDelay);
 
             // Find IE window and send keys to it
             var windowTitle = Settings.Default.Office365 == "Yes"
@@ -53,14 +53,12 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             // If this is Office365 then send extra keys
             if (Settings.Default.Office365 == "Yes")
             {
-                SendKeys.SendWait("{TAB}");
-                SendKeys.SendWait("{TAB}");
                 SendKeys.SendWait("{ENTER}");
             }
 
             // Tab stops
             SendKeys.SendWait(Settings.Default.Password.Decrypt());
-            Thread.Sleep(Convert.ToInt32(Settings.Default.SmallWait));
+            Thread.Sleep(Settings.Default.SmallWait);
 
             // Then the paste
             SendKeys.SendWait("{ENTER}");
@@ -74,31 +72,26 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// </param>
         private static void DoMapi(string target)
         {
-            // Loop round each file and add to Clipboard
-            string[] fileEntries = Directory.GetFiles(target, "*");
-            int numFiles = fileEntries.Length;
-            var files = new string[numFiles];
+            string myUrl;
 
-            int count = 0;
-            foreach (string fileName in fileEntries)
+            // Which version of Exchange?
+            if (Settings.Default.Version.Contains("Exchange2013"))
             {
-                files[count++] = Path.Combine(target, fileName);
+                myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail2013;
+            }
+            else
+            {
+                myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail
+                        + Settings.Default.MimeURL;
             }
 
-            var d = new DataObject();
-            d.SetData(DataFormats.FileDrop, files);
-            Clipboard.SetDataObject(d, true);
-
-            // Spawn IE
-            string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + @"/?ae=Item&a=New&t=IPM.Note"
-                           + Settings.Default.MimeURL;
             try
             {
                 Console.WriteLine("Browsing to " + myUrl);
                 Process.Start("IEXPLORE.EXE", myUrl);
 
                 // Wait for it to pop
-                Thread.Sleep(Convert.ToInt32(Settings.Default.PopupDelay));
+                Thread.Sleep(Settings.Default.Office365 == "Yes" ? Settings.Default.O365PopupDelay : Settings.Default.PopupDelay);
 
                 // Find IE window and send keys to it
                 int handle = NativeWin32.FindWindow(null, Settings.Default.IETitle);
@@ -109,17 +102,67 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                     Console.WriteLine("Handle2 = " + handle);
                 }
 
+                // Get focus
                 NativeWin32.SetForegroundWindow(handle);
 
-                // Tab stops
-                for (int f = 0; f < Convert.ToInt32(Settings.Default.TabStops); ++f)
-                {
-                    SendKeys.SendWait("{TAB}");
-                    Thread.Sleep(100);
-                }
+                // Build attachments list
+                string[] files = Directory.GetFiles(target);
 
-                // Then the paste
-                SendKeys.SendWait("^v");
+                // What we do next depends on the version of Exchange
+                if (Settings.Default.Version.Contains("Exchange2013"))
+                {
+                    // Exchange 2013
+                    for (int f = 0; f < (Settings.Default.Office365 == "Yes" ? Settings.Default.O365TabCount : Settings.Default.TabCount); ++f)
+                    {
+                        SendKeys.SendWait("+{TAB}");
+                        Thread.Sleep(100);
+                    }
+
+                    SendKeys.SendWait(" ");
+                    Thread.Sleep(100);
+                    SendKeys.SendWait("{DOWN}");
+                    Thread.Sleep(100);
+                    SendKeys.SendWait(" ");
+                    Thread.Sleep(250);
+                    foreach (var c in target)
+                    {
+                        SendKeys.SendWait(c.ToString(CultureInfo.InvariantCulture));
+                    }
+                    Thread.Sleep(100);
+                    SendKeys.SendWait("{ENTER}");
+                    foreach (string file in files)
+                    {
+                        Thread.Sleep(100);
+                        SendKeys.SendWait("\"");
+                        Thread.Sleep(100);
+                        foreach (var c in Path.GetFileName(file))
+                        {
+                            SendKeys.SendWait(c.ToString(CultureInfo.InvariantCulture));
+                        }
+                        Thread.Sleep(100);
+                        SendKeys.SendWait("\"");
+                        Thread.Sleep(100);
+                        SendKeys.SendWait(" ");
+                    }
+                    Thread.Sleep(100);
+                    SendKeys.SendWait("{ENTER}");
+                }
+                else
+                {
+                    // Pre-Exchange 2013
+                    var d = new DataObject();
+                    d.SetData(DataFormats.FileDrop, files);
+                    Clipboard.SetDataObject(d, true);
+
+                    for (int f = 0; f < Settings.Default.TabStops; ++f)
+                    {
+                        SendKeys.SendWait("{TAB}");
+                        Thread.Sleep(100);
+                    }
+
+                    // Then the paste
+                    SendKeys.SendWait("^v");
+                }
             }
             catch (Exception ex)
             {
@@ -530,7 +573,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             }
 
             // Which version of Exchange?
-            if (Settings.Default.Version == "Exchange2013")
+            if (Settings.Default.Version.Contains("Exchange2013"))
             {
                 myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail2013;
             }
@@ -553,10 +596,10 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             Console.WriteLine("Browsing to " + myUrl);
 
             // If Exchange2013 then paste in address
-            if (Settings.Default.Version == "Exchange2013")
+            if (Settings.Default.Version.Contains("Exchange2013"))
             {
                 // Wait for it to pop
-                Thread.Sleep(Convert.ToInt32(Settings.Default.PopupDelay));
+                Thread.Sleep(Settings.Default.PopupDelay);
 
                 // Find IE window and send keys to it
                 var handle = NativeWin32.FindWindow(null, Settings.Default.IETitle);

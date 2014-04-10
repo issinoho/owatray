@@ -398,7 +398,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 {
                     targetUrl =
                         "#viewmodel=_y.$TX&ItemID=AAMkADM2ZmI4ODcwLWY4YWEtNGQ2YS1hYjMyLTE0M2ZkNDM0MmQ2OABGAAAAAABE";
-                    string temp1 = this.popUrl.Replace("RgAAAABE", string.Empty);
+                    string temp1 = url.Replace("RgAAAABE", string.Empty);
                     string temp2 = temp1.Replace("J&exvsurl=1", string.Empty);
                     string temp3 = temp2.Replace("P&exvsurl=1", string.Empty);
                     string temp4 = temp3.Replace("?ae=Item&a=Open&t=IPM.Note&id=", string.Empty);

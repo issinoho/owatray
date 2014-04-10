@@ -131,7 +131,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                            ? this.ServerVersion == Resources.EwsConnection_Version_Default
                                  ? ExchangeVersion.Exchange2007_SP1.ToString()
                                  : this.ServerVersion
-                           : this.service.ServerInfo.VersionString;
+                                 : this.service.ServerInfo.VersionString.Contains("V2_") ? "Exchange2013_SP1" : this.service.ServerInfo.VersionString;
             }
         }
 
