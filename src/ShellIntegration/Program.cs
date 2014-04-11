@@ -12,6 +12,7 @@
 namespace DrunkenBakery.OWAtray.ShellIntegration
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
@@ -72,18 +73,11 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// </param>
         private static void DoMapi(string target)
         {
-            string myUrl;
+            // Set up our set of special-case characters
+            var specialCharacters = new HashSet<char> {'+', '^', '%', '~', '(', ')'};
 
             // Which version of Exchange?
-            if (Settings.Default.Version.Contains("Exchange2013"))
-            {
-                myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail2013;
-            }
-            else
-            {
-                myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail
-                        + Settings.Default.MimeURL;
-            }
+            var myUrl = Settings.Default.Version.Contains("Exchange2013") ? Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail2013 : Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail + Settings.Default.MimeURL;
 
             try
             {
@@ -94,7 +88,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 Thread.Sleep(Settings.Default.Office365 == "Yes" ? Settings.Default.O365PopupDelay : Settings.Default.PopupDelay);
 
                 // Find IE window and send keys to it
-                int handle = NativeWin32.FindWindow(null, Settings.Default.IETitle);
+                var handle = NativeWin32.FindWindow(null, Settings.Default.IETitle);
                 Console.WriteLine("Handle1 = " + handle);
                 if (handle == 0)
                 {
@@ -106,7 +100,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 NativeWin32.SetForegroundWindow(handle);
 
                 // Build attachments list
-                string[] files = Directory.GetFiles(target);
+                var files = Directory.GetFiles(target);
 
                 // What we do next depends on the version of Exchange
                 if (Settings.Default.Version.Contains("Exchange2013"))
@@ -137,7 +131,14 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                         Thread.Sleep(100);
                         foreach (var c in Path.GetFileName(file))
                         {
-                            SendKeys.SendWait(c.ToString(CultureInfo.InvariantCulture));
+                            if (specialCharacters.Contains(c))
+                            {
+                                SendKeys.SendWait("{" + c.ToString(CultureInfo.InvariantCulture) + "}");
+                            }
+                            else
+                            {
+                                SendKeys.SendWait(c.ToString(CultureInfo.InvariantCulture));
+                            }                            
                         }
                         Thread.Sleep(100);
                         SendKeys.SendWait("\"");
