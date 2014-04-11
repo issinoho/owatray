@@ -81,8 +81,16 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
             try
             {
+                // Fire up the browser
                 Console.WriteLine("Browsing to " + myUrl);
-                Process.Start("IEXPLORE.EXE", myUrl);
+                if (Settings.Default.Browser == "Yes")
+                {
+                    Process.Start("IEXPLORE.EXE", myUrl);
+                }
+                else
+                {
+                    Process.Start(myUrl);
+                }
 
                 // Wait for it to pop
                 Thread.Sleep(Settings.Default.Office365 == "Yes" ? Settings.Default.O365PopupDelay : Settings.Default.PopupDelay);
@@ -585,6 +593,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             }
 
             // Fire up the browser
+            Console.WriteLine("Browsing to " + myUrl);
             if (Settings.Default.Browser == "Yes")
             {
                 Process.Start("IEXPLORE.EXE", myUrl);
@@ -593,8 +602,6 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             {
                 Process.Start(myUrl);
             }
-
-            Console.WriteLine("Browsing to " + myUrl);
 
             // If Exchange2013 then paste in address
             if (Settings.Default.Version.Contains("Exchange2013"))
