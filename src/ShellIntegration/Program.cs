@@ -201,7 +201,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
                 // Set up a mail handler
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", string.Empty, "Outlook Web Access");
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", string.Empty, "Outlook Web App");
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "DLLPath", bridge);
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "EXE", "\"" + shell + "\"");
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "Parameters", "mapi %1");
