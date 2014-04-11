@@ -612,6 +612,9 @@ namespace DrunkenBakery.OWAtray.GUI
             this.scenario = ScenarioFactory.CreateScenario(filePath);
             this.scenario.ScenarioEvent += this.ScenarioScenarioEvent;
 
+            // Set up event handling
+            this.WireUpConnectionEvents();
+
             // TODO: Special case for single theConnection use only
             if (this.scenario.Connections.Count == 0)
             {
@@ -625,9 +628,6 @@ namespace DrunkenBakery.OWAtray.GUI
                 // Retrieve all the settings
                 this.connection = this.scenario.Connections[0];
             }
-
-            // Set up event handling
-            this.WireUpConnectionEvents();
 
             // Update any UI
             this.txtEmail.Text = this.connection.EmailAddress;
@@ -1424,7 +1424,7 @@ namespace DrunkenBakery.OWAtray.GUI
 
                             // Special case - pop message at the start if there is any unread email
                             this.PopToast(
-                                "New Mail",
+                                "Unread Mail",
                                 string.Format(
                                     "{0} {1} {2}{3}{4}",
                                     Resources.Form1_WireUpConnectionEvents_You_have,
