@@ -19,9 +19,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
     using System.Reflection;
     using System.Threading;
     using System.Windows.Forms;
-
     using DrunkenBakery.OWAtray.ShellIntegration.Properties;
-
     using Microsoft.Win32;
 
     /// <summary>
@@ -46,8 +44,8 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
             // Find IE window and send keys to it
             var windowTitle = Settings.Default.Office365 == "Yes"
-                                  ? Settings.Default.Office365Title
-                                  : Settings.Default.LoginTitle;
+                ? Settings.Default.Office365Title
+                : Settings.Default.LoginTitle;
             var handle = NativeWin32.FindWindow(null, windowTitle);
             NativeWin32.SetForegroundWindow(handle);
 
@@ -77,7 +75,10 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             var specialCharacters = new HashSet<char> {'+', '^', '%', '~', '(', ')'};
 
             // Which version of Exchange?
-            var myUrl = Settings.Default.Version.Contains("Exchange2013") ? Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail2013 : Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail + Settings.Default.MimeURL;
+            var myUrl = Settings.Default.Version.Contains("Exchange2013")
+                ? Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail2013
+                : Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail +
+                  Settings.Default.MimeURL;
 
             try
             {
@@ -93,7 +94,9 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 }
 
                 // Wait for it to pop
-                Thread.Sleep(Settings.Default.Office365 == "Yes" ? Settings.Default.O365PopupDelay : Settings.Default.PopupDelay);
+                Thread.Sleep(Settings.Default.Office365 == "Yes"
+                    ? Settings.Default.O365PopupDelay
+                    : Settings.Default.PopupDelay);
 
                 // Find IE window and send keys to it
                 var handle = NativeWin32.FindWindow(null, Settings.Default.IETitle);
@@ -114,7 +117,10 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 if (Settings.Default.Version.Contains("Exchange2013"))
                 {
                     // Exchange 2013
-                    for (int f = 0; f < (Settings.Default.Office365 == "Yes" ? Settings.Default.O365TabCount : Settings.Default.TabCount); ++f)
+                    for (int f = 0;
+                        f <
+                        (Settings.Default.Office365 == "Yes" ? Settings.Default.O365TabCount : Settings.Default.TabCount);
+                        ++f)
                     {
                         SendKeys.SendWait("+{TAB}");
                         Thread.Sleep(100);
@@ -146,7 +152,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                             else
                             {
                                 SendKeys.SendWait(c.ToString(CultureInfo.InvariantCulture));
-                            }                            
+                            }
                         }
                         Thread.Sleep(100);
                         SendKeys.SendWait("\"");
@@ -193,7 +199,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 // Define a class root for us
                 Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", string.Empty, "URL:MailTo Protocol");
                 Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "URL Protocol", string.Empty);
-                Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "EditFlags", new byte[] { 0x2, 0x0, 0x0, 0x0 });
+                Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "EditFlags", new byte[] {0x2, 0x0, 0x0, 0x0});
                 Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto\DefaultIcon", string.Empty, "\"" + shell + "\",0");
                 Registry.SetValue(
                     @"HKEY_CLASSES_ROOT\OWA.Url.Mailto\shell\open\command", string.Empty, "\"" + shell + "\" mailto %1");
@@ -203,8 +209,8 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 Registry.SetValue(
                     @"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, "\"" + shell + "\" mailto %1");
                 Registry.SetValue(
-                    @"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", 
-                    "Progid", 
+                    @"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice",
+                    "Progid",
                     Settings.Default.MailtoClass);
 
                 // Set up a mail handler
@@ -214,62 +220,62 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "EXE", "\"" + shell + "\"");
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi", "Parameters", "mapi %1");
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities", 
-                    "ApplicationDescription", 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities",
+                    "ApplicationDescription",
                     "Integrate Outlook Web Access into the desktop.");
                 Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Clients\Mail\OWAMapi\Capabilities\FileAssociations");
                 Registry.SetValue(
                     @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities\Start Menu", "Mail", "OWA");
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities\URLAssociations", 
-                    "mailto", 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Capabilities\URLAssociations",
+                    "mailto",
                     Settings.Default.MailtoClass);
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", 
-                    string.Empty, 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto",
+                    string.Empty,
                     "URL:MailTo Protocol");
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", 
-                    "EditFlags", 
-                    new byte[] { 0x2, 0x0, 0x0, 0x0 });
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto",
+                    "EditFlags",
+                    new byte[] {0x2, 0x0, 0x0, 0x0});
                 Registry.SetValue(
                     @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", "URL Protocol", string.Empty);
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\DefaultIcon", 
-                    string.Empty, 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\DefaultIcon",
+                    string.Empty,
                     "\"" + shell + "\",0");
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\shell\open\command", 
-                    string.Empty, 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto\shell\open\command",
+                    string.Empty,
                     "\"" + shell + "\" mailto %1");
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\shell\open\command", 
-                    string.Empty, 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\shell\open\command",
+                    string.Empty,
                     "\"" + shell + "\" owa");
                 Registry.SetValue(
                     @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\DefaultIcon", string.Empty, "\"" + shell + "\",0");
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", 
-                    "HideIconsCommand", 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo",
+                    "HideIconsCommand",
                     "\"" + shell + "\" restore");
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", 
-                    "ReinstallCommand", 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo",
+                    "ReinstallCommand",
                     "\"" + shell + "\" registry");
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", 
-                    "ShowIconsCommand", 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo",
+                    "ShowIconsCommand",
                     "\"" + shell + "\" registry");
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", 
-                    "IconsVisible", 
-                    1, 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo",
+                    "IconsVisible",
+                    1,
                     RegistryValueKind.DWord);
 
                 // Register the application
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\RegisteredApplications", 
-                    "OWA", 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\RegisteredApplications",
+                    "OWA",
                     @"Software\Clients\Mail\OWAMapi\Capabilities");
 
                 // Set default mail handler
@@ -378,7 +384,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                     if (args.Length > 1)
                     {
                         string myPath = args[1];
-                        myPath = myPath.TrimEnd(new[] { '\\', '/' });
+                        myPath = myPath.TrimEnd(new[] {'\\', '/'});
                         Settings.Default.OwaUrl = myPath;
                         Settings.Default.Save();
                     }
@@ -442,8 +448,8 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 if (Settings.Default.CurrentKey.Length > 0)
                 {
                     Registry.SetValue(
-                        @"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", 
-                        "Progid", 
+                        @"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice",
+                        "Progid",
                         Settings.Default.CurrentKey);
                 }
 
@@ -472,9 +478,9 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 }
 
                 Registry.SetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo", 
-                    "IconsVisible", 
-                    0, 
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\InstallInfo",
+                    "IconsVisible",
+                    0,
                     RegistryValueKind.DWord);
             }
             catch (Exception ex)
@@ -497,8 +503,8 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 // Get current mailto and store for use later
                 var currentKey =
                     Registry.GetValue(
-                        @"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice", 
-                        "Progid", 
+                        @"HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\mailto\UserChoice",
+                        "Progid",
                         Settings.Default.MailtoClass).ToString();
                 if (currentKey != Settings.Default.MailtoClass)
                 {
@@ -537,7 +543,8 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 // Get current default cmd path and store for use later
                 var defPathKey = "\"" + shell + "\" mailto %1";
                 var pathKey =
-                    Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, defPathKey).ToString();
+                    Registry.GetValue(@"HKEY_CLASSES_ROOT\mailto\shell\open\command", string.Empty, defPathKey)
+                        .ToString();
                 if (pathKey != defPathKey)
                 {
                     Settings.Default.DefaultOpen = pathKey;
