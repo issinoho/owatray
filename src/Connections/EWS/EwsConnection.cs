@@ -28,7 +28,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
     using Timer = System.Timers.Timer;
 
     /// <summary>
-    /// The ews connection.
+    /// The Exchange WebServices connection.
     /// </summary>
     public class EwsConnection : AbstractConnection
     {
@@ -127,11 +127,21 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         {
             get
             {
-                return !this.IsConnected
-                           ? this.ServerVersion == Resources.EwsConnection_Version_Default
-                                 ? ExchangeVersion.Exchange2007_SP1.ToString()
-                                 : this.ServerVersion
-                                 : this.service.ServerInfo.VersionString.Contains("V2_") ? "Exchange2013_SP1" : this.service.ServerInfo.VersionString;
+                var thisVersion = !this.IsConnected
+                                      ? this.ServerVersion == Resources.EwsConnection_Version_Default
+                                            ? ExchangeVersion.Exchange2007_SP1.ToString()
+                                            : this.ServerVersion
+                                      : this.service.ServerInfo.VersionString.Contains("V2_")
+                                            ? "Exchange2013_SP1"
+                                            : this.service.ServerInfo.VersionString;
+
+                // Special case for 2010_SP2
+                if (thisVersion == "Exchange2010_SP2" && this.ServerVersion == "Exchange2010_SP3")
+                {
+                    thisVersion = "Exchange2010_SP3";
+                }
+
+                return thisVersion;
             }
         }
 
@@ -178,11 +188,12 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                     // Validate the server certificate
                     ServicePointManager.ServerCertificateValidationCallback = this.CertificateValidationCallBack;
 
-                    // Define service
-                    this.service = this.ServerVersion == Resources.EwsConnection_Version_Default
+                    // Define service (special case for 2010_SP3 which does not have a unique enumeration in the library
+                    var thisVersion = this.ServerVersion == "Exchange2010_SP3" ? "Exchange2010_SP2" : this.ServerVersion;
+                    this.service = thisVersion == Resources.EwsConnection_Version_Default
                                        ? new ExchangeService()
                                        : new ExchangeService(
-                                             (ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), this.ServerVersion));
+                                             (ExchangeVersion)Enum.Parse(typeof(ExchangeVersion), thisVersion));
 
                     // Enable Tracing (if required)
                     if (Settings.Default.UseTracing)

@@ -419,6 +419,9 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                             case "Exchange2010_SP2":
                                 Settings.Default.MimeURL = Settings.Default.URL2010SP2;
                                 break;
+                            case "Exchange2010_SP3":
+                                Settings.Default.MimeURL = Settings.Default.URL2010SP3;
+                                break;
                             default:
                                 Settings.Default.MimeURL = string.Empty;
                                 break;
