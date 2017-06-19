@@ -1656,11 +1656,6 @@ namespace DrunkenBakery.OWAtray.GUI
             Justification = "Reviewed. Suppression is OK here.")]
         private void NotifyIcon1BalloonTipClicked(object sender, EventArgs e)
         {
-            if (MouseButtons != MouseButtons.Left)
-            {
-                return;
-            }
-
             this.ActivateOwa(this.popUrl);
         }
 
