@@ -2,6 +2,9 @@
 
 # OWAtray — OWA Tray Monitor
 
+[![Latest release](https://img.shields.io/github/v/release/issinoho/owatray)](https://github.com/issinoho/owatray/releases/latest)
+[![Build](https://github.com/issinoho/owatray/actions/workflows/build.yml/badge.svg)](https://github.com/issinoho/owatray/actions/workflows/build.yml)
+
 OWAtray is a Windows system-tray application that watches an Exchange or Office 365 mailbox and lets
 you know when new mail or upcoming calendar appointments arrive, without needing Outlook running. It
 can also register itself as your system's default (Simple MAPI) mail handler, so that "Send to Mail
@@ -40,9 +43,10 @@ Website: http://www.owatray.com · Support: support@owatray.com
 
 ## Installing
 
-Download and run the installer built from `Installer/OWAtray.nsi` (an NSIS script producing
-`OWAtray.exe`), or build it yourself — see below. The installer installs per-user (`$APPDATA\OWAtray`,
-`RequestExecutionLevel user`) and does not require admin rights.
+Download `OWAtray.exe` from the [latest release](https://github.com/issinoho/owatray/releases/latest)
+and run it, or build it yourself — see below. It's built from `Installer/OWAtray.nsi` (an NSIS script)
+by the [`build` workflow](.github/workflows/build.yml) whenever a version tag is pushed. The installer
+installs per-user (`$APPDATA\OWAtray`, `RequestExecutionLevel user`) and does not require admin rights.
 
 ## Building from source
 
