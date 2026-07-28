@@ -14,8 +14,6 @@ can also register itself as your system's default (Simple MAPI) mail handler, so
 Recipient" style actions from other Windows apps open a compose window in Outlook Web Access instead of
 launching Outlook.
 
-Website: http://www.owatray.com · Support: support@owatray.com
-
 ## Features
 
 - Polls a mailbox over Exchange Web Services (EWS) on a configurable interval and shows the unread
@@ -25,9 +23,9 @@ Website: http://www.owatray.com · Support: support@owatray.com
   either manually (e.g. for on-premise Exchange with non-standard URLs, or split-DNS setups).
 - Works against on-premise Exchange (with a selectable server version, from Exchange 2007 SP1 through
   2019 and Server SE) and Office 365 — see [Supported Exchange versions](#supported-exchange-versions).
-- Notifications via the native Windows tray balloon, [Growl](http://growl.info), or
-  [Snarl](http://snarlapp.com), plus an optional notification sound — pick one or combine them from the
-  tray icon's Notifications menu.
+- Notifications via the native Windows tray balloon, Growl, or Snarl (both long-discontinued
+  third-party notification systems — the tray balloon is the reliable option today), plus an optional
+  notification sound — pick one or combine them from the tray icon's Notifications menu.
 - Acts as a Simple MAPI provider: other applications that "send via MAPI" get handed off to OWAtray,
   which opens a new-message (or new-appointment) compose window in a browser against OWA instead of
   requiring Outlook to be installed. Can be switched on/off per-machine from the Advanced menu ("Make
