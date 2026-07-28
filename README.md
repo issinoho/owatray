@@ -5,6 +5,9 @@
 [![Latest release](https://img.shields.io/github/v/release/issinoho/owatray)](https://github.com/issinoho/owatray/releases/latest)
 [![Build](https://github.com/issinoho/owatray/actions/workflows/build.yml/badge.svg)](https://github.com/issinoho/owatray/actions/workflows/build.yml)
 
+**[issinoho.github.io/owatray](https://issinoho.github.io/owatray/)** — landing page with features,
+compatibility, and download link (source in [`docs/`](docs/)).
+
 OWAtray is a Windows system-tray application that watches an Exchange or Office 365 mailbox and lets
 you know when new mail or upcoming calendar appointments arrive, without needing Outlook running. It
 can also register itself as your system's default (Simple MAPI) mail handler, so that "Send to Mail
