@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Analyzer Include="..\..\packages\StyleCop.Analyzers.Unstable.1.2.0.556\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <AdditionalFiles Include="..\..\stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="nunit.framework, Version=3.14.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NUnit.3.14.0\lib\net40\nunit.framework.dll</HintPath>

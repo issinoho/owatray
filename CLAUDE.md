@@ -51,10 +51,52 @@ repo; fetch `NUnit.ConsoleRunner` the same way as any other package.) Validate e
 building in Visual Studio and running `DrunkenBakery.OWAtray.GUI.exe` manually against a real (or test)
 Exchange/EWS account.
 
+### Linting
+
+Every C# project (all of `src/` except the native `Mapi`) has [StyleCop.Analyzers](
+https://github.com/DotNetAnalyzers/StyleCopAnalyzers) wired in as a Roslyn analyzer (`<Analyzer
+Include="...">` + `<AdditionalFiles Include="...\stylecop.json">` in each `.csproj`, config at
+`stylecop.json` and `.editorconfig` at the repo root) — it runs automatically as part of a normal build
+(`msbuild ...`, no separate lint step) and the whole solution is currently warning-clean. Two rule
+categories are deliberately turned off repo-wide via `.editorconfig` rather than "fixed", because
+enforcing them would mean fighting the codebase's own long-standing conventions instead of catching real
+issues:
+- **SA1633–SA1641 (file headers)**: every file already carries a copyright banner, just not in the exact
+  machine-checkable form StyleCop expects.
+- **SA1124 (no regions)**: `#region` blocks (Constants and Fields, Public Properties, ...) are used with
+  total consistency in every hand-written file — a deliberate structural convention from the codebase's
+  original (classic) StyleCop pass, not something to strip out.
+
+`src/Tests/.editorconfig` additionally turns off SA1600 (elements must be documented) and SA0001 (doc
+analysis disabled) for that project only — test methods/classes are self-documenting via their names, and
+the test assembly generates no `<DocumentationFile>` for anything to consume. All other projects have
+`<DocumentationFile>` enabled so both StyleCop's own documentation-content rules and the C# compiler's
+native `CS1591`/`CS1574` doc-completeness/cref-resolution warnings run for real.
+
+`GUI` has a `<COMReference>` to `IWshRuntimeLibrary` (used by `WindowsShortcut.cs`), which makes
+`msbuild` invoke `ResolveComReferences`/`AxImp.exe` — unavailable under Mono, so `GUI` can't be built via
+`msbuild` on Linux at all (Mono's MSBuild also segfaults on this specific failure rather than reporting
+it cleanly). Its StyleCop compliance was instead verified by invoking `csc` directly on its source files
+with the same `/analyzer:`/`/additionalfile:`/`/analyzerconfig:` flags MSBuild would pass, referencing a
+local throwaway stub assembly in place of `IWshRuntimeLibrary` purely to get past type resolution — that
+stub is not part of the repo or the real build.
+
 The installer is built from `Installer/OWAtray.nsi` with NSIS (`makensis`), producing `OWAtray.exe`. Its
 `PRODUCT_VERSION` define and the `AssemblyVersion`/`AssemblyFileVersion` in
 `src/GUI/Properties/AssemblyInfo.cs` are bumped together for each release (see recent "Version to
 x.y.z" commits) — that assembly is the one authoritative version number for the product.
+
+### CI
+
+`.github/workflows/build.yml` builds the binaries and the NSIS installer on every push to `main`, on a
+`windows-latest` runner (the only OS this solution actually builds on). It restores with a modern NuGet
+client (see above), builds `GUI`+`ShellIntegration` (which pulls in every other C# project transitively
+via their `..\..\bin\` `OutputPath`, so no manual staging step is needed for those), builds `Mapi` for
+both `Win32` and `x64` overriding its old `v110` toolset to `v143` on the command line (VS2022 doesn't
+ship v110), mirrors the built GUI/ShellIntegration/library binaries into `bin\Secure\` (see the workflow
+file for why — that folder isn't produced by anything else in this repo), installs NSIS plus the
+third-party `nsProcess` plugin the `.nsi` requires, and uploads both the installer and the raw `bin\` as
+build artifacts. No test execution or release/tag publishing is wired in — just the build.
 
 ## Branching / release convention
 
@@ -130,7 +172,8 @@ logs via `LoggerProxy`. Separately, any app doing a classic MAPI send goes throu
 ## Conventions
 
 - Code follows StyleCop formatting/documentation conventions throughout (see the "Run through StyleCop"
-  history) — full XML doc comments on public members, `#region` blocks grouping constants/fields,
+  history, and the StyleCop.Analyzers wiring under "Linting" above, which now enforces this on every
+  build) — full XML doc comments on public members, `#region` blocks grouping constants/fields,
   constructors, properties, and methods. Match this style in existing files rather than introducing a
   different convention.
 - File headers use a standard copyright banner (`Copyright (c) 2009-<year> The Drunken Bakery`) — update

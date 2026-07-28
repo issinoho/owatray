@@ -63,7 +63,7 @@ namespace DrunkenBakery.OWAtray.Tests.Framework
                 Office365 = false,
                 OverrideOffice365Login = false,
                 OverrideAutodiscoveryValidation = false,
-                ServerVersion = "Exchange2016"
+                ServerVersion = "Exchange2016",
             };
 
             var saved = new Scenario { Connections = new EmailConnections(), ScenarioFile = this.scenarioFile };
@@ -123,7 +123,7 @@ namespace DrunkenBakery.OWAtray.Tests.Framework
             var scenario = new Scenario
             {
                 Connections = new EmailConnections { new EwsConnection { EmailAddress = "existing@example.com" } },
-                ScenarioFile = Path.Combine(Path.GetTempPath(), "owatray-scenario-does-not-exist-" + Guid.NewGuid() + ".xml")
+                ScenarioFile = Path.Combine(Path.GetTempPath(), "owatray-scenario-does-not-exist-" + Guid.NewGuid() + ".xml"),
             };
 
             scenario.Load();
@@ -142,7 +142,7 @@ namespace DrunkenBakery.OWAtray.Tests.Framework
             var reloaded = new Scenario
             {
                 Connections = new EmailConnections { new EwsConnection { EmailAddress = "stale@example.com" } },
-                ScenarioFile = this.scenarioFile
+                ScenarioFile = this.scenarioFile,
             };
             reloaded.Load();
 
@@ -170,10 +170,10 @@ namespace DrunkenBakery.OWAtray.Tests.Framework
             // Regression test: Scenario.Load() used to check the "EmailAddress" element-name constant
             // for null (always true) instead of the parsed XmlElement, so a <Connection> node missing
             // <EmailAddress> threw a NullReferenceException instead of leaving it unset.
-            File.WriteAllText(
-                this.scenarioFile,
+            const string ScenarioXml =
                 "<?xml version=\"1.0\"?><Scenario><Connections><Connection><Type>Exchange</Type>"
-                + "</Connection></Connections></Scenario>");
+                + "</Connection></Connections></Scenario>";
+            File.WriteAllText(this.scenarioFile, ScenarioXml);
 
             var scenario = new Scenario { Connections = new EmailConnections(), ScenarioFile = this.scenarioFile };
 

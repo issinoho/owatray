@@ -1,0 +1,133 @@
+name: Build
+
+# This solution is Windows-only: the GUI is WinForms with a COM interop reference, and Mapi is a
+# native C++ DLL built with the classic v110 (VS2012) toolset. There is no Linux/Mac build path.
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      # Old (v110 / VS2012) toolset the native Mapi project was authored against. windows-latest ships
+      # VS2022 and does not have v110 installed, so every Mapi build below overrides it on the command
+      # line with a toolset that IS installed (v143, VS2022's own). This is the standard way to build an
+      # old vcxproj on a newer image without editing the project file: /p: global properties win over a
+      # project's own unconditional <PlatformToolset> assignment.
+      MAPI_TOOLSET: v143
+      NSIS_DIR: C:\Program Files (x86)\NSIS
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+        with:
+          nuget-version: "6.x"
+
+      # The nuget.exe checked into .nuget/ is a ~2011-era client (v1.6) that can no longer talk to
+      # nuget.org (the legacy protocol it speaks was retired) - restore with the modern client instead.
+      - name: Restore NuGet packages
+        run: nuget restore OWAtray.sln
+
+      # Every .csproj in this solution has <RestorePackages>true</RestorePackages>, which makes MSBuild
+      # invoke the same broken bundled nuget.exe again as a pre-build step unless explicitly disabled -
+      # packages are already restored above via a working client, so turn that legacy step off here.
+      # (The default shell on windows-latest is PowerShell, which treats a bare `;` as a command
+      # separator - the /t: target list has to stay inside one quoted token or it gets split apart.)
+      - name: Build C# projects (GUI, ShellIntegration, and their dependencies)
+        run: >
+          msbuild OWAtray.sln
+          /p:Configuration=Release
+          /p:Platform="Any CPU"
+          /p:RestorePackages=false
+          "/t:DrunkenBakery_OWAtray_GUI;DrunkenBakery_OWAtray_ShellIntegration"
+          /m
+
+      # GUI and ShellIntegration both have their Release OutputPath set to ..\..\bin\ (a repo-root `bin`
+      # folder, matching Mapi's own OutDir below and what Installer\OWAtray.nsi expects under `..\bin\`)
+      # - so building them is enough; their dependency DLLs, satellite resource assemblies, and content
+      # files (icons, License.txt, notify.wav, NLog.config, ...) land there automatically via MSBuild's
+      # normal transitive "copy local" reference behavior. No separate staging/copy step needed for them.
+
+      - name: Build Mapi (Win32)
+        run: >
+          msbuild src\Mapi\MapiDll.vcxproj
+          /p:Configuration=Release
+          /p:Platform=Win32
+          /p:PlatformToolset=${{ env.MAPI_TOOLSET }}
+
+      - name: Build Mapi (x64)
+        run: >
+          msbuild src\Mapi\MapiDll.vcxproj
+          /p:Configuration=Release
+          /p:Platform=x64
+          /p:PlatformToolset=${{ env.MAPI_TOOLSET }}
+
+      # The .nsi additionally expects DrunkenBakery.OWAtray.GUI.exe/.ShellIntegration.exe and the
+      # library DLLs under bin\Secure\ (alongside the plain copies in bin\). Nothing in this repo's own
+      # build process produces that folder - it looks like a manual step from the original author (an
+      # obfuscation/signing pass?) that never got checked in. Rather than invent a replacement, this
+      # just mirrors the same (unobfuscated) build output there so the installer script's file
+      # references resolve; functionally identical binaries, just not whatever the original extra step
+      # did.
+      - name: Stage bin\Secure
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path bin\Secure | Out-Null
+          $files = @(
+            "DrunkenBakery.OWAtray.Audio.dll",
+            "DrunkenBakery.OWAtray.Connections.Abstract.dll",
+            "DrunkenBakery.OWAtray.Connections.EWS.dll",
+            "DrunkenBakery.OWAtray.Connections.Proxy.dll",
+            "DrunkenBakery.OWAtray.Framework.dll",
+            "DrunkenBakery.OWAtray.Growl.dll",
+            "DrunkenBakery.OWAtray.GUI.exe",
+            "DrunkenBakery.OWAtray.Logging.dll",
+            "DrunkenBakery.OWAtray.ShellIntegration.exe",
+            "DrunkenBakery.OWAtray.Snarl.dll"
+          )
+          foreach ($f in $files) {
+            Copy-Item "bin\$f" "bin\Secure\$f"
+          }
+
+      - name: Install NSIS
+        run: choco install nsis -y --no-progress
+
+      # Installer\OWAtray.nsi does `!include "nsProcess.nsh"`, a third-party plugin not bundled with
+      # NSIS itself. Fetched from its long-standing home on the NSIS project wiki. Despite the .zip
+      # extension this archive is actually 7z-formatted (verified by hand), hence `7z x` and not
+      # Expand-Archive.
+      - name: Install nsProcess plugin
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://nsis.sourceforge.io/mediawiki/images/1/18/NsProcess.zip" -OutFile "$env:TEMP\NsProcess.7z"
+          7z x "$env:TEMP\NsProcess.7z" -o"$env:TEMP\NsProcess" -y
+          New-Item -ItemType Directory -Force -Path "${{ env.NSIS_DIR }}\Plugins\x86-ansi" | Out-Null
+          New-Item -ItemType Directory -Force -Path "${{ env.NSIS_DIR }}\Plugins\x86-unicode" | Out-Null
+          Copy-Item "$env:TEMP\NsProcess\Plugin\nsProcess.dll" "${{ env.NSIS_DIR }}\Plugins\x86-ansi\nsProcess.dll"
+          Copy-Item "$env:TEMP\NsProcess\Plugin\nsProcessW.dll" "${{ env.NSIS_DIR }}\Plugins\x86-unicode\nsProcess.dll"
+          Copy-Item "$env:TEMP\NsProcess\Include\nsProcess.nsh" "${{ env.NSIS_DIR }}\Include\nsProcess.nsh"
+
+      - name: Build installer
+        shell: pwsh
+        run: '& "${{ env.NSIS_DIR }}\makensis.exe" Installer\OWAtray.nsi'
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: OWAtray-installer
+          path: Installer\OWAtray.exe
+          if-no-files-found: error
+
+      - name: Upload raw binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: OWAtray-binaries
+          path: bin\
+          if-no-files-found: error

@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.Connections.EWS
-// 
+//
 //  <copyright file="EwsConnection.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
+//
 //  Author: IRS
 // ------------------------------------------------------------------
 
@@ -211,13 +211,13 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                                                        ? new WebCredentials(
                                                              this.Username.Length == 0
                                                                  ? this.EmailAddress
-                                                                 : this.Username, 
-                                                             this.Password, 
+                                                                 : this.Username,
+                                                             this.Password,
                                                              this.AccountDomain)
                                                        : new WebCredentials(
                                                              this.Username.Length == 0
                                                                  ? this.EmailAddress
-                                                                 : this.Username, 
+                                                                 : this.Username,
                                                              this.Password);
                     }
 
@@ -226,7 +226,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                     {
                         if (this.OverrideAutodiscoveryValidation)
                         {
-                            this.service.AutodiscoverUrl(this.EmailAddress, delegate { return true; });
+                            this.service.AutodiscoverUrl(this.EmailAddress, redirectionUrl => true);
                         }
                         else
                         {
@@ -247,20 +247,20 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                                                                   ? new WebCredentials(
                                                                         this.Username.Length == 0
                                                                             ? this.EmailAddress
-                                                                            : this.Username, 
-                                                                        this.Password, 
+                                                                            : this.Username,
+                                                                        this.Password,
                                                                         this.AccountDomain)
                                                                   : new WebCredentials(
                                                                         this.Username.Length == 0
                                                                             ? this.EmailAddress
-                                                                            : this.Username, 
+                                                                            : this.Username,
                                                                         this.Password);
                         }
 
                         // Redirection Callback
                         if (this.OverrideAutodiscoveryValidation)
                         {
-                            autodiscoverService.RedirectionUrlValidationCallback = delegate { return true; };
+                            autodiscoverService.RedirectionUrlValidationCallback = redirectionUrl => true;
                         }
 
                         // Is this Internal or External ?
@@ -268,10 +268,10 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                         {
                             // Probe for values
                             GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(
-                                this.EmailAddress, 
-                                UserSettingName.InternalWebClientUrls, 
-                                UserSettingName.InternalEwsUrl, 
-                                UserSettingName.InternalMailboxServer, 
+                                this.EmailAddress,
+                                UserSettingName.InternalWebClientUrls,
+                                UserSettingName.InternalEwsUrl,
+                                UserSettingName.InternalMailboxServer,
                                 UserSettingName.UserDisplayName);
 
                             // OWA Url
@@ -311,10 +311,10 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                         {
                             // Probe for values
                             GetUserSettingsResponse userresponse = autodiscoverService.GetUserSettings(
-                                this.EmailAddress, 
-                                UserSettingName.ExternalWebClientUrls, 
-                                UserSettingName.ExternalEwsUrl, 
-                                UserSettingName.ExternalMailboxServer, 
+                                this.EmailAddress,
+                                UserSettingName.ExternalWebClientUrls,
+                                UserSettingName.ExternalEwsUrl,
+                                UserSettingName.ExternalMailboxServer,
                                 UserSettingName.UserDisplayName);
 
                             // OWA Url
@@ -452,10 +452,10 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         /// The send.
         /// </summary>
         /// <param name="subject">
-        /// The subject. 
+        /// The subject.
         /// </param>
         /// <param name="recipient">
-        /// The recipient. 
+        /// The recipient.
         /// </param>
         public override void Send(string subject, string recipient)
         {
@@ -479,7 +479,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                 {
                     var message = new EmailMessage(this.service)
                         {
-                           Subject = subject, Body = Resources.EwsConnection_Send_OWAtray_Test_Message 
+                           Subject = subject, Body = Resources.EwsConnection_Send_OWAtray_Test_Message,
                         };
                     message.ToRecipients.Add(recipient);
                     message.Send();
@@ -495,10 +495,10 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         /// The send a.
         /// </summary>
         /// <param name="subject">
-        /// The subject. 
+        /// The subject.
         /// </param>
         /// <param name="recipient">
-        /// The recipient. 
+        /// The recipient.
         /// </param>
         public override void SendA(string subject, string recipient)
         {
@@ -514,19 +514,19 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         /// The certificate validation call back.
         /// </summary>
         /// <param name="sender">
-        /// The sender. 
+        /// The sender.
         /// </param>
         /// <param name="certificate">
-        /// The certificate. 
+        /// The certificate.
         /// </param>
         /// <param name="chain">
-        /// The chain. 
+        /// The chain.
         /// </param>
         /// <param name="sslPolicyErrors">
-        /// The ssl policy errors. 
+        /// The ssl policy errors.
         /// </param>
         /// <returns>
-        /// True if it worked. 
+        /// True if it worked.
         /// </returns>
         private bool CertificateValidationCallBack(
             object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
@@ -563,7 +563,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         /// The change state.
         /// </summary>
         /// <param name="state">
-        /// The state. 
+        /// The state.
         /// </param>
         private void ChangeState(ConnectionState state)
         {
@@ -590,7 +590,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                     var calendarView = new CalendarView(
                         DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Settings.Default.ApptWindow)))
                         {
-                           PropertySet = PropertySet.FirstClassProperties 
+                           PropertySet = PropertySet.FirstClassProperties,
                         };
                     FindItemsResults<Appointment> findResults =
                         this.service.FindAppointments(WellKnownFolderName.Calendar, calendarView);
@@ -667,8 +667,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                     // RaiseLogMessage("Checking for mail after " + _timeLastChecked);
                     var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
                         {
-                            new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false), 
-                            new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, this.timeLastChecked)
+                            new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
+                            new SearchFilter.IsGreaterThan(ItemSchema.DateTimeReceived, this.timeLastChecked),
                         };
 
                     // Set initial flags
@@ -686,8 +686,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                                 PropertySet =
                                     new PropertySet(BasePropertySet.IdOnly)
                                         {
-                                           ItemSchema.Subject, ItemSchema.DateTimeReceived 
-                                        }
+                                           ItemSchema.Subject, ItemSchema.DateTimeReceived,
+                                        },
                             };
                         view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Ascending);
 
@@ -751,7 +751,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         /// The send.
         /// </summary>
         /// <param name="payload">
-        /// The payload. 
+        /// The payload.
         /// </param>
         private void Send(object payload)
         {
@@ -763,7 +763,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         /// Get the time of newest email.
         /// </summary>
         /// <returns>
-        /// The time that the newest mail arived
+        /// The time that the newest mail arrived.
         /// </returns>
         private DateTime TimeOfNewestEmail()
         {
@@ -772,13 +772,13 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
             // Define filters collection
             var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
                 {
-                   new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false) 
+                   new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
                 };
 
             // Item view
             var view = new ItemView(10, 0, OffsetBasePoint.Beginning)
                 {
-                   PropertySet = new PropertySet(BasePropertySet.IdOnly) { ItemSchema.DateTimeReceived } 
+                   PropertySet = new PropertySet(BasePropertySet.IdOnly) { ItemSchema.DateTimeReceived },
                 };
             view.OrderBy.Add(ItemSchema.DateTimeReceived, SortDirection.Descending);
 
@@ -807,10 +807,10 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         /// The appointment poll_ elapsed.
         /// </summary>
         /// <param name="sender">
-        /// The sender. 
+        /// The sender.
         /// </param>
         /// <param name="e">
-        /// The e. 
+        /// The e.
         /// </param>
         private void AppointmentPollElapsed(object sender, EventArgs e)
         {
@@ -824,10 +824,10 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         /// The background poll_ elapsed.
         /// </summary>
         /// <param name="sender">
-        /// The sender. 
+        /// The sender.
         /// </param>
         /// <param name="e">
-        /// The e. 
+        /// The e.
         /// </param>
         private void BackgroundPollElapsed(object sender, EventArgs e)
         {

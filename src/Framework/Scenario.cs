@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  Freshly Baked at the Drunken Bakery
 //  OWAtray::DrunkenBakery.OWAtray.Framework
-// 
+//
 //  <copyright file="Scenario.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2014 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
+//
 //  Author: IRS
 // ------------------------------------------------------------------
 
@@ -160,6 +160,9 @@ namespace DrunkenBakery.OWAtray.Framework
 
         #region Public Events
 
+        /// <summary>
+        ///     Raised with an error message when <see cref="Save()"/> fails.
+        /// </summary>
         public event Action<string> ScenarioEvent;
 
         #endregion
@@ -172,7 +175,7 @@ namespace DrunkenBakery.OWAtray.Framework
         public EmailConnections Connections { get; set; }
 
         /// <summary>
-        ///     Gets or sets ScenarioFile.
+        ///     Sets ScenarioFile.
         /// </summary>
         public string ScenarioFile { private get; set; }
 

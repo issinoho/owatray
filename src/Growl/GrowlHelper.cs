@@ -1,11 +1,11 @@
 // ------------------------------------------------------------------
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.Growl
-// 
+//
 //  <copyright file="GrowlHelper.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
+//
 //  Author: IRS
 // ------------------------------------------------------------------
 

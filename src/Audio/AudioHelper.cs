@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  OWAtray
 //  DrunkenBakery.OWAtray.Audio.AudioHelper.cs
-//  
+//
 //  <copyright file="AudioHelper.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-//  
+//
 //  Author: Iain Smith
 // ------------------------------------------------------------------
 namespace DrunkenBakery.OWAtray.Audio
@@ -30,42 +30,42 @@ namespace DrunkenBakery.OWAtray.Audio
             /// <summary>
             ///     The snd sync.
             /// </summary>
-            SndSync = 0x0000, 
+            SndSync = 0x0000,
 
             /// <summary>
             ///     The snd async.
             /// </summary>
-            SndAsync = 0x0001, 
+            SndAsync = 0x0001,
 
             /// <summary>
             ///     The snd nodefault.
             /// </summary>
-            SndNodefault = 0x0002, 
+            SndNodefault = 0x0002,
 
             /// <summary>
             ///     The snd loop.
             /// </summary>
-            SndLoop = 0x0008, 
+            SndLoop = 0x0008,
 
             /// <summary>
             ///     The snd nostop.
             /// </summary>
-            SndNostop = 0x0010, 
+            SndNostop = 0x0010,
 
             /// <summary>
             ///     The snd nowait.
             /// </summary>
-            SndNowait = 0x00002000, 
+            SndNowait = 0x00002000,
 
             /// <summary>
             ///     The snd filename.
             /// </summary>
-            SndFilename = 0x00020000, 
+            SndFilename = 0x00020000,
 
             /// <summary>
             ///     The snd resource.
             /// </summary>
-            SndResource = 0x00040004
+            SndResource = 0x00040004,
         }
 
         #endregion
@@ -82,7 +82,7 @@ namespace DrunkenBakery.OWAtray.Audio
         {
             if (File.Exists(soundFile))
             {
-                PlaySound(soundFile, new IntPtr(), PlaySoundFlags.SndSync);
+                PlaySound(soundFile, IntPtr.Zero, PlaySoundFlags.SndSync);
             }
         }
 

@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  OWAtray
 //  DrunkenBakery.OWAtray.Snarl.SnarlHelper.cs
-//  
+//
 //  <copyright file="SnarlHelper.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-//  
+//
 //  Author: Iain Smith
 // ------------------------------------------------------------------
 namespace DrunkenBakery.OWAtray.Snarl

@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.GUI
-// 
+//
 //  <copyright file="AssemblyHelpers.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
+//
 //  Author: IRS
 // ------------------------------------------------------------------
 
@@ -145,7 +145,7 @@ namespace DrunkenBakery.OWAtray.GUI
         /// The dependent assemblies.
         /// </summary>
         /// <returns>
-        /// A list of dependent assemblies
+        /// A list of dependent assemblies.
         /// </returns>
         public static IEnumerable<string> DependentAssemblies()
         {

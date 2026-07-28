@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.GUI
-// 
+//
 //  <copyright file="ContactUs.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
+//
 //  Author: IRS
 // ------------------------------------------------------------------
 
@@ -62,10 +62,10 @@ namespace DrunkenBakery.OWAtray.GUI
         /// The cmd o k_ click.
         /// </summary>
         /// <param name="sender">
-        /// The sender. 
+        /// The sender.
         /// </param>
         /// <param name="e">
-        /// The e. 
+        /// The e.
         /// </param>
         private void CmdOkClick(object sender, EventArgs e)
         {
@@ -76,10 +76,10 @@ namespace DrunkenBakery.OWAtray.GUI
         /// The link bakery_ link clicked.
         /// </summary>
         /// <param name="sender">
-        /// The sender. 
+        /// The sender.
         /// </param>
         /// <param name="e">
-        /// The e. 
+        /// The e.
         /// </param>
         private void LinkBakeryLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -90,10 +90,10 @@ namespace DrunkenBakery.OWAtray.GUI
         /// The link email_ link clicked.
         /// </summary>
         /// <param name="sender">
-        /// The sender. 
+        /// The sender.
         /// </param>
         /// <param name="e">
-        /// The e. 
+        /// The e.
         /// </param>
         private void LinkEmailLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

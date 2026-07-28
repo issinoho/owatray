@@ -1,11 +1,11 @@
 // ------------------------------------------------------------------
 //  OWAtray
 //  DrunkenBakery.OWAtray.ShellIntegration.NativeWin32.cs
-//  
+//
 //  <copyright file="NativeWin32.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-//  
+//
 //  Author: Iain Smith
 // ------------------------------------------------------------------
 namespace DrunkenBakery.OWAtray.ShellIntegration

@@ -61,6 +61,10 @@ msbuild OWAtray.sln /t:DrunkenBakery_OWAtray_Tests /p:Configuration=Debug
 nunit3-console src/Tests/bin/Debug/DrunkenBakery.OWAtray.Tests.dll
 ```
 
+Every C# project also has [StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers)
+wired in and runs as part of a normal build — no separate lint step. See `CLAUDE.md` for which rules are
+deliberately turned off and why.
+
 It doesn't cover EWS network calls, the WinForms GUI, or the MAPI/shell integration — validate those by
 running `DrunkenBakery.OWAtray.GUI.exe` against a real (or test) Exchange/EWS mailbox. See `CLAUDE.md`
 for a fuller breakdown of the project layout and conventions if you're working on the codebase.

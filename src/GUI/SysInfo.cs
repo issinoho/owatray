@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.GUI
-// 
+//
 //  <copyright file="SysInfo.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
+//
 //  Author: IRS
 // ------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ namespace DrunkenBakery.OWAtray.GUI
             // Please wait...
             var newNode = new TreeNode(string.Format("{0}...", Resources.SysInfo_SysInfo_Gathering_data__please_wait))
                 {
-                   ImageIndex = 23, SelectedImageIndex = 23 
+                   ImageIndex = 23, SelectedImageIndex = 23,
                 };
             this.tvCheat.Nodes.Add(newNode);
 
@@ -74,7 +74,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 {
                     var childNode = new TreeNode(mo["Manufacturer"].ToString())
                         {
-                           ImageIndex = 14, SelectedImageIndex = 14 
+                           ImageIndex = 14, SelectedImageIndex = 14,
                         };
                     newNode.Nodes.Add(childNode);
                     childNode = new TreeNode(mo["Model"].ToString()) { ImageIndex = 13, SelectedImageIndex = 13 };
@@ -89,14 +89,14 @@ namespace DrunkenBakery.OWAtray.GUI
                                                select
                                                    new TreeNode(
                                                    string.Format(
-                                                       "{0} {1}: {2} ({3} {4})", 
-                                                       Resources.SysInfo_GetComputer_CPU, 
-                                                       count++, 
-                                                       Regex.Replace(mo["Name"].ToString(), @"^\s+|\s+$", string.Empty), 
-                                                       mo["AddressWidth"], 
+                                                       "{0} {1}: {2} ({3} {4})",
+                                                       Resources.SysInfo_GetComputer_CPU,
+                                                       count++,
+                                                       Regex.Replace(mo["Name"].ToString(), @"^\s+|\s+$", string.Empty),
+                                                       mo["AddressWidth"],
                                                        Resources.SysInfo_GetComputer_bit))
                                                        {
-                                                          ImageIndex = 17, SelectedImageIndex = 17 
+                                                          ImageIndex = 17, SelectedImageIndex = 17,
                                                        })
                 {
                     newNode.Nodes.Add(childNode);
@@ -206,7 +206,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 {
                     var childNode = new TreeNode(mo["RegisteredUser"].ToString())
                         {
-                           ImageIndex = 3, SelectedImageIndex = 3 
+                           ImageIndex = 3, SelectedImageIndex = 3,
                         };
                     newNode.Nodes.Add(childNode);
                     childNode = new TreeNode(mo["Organization"].ToString()) { ImageIndex = 4, SelectedImageIndex = 4 };
@@ -239,15 +239,15 @@ namespace DrunkenBakery.OWAtray.GUI
                                                select
                                                    new TreeNode(
                                                    string.Format(
-                                                       "{0}: {1} {2} ({3} {4} {5})", 
-                                                       mo["Name"], 
-                                                       size / 1073741824, 
-                                                       Resources.SysInfo_GetStorage_GB, 
-                                                       freeSpace / 1073741824, 
-                                                       Resources.SysInfo_GetStorage_GB, 
+                                                       "{0}: {1} {2} ({3} {4} {5})",
+                                                       mo["Name"],
+                                                       size / 1073741824,
+                                                       Resources.SysInfo_GetStorage_GB,
+                                                       freeSpace / 1073741824,
+                                                       Resources.SysInfo_GetStorage_GB,
                                                        Resources.SysInfo_GetStorage_free))
                                                        {
-                                                          ImageIndex = 15, SelectedImageIndex = 15 
+                                                          ImageIndex = 15, SelectedImageIndex = 15,
                                                        })
                 {
                     newNode.Nodes.Add(childNode);
@@ -270,7 +270,7 @@ namespace DrunkenBakery.OWAtray.GUI
             // Top level branches
             var newNode = new TreeNode(Resources.SysInfo_BuildTree_Operating_System)
                 {
-                   ImageIndex = 10, SelectedImageIndex = 10 
+                   ImageIndex = 10, SelectedImageIndex = 10,
                 };
             this.tvOptions.Nodes.Add(newNode);
             GetOs(newNode);

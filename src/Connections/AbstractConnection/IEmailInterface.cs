@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.Connections.Abstract
-// 
+//
 //  <copyright file="IEmailInterface.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
+//
 //  Author: IRS
 // ------------------------------------------------------------------
 
@@ -244,10 +244,10 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The connect.
         /// </summary>
         /// <param name="email">
-        /// The email. 
+        /// The email.
         /// </param>
         /// <param name="password">
-        /// The password. 
+        /// The password.
         /// </param>
         void Connect(string email, string password);
 
@@ -255,13 +255,13 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The connect.
         /// </summary>
         /// <param name="username">
-        /// The username. 
+        /// The username.
         /// </param>
         /// <param name="email">
-        /// The email. 
+        /// The email.
         /// </param>
         /// <param name="password">
-        /// The password. 
+        /// The password.
         /// </param>
         void Connect(string username, string email, string password);
 
@@ -284,10 +284,10 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The send.
         /// </summary>
         /// <param name="subject">
-        /// The subject. 
+        /// The subject.
         /// </param>
         /// <param name="recipient">
-        /// The recipient. 
+        /// The recipient.
         /// </param>
         void Send(string subject, string recipient);
 
@@ -295,10 +295,10 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// The send a.
         /// </summary>
         /// <param name="subject">
-        /// The subject. 
+        /// The subject.
         /// </param>
         /// <param name="recipient">
-        /// The recipient. 
+        /// The recipient.
         /// </param>
         void SendA(string subject, string recipient);
 

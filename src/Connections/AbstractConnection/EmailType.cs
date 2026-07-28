@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.Connections.Abstract
-// 
+//
 //  <copyright file="EmailType.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
+//
 //  Author: IRS
 // ------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// <summary>
         /// The exchange.
         /// </summary>
-        Exchange
+        Exchange,
     }
 
     /// <summary>

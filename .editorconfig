@@ -1,0 +1,22 @@
+root = true
+
+[*.cs]
+
+# File header rules (SA1633-SA1641): every file already carries a copyright banner, just not in the
+# exact machine-checkable form StyleCop expects (and it predates this pass by 15 years) — enforcing an
+# exact match here is busywork, not a real improvement, so these are off rather than "fixed".
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1634.severity = none
+dotnet_diagnostic.SA1635.severity = none
+dotnet_diagnostic.SA1636.severity = none
+dotnet_diagnostic.SA1637.severity = none
+dotnet_diagnostic.SA1638.severity = none
+dotnet_diagnostic.SA1639.severity = none
+dotnet_diagnostic.SA1640.severity = none
+dotnet_diagnostic.SA1641.severity = none
+
+# SA1124 (do not use regions): this codebase uses #region blocks (Constants and Fields, Public
+# Properties, Public Methods and Operators, ...) with total consistency in every hand-written file, a
+# deliberate structural convention from its original StyleCop pass. Stripping ~hundreds of regions
+# across the whole codebase would be pure churn against that convention, not a real fix.
+dotnet_diagnostic.SA1124.severity = none

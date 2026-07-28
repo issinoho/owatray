@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  OWAtray
 //  DrunkenBakery.OWAtray.Logging.LoggerProxy.cs
-//  
+//
 //  <copyright file="LoggerProxy.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-//  
+//
 //  Author: Iain Smith
 // ------------------------------------------------------------------
 namespace DrunkenBakery.OWAtray.Logging
@@ -98,11 +98,12 @@ namespace DrunkenBakery.OWAtray.Logging
         /// The target type.
         /// </typeparam>
         /// <returns>
-        /// The <see cref="T"/>.
+        /// The <typeparamref name="T"/>.
         /// </returns>
-        private static T GetTarget<T>(string targetName) where T : Target
+        private static T GetTarget<T>(string targetName)
+            where T : Target
         {
-            if (null == LogManager.Configuration)
+            if (LogManager.Configuration == null)
             {
                 return null;
             }
@@ -123,13 +124,13 @@ namespace DrunkenBakery.OWAtray.Logging
         private static string GetTargetFilename(string targetName)
         {
             var target = GetTarget<FileTarget>(targetName);
-            if (null == target)
+            if (target == null)
             {
                 return null;
             }
 
             var layout = target.FileName as SimpleLayout;
-            if (null == layout)
+            if (layout == null)
             {
                 return null;
             }

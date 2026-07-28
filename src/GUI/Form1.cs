@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  Freshly Baked at the Drunken Bakery
 //  OWAtray::DrunkenBakery.OWAtray.GUI
-// 
+//
 //  <copyright file="Form1.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2014 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
+//
 //  Author: IRS
 // ------------------------------------------------------------------
 
@@ -57,12 +57,12 @@ namespace DrunkenBakery.OWAtray.GUI
         private string alertIcon;
 
         /// <summary>
-        ///     ContextMenu's Exit command used
+        ///     ContextMenu's Exit command used.
         /// </summary>
         private bool allowClose;
 
         /// <summary>
-        ///     ContextMenu's Show command used
+        ///     ContextMenu's Show command used.
         /// </summary>
         private bool allowVisible;
 
@@ -147,7 +147,7 @@ namespace DrunkenBakery.OWAtray.GUI
         private string lastPopUrl = string.Empty;
 
         /// <summary>
-        ///     The last read mail count
+        ///     The last read mail count.
         /// </summary>
         private int mailCount;
 
@@ -240,7 +240,7 @@ namespace DrunkenBakery.OWAtray.GUI
         }
 
         /// <summary>
-        ///     Overrides the windows form logic
+        ///     Overrides the windows form logic.
         /// </summary>
         /// <param name="value">
         ///     true to make the control visible; otherwise, false.
@@ -497,13 +497,10 @@ namespace DrunkenBakery.OWAtray.GUI
             this.scenario.Save();
             this.ShellBrowserVersion();
 
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_Always_use_IE_switched_,
-                    this.connection.AlwaysUseInternetExplorer
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = this.connection.AlwaysUseInternetExplorer
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_Always_use_IE_switched_, state));
         }
 
         /// <summary>
@@ -524,13 +521,10 @@ namespace DrunkenBakery.OWAtray.GUI
 
             Settings.Default.Balloon = this.balloonToolStripMenuItem.Checked;
             Settings.Default.Save();
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources.Form1_balloonToolStripMenuItem_CheckStateChanged_Balloon_notifications_switched,
-                    Settings.Default.Balloon
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = Settings.Default.Balloon
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_balloonToolStripMenuItem_CheckStateChanged_Balloon_notifications_switched, state));
         }
 
         /// <summary>
@@ -697,13 +691,10 @@ namespace DrunkenBakery.OWAtray.GUI
             this.scenario.Save();
 
             this.UpdateServiceUrl();
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources.Form1_cbOverrideEWS_CheckedChanged_EWS_URL_override_switched,
-                    this.connection.OverrideServiceUrl
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = this.connection.OverrideServiceUrl
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_cbOverrideEWS_CheckedChanged_EWS_URL_override_switched, state));
         }
 
         /// <summary>
@@ -752,13 +743,10 @@ namespace DrunkenBakery.OWAtray.GUI
             this.scenario.Save();
 
             this.UpdateOwaUrl();
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources.Form1_cbOverrideOWA_CheckedChanged_OWA_URL_override_switched,
-                    this.connection.OverrideEmailUrl
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = this.connection.OverrideEmailUrl
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_cbOverrideOWA_CheckedChanged_OWA_URL_override_switched, state));
         }
 
         /// <summary>
@@ -822,13 +810,10 @@ namespace DrunkenBakery.OWAtray.GUI
 
             this.connection.UseAutodiscovery = this.chkAutodiscovery.Checked;
             this.scenario.Save();
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources.Form1_chkAutodiscovery_CheckedChanged_Autodiscovery_is_switched,
-                    this.chkAutodiscovery.Checked
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = this.chkAutodiscovery.Checked
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_chkAutodiscovery_CheckedChanged_Autodiscovery_is_switched, state));
 
             // Switch off some options when Autodiscovery is checked
             this.SelectAutodiscoveryOptions();
@@ -1024,8 +1009,7 @@ namespace DrunkenBakery.OWAtray.GUI
                                     this.notifyIcon1.Text = AssemblyHelpers.AssemblyTitle + Environment.NewLine
                                                             + string.Format(
                                                                 "{0}!",
-                                                                Resources
-                                                                    .Form1_WireUpConnectionEvents_Connection_Failure);
+                                                                Resources.Form1_WireUpConnectionEvents_Connection_Failure);
                                     this.PopToast(
                                         string.Format(
                                             "[{0}] - {1}!",
@@ -1126,13 +1110,10 @@ namespace DrunkenBakery.OWAtray.GUI
             this.connection.DisableCalendar = this.disableCalendarToolStripMenuItem.Checked;
             this.scenario.Save();
 
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources.Form1_disableCalendarToolStripMenuItem_CheckStateChanged_Calendar_notifications_switched,
-                    this.connection.DisableCalendar
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON));
+            var state = this.connection.DisableCalendar
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_disableCalendarToolStripMenuItem_CheckStateChanged_Calendar_notifications_switched, state));
         }
 
         /// <summary>
@@ -1292,13 +1273,10 @@ namespace DrunkenBakery.OWAtray.GUI
 
             Settings.Default.Growl = this.growlToolStripMenuItem.Checked;
             Settings.Default.Save();
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources.Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched,
-                    Settings.Default.Growl
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = Settings.Default.Growl
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched, state));
         }
 
         /// <summary>
@@ -1363,13 +1341,10 @@ namespace DrunkenBakery.OWAtray.GUI
             this.scenario.Save();
             this.ShellAutologin();
 
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources.Form1_loginAutomaticallyToolStripMenuItem_CheckStateChanged_Automatic_Login_is_switched,
-                    this.connection.AutoLogin
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = this.connection.AutoLogin
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_loginAutomaticallyToolStripMenuItem_CheckStateChanged_Automatic_Login_is_switched, state));
         }
 
         /// <summary>
@@ -1465,7 +1440,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 var runSvc = new ProcessStartInfo(this.shellPath)
                 {
                     Arguments = "registry",
-                    WindowStyle = ProcessWindowStyle.Hidden
+                    WindowStyle = ProcessWindowStyle.Hidden,
                 };
 
                 if (Environment.OSVersion.Version.Major >= 6)
@@ -1543,14 +1518,15 @@ namespace DrunkenBakery.OWAtray.GUI
                         () =>
                         {
                             this.popUrl = accessUrl;
+                            string minutesUnit = minsToGo != 1
+                                ? Resources.Form1_WireUpConnectionEvents_minutes
+                                : Resources.Form1_WireUpConnectionEvents_minute;
                             this.PopToast(
                                 string.Format(
                                     "{0} {1} {2}",
                                     Resources.Form1_WireUpConnectionEvents_You_have_an_appointment_in,
                                     minsToGo,
-                                    minsToGo != 1
-                                        ? Resources.Form1_WireUpConnectionEvents_minutes
-                                        : Resources.Form1_WireUpConnectionEvents_minute),
+                                    minutesUnit),
                                 string.Format("{0} - {1} ({2})", startTime.ToShortTimeString(), subject, location));
                         }));
             }
@@ -1588,7 +1564,7 @@ namespace DrunkenBakery.OWAtray.GUI
         ///     Notifications the text.
         /// </summary>
         /// <returns>
-        ///     The text
+        ///     The text.
         /// </returns>
         private string NotificationText()
         {
@@ -1652,7 +1628,9 @@ namespace DrunkenBakery.OWAtray.GUI
         /// <param name="e">
         ///     The e.
         /// </param>
-        [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1126:PrefixCallsCorrectly",
+        [SuppressMessage(
+            "StyleCop.CSharp.ReadabilityRules",
+            "SA1126:PrefixCallsCorrectly",
             Justification = "Reviewed. Suppression is OK here.")]
         private void NotifyIcon1BalloonTipClicked(object sender, EventArgs e)
         {
@@ -1692,13 +1670,10 @@ namespace DrunkenBakery.OWAtray.GUI
             this.connection.OverrideOffice365Login = this.office365LoginOverrideToolStripMenuItem.Checked;
             this.scenario.Save();
 
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources.Form1_office365LoginOverrideToolStripMenuItem_CheckStateChanged_Office365_login_override,
-                    this.connection.OverrideOffice365Login
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = this.connection.OverrideOffice365Login
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_office365LoginOverrideToolStripMenuItem_CheckStateChanged_Office365_login_override, state));
 
             this.UpdateOwaUrl();
         }
@@ -1758,14 +1733,10 @@ namespace DrunkenBakery.OWAtray.GUI
                 this.overrideAutodiscoveryValidationToolStripMenuItem.Checked;
             this.scenario.Save();
 
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources
-                        .Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched,
-                    this.connection.OverrideAutodiscoveryValidation
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = this.connection.OverrideAutodiscoveryValidation
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_overrideAutodiscoveryValidationToolStripMenuItem_CheckStateChanged_Autodiscovery_Validation_override_switched, state));
         }
 
         /// <summary>
@@ -1787,14 +1758,10 @@ namespace DrunkenBakery.OWAtray.GUI
             this.connection.OverrideCertificate = this.overrideCertificateToolStripMenuItem.Checked;
             this.scenario.Save();
 
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources
-                        .Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched,
-                    this.connection.OverrideCertificate
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = this.connection.OverrideCertificate
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_overrideCertificateToolStripMenuItem_CheckStateChanged_SSL_Certificate_override_switched, state));
         }
 
         /// <summary>
@@ -1815,13 +1782,10 @@ namespace DrunkenBakery.OWAtray.GUI
 
             Settings.Default.Bell = this.playSoundToolStripMenuItem.Checked;
             Settings.Default.Save();
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources.Form1_playSoundToolStripMenuItem_CheckStateChanged_Audible_notifications_switched,
-                    Settings.Default.Bell
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = Settings.Default.Bell
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_playSoundToolStripMenuItem_CheckStateChanged_Audible_notifications_switched, state));
         }
 
         /// <summary>
@@ -1996,7 +1960,7 @@ namespace DrunkenBakery.OWAtray.GUI
                     Arguments =
                         "autologin " + (this.connection.AutoLogin ? "Yes" : "No") + " "
                         + (this.connection.Office365 ? "Yes" : "No"),
-                    WindowStyle = ProcessWindowStyle.Hidden
+                    WindowStyle = ProcessWindowStyle.Hidden,
                 };
 
                 Process serviceProcess = Process.Start(runSvc);
@@ -2023,7 +1987,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 var runSvc = new ProcessStartInfo(this.shellPath)
                 {
                     Arguments = "browser " + (this.connection.AlwaysUseInternetExplorer ? "Yes" : "No"),
-                    WindowStyle = ProcessWindowStyle.Hidden
+                    WindowStyle = ProcessWindowStyle.Hidden,
                 };
 
                 Process serviceProcess = Process.Start(runSvc);
@@ -2050,7 +2014,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 var runSvc = new ProcessStartInfo(this.shellPath)
                 {
                     Arguments = "exchange " + this.connection.Version,
-                    WindowStyle = ProcessWindowStyle.Hidden
+                    WindowStyle = ProcessWindowStyle.Hidden,
                 };
 
                 Process serviceProcess = Process.Start(runSvc);
@@ -2077,7 +2041,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 var runSvc = new ProcessStartInfo(this.shellPath)
                 {
                     Arguments = "url " + this.connection.DerivedEmailUrl,
-                    WindowStyle = ProcessWindowStyle.Hidden
+                    WindowStyle = ProcessWindowStyle.Hidden,
                 };
 
                 Process serviceProcess = Process.Start(runSvc);
@@ -2104,7 +2068,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 var runSvc = new ProcessStartInfo(this.shellPath)
                 {
                     Arguments = "password " + this.connection.Password,
-                    WindowStyle = ProcessWindowStyle.Hidden
+                    WindowStyle = ProcessWindowStyle.Hidden,
                 };
 
                 Process serviceProcess = Process.Start(runSvc);
@@ -2178,13 +2142,10 @@ namespace DrunkenBakery.OWAtray.GUI
 
             Settings.Default.Snarl = this.snarlToolStripMenuItem.Checked;
             Settings.Default.Save();
-            this.AddLogEntry(
-                string.Format(
-                    "{0} {1}",
-                    Resources.Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched,
-                    Settings.Default.Snarl
-                        ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                        : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF));
+            var state = Settings.Default.Snarl
+                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
+                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
+            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched, state));
         }
 
         /// <summary>
@@ -2235,7 +2196,7 @@ namespace DrunkenBakery.OWAtray.GUI
                 var runSvc = new ProcessStartInfo(this.shellPath)
                 {
                     Arguments = "restore",
-                    WindowStyle = ProcessWindowStyle.Hidden
+                    WindowStyle = ProcessWindowStyle.Hidden,
                 };
                 if (Environment.OSVersion.Version.Major >= 6)
                 {
@@ -2428,19 +2389,17 @@ namespace DrunkenBakery.OWAtray.GUI
                 }
                 else
                 {
-                    this.errorProvider1.SetError(
-                        this.txtInterval,
-                        Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_
-                        + MaxInterval.ToString());
+                    string errorMessage = Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_
+                        + MaxInterval.ToString();
+                    this.errorProvider1.SetError(this.txtInterval, errorMessage);
                     e.Cancel = true;
                 }
             }
             else
             {
-                this.errorProvider1.SetError(
-                    this.txtInterval,
-                    Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_
-                    + MaxInterval.ToString());
+                string errorMessage = Resources.Form1_txtInterval_Validating_Must_be_a_numeric_value_between_1_and_
+                    + MaxInterval.ToString();
+                this.errorProvider1.SetError(this.txtInterval, errorMessage);
                 e.Cancel = true;
             }
         }

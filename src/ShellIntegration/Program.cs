@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  DrunkenBakery OWA Tray Monitor
 //  OWAtray.DrunkenBakery.OWAtray.ShellIntegration
-// 
+//
 //  <copyright file="Program.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2012 The Drunken Bakery. All rights reserved.
 //  </copyright>
-// 
+//
 //  Author: IRS
 // ------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// </summary>
         private static readonly HashSet<string> ModernComposeUrlVersions = new HashSet<string>
         {
-            "Exchange2013", "Exchange2013_SP1", "Exchange2016", "Exchange2019", "ExchangeServerSE"
+            "Exchange2013", "Exchange2013_SP1", "Exchange2016", "Exchange2019", "ExchangeServerSE",
         };
 
         #endregion
@@ -80,12 +80,12 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// The do mapi.
         /// </summary>
         /// <param name="target">
-        /// The target. 
+        /// The target.
         /// </param>
         private static void DoMapi(string target)
         {
             // Set up our set of special-case characters
-            var specialCharacters = new HashSet<char> {'+', '^', '%', '~', '(', ')'};
+            var specialCharacters = new HashSet<char> { '+', '^', '%', '~', '(', ')' };
 
             // Which version of Exchange?
             var myUrl = ModernComposeUrlVersions.Contains(Settings.Default.Version)
@@ -149,6 +149,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                     {
                         SendKeys.SendWait(c.ToString(CultureInfo.InvariantCulture));
                     }
+
                     Thread.Sleep(100);
                     SendKeys.SendWait("{ENTER}");
                     foreach (string file in files)
@@ -167,11 +168,13 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                                 SendKeys.SendWait(c.ToString(CultureInfo.InvariantCulture));
                             }
                         }
+
                         Thread.Sleep(100);
                         SendKeys.SendWait("\"");
                         Thread.Sleep(100);
                         SendKeys.SendWait(" ");
                     }
+
                     Thread.Sleep(100);
                     SendKeys.SendWait("{ENTER}");
                 }
@@ -212,7 +215,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 // Define a class root for us
                 Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", string.Empty, "URL:MailTo Protocol");
                 Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "URL Protocol", string.Empty);
-                Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "EditFlags", new byte[] {0x2, 0x0, 0x0, 0x0});
+                Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto", "EditFlags", new byte[] { 0x2, 0x0, 0x0, 0x0 });
                 Registry.SetValue(@"HKEY_CLASSES_ROOT\OWA.Url.Mailto\DefaultIcon", string.Empty, "\"" + shell + "\",0");
                 Registry.SetValue(
                     @"HKEY_CLASSES_ROOT\OWA.Url.Mailto\shell\open\command", string.Empty, "\"" + shell + "\" mailto %1");
@@ -250,7 +253,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 Registry.SetValue(
                     @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto",
                     "EditFlags",
-                    new byte[] {0x2, 0x0, 0x0, 0x0});
+                    new byte[] { 0x2, 0x0, 0x0, 0x0 });
                 Registry.SetValue(
                     @"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail\OWAMapi\Protocols\mailto", "URL Protocol", string.Empty);
                 Registry.SetValue(
@@ -305,7 +308,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// The main.
         /// </summary>
         /// <param name="args">
-        /// The args. 
+        /// The args.
         /// </param>
         [STAThread]
         private static void Main(string[] args)
@@ -397,7 +400,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                     if (args.Length > 1)
                     {
                         string myPath = args[1];
-                        myPath = myPath.TrimEnd(new[] {'\\', '/'});
+                        myPath = myPath.TrimEnd(new[] { '\\', '/' });
                         Settings.Default.OwaUrl = myPath;
                         Settings.Default.Save();
                     }
@@ -577,7 +580,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// The shell owa.
         /// </summary>
         /// <param name="url">
-        /// The url. 
+        /// The url.
         /// </param>
         private static void ShellOwa(string url = "")
         {
@@ -656,7 +659,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
         /// The start ow ain ie.
         /// </summary>
         /// <param name="url">
-        /// The url. 
+        /// The url.
         /// </param>
         private static void StartOwAinIe(string url = "")
         {

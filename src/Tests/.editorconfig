@@ -1,0 +1,8 @@
+# Test methods/classes are self-documenting via their descriptive names; requiring an XML doc summary
+# on every one of them (SA1600) would just be repeating the method name back as a sentence.
+[*.cs]
+dotnet_diagnostic.SA1600.severity = none
+
+# No DocumentationFile is generated for this project (it has no consumers needing IntelliSense), so
+# StyleCop can't run its own documentation-content analysis here either; that's expected, not an issue.
+dotnet_diagnostic.SA0001.severity = none

@@ -1,11 +1,11 @@
 ﻿// ------------------------------------------------------------------
 //  OWAtray
 //  DrunkenBakery.OWAtray.Connections.Abstract.ConnectionState.cs
-//  
+//
 //  <copyright file="ConnectionState.cs" company="The Drunken Bakery">
 //      Copyright (c) 2009-2013 The Drunken Bakery. All rights reserved.
 //  </copyright>
-//  
+//
 //  Author: Iain Smith
 // ------------------------------------------------------------------
 namespace DrunkenBakery.OWAtray.Connections.Abstract
@@ -20,27 +20,27 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// <summary>
         /// The disconnected.
         /// </summary>
-        Disconnected, 
+        Disconnected,
 
         /// <summary>
         /// The connecting.
         /// </summary>
-        Connecting, 
+        Connecting,
 
         /// <summary>
         /// The connected.
         /// </summary>
-        Connected, 
+        Connected,
 
         /// <summary>
         /// The disconnecting.
         /// </summary>
-        Disconnecting, 
+        Disconnecting,
 
         /// <summary>
         /// The failed.
         /// </summary>
-        Failed
+        Failed,
     }
 
     /// <summary>

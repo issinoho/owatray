@@ -32,7 +32,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
             { "Exchange2010_SP3", "Exchange2010_SP2" },
             { "Exchange2016", "Exchange2013_SP1" },
             { "Exchange2019", "Exchange2013_SP1" },
-            { "ExchangeServerSE", "Exchange2013_SP1" }
+            { "ExchangeServerSE", "Exchange2013_SP1" },
         };
 
         #endregion
@@ -46,7 +46,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         /// unchanged.
         /// </summary>
         /// <param name="selectedVersion">
-        /// The version selected by the user (<see cref="AbstractConnection.ServerVersion"/>).
+        /// The version selected by the user (<see cref="DrunkenBakery.OWAtray.Connections.Abstract.AbstractConnection.ServerVersion"/>).
         /// </param>
         /// <returns>
         /// The wire-compatible version name to parse as an <c>ExchangeVersion</c> enum value.
@@ -64,7 +64,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         /// version aliases onto. Otherwise the candidate is returned unchanged.
         /// </summary>
         /// <param name="selectedVersion">
-        /// The version selected by the user (<see cref="AbstractConnection.ServerVersion"/>).
+        /// The version selected by the user (<see cref="DrunkenBakery.OWAtray.Connections.Abstract.AbstractConnection.ServerVersion"/>).
         /// </param>
         /// <param name="candidateVersion">
         /// The version that would otherwise be displayed.
