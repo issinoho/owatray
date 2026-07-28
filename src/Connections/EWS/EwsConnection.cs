@@ -12,6 +12,7 @@
 namespace DrunkenBakery.OWAtray.Connections.EWS
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Security;
@@ -63,6 +64,20 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
         /// The _time last checked.
         /// </summary>
         private DateTime timeLastChecked;
+
+        /// <summary>
+        /// Maps GUI-selectable server versions that have no distinct <see cref="ExchangeVersion"/> enum
+        /// value onto the closest wire-compatible one. Exchange 2016, 2019 and Server SE do not change
+        /// the EWS schema over Exchange 2013 SP1, and the bundled EWS Managed API predates all three, so
+        /// they negotiate using the 2013 SP1 schema.
+        /// </summary>
+        private static readonly Dictionary<string, string> WireVersionAliases = new Dictionary<string, string>
+        {
+            { "Exchange2010_SP3", "Exchange2010_SP2" },
+            { "Exchange2016", "Exchange2013_SP1" },
+            { "Exchange2019", "Exchange2013_SP1" },
+            { "ExchangeServerSE", "Exchange2013_SP1" }
+        };
 
         #endregion
 
@@ -135,10 +150,12 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                                             ? "Exchange2013_SP1"
                                             : this.service.ServerInfo.VersionString;
 
-                // Special case for 2010_SP2
-                if (thisVersion == "Exchange2010_SP2" && this.ServerVersion == "Exchange2010_SP3")
+                // Preserve the user's selection for versions that alias onto another wire version
+                string aliasedVersion;
+                if (WireVersionAliases.TryGetValue(this.ServerVersion, out aliasedVersion)
+                    && thisVersion == aliasedVersion)
                 {
-                    thisVersion = "Exchange2010_SP3";
+                    thisVersion = this.ServerVersion;
                 }
 
                 return thisVersion;
@@ -188,8 +205,14 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                     // Validate the server certificate
                     ServicePointManager.ServerCertificateValidationCallback = this.CertificateValidationCallBack;
 
-                    // Define service (special case for 2010_SP3 which does not have a unique enumeration in the library
-                    var thisVersion = this.ServerVersion == "Exchange2010_SP3" ? "Exchange2010_SP2" : this.ServerVersion;
+                    // Define service (map versions with no distinct enumeration in the library onto the
+                    // closest wire-compatible one)
+                    string thisVersion;
+                    if (!WireVersionAliases.TryGetValue(this.ServerVersion, out thisVersion))
+                    {
+                        thisVersion = this.ServerVersion;
+                    }
+
                     this.service = thisVersion == Resources.EwsConnection_Version_Default
                                        ? new ExchangeService()
                                        : new ExchangeService(

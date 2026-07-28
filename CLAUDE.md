@@ -57,10 +57,18 @@ GUI's `Form1`:
   upcoming appointments on a second timer. Supported server versions (the `ServerVersion`/`Version`
   strings, selectable in the GUI's `cmbExchangeVersion`) are `Default` (no explicit version — server
   auto-negotiates), `Exchange2007_SP1`, `Exchange2010`, `Exchange2010_SP1`, `Exchange2010_SP2`,
-  `Exchange2010_SP3`, `Exchange2013`, and `Exchange2013_SP1` (Office 365 reports as Exchange2013-family).
-  `Exchange2010_SP3` is special-cased in `EwsConnection.cs` (`Connect()` and the `Version` getter): the
-  EWS Managed API's `ExchangeVersion` enum has no distinct SP3 member, so the connection actually
-  negotiates as `Exchange2010_SP2` under the hood while still displaying/persisting `Exchange2010_SP3`.
+  `Exchange2010_SP3`, `Exchange2013`, `Exchange2013_SP1`, `Exchange2016`, `Exchange2019`, and
+  `ExchangeServerSE` (Office 365 reports as Exchange2013-family). The bundled EWS Managed API predates
+  Exchange 2016/2019/SE and its `ExchangeVersion` enum has no distinct member for any of them (nor for
+  2010 SP3) — `EwsConnection.WireVersionAliases` maps each of those onto the closest wire-compatible
+  enum value (2010 SP3 → 2010 SP2, 2016/2019/SE → 2013 SP1) when calling into the API, while
+  `Connect()`/the `Version` getter still display and persist the user's original selection. When adding
+  a future Exchange version this way, add it to `WireVersionAliases`, the `cmbExchangeVersion` items in
+  `Form1.Designer.cs`, and `ShellIntegration.Program.ModernComposeUrlVersions` if it uses the post-2013
+  OWA compose UI.
+  This only covers on-premises Exchange over Basic Auth — Exchange Online/Office 365 disabled EWS Basic
+  Auth for most tenants in October 2022, so connecting to a modern Microsoft 365 mailbox would require
+  adding OAuth 2.0 ("Modern Auth") support, which does not exist yet.
 - **`Connections/Proxy`** — `ConnectionFactory.CreateConnection(EmailType)`, a thin indirection layer so
   `Framework`/`GUI` never reference `Connections.EWS` directly. Add new providers here + a new
   `EmailType` value + a new `Connections/<Provider>` project, following the `EwsConnection` shape.
@@ -80,8 +88,9 @@ GUI's `Form1`:
   invoked by the native MAPI DLL. It reads settings written by the main app, opens a browser to OWA's
   "new mail"/"new appointment" URL (with MIME/attachment handling), and can drive an auto-login via
   `SendKeys` against the IE/OWA login window. The compose-URL format branches on the same
-  `ServerVersion` string as `EwsConnection`: any version containing `"Exchange2013"` uses the newer
-  compose-URL format, everything else (2007 SP1 through 2010 SP3) uses the legacy URL/MIME-URL format.
+  `ServerVersion` string as `EwsConnection`, via `Program.ModernComposeUrlVersions`: Exchange 2013 and
+  newer use the newer compose-URL format, everything from 2007 SP1 through 2010 SP3 uses the legacy
+  URL/MIME-URL format.
 - **`Mapi`** (`MapiDll.vcxproj`, native C++) — implements the classic Simple MAPI entry points
   (`MAPILogon`, `MAPISendMail`, etc., see `Mapi32.DEF`) so third-party Windows apps that "send via MAPI"
   hand off to OWAtray, which shells out to `ShellIntegration.exe` to actually compose the mail in a

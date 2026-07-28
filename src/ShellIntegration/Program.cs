@@ -27,6 +27,19 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
     /// </summary>
     internal static class Program
     {
+        #region Constants and Fields
+
+        /// <summary>
+        /// Server versions that use the post-2013 OWA compose UI (and therefore the "NewMail2013"
+        /// compose-URL format instead of the legacy MIME-URL one).
+        /// </summary>
+        private static readonly HashSet<string> ModernComposeUrlVersions = new HashSet<string>
+        {
+            "Exchange2013", "Exchange2013_SP1", "Exchange2016", "Exchange2019", "ExchangeServerSE"
+        };
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -75,7 +88,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             var specialCharacters = new HashSet<char> {'+', '^', '%', '~', '(', ')'};
 
             // Which version of Exchange?
-            var myUrl = Settings.Default.Version.Contains("Exchange2013")
+            var myUrl = ModernComposeUrlVersions.Contains(Settings.Default.Version)
                 ? Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail2013
                 : Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail +
                   Settings.Default.MimeURL;
@@ -114,7 +127,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 var files = Directory.GetFiles(target);
 
                 // What we do next depends on the version of Exchange
-                if (Settings.Default.Version.Contains("Exchange2013"))
+                if (ModernComposeUrlVersions.Contains(Settings.Default.Version))
                 {
                     // Exchange 2013
                     for (int f = 0;
@@ -592,7 +605,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             }
 
             // Which version of Exchange?
-            if (Settings.Default.Version.Contains("Exchange2013"))
+            if (ModernComposeUrlVersions.Contains(Settings.Default.Version))
             {
                 myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount + Settings.Default.NewMail2013;
             }
@@ -614,7 +627,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             }
 
             // If Exchange2013 then paste in address
-            if (Settings.Default.Version.Contains("Exchange2013"))
+            if (ModernComposeUrlVersions.Contains(Settings.Default.Version))
             {
                 // Wait for it to pop
                 Thread.Sleep(Settings.Default.PopupDelay);

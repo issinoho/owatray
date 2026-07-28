@@ -15,8 +15,8 @@ Website: http://www.owatray.com · Support: support@owatray.com
 - Calendar polling with reminders for upcoming appointments.
 - Autodiscovery of the EWS service URL and OWA URL from an email address, with the option to override
   either manually (e.g. for on-premise Exchange with non-standard URLs, or split-DNS setups).
-- Works against on-premise Exchange (with a selectable server version, e.g. Exchange 2007 SP1 through
-  2013 SP1) and Office 365.
+- Works against on-premise Exchange (with a selectable server version, from Exchange 2007 SP1 through
+  2019 and Server SE) and Office 365 — see [Supported Exchange versions](#supported-exchange-versions).
 - Notifications via the native Windows tray balloon, [Growl](http://growl.info), or
   [Snarl](http://snarlapp.com), plus an optional notification sound — pick one or combine them from the
   tray icon's Notifications menu.
@@ -78,10 +78,18 @@ The Account tab's server-version selector supports:
 | Exchange2010_SP3 | The EWS Managed API has no distinct enum value for SP3, so the connection actually negotiates as `Exchange2010_SP2` under the hood but is displayed/stored as SP3. |
 | Exchange2013 | Also covers Office 365, which reports as Exchange2013-family. |
 | Exchange2013_SP1 | |
+| Exchange2016 | Wire-compatible with Exchange 2013 SP1 — negotiates using the 2013 SP1 schema, since the EWS protocol didn't change and the bundled EWS Managed API predates this server version. |
+| Exchange2019 | Same as Exchange 2016 — negotiates using the 2013 SP1 schema. |
+| ExchangeServerSE (Subscription Edition) | Same as Exchange 2016/2019 — negotiates using the 2013 SP1 schema. |
 
-The same version also selects the OWA compose-URL format used for MAPI/shell integration: anything
-containing `Exchange2013` uses the newer compose-URL format, everything else uses the legacy
-2007–2010 format.
+The same version also selects the OWA compose-URL format used for MAPI/shell integration: Exchange
+2013 and newer (including Office 365) use the newer compose-URL format, everything from Exchange 2007
+through 2010 uses the legacy MIME-URL format.
+
+Note: this covers on-premises Exchange. For Exchange Online/Office 365, EWS Basic Authentication
+(username + password, which is all this app currently supports) was disabled for most tenants in
+October 2022 — connecting to a modern Microsoft 365 mailbox requires OAuth 2.0 ("Modern Auth"), which
+is not yet implemented.
 
 ## License
 
