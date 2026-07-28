@@ -2,13 +2,22 @@ name: Build
 
 # This solution is Windows-only: the GUI is WinForms with a COM interop reference, and Mapi is a
 # native C++ DLL built with the classic v110 (VS2012) toolset. There is no Linux/Mac build path.
+#
+# Every push to main builds and uploads workflow artifacts (fast feedback on whether the tip builds).
+# Pushing a version tag (v*) does the same build and additionally publishes a GitHub Release with the
+# installer attached - that's a deliberate, separate action from an ordinary push, so releases don't
+# happen on every commit. Tag it like the existing AssemblyVersion/PRODUCT_VERSION, e.g. `v3.5.1`.
 on:
   push:
     branches: [main]
+    tags: ["v*"]
 
 jobs:
   build:
     runs-on: windows-latest
+
+    permissions:
+      contents: write # only needed for the release step below, on tag pushes
 
     env:
       # Old (v110 / VS2012) toolset the native Mapi project was authored against. windows-latest ships
@@ -141,3 +150,14 @@ jobs:
           name: OWAtray-binaries
           path: bin\
           if-no-files-found: error
+
+      # Only runs on a version-tag push (see the `on:` trigger above) - an ordinary push to main just
+      # builds and stops at the artifact uploads above. The website's Download button links to this
+      # repo's releases page, so this is what makes that link resolve to something.
+      - name: Create release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: OWAtray ${{ github.ref_name }}
+          files: Installer\OWAtray.exe
+          generate_release_notes: true

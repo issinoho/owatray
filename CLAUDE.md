@@ -96,7 +96,13 @@ both `Win32` and `x64` overriding its old `v110` toolset to `v143` on the comman
 ship v110), mirrors the built GUI/ShellIntegration/library binaries into `bin\Secure\` (see the workflow
 file for why — that folder isn't produced by anything else in this repo), installs NSIS plus the
 third-party `nsProcess` plugin the `.nsi` requires, and uploads both the installer and the raw `bin\` as
-build artifacts. No test execution or release/tag publishing is wired in — just the build.
+build artifacts. No test execution is wired in — just the build.
+
+Pushing a version tag (`v*`, e.g. `v3.5.1`) does the same build and additionally publishes a GitHub
+Release named after the tag with the installer attached, via `softprops/action-gh-release`. An ordinary
+push to `main` never creates a release — only a tag push does, so cutting a release is a deliberate,
+separate action. The website's Download button links to this repo's releases page, so a release needs
+to exist there for that link to have anything to show.
 
 ## Branching / release convention
 
