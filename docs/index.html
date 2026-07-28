@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OWAtray — OWA Tray Monitor</title>
+<meta name="description" content="OWAtray puts your Exchange inbox and calendar in the Windows tray — unread counts, new-mail and appointment notifications, and MAPI integration for on-premises Outlook Web Access. Legacy software, offered as-is.">
+<meta property="og:title" content="OWAtray — OWA Tray Monitor">
+<meta property="og:description" content="A legacy Windows tray notifier for on-premises Exchange, offered as-is.">
+<meta property="og:image" content="owatray-icon.png">
+<meta name="theme-color" content="#17120d">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <img src="owatray-icon.png" alt="">
+      owatray
+    </a>
+    <nav class="nav-links">
+      <a href="#features" class="hide-mobile">Features</a>
+      <a href="#support" class="hide-mobile">Supported</a>
+      <a href="#legacy" class="hide-mobile">Legacy status</a>
+      <a href="https://github.com/issinoho/owatray">GitHub</a>
+      <a class="btn btn-accent" href="https://github.com/issinoho/owatray/releases">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-top">
+          <img class="hero-logo" src="owatray-icon.png" alt="OWAtray icon — a yellow envelope">
+          <span class="statusline"><span class="tag">legacy</span> offered as-is<span class="cursor"></span></span>
+        </div>
+        <h1>Your Exchange inbox, <span class="accent-word">right in the tray</span></h1>
+        <p class="lead">
+          OWAtray watches an on-premises Exchange mailbox and lets you know about new mail and upcoming
+          appointments without running Outlook — and hands off "send via MAPI" requests from other apps
+          straight to Outlook Web Access.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-accent" href="https://github.com/issinoho/owatray/releases">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 3v13"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+            Download for Windows
+          </a>
+          <a class="btn btn-ghost" href="https://github.com/issinoho/owatray">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 .5a12 12 0 0 0-3.79 23.4c.6.1.82-.26.82-.58v-2.23c-3.34.73-4.04-1.42-4.04-1.42-.55-1.38-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.58A12 12 0 0 0 12 .5Z"/></svg>
+            View source
+          </a>
+        </div>
+      </div>
+      <div class="termcard" aria-hidden="true">
+        <div class="termcard-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="path">scenario.xml</span>
+        </div>
+        <div class="termcard-body">
+          <div><span class="ln">1</span><span class="c">&lt;!-- polled every 5 minutes --&gt;</span></div>
+          <div><span class="ln">2</span><span class="k">EmailServer</span>: mail.contoso.local</div>
+          <div><span class="ln">3</span><span class="k">ServerVersion</span>: Exchange2019</div>
+          <div><span class="ln">4</span><span class="k">UseAutodiscovery</span>: true</div>
+          <div><span class="ln">5</span><span class="k">Notifications</span>: balloon, sound</div>
+          <div><span class="ln">6</span><span class="s">status: connected</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What it does</span>
+        <h2>A quiet, always-on watcher for your mailbox</h2>
+        <p>Sits in the tray, polls Exchange, and tells you what changed — nothing more.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m4 6 8 7 8-7"/></svg></div>
+          <h3>Unread mail at a glance</h3>
+          <p>Polls your inbox over Exchange Web Services on a configurable interval and shows the unread count and new-mail details as they arrive.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+          <h3>Calendar reminders</h3>
+          <p>Polls your calendar too, popping a reminder before upcoming appointments so you don't need Outlook open to catch them.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+          <h3>Balloon, Growl or Snarl</h3>
+          <p>Notify however you like: the native Windows tray balloon, <a href="http://growl.info">Growl</a>, <a href="http://snarlapp.com">Snarl</a>, or an audible alert — mix and match from the tray menu.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg></div>
+          <h3>MAPI hand-off</h3>
+          <p>Registers as a Simple MAPI provider — "Send to Mail Recipient" and similar actions from other Windows apps open a compose window in OWA instead of needing Outlook installed.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
+          <h3>Autodiscovery</h3>
+          <p>Finds your EWS service URL and OWA URL from just an email address, with manual overrides for non-standard servers or split-DNS setups.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg></div>
+          <h3>11 languages</h3>
+          <p>Localized into English, German, Italian, Turkish, Catalan, Macedonian, Russian, Polish, French, Spanish and Czech, by volunteer translators.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="support">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Compatibility</span>
+        <h2>Built for on-premises Exchange</h2>
+        <p>OWAtray talks to Exchange over classic EWS with a username and password. Here's what that does and doesn't cover today.</p>
+      </div>
+
+      <div class="difflog">
+        <div class="difflog-head">compatibility.diff</div>
+
+        <div class="diffline add">
+          <div class="gutter">+</div>
+          <div class="content">
+            <strong>On-premises Exchange</strong>, 2007 SP1 through Exchange 2019 and Server SE, via Basic Auth EWS
+            <span class="detail">The version dropdown covers every release below — pick the closest match, or leave it on autodetect.</span>
+          </div>
+        </div>
+        <div class="version-strip">
+          <span class="version-chip">2007 SP1</span>
+          <span class="version-chip">2010 / SP1 / SP2 / SP3</span>
+          <span class="version-chip">2013 / SP1</span>
+          <span class="version-chip">2016</span>
+          <span class="version-chip">2019</span>
+          <span class="version-chip">Server SE</span>
+        </div>
+
+        <div class="diffline add">
+          <div class="gutter">+</div>
+          <div class="content">
+            <strong>Autodiscovery</strong> or manual EWS/OWA URL configuration
+            <span class="detail">Works with split-DNS and non-standard internal URLs too.</span>
+          </div>
+        </div>
+        <div class="diffline add">
+          <div class="gutter">+</div>
+          <div class="content">
+            <strong>Domain or non-domain machines</strong>, with an optional web proxy
+          </div>
+        </div>
+
+        <div class="diffline rem">
+          <div class="gutter">−</div>
+          <div class="content">
+            <strong>Exchange Online / Microsoft 365</strong>
+            <span class="detail">Microsoft disabled EWS Basic Authentication for most tenants in October 2022. OWAtray only speaks Basic Auth, so it can't reach a modern Microsoft&nbsp;365 mailbox until OAuth ("Modern Auth") support is added.</span>
+          </div>
+        </div>
+        <div class="diffline rem">
+          <div class="gutter">−</div>
+          <div class="content">
+            <strong>macOS / Linux</strong>
+            <span class="detail">Windows-only WinForms application with a native COM component.</span>
+          </div>
+        </div>
+        <div class="diffline rem">
+          <div class="gutter">−</div>
+          <div class="content">
+            <strong>Official support</strong>
+            <span class="detail">Freeware, community-maintained — no SLA or guaranteed response.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="legacy">
+    <div class="wrap">
+      <div class="legacy-box">
+        <div class="kicker">// a note on legacy status</div>
+        <h2>This is legacy software, offered as-is</h2>
+        <p>
+          OWAtray's core dates back to 2009 and still targets .NET Framework 4.0. It works, and it's
+          actively kept building and lint-clean, but it isn't built with modern security or
+          authentication practices in mind.
+        </p>
+        <ul class="legacy-list">
+          <li><strong>No warranty, no SLA</strong> — used entirely at your own risk.</li>
+          <li><strong>Freeware</strong> — free to use, including at work, but not for resale or bundling into a commercial product.</li>
+          <li><strong>Passwords</strong> are protected with the OS's per-user data protection API, not a modern secrets vault.</li>
+          <li><strong>Best-effort maintenance</strong> — issues and pull requests are welcome on GitHub, with no guaranteed turnaround.</li>
+        </ul>
+        <p>If that trade-off works for your on-premises Exchange setup, it's a small, focused tool that does one job well.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="screenshots">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">A look inside</span>
+        <h2>Screenshots</h2>
+        <p>Coming soon — the tray icon, notifications, and settings screens.</p>
+      </div>
+      <div class="screens-window">
+        <div class="termcard-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="title">DrunkenBakery.OWAtray.GUI.exe</span>
+          <span></span>
+        </div>
+        <div class="screens-body">
+          <div class="inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+            <p>screenshots.zip — pending</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="download">
+    <div class="wrap">
+      <div class="cta-box">
+        <h2>Get OWAtray</h2>
+        <p>Download the installer from GitHub Releases. It installs per-user — no admin rights needed.</p>
+        <a class="btn btn-accent" href="https://github.com/issinoho/owatray/releases">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 3v13"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+          Download for Windows
+        </a>
+        <div class="requirements">
+          <span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
+            Windows 7 or later
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            .NET Framework 4.0
+          </span>
+          <span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m4 6 8 7 8-7"/></svg>
+            On-prem Exchange 2007 SP1–2019/SE with EWS enabled
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="owatray-icon.png" alt="">
+        owatray
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/issinoho/owatray">GitHub</a>
+        <a href="https://github.com/issinoho/owatray/blob/main/README.md">Documentation</a>
+        <a href="https://github.com/issinoho/owatray/blob/main/src/GUI/License.txt">License</a>
+        <a href="https://github.com/issinoho/owatray/releases">Releases</a>
+      </div>
+    </div>
+    <p class="footer-note">
+      OWAtray is freeware from The Drunken Bakery. Translations by Daniel Sabater, Christian Treudler,
+      pi511, Marc Lairet, Marco Procida, Aleksandr Bembel, Ryszard Ostrowski, Igor Vojnoski and Jiri
+      Kubinek. Not affiliated with or endorsed by Microsoft.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
