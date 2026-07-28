@@ -221,7 +221,7 @@ namespace DrunkenBakery.OWAtray.Framework
                         (EmailType)Enum.Parse(typeof(EmailType), node[ElementType].InnerText));
 
                 XmlElement xmlElementEmailAddress = node[ElementEmailAddress];
-                if (ElementEmailAddress != null)
+                if (xmlElementEmailAddress != null)
                 {
                     item.EmailAddress = xmlElementEmailAddress.InnerText;
                 }

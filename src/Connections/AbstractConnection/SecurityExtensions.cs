@@ -33,6 +33,11 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// </returns>
         public static string Decrypt(this string protectedPassword)
         {
+            if (protectedPassword.Length == 0)
+            {
+                return string.Empty;
+            }
+
             byte[] bytes = Convert.FromBase64String(protectedPassword);
             byte[] password = ProtectedData.Unprotect(bytes, null, DataProtectionScope.CurrentUser);
             return Encoding.Unicode.GetString(password);
@@ -49,6 +54,11 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         /// </returns>
         public static string Encrypt(this string password)
         {
+            if (password.Length == 0)
+            {
+                return string.Empty;
+            }
+
             byte[] bytes = Encoding.Unicode.GetBytes(password);
             byte[] protectedPassword = ProtectedData.Protect(bytes, null, DataProtectionScope.CurrentUser);
             return Convert.ToBase64String(protectedPassword);

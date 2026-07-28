@@ -163,5 +163,23 @@ namespace DrunkenBakery.OWAtray.Tests.Framework
             Assert.AreEqual(1, scenario.Connections.Count);
             Assert.AreEqual("factory@example.com", scenario.Connections[0].EmailAddress);
         }
+
+        [Test]
+        public void Load_ConnectionMissingEmailAddressElement_DoesNotThrow()
+        {
+            // Regression test: Scenario.Load() used to check the "EmailAddress" element-name constant
+            // for null (always true) instead of the parsed XmlElement, so a <Connection> node missing
+            // <EmailAddress> threw a NullReferenceException instead of leaving it unset.
+            File.WriteAllText(
+                this.scenarioFile,
+                "<?xml version=\"1.0\"?><Scenario><Connections><Connection><Type>Exchange</Type>"
+                + "</Connection></Connections></Scenario>");
+
+            var scenario = new Scenario { Connections = new EmailConnections(), ScenarioFile = this.scenarioFile };
+
+            Assert.DoesNotThrow(() => scenario.Load());
+            Assert.AreEqual(1, scenario.Connections.Count);
+            Assert.AreEqual(string.Empty, scenario.Connections[0].EmailAddress);
+        }
     }
 }

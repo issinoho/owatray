@@ -45,15 +45,15 @@ namespace DrunkenBakery.OWAtray.Tests.Connections
         }
 
         [Test]
-        public void EncryptThenDecrypt_EmptyString_RoundTrips()
+        public void Encrypt_EmptyString_ReturnsEmptyStringWithoutCallingDataProtectionApi()
         {
-            // Unlike the GUI and ShellIntegration copies of SecurityExtensions, this one (used by
-            // AbstractConnection.Password) has no empty-string short-circuit, so it still calls into
-            // the underlying data-protection API for an empty password. Locking in that it still
-            // round-trips correctly rather than throwing.
-            var encrypted = string.Empty.Encrypt();
+            Assert.AreEqual(string.Empty, string.Empty.Encrypt());
+        }
 
-            Assert.AreEqual(string.Empty, encrypted.Decrypt());
+        [Test]
+        public void Decrypt_EmptyString_ReturnsEmptyStringWithoutCallingDataProtectionApi()
+        {
+            Assert.AreEqual(string.Empty, string.Empty.Decrypt());
         }
 
         [Test]
