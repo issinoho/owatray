@@ -11,21 +11,45 @@ a Simple MAPI provider so other Windows apps can send mail through it, opening c
 browser against Outlook Web Access.
 
 This is old, StyleCop-formatted C# (targets .NET Framework 4.0, VS2012-era `.csproj`/`.sln` format) plus
-one native C++ DLL. There is no cross-platform build; it only builds and runs on Windows.
+one native C++ DLL. The end-to-end app (GUI, ShellIntegration, Mapi) only builds and runs on Windows —
+GUI/ShellIntegration are WinForms, Mapi is native C++ requiring the VC++ toolset. The non-UI class
+libraries (`Connections.*`, `Framework`, `Logging`, and the `Tests` project) have no Windows-only
+dependencies and build/run fine on Mono/Linux too (verified with Mono's MSBuild + `mono`); that's what
+makes the unit test suite runnable in a Linux dev/CI environment.
 
 ## Build
 
-Requires Windows with Visual Studio (or MSBuild) and the VC++ toolset for the native project. NuGet
-package restore is via `.nuget/NuGet.exe` (old-style packages.config restore, not `PackageReference`).
+On Windows: Visual Studio (or MSBuild) and the VC++ toolset for the native project. NuGet package
+restore is via `.nuget/NuGet.exe` — but that bundled `nuget.exe` is a ~2011-era client (v1.6) that can no
+longer talk to nuget.org (the legacy V2 OData feed it uses was retired); restore with a modern NuGet
+client instead (Visual Studio's own restore, a current `nuget.exe`, or `dotnet restore`/`dotnet add
+package` into the same `packages/` layout). `.nuget/nuget.targets` and `.nuget/nuget.exe` are symlinks to
+the real (differently-cased) `NuGet.targets`/`NuGet.exe` files, added so the `.csproj` files' lowercase
+`Import`/tool references resolve on case-sensitive filesystems (Linux/Mac) as well as Windows.
 
 ```
 nuget restore OWAtray.sln
 msbuild OWAtray.sln /p:Configuration=Release
 ```
 
-There is no CLI test runner and no test project in the solution — there is currently no automated test
-suite. Validate changes by building in Visual Studio and running `DrunkenBakery.OWAtray.GUI.exe` manually
-against a real (or test) Exchange/EWS account.
+### Tests
+
+`src/Tests` (`DrunkenBakery.OWAtray.Tests`, NUnit 3) covers the non-UI, non-network logic: `Scenario`
+XML save/load round-tripping, `AbstractConnection` defaults and encrypted-password storage,
+`ConnectionFactory`, the `EmailType`/`ConnectionState` description enums, and `ExchangeVersionResolver`.
+It does not and cannot cover `EwsConnection`'s actual EWS network calls, the WinForms `GUI` project, or
+`ShellIntegration`/`Mapi` (native, `SendKeys`/registry/COM-driven) — those need manual testing against a
+real Exchange/EWS account per the note below. Run the suite with NUnit's console runner:
+
+```
+msbuild OWAtray.sln /t:DrunkenBakery_OWAtray_Tests /p:Configuration=Debug
+nunit3-console src/Tests/bin/Debug/DrunkenBakery.OWAtray.Tests.dll
+```
+
+(On Linux, that's `mono path/to/nunit3-console.exe ...` — NUnit's console runner isn't bundled in the
+repo; fetch `NUnit.ConsoleRunner` the same way as any other package.) Validate everything else by
+building in Visual Studio and running `DrunkenBakery.OWAtray.GUI.exe` manually against a real (or test)
+Exchange/EWS account.
 
 The installer is built from `Installer/OWAtray.nsi` with NSIS (`makensis`), producing `OWAtray.exe`. Its
 `PRODUCT_VERSION` define and the `AssemblyVersion`/`AssemblyFileVersion` in
@@ -60,10 +84,10 @@ GUI's `Form1`:
   `Exchange2010_SP3`, `Exchange2013`, `Exchange2013_SP1`, `Exchange2016`, `Exchange2019`, and
   `ExchangeServerSE` (Office 365 reports as Exchange2013-family). The bundled EWS Managed API predates
   Exchange 2016/2019/SE and its `ExchangeVersion` enum has no distinct member for any of them (nor for
-  2010 SP3) — `EwsConnection.WireVersionAliases` maps each of those onto the closest wire-compatible
-  enum value (2010 SP3 → 2010 SP2, 2016/2019/SE → 2013 SP1) when calling into the API, while
-  `Connect()`/the `Version` getter still display and persist the user's original selection. When adding
-  a future Exchange version this way, add it to `WireVersionAliases`, the `cmbExchangeVersion` items in
+  2010 SP3) — `ExchangeVersionResolver` maps each of those onto the closest wire-compatible enum value
+  (2010 SP3 → 2010 SP2, 2016/2019/SE → 2013 SP1) when calling into the API, while `Connect()`/the
+  `Version` getter still display and persist the user's original selection. When adding a future
+  Exchange version this way, add it to `ExchangeVersionResolver`, the `cmbExchangeVersion` items in
   `Form1.Designer.cs`, and `ShellIntegration.Program.ModernComposeUrlVersions` if it uses the post-2013
   OWA compose UI.
   This only covers on-premises Exchange over Basic Auth — Exchange Online/Office 365 disabled EWS Basic
@@ -95,6 +119,7 @@ GUI's `Form1`:
   (`MAPILogon`, `MAPISendMail`, etc., see `Mapi32.DEF`) so third-party Windows apps that "send via MAPI"
   hand off to OWAtray, which shells out to `ShellIntegration.exe` to actually compose the mail in a
   browser.
+- **`Tests`** — NUnit unit tests for `Connections.*`/`Framework`/`Logging`; see "Tests" under Build above.
 
 Data flow at a glance: `Form1` loads a `Scenario` (XML) → builds an `EwsConnection` via
 `ConnectionFactory` → connection polls EWS on timers and raises `NewMail`/`NewAppointment`/`MessageCount`

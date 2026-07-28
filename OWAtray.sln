@@ -42,6 +42,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Shell
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DrunkenBakery.OWAtray.Mapi", "src\Mapi\MapiDll.vcxproj", "{902675FD-4CCE-4425-803D-D4323A9D50D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrunkenBakery.OWAtray.Tests", "src\Tests\DrunkenBakery.OWAtray.Tests.csproj", "{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{94D3AD21-4245-4700-8376-89D0705F28BC} = {94D3AD21-4245-4700-8376-89D0705F28BC}
+		{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616} = {BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}
+		{573E4922-2D13-4499-8EA9-7ED37DF363FE} = {573E4922-2D13-4499-8EA9-7ED37DF363FE}
+		{48C4C1F1-1A70-447D-AC52-FB77751FD5E9} = {48C4C1F1-1A70-447D-AC52-FB77751FD5E9}
+		{0EC3CCE1-E95E-45A9-9386-AD4E7A6C09C2} = {0EC3CCE1-E95E-45A9-9386-AD4E7A6C09C2}
+	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6499F1BB-6668-4E91-A575-238043E62495}"
 	ProjectSection(SolutionItems) = preProject
 		Installer\OWAtray.nsi = Installer\OWAtray.nsi
@@ -192,6 +201,18 @@ Global
 		{902675FD-4CCE-4425-803D-D4323A9D50D4}.Release|Win32.ActiveCfg = Release|Win32
 		{902675FD-4CCE-4425-803D-D4323A9D50D4}.Release|Win32.Build.0 = Release|Win32
 		{902675FD-4CCE-4425-803D-D4323A9D50D4}.Release|x86.ActiveCfg = Release|Win32
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Release|Win32.ActiveCfg = Release|Any CPU
+		{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

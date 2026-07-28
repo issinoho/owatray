@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BF3C5961-1D42-4782-8E68-08A23B6F2F6C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DrunkenBakery.OWAtray.Tests</RootNamespace>
+    <AssemblyName>DrunkenBakery.OWAtray.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\owatray\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=3.14.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NUnit.3.14.0\lib\net40\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Connections\AbstractConnectionTests.cs" />
+    <Compile Include="Connections\ConnectionFactoryTests.cs" />
+    <Compile Include="Connections\ConnectionStateTests.cs" />
+    <Compile Include="Connections\EmailTypeTests.cs" />
+    <Compile Include="Connections\ExchangeVersionResolverTests.cs" />
+    <Compile Include="Connections\SecurityExtensionsTests.cs" />
+    <Compile Include="Connections\TestEmailConnection.cs" />
+    <Compile Include="Framework\ScenarioTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Connections\AbstractConnection\DrunkenBakery.OWAtray.Connections.Abstract.csproj">
+      <Project>{94D3AD21-4245-4700-8376-89D0705F28BC}</Project>
+      <Name>DrunkenBakery.OWAtray.Connections.Abstract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Connections\EWS\DrunkenBakery.OWAtray.Connections.EWS.csproj">
+      <Project>{BCA28718-4FBA-4B2D-87CF-A4F4BDF69616}</Project>
+      <Name>DrunkenBakery.OWAtray.Connections.EWS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Connections\Proxy\DrunkenBakery.OWAtray.Connections.Proxy.csproj">
+      <Project>{573E4922-2D13-4499-8EA9-7ED37DF363FE}</Project>
+      <Name>DrunkenBakery.OWAtray.Connections.Proxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\DrunkenBakery.OWAtray.Framework.csproj">
+      <Project>{48C4C1F1-1A70-447D-AC52-FB77751FD5E9}</Project>
+      <Name>DrunkenBakery.OWAtray.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logging\DrunkenBakery.OWAtray.Logging.csproj">
+      <Project>{0EC3CCE1-E95E-45A9-9386-AD4E7A6C09C2}</Project>
+      <Name>DrunkenBakery.OWAtray.Logging</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -53,9 +53,17 @@ nuget restore OWAtray.sln
 msbuild OWAtray.sln /p:Configuration=Release
 ```
 
-There is no automated test suite — validate changes by running `DrunkenBakery.OWAtray.GUI.exe` against
-a real (or test) Exchange/EWS mailbox. See `CLAUDE.md` for a fuller breakdown of the project layout and
-conventions if you're working on the codebase.
+`src/Tests` has an NUnit unit test suite covering the non-UI logic (scenario save/load, connection
+defaults, the Exchange version resolver, etc.):
+
+```
+msbuild OWAtray.sln /t:DrunkenBakery_OWAtray_Tests /p:Configuration=Debug
+nunit3-console src/Tests/bin/Debug/DrunkenBakery.OWAtray.Tests.dll
+```
+
+It doesn't cover EWS network calls, the WinForms GUI, or the MAPI/shell integration — validate those by
+running `DrunkenBakery.OWAtray.GUI.exe` against a real (or test) Exchange/EWS mailbox. See `CLAUDE.md`
+for a fuller breakdown of the project layout and conventions if you're working on the codebase.
 
 ## Configuration
 
