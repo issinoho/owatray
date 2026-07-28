@@ -1,3 +1,5 @@
+<img src="docs/owatray-icon.png" width="96" height="96" alt="OWAtray icon">
+
 # OWAtray — OWA Tray Monitor
 
 OWAtray is a Windows system-tray application that watches an Exchange or Office 365 mailbox and lets
