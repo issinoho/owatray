@@ -64,6 +64,25 @@ polling, auto-login, run on startup, use the system default web proxy, on-Window
 SSL/TLS certificate validation, override autodiscovery validation). Settings are persisted to an XML
 "Scenario" file so they survive restarts.
 
+## Supported Exchange versions
+
+The Account tab's server-version selector supports:
+
+| Selection | Notes |
+|---|---|
+| Default | No explicit version is sent to the EWS Managed API — the server auto-negotiates. |
+| Exchange2007_SP1 | |
+| Exchange2010 | |
+| Exchange2010_SP1 | |
+| Exchange2010_SP2 | |
+| Exchange2010_SP3 | The EWS Managed API has no distinct enum value for SP3, so the connection actually negotiates as `Exchange2010_SP2` under the hood but is displayed/stored as SP3. |
+| Exchange2013 | Also covers Office 365, which reports as Exchange2013-family. |
+| Exchange2013_SP1 | |
+
+The same version also selects the OWA compose-URL format used for MAPI/shell integration: anything
+containing `Exchange2013` uses the newer compose-URL format, everything else uses the legacy
+2007–2010 format.
+
 ## License
 
 OWAtray is freeware (see `src/GUI/License.txt`). You may use it freely, including within a company,
