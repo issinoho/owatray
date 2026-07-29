@@ -19,6 +19,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
     using System.Reflection;
     using System.Threading;
     using System.Windows.Forms;
+    using DrunkenBakery.OWAtray.Logging;
     using DrunkenBakery.OWAtray.ShellIntegration.Properties;
     using Microsoft.Win32;
 
@@ -52,6 +53,8 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 return;
             }
 
+            LoggerProxy.Debug("Starting auto-login (Office365=" + Settings.Default.Office365 + ")");
+
             // Wait for it to load the page
             Thread.Sleep(Settings.Default.PopupDelay);
 
@@ -60,6 +63,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 ? Settings.Default.Office365Title
                 : Settings.Default.LoginTitle;
             var handle = NativeWin32.FindWindow(null, windowTitle);
+            LoggerProxy.Debug("Auto-login found window \"" + windowTitle + "\", handle=" + handle);
             NativeWin32.SetForegroundWindow(handle);
 
             // If this is Office365 then send extra keys
@@ -68,12 +72,13 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 SendKeys.SendWait("{ENTER}");
             }
 
-            // Tab stops
+            // Tab stops - deliberately never logging the decrypted password itself
             SendKeys.SendWait(Settings.Default.Password.Decrypt());
             Thread.Sleep(Settings.Default.SmallWait);
 
             // Then the paste
             SendKeys.SendWait("{ENTER}");
+            LoggerProxy.Debug("Auto-login SendKeys sequence complete");
         }
 
         /// <summary>
@@ -96,7 +101,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             try
             {
                 // Fire up the browser
-                Console.WriteLine("Browsing to " + myUrl);
+                LoggerProxy.Debug("MAPI: browsing to " + myUrl);
                 if (Settings.Default.Browser == "Yes")
                 {
                     Process.Start("IEXPLORE.EXE", myUrl);
@@ -113,11 +118,11 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
                 // Find IE window and send keys to it
                 var handle = NativeWin32.FindWindow(null, Settings.Default.IETitle);
-                Console.WriteLine("Handle1 = " + handle);
+                LoggerProxy.Debug("MAPI: window handle (title 1) = " + handle);
                 if (handle == 0)
                 {
                     handle = NativeWin32.FindWindow(null, Settings.Default.IETitle2);
-                    Console.WriteLine("Handle2 = " + handle);
+                    LoggerProxy.Debug("MAPI: window handle (title 2) = " + handle);
                 }
 
                 // Get focus
@@ -125,6 +130,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
                 // Build attachments list
                 var files = Directory.GetFiles(target);
+                LoggerProxy.Debug("MAPI: found " + files.Length + " attachment(s) in " + target);
 
                 // What we do next depends on the version of Exchange
                 if (ModernComposeUrlVersions.Contains(Settings.Default.Version))
@@ -197,7 +203,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                LoggerProxy.Log("MAPI: exception while composing message", ex);
             }
         }
 
@@ -209,6 +215,8 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             var bridge = Path.Combine(
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Settings.Default.MAPIBridge);
             var shell = Assembly.GetExecutingAssembly().Location;
+
+            LoggerProxy.Debug("Registering default mail handler: bridge=" + bridge + ", shell=" + shell);
 
             try
             {
@@ -297,10 +305,11 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 // Set default mail handler
                 Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Clients\Mail", string.Empty, "OWAMapi");
                 Registry.SetValue(@"HKEY_CURRENT_USER\SOFTWARE\Clients\Mail", string.Empty, "OWAMapi");
+                LoggerProxy.Log("Registered OWAtray as the default mail handler", true);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                LoggerProxy.Log("Exception while registering as the default mail handler", ex);
             }
         }
 
@@ -316,12 +325,12 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             // Check for arguments
             if (args.Length < 1)
             {
-                Console.WriteLine("Error - minimum of 1 argument required.");
+                LoggerProxy.Log("Error - minimum of 1 argument required.", false);
                 return;
             }
 
             // Which command?
-            Console.WriteLine("Received command: " + args[0]);
+            LoggerProxy.Log("Received command: " + args[0], true);
             switch (args[0].ToUpper())
             {
                 case "OWA":
@@ -354,6 +363,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                         Settings.Default.AutoLogin = args[1];
                         Settings.Default.Office365 = args[2];
                         Settings.Default.Save();
+                        LoggerProxy.Debug("AutoLogin=" + args[1] + ", Office365=" + args[2]);
                     }
 
                     break;
@@ -363,6 +373,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                     {
                         Settings.Default.Browser = args[1];
                         Settings.Default.Save();
+                        LoggerProxy.Debug("Browser=" + args[1]);
                     }
 
                     break;
@@ -403,6 +414,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                         myPath = myPath.TrimEnd(new[] { '\\', '/' });
                         Settings.Default.OwaUrl = myPath;
                         Settings.Default.Save();
+                        LoggerProxy.Debug("OwaUrl=" + myPath);
                     }
 
                     break;
@@ -410,6 +422,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                 case "ACCOUNT":
                     Settings.Default.UserAccount = args.Length > 1 ? args[1] : string.Empty;
                     Settings.Default.Save();
+                    LoggerProxy.Debug("UserAccount=" + Settings.Default.UserAccount);
                     break;
 
                 case "PASSWORD":
@@ -417,6 +430,9 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                     {
                         Settings.Default.Password = args[1].Length > 0 ? args[1].Encrypt() : string.Empty;
                         Settings.Default.Save();
+
+                        // Deliberately never logging the password itself, even encrypted.
+                        LoggerProxy.Debug("Password updated");
                     }
 
                     break;
@@ -445,16 +461,17 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
                         Settings.Default.Version = args[1];
                         Settings.Default.Save();
+                        LoggerProxy.Debug("Version=" + args[1]);
                     }
 
                     break;
 
                 default:
-                    Console.WriteLine("Unknown command");
+                    LoggerProxy.Log("Unknown command: " + args[0], false);
                     break;
             }
 
-            Console.WriteLine("Completed.");
+            LoggerProxy.Debug("Completed.");
         }
 
         /// <summary>
@@ -501,10 +518,11 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                     "IconsVisible",
                     0,
                     RegistryValueKind.DWord);
+                LoggerProxy.Log("Restored the previous default mail handler", true);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                LoggerProxy.Log("Exception while restoring the previous default mail handler", ex);
             }
         }
 
@@ -569,10 +587,12 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
                     Settings.Default.DefaultOpen = pathKey;
                     Settings.Default.Save();
                 }
+
+                LoggerProxy.Debug("Saved the previous default mail handler for later restore");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                LoggerProxy.Log("Exception while saving the previous default mail handler", ex);
             }
         }
 
@@ -587,7 +607,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount
                            + (url.Length > 0 ? "/" + url : string.Empty);
             Process.Start(myUrl);
-            Console.WriteLine("Browsing to " + myUrl);
+            LoggerProxy.Debug("SHELL: browsing to " + myUrl);
             AutoLogin();
         }
 
@@ -619,7 +639,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             }
 
             // Fire up the browser
-            Console.WriteLine("Browsing to " + myUrl);
+            LoggerProxy.Debug("MAILTO: browsing to " + myUrl);
             if (Settings.Default.Browser == "Yes")
             {
                 Process.Start("IEXPLORE.EXE", myUrl);
@@ -637,11 +657,11 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
 
                 // Find IE window and send keys to it
                 var handle = NativeWin32.FindWindow(null, Settings.Default.IETitle);
-                Console.WriteLine("Handle1 = " + handle);
+                LoggerProxy.Debug("MAILTO: window handle (title 1) = " + handle);
                 if (handle == 0)
                 {
                     handle = NativeWin32.FindWindow(null, Settings.Default.IETitle2);
-                    Console.WriteLine("Handle2 = " + handle);
+                    LoggerProxy.Debug("MAILTO: window handle (title 2) = " + handle);
                 }
 
                 // Focus window
@@ -666,7 +686,7 @@ namespace DrunkenBakery.OWAtray.ShellIntegration
             string myUrl = Settings.Default.OwaUrl + Settings.Default.UserAccount
                            + (url.Length > 0 ? "/" + url : string.Empty);
             Process.Start("IEXPLORE.EXE", myUrl);
-            Console.WriteLine("Browsing to " + myUrl);
+            LoggerProxy.Debug("OWA: browsing to " + myUrl);
             AutoLogin();
         }
 

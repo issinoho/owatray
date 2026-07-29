@@ -84,6 +84,19 @@ namespace DrunkenBakery.OWAtray.Logging
             Logger.ErrorException(message, ex);
         }
 
+        /// <summary>
+        /// Writes a deep diagnostic entry to the file log only - never mirrored to the on-screen
+        /// connection log, unlike <see cref="Log(string, bool)"/>/<see cref="Log(string, Exception)"/>
+        /// (both called from <c>Form1.AddLogEntry</c>, which also appends to the visible ListView).
+        /// </summary>
+        /// <param name="message">
+        /// The message.
+        /// </param>
+        public static void Debug(string message)
+        {
+            Logger.Debug(message);
+        }
+
         #endregion
 
         #region Methods

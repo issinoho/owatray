@@ -182,6 +182,13 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                     // State
                     this.ChangeState(ConnectionState.Connecting);
 
+                    this.RaiseDebugMessage(
+                        string.Format(
+                            "Connecting: autodiscovery={0}, windowsDomain={1}, serverVersion={2}",
+                            this.UseAutodiscovery,
+                            this.OnWindowsDomain,
+                            this.ServerVersion));
+
                     // Validate the server certificate
                     ServicePointManager.ServerCertificateValidationCallback = this.CertificateValidationCallBack;
 
@@ -224,6 +231,10 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                     // Connect using Autodiscover?
                     if (this.UseAutodiscovery)
                     {
+                        this.RaiseDebugMessage(
+                            "Starting autodiscovery (overrideValidation=" + this.OverrideAutodiscoveryValidation
+                            + ")");
+
                         if (this.OverrideAutodiscoveryValidation)
                         {
                             this.service.AutodiscoverUrl(this.EmailAddress, redirectionUrl => true);
@@ -232,6 +243,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                         {
                             this.service.AutodiscoverUrl(this.EmailAddress);
                         }
+
+                        this.RaiseDebugMessage("Autodiscovery resolved EWS URL to " + this.service.Url);
 
                         // Probe for autodiscover information
                         var autodiscoverService = new AutodiscoverService(ExchangeVersion.Exchange2007_SP1);
@@ -264,6 +277,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                         }
 
                         // Is this Internal or External ?
+                        this.RaiseDebugMessage("Autodiscovery reports client is external=" + autodiscoverService.IsExternal);
+
                         if (autodiscoverService.IsExternal == false)
                         {
                             // Probe for values
@@ -350,9 +365,18 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                                 this.DiscoveredUsername = userName;
                             }
                         }
+
+                        this.RaiseDebugMessage(
+                            string.Format(
+                                "Autodiscovery resolved: EWS URL={0}, OWA URL={1}, mailbox server={2}",
+                                this.DiscoveredServiceUrl,
+                                this.DiscoveredEmailUrl,
+                                this.DiscoveredEmailServer));
                     }
                     else
                     {
+                        this.RaiseDebugMessage("Using manually configured server URL " + this.DerivedServiceUrl);
+
                         if (this.DerivedServiceUrl.Length > 0)
                         {
                             var myUri = new Uri(this.DerivedServiceUrl);
@@ -372,6 +396,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
 
                     // Get initial timestamp
                     this.timeLastChecked = this.TimeOfNewestEmail().AddSeconds(1);
+                    this.RaiseDebugMessage("Initial timeLastChecked set to " + this.timeLastChecked);
 
                     // Initial Message
                     int count = this.UnreadCount;
@@ -384,6 +409,11 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                     this.appointmentPoll.Interval = Settings.Default.ApptInterval * 1000;
                     this.appointmentPoll.Elapsed += this.AppointmentPollElapsed;
                     this.appointmentPoll.Start();
+                    this.RaiseDebugMessage(
+                        string.Format(
+                            "Started poll timers: mail every {0}s, appointments every {1}s",
+                            this.Interval,
+                            Settings.Default.ApptInterval));
 
                     // Set timeout
                     this.service.Timeout = (this.Interval * 1000) - 500;
@@ -433,10 +463,12 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                 this.appointmentPoll.Stop();
                 this.appointmentPoll.Elapsed -= this.AppointmentPollElapsed;
                 this.service = null;
+                this.RaiseDebugMessage("Stopped poll timers");
                 this.ChangeState(ConnectionState.Disconnected);
             }
-            catch
+            catch (Exception ex)
             {
+                this.RaiseDebugMessage("Exception while disconnecting: " + ex.Message);
             }
         }
 
@@ -483,6 +515,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                         };
                     message.ToRecipients.Add(recipient);
                     message.Send();
+                    this.RaiseDebugMessage("Sent test message \"" + subject + "\"");
                 }
                 catch (Exception ex)
                 {
@@ -543,6 +576,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                 return true;
             }
 
+            this.RaiseDebugMessage("Server certificate validation errors: " + sslPolicyErrors);
+
             // If there are errors in the certificate chain, look at each error to determine the cause.
             if ((sslPolicyErrors & SslPolicyErrors.RemoteCertificateChainErrors) == 0)
             {
@@ -550,13 +585,20 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                 return false;
             }
 
-            return chain == null
-                   ||
-                   chain.ChainStatus.Where(
-                       status =>
-                       (certificate.Subject != certificate.Issuer)
-                       || (status.Status != X509ChainStatusFlags.UntrustedRoot)).All(
-                           status => status.Status == X509ChainStatusFlags.NoError);
+            bool trusted = chain == null
+                           ||
+                           chain.ChainStatus.Where(
+                               status =>
+                               (certificate.Subject != certificate.Issuer)
+                               || (status.Status != X509ChainStatusFlags.UntrustedRoot)).All(
+                                   status => status.Status == X509ChainStatusFlags.NoError);
+
+            if (!trusted)
+            {
+                this.RaiseDebugMessage("Rejecting server certificate: chain is not trusted");
+            }
+
+            return trusted;
         }
 
         /// <summary>
@@ -586,6 +628,9 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
             {
                 try
                 {
+                    this.RaiseDebugMessage(
+                        "Checking for appointments in the next " + Settings.Default.ApptWindow + " minutes");
+
                     // Interrogate default Calendar
                     var calendarView = new CalendarView(
                         DateTime.Now, DateTime.Now.AddMinutes(Convert.ToDouble(Settings.Default.ApptWindow)))
@@ -594,6 +639,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                         };
                     FindItemsResults<Appointment> findResults =
                         this.service.FindAppointments(WellKnownFolderName.Calendar, calendarView);
+
+                    this.RaiseDebugMessage("Found " + findResults.Items.Count + " appointments in the window");
 
                     // Process each item.
                     foreach (Appointment myItem in findResults.Items)
@@ -614,14 +661,17 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                         string myAccessUrl = this.SupportsDirectMessageAccess
                                                  ? myItem.WebClientReadFormQueryString
                                                  : string.Empty;
+                        this.RaiseDebugMessage(
+                            string.Format("Processing appointment \"{0}\" starting in {1} min", mySubject, duration));
                         if (duration > 0)
                         {
                             this.RaiseNewAppointment(duration, myTime, mySubject, myLocation, myAccessUrl);
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    this.RaiseDebugMessage("Exception while checking for appointments: " + ex.Message);
                 }
             }
         }
@@ -664,7 +714,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                     }
 
                     // Define filters collection
-                    // RaiseLogMessage("Checking for mail after " + _timeLastChecked);
+                    this.RaiseDebugMessage(
+                        "Checking for mail after " + this.timeLastChecked + " (unread count=" + count + ")");
                     var filters = new SearchFilter.SearchFilterCollection(LogicalOperator.And)
                         {
                             new SearchFilter.IsEqualTo(EmailMessageSchema.IsRead, false),
@@ -678,7 +729,7 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                     // Continue paging while there are more items to fetch
                     while (moreItems)
                     {
-                        // RaiseLogMessage("Looking for items...");
+                        this.RaiseDebugMessage("Looking for items (offset=" + offset + ")...");
 
                         // Item view
                         var view = new ItemView(Settings.Default.BatchAmount, offset, OffsetBasePoint.Beginning)
@@ -695,13 +746,11 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                         FindItemsResults<Item> findResults = this.service.FindItems(
                             WellKnownFolderName.Inbox, filters, view);
 
-                        // RaiseLogMessage("Found " + findResults.Items.Count + " messages");
+                        this.RaiseDebugMessage("Found " + findResults.Items.Count + " messages");
 
                         // Process each item.
                         foreach (EmailMessage myItem in findResults.Items)
                         {
-                            // RaiseLogMessage("Processing message");
-
                             // Get the email details
                             var ps = new PropertySet(BasePropertySet.FirstClassProperties);
 
@@ -712,6 +761,8 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                                                      ? myItem.WebClientReadFormQueryString
                                                      : string.Empty;
                             DateTime myTime = myItem.DateTimeReceived;
+
+                            this.RaiseDebugMessage("Processing message \"" + mySubject + "\"");
 
                             // Update timestamp
                             this.timeLastChecked = myTime.AddSeconds(1);
@@ -733,8 +784,9 @@ namespace DrunkenBakery.OWAtray.Connections.EWS
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    this.RaiseDebugMessage("Exception while checking for mail: " + ex.Message);
                 }
             }
         }

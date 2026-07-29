@@ -123,8 +123,8 @@ GUI's `Form1`:
 - **`Connections/AbstractConnection`** — the `IEmailInterface` contract and `AbstractConnection` base
   class every mail-provider connection implements: connect/disconnect, polling `Interval`, encrypted
   password storage (`EncryptedPassword`/`Password` via `SecurityExtensions.Encrypt/Decrypt`), and events
-  (`NewMail`, `NewAppointment`, `MessageCount`, `LogMessage`, `LogException`, `ConnectedStateChange`).
-  `EmailType` is the enum of supported providers (currently only `Exchange`).
+  (`NewMail`, `NewAppointment`, `MessageCount`, `LogMessage`, `LogException`, `ConnectedStateChange`,
+  `DebugMessage`). `EmailType` is the enum of supported providers (currently only `Exchange`).
 - **`Connections/EWS`** — `EwsConnection`, the only concrete connection today. Wraps the EWS Managed API
   (`Microsoft.Exchange.WebServices.dll` in `lib/`) to autodiscover/connect to Exchange or Office 365,
   poll the inbox on a `System.Timers.Timer` for unread count / new mail, and poll the calendar for
@@ -147,7 +147,16 @@ GUI's `Form1`:
   `Framework`/`GUI` never reference `Connections.EWS` directly. Add new providers here + a new
   `EmailType` value + a new `Connections/<Provider>` project, following the `EwsConnection` shape.
 - **`Logging`** — `LoggerProxy` wraps NLog (configured via `packages.config`/NLog.config) and defines the
-  `Severity` enum used by connection log events.
+  `Severity` enum used by connection log events. Two tiers: `Log(string, bool)`/`Log(string, Exception)`
+  (Info/Error) are what `Form1.AddLogEntry` writes for every entry that also appears in the on-screen
+  connection log; `Debug(string)` is a separate, file-only tier for deep diagnostic detail (EWS poll
+  cycles, item counts, autodiscovery steps, scenario load/save, the ShellIntegration browser/auto-login
+  flow) that's never shown on screen — routed via each `AbstractConnection`/`Scenario`'s `DebugMessage`
+  event straight to `LoggerProxy.Debug` in `Form1`, bypassing `AddLogEntry`/the `ListView` entirely. Both
+  tiers land in the same rotated file (`NLog.config`'s `minlevel="Debug"`, 7-day archive) at
+  `LoggerProxy.Filename`. This is a separate log from the native `Mapi` DLL's own
+  `%LOCALAPPDATA%\OWAtray\logs\debug.log` (see `MAPI.md`) — native code can't use NLog, so the two
+  logging systems are independent.
 - **`Audio`** — `AudioHelper`, plays the notification sound.
 - **`GUI`** — the actual tray app. `Program.cs` is the WinForms entry point; almost all application
   logic (config UI, tray icon/menu, wiring connection events to balloon/audio notifications, polling
@@ -163,7 +172,9 @@ GUI's `Form1`:
   newer use the newer compose-URL format, everything from 2007 SP1 through 2010 SP3 uses the legacy
   URL/MIME-URL format. It's also what the GUI's Advanced menu shells out to (elevated, via `runas`) to
   register/unregister OWAtray as the system's default mail handler (`registry`/`restore` arguments to
-  `Program.Main`) — see `REGISTRY.md` for the exact registry keys involved.
+  `Program.Main`) — see `REGISTRY.md` for the exact registry keys involved. References `Logging` and logs
+  via `LoggerProxy` (deep detail via `Debug`, real errors via `Log`) — since this process is launched
+  hidden with no console attached, that file log is the only way to see what it did.
 - **`Mapi`** (`MapiDll.vcxproj`, native C++) — implements the classic Simple MAPI entry points
   (`MAPILogon`, `MAPISendMail`, etc., see `Mapi32.DEF`) so third-party Windows apps that "send via MAPI"
   hand off to OWAtray, which shells out to `ShellIntegration.exe` to actually compose the mail in a

@@ -587,6 +587,7 @@ namespace DrunkenBakery.OWAtray.GUI
             // Create our whole universe
             this.scenario = ScenarioFactory.CreateScenario(filePath);
             this.scenario.ScenarioEvent += this.ScenarioScenarioEvent;
+            this.scenario.DebugMessage += this.DebugLogHandler;
 
             // Set up event handling
             this.WireUpConnectionEvents();
@@ -596,6 +597,7 @@ namespace DrunkenBakery.OWAtray.GUI
             {
                 // Create the new entry
                 this.connection = ConnectionFactory.CreateConnection(EmailType.Exchange);
+                LoggerProxy.Debug("Created a new " + this.connection.Type + " connection (no existing scenario)");
                 this.scenario.Connections.Add(this.connection);
                 this.scenario.Save();
             }
@@ -1854,6 +1856,19 @@ namespace DrunkenBakery.OWAtray.GUI
         }
 
         /// <summary>
+        ///     Routes deep diagnostic messages (from a <see cref="Scenario"/> or connection's
+        ///     <c>DebugMessage</c> event) straight to the file log - unlike <see cref="AddLogEntry(string, Severity)"/>,
+        ///     this never touches the on-screen connection log.
+        /// </summary>
+        /// <param name="message">
+        ///     The message.
+        /// </param>
+        private void DebugLogHandler(string message)
+        {
+            LoggerProxy.Debug(message);
+        }
+
+        /// <summary>
         ///     The select autodiscovery options.
         /// </summary>
         private void SelectAutodiscoveryOptions()
@@ -2395,6 +2410,7 @@ namespace DrunkenBakery.OWAtray.GUI
             {
                 item.LogMessage -= this.AddLogEntry;
                 item.LogException -= this.AddLogEntry;
+                item.DebugMessage -= this.DebugLogHandler;
                 item.ConnectedStateChange -= this.ConnectedStateHandler;
                 item.NewMail -= this.NewMailHandler;
                 item.NewAppointment -= this.NewAppointmentHandler;
@@ -2520,6 +2536,7 @@ namespace DrunkenBakery.OWAtray.GUI
             {
                 item.LogMessage += this.AddLogEntry;
                 item.LogException += this.AddLogEntry;
+                item.DebugMessage += this.DebugLogHandler;
                 item.ConnectedStateChange += this.ConnectedStateHandler;
                 item.NewMail += this.NewMailHandler;
                 item.NewAppointment += this.NewAppointmentHandler;

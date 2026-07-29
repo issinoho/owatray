@@ -86,6 +86,13 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         }
 
         /// <summary>
+        /// Deep diagnostic detail (poll cycles, item counts, autodiscovery steps, connect/disconnect
+        /// lifecycle, etc.) intended for the file log only - unlike <see cref="LogMessage"/>/
+        /// <see cref="LogException"/>, this is never surfaced in the on-screen connection log.
+        /// </summary>
+        public event Action<string> DebugMessage;
+
+        /// <summary>
         /// The log exception.
         /// </summary>
         public event Action<string, Exception> LogException;
@@ -408,6 +415,21 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Raises a deep diagnostic message, intended for the file log only. See
+        /// <see cref="DebugMessage"/>.
+        /// </summary>
+        /// <param name="message">
+        /// The message.
+        /// </param>
+        protected virtual void RaiseDebugMessage(string message)
+        {
+            if (this.DebugMessage != null)
+            {
+                this.DebugMessage(string.Format("[{0}] - {1}", this.EmailAddress, message));
+            }
+        }
 
         /// <summary>
         /// The raise exception.

@@ -28,6 +28,12 @@ namespace DrunkenBakery.OWAtray.Connections.Abstract
         event Action<IEmailInterface, ConnectionState> ConnectedStateChange;
 
         /// <summary>
+        /// Deep diagnostic detail intended for the file log only - never surfaced in the on-screen
+        /// connection log, unlike <see cref="LogMessage"/>/<see cref="LogException"/>.
+        /// </summary>
+        event Action<string> DebugMessage;
+
+        /// <summary>
         /// The log exception.
         /// </summary>
         event Action<string, Exception> LogException;

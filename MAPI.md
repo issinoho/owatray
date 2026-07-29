@@ -64,6 +64,11 @@ attachments gets a blank OWA compose window with nothing pre-filled.
 
 ## Logging and temp files
 
+This is a separate log from the managed side of the app (`GUI`/`ShellIntegration`/`Connections.*`, which
+log via `LoggerProxy`/NLog to a rotated text file at `LoggerProxy.Filename` — see `CLAUDE.md`'s `Logging`
+bullet). Native code can't use NLog, so `Mapi` has always had its own file and its own mechanism; the two
+are independent and don't share a location or format.
+
 Every export above (except `MAPIAddress`/`MAPIDetails`/`MAPIResolveName`/`MAPIFreeBuffer`/
 `GetMapiDllVersion`) logs one timestamped line through a shared `WriteLogLine()` helper, naming the
 function that was called (`MAPISendMail` logs several extra lines tracing its own progress — the temp

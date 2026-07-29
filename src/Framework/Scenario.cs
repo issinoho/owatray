@@ -165,6 +165,13 @@ namespace DrunkenBakery.OWAtray.Framework
         /// </summary>
         public event Action<string> ScenarioEvent;
 
+        /// <summary>
+        ///     Deep diagnostic detail for <see cref="Load()"/>/<see cref="Load(string)"/>/<see cref="Save()"/>
+        ///     (filename only - never the password field, even encrypted), intended for the file log
+        ///     only, unlike <see cref="ScenarioEvent"/> which is user-visible.
+        /// </summary>
+        public event Action<string> DebugMessage;
+
         #endregion
 
         #region Public Properties
@@ -199,8 +206,11 @@ namespace DrunkenBakery.OWAtray.Framework
         /// </param>
         public void Load(string filename)
         {
+            this.RaiseDebugMessage("Loading scenario from " + filename);
+
             if (!File.Exists(filename))
             {
+                this.RaiseDebugMessage("Scenario file " + filename + " does not exist, nothing to load");
                 return;
             }
 
@@ -214,6 +224,7 @@ namespace DrunkenBakery.OWAtray.Framework
             XmlNodeList connections = doc.SelectNodes(SearchConnection);
             if (connections == null)
             {
+                this.RaiseDebugMessage("Scenario file " + filename + " has no connections to load");
                 return;
             }
 
@@ -354,6 +365,9 @@ namespace DrunkenBakery.OWAtray.Framework
                 // Add to collection
                 this.Connections.Add(item);
             }
+
+            this.RaiseDebugMessage(
+                "Loaded scenario from " + filename + " (" + this.Connections.Count + " connections)");
         }
 
         /// <summary>
@@ -376,6 +390,14 @@ namespace DrunkenBakery.OWAtray.Framework
             }
         }
 
+        private void RaiseDebugMessage(string message)
+        {
+            if (this.DebugMessage != null)
+            {
+                this.DebugMessage(message);
+            }
+        }
+
         /// <summary>
         ///     The save.
         /// </summary>
@@ -384,6 +406,8 @@ namespace DrunkenBakery.OWAtray.Framework
         /// </param>
         private void Save(string filename)
         {
+            this.RaiseDebugMessage("Saving scenario to " + filename);
+
             try
             {
                 using (XmlWriter writer = XmlWriter.Create(filename))
@@ -432,6 +456,9 @@ namespace DrunkenBakery.OWAtray.Framework
                     writer.WriteEndElement();
                     writer.WriteEndDocument();
                 }
+
+                this.RaiseDebugMessage(
+                    "Saved scenario to " + filename + " (" + this.Connections.Count + " connections)");
             }
             catch (Exception ex)
             {
