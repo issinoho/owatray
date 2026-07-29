@@ -99,10 +99,12 @@ third-party `nsProcess` plugin the `.nsi` requires, and uploads both the install
 build artifacts. No test execution is wired in — just the build.
 
 Pushing a version tag (`v*`, e.g. `v3.5.1`) does the same build and additionally publishes a GitHub
-Release named after the tag with the installer attached, via `softprops/action-gh-release`. An ordinary
-push to `main` never creates a release — only a tag push does, so cutting a release is a deliberate,
-separate action. The website's Download button links to this repo's releases page, so a release needs
-to exist there for that link to have anything to show.
+Release named after the tag, via `softprops/action-gh-release`, with two assets attached: the installer
+and `OWAtray-website.zip` (a zip of `docs\`, packaged as a standalone offline-hostable snapshot of the
+site for that version — GitHub Pages itself deploys straight from `docs\` independently of this, on
+every push). An ordinary push to `main` never creates a release — only a tag push does, so cutting a
+release is a deliberate, separate action. The website's Download button links to this repo's releases
+page, so a release needs to exist there for that link to have anything to show.
 
 ## Branching / release convention
 

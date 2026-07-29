@@ -150,12 +150,23 @@ jobs:
           if-no-files-found: error
 
       # Only runs on a version-tag push (see the `on:` trigger above) - an ordinary push to main just
-      # builds and stops at the artifact uploads above. The website's Download button links to this
-      # repo's releases page, so this is what makes that link resolve to something.
+      # builds and stops at the artifact uploads above.
+      - name: Package website
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: Compress-Archive -Path docs\* -DestinationPath OWAtray-website.zip
+
+      # The website's Download button links to this repo's releases page, so this is what makes that
+      # link resolve to something. The zipped docs\ site is attached alongside the installer as a
+      # standalone, offline-hostable snapshot of what's live at https://issinoho.github.io/owatray/ for
+      # this version - GitHub Pages itself deploys straight from docs\ on every push, independently of
+      # this release step.
       - name: Create release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           name: OWAtray ${{ github.ref_name }}
-          files: Installer\OWAtray.exe
+          files: |
+            Installer\OWAtray.exe
+            OWAtray-website.zip
           generate_release_notes: true
