@@ -6,6 +6,7 @@
 #include <fstream>
 #include <direct.h>
 #include <tchar.h>
+#include <mutex>
 using namespace std;
 
 #define MAX_RECIPS  2000
@@ -25,6 +26,14 @@ DWORD tId = 0;
 // Used to make each MAPISendMail's temp attachment folder unique - see GetOwatrayLocalAppDataDir /
 // MAPISendMail below.
 static LONG g_sendCounter = 0;
+
+// This DLL is loaded in-process by whatever app calls MAPISendMail, and Simple MAPI doesn't promise
+// callers only do that from one thread - two sends racing on the same debug.log or the same sweep of
+// %LOCALAPPDATA%\OWAtray\mapi\ could interleave writes or double-delete a folder mid-enumeration.
+// g_logMutex guards the log file only; g_tempMutex guards the temp-folder sweep/create only. Neither
+// is ever held while acquiring the other, so there's no lock-ordering/deadlock concern between them.
+static std::mutex g_logMutex;
+static std::mutex g_tempMutex;
 
 #define   MAPI_MESSAGE_TYPE     0
 #define   MAPI_RECIPIENT_TYPE   1
@@ -115,7 +124,8 @@ string GetOwatrayLocalAppDataDir(const char *subfolder)
 // logs through here instead of opening its own ofstream, so there's a single place that creates the
 // directory and checks the file actually opened - previously only MAPISendMail created the
 // directory first, so every other export's log line was silently dropped on a machine where
-// MAPISendMail hadn't already run at least once.
+// MAPISendMail hadn't already run at least once. Serialized by g_logMutex, since two threads each
+// opening their own ofstream onto the same file could otherwise interleave writes.
 //
 void WriteLogLine(const string &message)
 {
@@ -123,12 +133,110 @@ void WriteLogLine(const string &message)
 	if (logDir.empty())
 		return;
 
-	ofstream File((logDir + "\\debug.log").c_str(), ios::app);
+	std::lock_guard<std::mutex> lock(g_logMutex);
+
+	string logPath = logDir + "\\debug.log";
+
+	// Keep the log from growing forever: once it passes ~2MB, roll it into a single ".old" backup
+	// (replacing whatever was there before) and start fresh, rather than appending indefinitely.
+	const ULONGLONG MAX_LOG_BYTES = 2ULL * 1024 * 1024;
+	WIN32_FILE_ATTRIBUTE_DATA attrs;
+	if (GetFileAttributesExA(logPath.c_str(), GetFileExInfoStandard, &attrs))
+	{
+		ULARGE_INTEGER size;
+		size.LowPart = attrs.nFileSizeLow;
+		size.HighPart = attrs.nFileSizeHigh;
+		if (size.QuadPart > MAX_LOG_BYTES)
+		{
+			string backupPath = logDir + "\\debug.log.old";
+			DeleteFileA(backupPath.c_str());
+			MoveFileA(logPath.c_str(), backupPath.c_str());
+		}
+	}
+
+	ofstream File(logPath.c_str(), ios::app);
 	if (!File.is_open())
 		return;
 
 	File << "\r\n" << gettimestring() << " " << message;
 	File.close();
+}
+
+//
+// Deletes every file directly inside folder, then the (now-empty) folder itself. The per-send
+// attachment folders this is used on only ever contain flat files (MAPISendMail copies attachments
+// straight into them, no subfolders), so this doesn't need to recurse.
+//
+void DeleteDirectoryContents(const string &folder)
+{
+	WIN32_FIND_DATAA findData;
+	HANDLE hFind = FindFirstFileA((folder + "\\*").c_str(), &findData);
+	if (hFind != INVALID_HANDLE_VALUE)
+	{
+		do
+		{
+			string name = findData.cFileName;
+			if (name == "." || name == "..")
+				continue;
+
+			if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+				DeleteFileA((folder + "\\" + name).c_str());
+		}
+		while (FindNextFileA(hFind, &findData));
+
+		FindClose(hFind);
+	}
+
+	RemoveDirectoryA(folder.c_str());
+}
+
+//
+// Sweeps %LOCALAPPDATA%\OWAtray\mapi\ for per-send attachment folders left behind by earlier calls
+// and deletes any older than a day. Nothing else ever cleans these up - each MAPISendMail creates one
+// but never removes it (ShellIntegration.exe, the actual reader, has no reason to either, since it
+// doesn't know if the file copy has been fully consumed by the browser yet) - so without this sweep
+// they'd accumulate under that folder forever. A day is a generous margin: a folder is normally only
+// alive for as long as it takes ShellIntegration.exe to read the files back out of it at
+// browser-launch time, i.e. seconds.
+//
+void CleanupOldTempFolders(const string &attachmentsDir)
+{
+	const double MAX_AGE_HOURS = 24.0;
+
+	WIN32_FIND_DATAA findData;
+	HANDLE hFind = FindFirstFileA((attachmentsDir + "\\*").c_str(), &findData);
+	if (hFind == INVALID_HANDLE_VALUE)
+		return;
+
+	FILETIME nowFileTime;
+	GetSystemTimeAsFileTime(&nowFileTime);
+	ULARGE_INTEGER now;
+	now.LowPart = nowFileTime.dwLowDateTime;
+	now.HighPart = nowFileTime.dwHighDateTime;
+
+	do
+	{
+		if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+			continue;
+
+		string name = findData.cFileName;
+		if (name == "." || name == "..")
+			continue;
+
+		ULARGE_INTEGER modified;
+		modified.LowPart = findData.ftLastWriteTime.dwLowDateTime;
+		modified.HighPart = findData.ftLastWriteTime.dwHighDateTime;
+
+		// FILETIME ticks are 100-nanosecond units.
+		double ageHours = ((double) (now.QuadPart - modified.QuadPart)) / 10000000.0 / 3600.0;
+		if (ageHours < MAX_AGE_HOURS)
+			continue;
+
+		DeleteDirectoryContents(attachmentsDir + "\\" + name);
+	}
+	while (FindNextFileA(hFind, &findData));
+
+	FindClose(hFind);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -237,6 +345,12 @@ ULONG FAR PASCAL MAPISendMail (LHANDLE lhSession, ULONG ulUIParam, MapiMessage *
 	string attachmentsDir = GetOwatrayLocalAppDataDir("mapi");
 	if (!attachmentsDir.empty())
 	{
+		std::lock_guard<std::mutex> lock(g_tempMutex);
+
+		// Sweep anything left behind by earlier sends before creating this one, rather than on
+		// every call - keeps this cheap while still bounding how long abandoned folders survive.
+		CleanupOldTempFolders(attachmentsDir);
+
 		char suffix[64] = {0};
 		sprintf_s(suffix, "%s-%lu-%lu", gettimestring().c_str(),
 			(unsigned long) GetCurrentProcessId(), (unsigned long) InterlockedIncrement(&g_sendCounter));

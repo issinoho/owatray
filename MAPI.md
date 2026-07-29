@@ -82,8 +82,18 @@ there ahead of the app. The per-send temp folder name also used to be just a `dd
 (1-second resolution — two sends in the same second collided on the same folder and mixed attachments
 together); it now also folds in the process ID and a per-process counter.
 
-Nothing yet deletes old per-send temp folders or rotates the log file — both still accumulate
-indefinitely. That's a deliberate second pass, not done here (see below).
+The log file is capped at ~2MB — once it passes that, `WriteLogLine` rolls it into a single
+`debug.log.old` backup and starts fresh, rather than growing forever. Old per-send attachment folders
+are swept before each `MAPISendMail` creates a new one: anything under
+`%LOCALAPPDATA%\OWAtray\mapi\` older than 24 hours (a generous margin — a folder is normally only alive
+for as long as it takes `ShellIntegration.exe` to read the files back out of it at browser-launch time,
+i.e. seconds) gets deleted by `CleanupOldTempFolders`.
+
+**Thread-safety**: this DLL is loaded in-process by whatever app calls `MAPISendMail`, and Simple MAPI
+doesn't promise callers only do that from one thread. `WriteLogLine` and the temp-folder sweep/create in
+`MAPISendMail` are each serialized by their own `std::mutex` (`g_logMutex`, `g_tempMutex`) — otherwise
+two concurrent sends could interleave writes to the same `debug.log`, or race deleting the same stale
+folder mid-enumeration. Neither mutex is ever held while acquiring the other.
 
 ## Build
 
