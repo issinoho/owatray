@@ -110,7 +110,7 @@ page, so a release needs to exist there for that link to have anything to show.
 
 Releases are done on `release/x.y.z` branches, merged back into the mainline via a merge commit (see
 `git log`). When asked to cut a release, follow that pattern rather than tagging directly on the
-mainline.
+mainline. Add an entry to `CHANGELOG.md` for each release.
 
 ## Architecture
 
