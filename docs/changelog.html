@@ -50,8 +50,26 @@
 
         <article class="release">
           <header class="release-head">
-            <a class="release-version" href="https://github.com/issinoho/owatray/releases/tag/v3.5.5">v3.5.5</a>
+            <a class="release-version" href="https://github.com/issinoho/owatray/releases/tag/v3.5.6">v3.5.6</a>
             <span class="release-tag">Latest</span>
+            <time class="release-date" datetime="2026-07-29">29 July 2026</time>
+          </header>
+          <ul class="release-list">
+            <li>Added a <a href="changelog.html">changelog page</a> to the website, mirroring
+              <code>CHANGELOG.md</code>.</li>
+            <li>Fixed a double-slash in the main diagnostic log's displayed path (<code>${basedir}</code>
+              already ends in a trailing separator; <code>NLog.config</code> was adding another one on
+              top, e.g. <code>...OWAtray\\logs\log-file.txt</code>).</li>
+            <li>The on-screen connection log now also shows the native Mapi DLL's separate log location
+              (<code>%LOCALAPPDATA%\OWAtray\logs\debug.log</code>), alongside the main one.</li>
+            <li>Moved the "Ready." log entry so it appears after both log-location messages instead of
+              before any booting had actually happened.</li>
+          </ul>
+        </article>
+
+        <article class="release">
+          <header class="release-head">
+            <a class="release-version" href="https://github.com/issinoho/owatray/releases/tag/v3.5.5">v3.5.5</a>
             <time class="release-date" datetime="2026-07-29">29 July 2026</time>
           </header>
           <ul class="release-list">
