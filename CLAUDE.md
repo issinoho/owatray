@@ -161,7 +161,9 @@ GUI's `Form1`:
   `SendKeys` against the IE/OWA login window. The compose-URL format branches on the same
   `ServerVersion` string as `EwsConnection`, via `Program.ModernComposeUrlVersions`: Exchange 2013 and
   newer use the newer compose-URL format, everything from 2007 SP1 through 2010 SP3 uses the legacy
-  URL/MIME-URL format.
+  URL/MIME-URL format. It's also what the GUI's Advanced menu shells out to (elevated, via `runas`) to
+  register/unregister OWAtray as the system's default mail handler (`registry`/`restore` arguments to
+  `Program.Main`) — see `REGISTRY.md` for the exact registry keys involved.
 - **`Mapi`** (`MapiDll.vcxproj`, native C++) — implements the classic Simple MAPI entry points
   (`MAPILogon`, `MAPISendMail`, etc., see `Mapi32.DEF`) so third-party Windows apps that "send via MAPI"
   hand off to OWAtray, which shells out to `ShellIntegration.exe` to actually compose the mail in a
