@@ -507,15 +507,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Growl notifications switched.
-        /// </summary>
-        internal static string Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched {
-            get {
-                return ResourceManager.GetString("Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Event Details.
         /// </summary>
         internal static string Form1_InitEventView_Event_Details {
@@ -674,15 +665,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         internal static string Form1_InitializeComponent_File {
             get {
                 return ResourceManager.GetString("Form1_InitializeComponent_File", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Growl.
-        /// </summary>
-        internal static string Form1_InitializeComponent_Growl {
-            get {
-                return ResourceManager.GetString("Form1_InitializeComponent_Growl", resourceCulture);
             }
         }
         
@@ -899,15 +881,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         internal static string Form1_InitializeComponent_Show_Log_File {
             get {
                 return ResourceManager.GetString("Form1_InitializeComponent_Show_Log_File", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Snarl.
-        /// </summary>
-        internal static string Form1_InitializeComponent_Snarl {
-            get {
-                return ResourceManager.GetString("Form1_InitializeComponent_Snarl", resourceCulture);
             }
         }
         
@@ -1166,15 +1139,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         internal static string Form1_ShellOwaUrl_Error {
             get {
                 return ResourceManager.GetString("Form1_ShellOwaUrl_Error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Snarl notifications switched.
-        /// </summary>
-        internal static string Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched {
-            get {
-                return ResourceManager.GetString("Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched", resourceCulture);
             }
         }
         

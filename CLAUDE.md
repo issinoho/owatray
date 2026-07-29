@@ -5,10 +5,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this is
 
 OWAtray ("OWA Tray Monitor") is a Windows system-tray application that polls an Exchange/Office 365
-mailbox via Exchange Web Services (EWS) and pops up notifications (balloon tip, Growl, or Snarl) plus
-an optional sound when new mail or upcoming calendar appointments arrive. It also registers itself as
-a Simple MAPI provider so other Windows apps can send mail through it, opening compose windows in a
-browser against Outlook Web Access.
+mailbox via Exchange Web Services (EWS) and pops up a tray-balloon notification (which Windows 10/11
+itself renders as a modern Action Center toast) plus an optional sound when new mail or upcoming
+calendar appointments arrive. It also registers itself as a Simple MAPI provider so other Windows apps
+can send mail through it, opening compose windows in a browser against Outlook Web Access.
 
 This is old, StyleCop-formatted C# (targets .NET Framework 4.0, VS2012-era `.csproj`/`.sln` format) plus
 one native C++ DLL. The end-to-end app (GUI, ShellIntegration, Mapi) only builds and runs on Windows —
@@ -146,13 +146,10 @@ GUI's `Form1`:
   `EmailType` value + a new `Connections/<Provider>` project, following the `EwsConnection` shape.
 - **`Logging`** — `LoggerProxy` wraps NLog (configured via `packages.config`/NLog.config) and defines the
   `Severity` enum used by connection log events.
-- **`Growl`** / **`Snarl`** — thin static helper wrappers (`GrowlHelper`, `SnarlHelper`) around the
-  third-party Growl (`lib/`, via NuGet `Growl` package) and Snarl (`lib/SnarlConnector.dll`) notification
-  systems, registered/used from `Form1` alongside the native Windows balloon-tip `NotifyIcon`.
 - **`Audio`** — `AudioHelper`, plays the notification sound.
 - **`GUI`** — the actual tray app. `Program.cs` is the WinForms entry point; almost all application
-  logic (config UI, tray icon/menu, wiring connection events to Growl/Snarl/balloon/audio notifications,
-  polling timer, About/ChangeLog/SysInfo dialogs) lives in the large `Form1` partial class. Localized
+  logic (config UI, tray icon/menu, wiring connection events to balloon/audio notifications, polling
+  timer, About/ChangeLog/SysInfo dialogs) lives in the large `Form1` partial class. Localized
   strings live in per-culture `.resx` files under `Properties/` (currently: de, it, tr, ca, mk, ru, pl,
   fr, es, cs) — add new user-facing strings to `Resources.resx` and mirror the key into the other
   culture files (existing translations can lag/be left in English for new keys).
@@ -171,8 +168,7 @@ GUI's `Form1`:
 
 Data flow at a glance: `Form1` loads a `Scenario` (XML) → builds an `EwsConnection` via
 `ConnectionFactory` → connection polls EWS on timers and raises `NewMail`/`NewAppointment`/`MessageCount`
-events → `Form1` fans those out to the tray balloon, `GrowlHelper`, `SnarlHelper`, and `AudioHelper`, and
-logs via `LoggerProxy`. Separately, any app doing a classic MAPI send goes through `Mapi`'s native DLL →
+events → `Form1` fans those out to the tray balloon and `AudioHelper`, and logs via `LoggerProxy`. Separately, any app doing a classic MAPI send goes through `Mapi`'s native DLL →
 `ShellIntegration.exe` → browser against the OWA URLs read from that scenario's connection settings.
 
 ## Conventions

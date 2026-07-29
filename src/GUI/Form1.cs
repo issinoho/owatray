@@ -29,10 +29,8 @@ namespace DrunkenBakery.OWAtray.GUI
     using DrunkenBakery.OWAtray.Connections.Abstract;
     using DrunkenBakery.OWAtray.Connections.Proxy;
     using DrunkenBakery.OWAtray.Framework;
-    using DrunkenBakery.OWAtray.Growl;
     using DrunkenBakery.OWAtray.GUI.Properties;
     using DrunkenBakery.OWAtray.Logging;
-    using DrunkenBakery.OWAtray.Snarl;
 
     /// <summary>
     ///     The main form.
@@ -549,8 +547,6 @@ namespace DrunkenBakery.OWAtray.GUI
 
             // Notifications
             this.balloonToolStripMenuItem.Checked = Settings.Default.Balloon;
-            this.growlToolStripMenuItem.Checked = Settings.Default.Growl;
-            this.snarlToolStripMenuItem.Checked = Settings.Default.Snarl;
             this.playSoundToolStripMenuItem.Checked = Settings.Default.Bell;
 
             // Web Proxy
@@ -559,15 +555,6 @@ namespace DrunkenBakery.OWAtray.GUI
 
             // Lockdown mode
             this.restoreToolStripMenuItem.Enabled = !Settings.Default.LockDown;
-        }
-
-        /// <summary>
-        ///     The boot helpers.
-        /// </summary>
-        private void BootHelpers()
-        {
-            GrowlHelper.RegisterGrowl(AssemblyHelpers.AssemblyTitle, this.graphicPath, "NEWMAIL", "New Mail");
-            SnarlHelper.RegisterSnarl(AssemblyHelpers.AssemblyTitle, this.graphicPath, this.Handle);
         }
 
         /// <summary>
@@ -1256,30 +1243,6 @@ namespace DrunkenBakery.OWAtray.GUI
         }
 
         /// <summary>
-        ///     The growl tool strip menu item_ check state changed.
-        /// </summary>
-        /// <param name="sender">
-        ///     The sender.
-        /// </param>
-        /// <param name="e">
-        ///     The e.
-        /// </param>
-        private void GrowlToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
-        {
-            if (this.booting)
-            {
-                return;
-            }
-
-            Settings.Default.Growl = this.growlToolStripMenuItem.Checked;
-            Settings.Default.Save();
-            var state = Settings.Default.Growl
-                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
-            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched, state));
-        }
-
-        /// <summary>
         ///     The lbl email_ link clicked.
         /// </summary>
         /// <param name="sender">
@@ -1824,18 +1787,6 @@ namespace DrunkenBakery.OWAtray.GUI
                 this.notifyIcon1.ShowBalloonTip(5000, myTitle, myMessage, ToolTipIcon.Info);
             }
 
-            // Growl
-            if (Settings.Default.Growl)
-            {
-                GrowlHelper.PopGrowl(myTitle, myMessage);
-            }
-
-            // Snarl
-            if (Settings.Default.Snarl)
-            {
-                SnarlHelper.PopSnarl(myTitle, myMessage, this.graphicPath, this.Handle);
-            }
-
             // Audible
             if (Settings.Default.Bell)
             {
@@ -2116,36 +2067,11 @@ namespace DrunkenBakery.OWAtray.GUI
             this.AddLogEntry(Resources.Form1_Form1_FormClosed_Terminating);
             if (this.bootOk)
             {
-                SnarlHelper.Revoke(this.Handle);
                 this.UnwireConnectionEvents();
                 this.DisconnectFromExchange();
             }
 
             this.Close();
-        }
-
-        /// <summary>
-        ///     The snarl tool strip menu item_ check state changed.
-        /// </summary>
-        /// <param name="sender">
-        ///     The sender.
-        /// </param>
-        /// <param name="e">
-        ///     The e.
-        /// </param>
-        private void SnarlToolStripMenuItemCheckStateChanged(object sender, EventArgs e)
-        {
-            if (this.booting)
-            {
-                return;
-            }
-
-            Settings.Default.Snarl = this.snarlToolStripMenuItem.Checked;
-            Settings.Default.Save();
-            var state = Settings.Default.Snarl
-                ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
-                : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
-            this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched, state));
         }
 
         /// <summary>
@@ -2264,7 +2190,6 @@ namespace DrunkenBakery.OWAtray.GUI
                 this.BootAudio();
                 this.BootScenario();
                 this.BootIcons();
-                this.BootHelpers();
 
                 // Connect if autostart is good to go
                 if (Settings.Default.Autostart)

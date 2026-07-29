@@ -242,17 +242,9 @@
       <Project>{48C4C1F1-1A70-447D-AC52-FB77751FD5E9}</Project>
       <Name>DrunkenBakery.OWAtray.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Growl\DrunkenBakery.OWAtray.Growl.csproj">
-      <Project>{432ABDDF-CA91-49F8-A12E-BDD660F6BF71}</Project>
-      <Name>DrunkenBakery.OWAtray.Growl</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Logging\DrunkenBakery.OWAtray.Logging.csproj">
       <Project>{0EC3CCE1-E95E-45A9-9386-AD4E7A6C09C2}</Project>
       <Name>DrunkenBakery.OWAtray.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Snarl\DrunkenBakery.OWAtray.Snarl.csproj">
-      <Project>{A0EAC8F3-99F4-400D-AFAE-9DA7AD49ADA7}</Project>
-      <Name>DrunkenBakery.OWAtray.Snarl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

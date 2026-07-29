@@ -451,9 +451,6 @@
   <data name="Form1_Form1_FormClosed_Terminating" xml:space="preserve">
     <value>Terminating</value>
   </data>
-  <data name="Form1_growlToolStripMenuItem_CheckStateChanged_Growl_notifications_switched" xml:space="preserve">
-    <value>Growl notifications switched</value>
-  </data>
   <data name="Form1_InitEventView_Time" xml:space="preserve">
     <value>Time</value>
   </data>
@@ -483,9 +480,6 @@
   </data>
   <data name="Form1_PopToast_No_Subject" xml:space="preserve">
     <value>No Subject</value>
-  </data>
-  <data name="Form1_snarlToolStripMenuItem_CheckStateChanged_Snarl_notifications_switched" xml:space="preserve">
-    <value>Snarl notifications switched</value>
   </data>
   <data name="Form1_switchOffToolStripMenuItem_Click_You_are_not_an_Admin_user" xml:space="preserve">
     <value>You are not an Admin user</value>
@@ -561,12 +555,6 @@
   </data>
   <data name="Form1_InitializeComponent_Balloon" xml:space="preserve">
     <value>Balloon</value>
-  </data>
-  <data name="Form1_InitializeComponent_Growl" xml:space="preserve">
-    <value>Growl</value>
-  </data>
-  <data name="Form1_InitializeComponent_Snarl" xml:space="preserve">
-    <value>Snarl</value>
   </data>
   <data name="Form1_InitializeComponent_Play_Sound" xml:space="preserve">
     <value>Play Sound</value>

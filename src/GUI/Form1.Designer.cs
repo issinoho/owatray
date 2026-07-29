@@ -59,8 +59,6 @@ namespace DrunkenBakery.OWAtray.GUI
             this.systemInformationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notificationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.balloonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.growlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.snarlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playSoundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.advancedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.overrideCertificateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -341,8 +339,6 @@ namespace DrunkenBakery.OWAtray.GUI
             // 
             this.notificationsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.balloonToolStripMenuItem,
-            this.growlToolStripMenuItem,
-            this.snarlToolStripMenuItem,
             this.playSoundToolStripMenuItem});
             this.notificationsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("notificationsToolStripMenuItem.Image")));
             this.notificationsToolStripMenuItem.Name = "notificationsToolStripMenuItem";
@@ -359,25 +355,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.balloonToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.balloonToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Balloon;
             this.balloonToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.BalloonToolStripMenuItemCheckStateChanged);
-            // 
-            // growlToolStripMenuItem
-            // 
-            this.growlToolStripMenuItem.CheckOnClick = true;
-            this.growlToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("growlToolStripMenuItem.Image")));
-            this.growlToolStripMenuItem.Name = "growlToolStripMenuItem";
-            this.growlToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.growlToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Growl;
-            this.growlToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.GrowlToolStripMenuItemCheckStateChanged);
-            // 
-            // snarlToolStripMenuItem
-            // 
-            this.snarlToolStripMenuItem.CheckOnClick = true;
-            this.snarlToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("snarlToolStripMenuItem.Image")));
-            this.snarlToolStripMenuItem.Name = "snarlToolStripMenuItem";
-            this.snarlToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.snarlToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_Snarl;
-            this.snarlToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.SnarlToolStripMenuItemCheckStateChanged);
-            // 
+            //
             // playSoundToolStripMenuItem
             // 
             this.playSoundToolStripMenuItem.Checked = true;
@@ -1201,8 +1179,6 @@ namespace DrunkenBakery.OWAtray.GUI
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.ToolStripMenuItem notificationsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem balloonToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem growlToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem snarlToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem supportToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem playSoundToolStripMenuItem;
 		private System.Windows.Forms.Timer timerLogging;

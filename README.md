@@ -23,9 +23,8 @@ launching Outlook.
   either manually (e.g. for on-premise Exchange with non-standard URLs, or split-DNS setups).
 - Works against on-premise Exchange (with a selectable server version, from Exchange 2007 SP1 through
   2019 and Server SE) and Office 365 — see [Supported Exchange versions](#supported-exchange-versions).
-- Notifications via the native Windows tray balloon, Growl, or Snarl (both long-discontinued
-  third-party notification systems — the tray balloon is the reliable option today), plus an optional
-  notification sound — pick one or combine them from the tray icon's Notifications menu.
+- Notifications via the native Windows tray balloon (which the OS itself renders as a modern Action
+  Center toast on Windows 10/11), plus an optional notification sound.
 - Acts as a Simple MAPI provider: other applications that "send via MAPI" get handed off to OWAtray,
   which opens a new-message (or new-appointment) compose window in a browser against OWA instead of
   requiring Outlook to be installed. Can be switched on/off per-machine from the Advanced menu ("Make

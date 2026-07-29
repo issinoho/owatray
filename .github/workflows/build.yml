@@ -105,11 +105,9 @@ jobs:
             "DrunkenBakery.OWAtray.Connections.EWS.dll",
             "DrunkenBakery.OWAtray.Connections.Proxy.dll",
             "DrunkenBakery.OWAtray.Framework.dll",
-            "DrunkenBakery.OWAtray.Growl.dll",
             "DrunkenBakery.OWAtray.GUI.exe",
             "DrunkenBakery.OWAtray.Logging.dll",
-            "DrunkenBakery.OWAtray.ShellIntegration.exe",
-            "DrunkenBakery.OWAtray.Snarl.dll"
+            "DrunkenBakery.OWAtray.ShellIntegration.exe"
           )
           foreach ($f in $files) {
             Copy-Item "bin\$f" "bin\Secure\$f"
