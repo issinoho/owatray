@@ -167,7 +167,9 @@ GUI's `Form1`:
 - **`Mapi`** (`MapiDll.vcxproj`, native C++) — implements the classic Simple MAPI entry points
   (`MAPILogon`, `MAPISendMail`, etc., see `Mapi32.DEF`) so third-party Windows apps that "send via MAPI"
   hand off to OWAtray, which shells out to `ShellIntegration.exe` to actually compose the mail in a
-  browser.
+  browser. Most exports are stubs; `MAPISendMail` is the only one that does real work (and even it drops
+  the subject/body/recipients, forwarding only file attachments) — see `MAPI.md` for the full
+  function-by-function breakdown.
 - **`Tests`** — NUnit unit tests for `Connections.*`/`Framework`/`Logging`; see "Tests" under Build above.
 
 Data flow at a glance: `Form1` loads a `Scenario` (XML) → builds an `EwsConnection` via

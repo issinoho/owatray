@@ -176,6 +176,25 @@ Section Uninstall
   ${nsProcess::KillProcess} "DrunkenBakery.OWAtray.GUI.exe" $R0
   sleep 500
 
+  ; If OWAtray was ever made the default mail handler (Form1's "Make OWA the default mail handler"),
+  ; restore whatever handler was previously in place before deleting the files that registration
+  ; points at - otherwise HKLM\SOFTWARE\Clients\Mail\OWAMapi\EXE etc. are left pointing at binaries
+  ; that no longer exist. This is exactly "Switch off shell integration" (ShellIntegration.exe
+  ; restore), elevated the same way it is there: RequestExecutionLevel user means neither the
+  ; installer nor the generated uninstaller auto-elevates, so this has to ask explicitly via "runas".
+  IfFileExists "$INSTDIR\DrunkenBakery.OWAtray.ShellIntegration.exe" 0 skip_restore
+    ExecShellWait "runas" "$INSTDIR\DrunkenBakery.OWAtray.ShellIntegration.exe" "restore" SW_HIDE
+  skip_restore:
+
+  ; RestoreKey() above only restores the mailto/default-mail association values; it deliberately
+  ; leaves the OWAMapi client registration itself in place (so switching shell integration off then
+  ; back on doesn't need to fully re-register). There's no "back on" coming at uninstall time, so
+  ; clean up what would otherwise be an orphaned registration pointing at deleted files. See
+  ; REGISTRY.md for what each of these trees is.
+  DeleteRegKey HKLM "SOFTWARE\Clients\Mail\OWAMapi"
+  DeleteRegKey HKCR "OWA.Url.Mailto"
+  DeleteRegValue HKLM "SOFTWARE\RegisteredApplications" "OWA"
+
   Delete "$INSTDIR\alert.ico"
   Delete "$INSTDIR\DrunkenBakery.OWAtray.Audio.dll"
   Delete "$INSTDIR\DrunkenBakery.OWAtray.Connections.Abstract.dll"

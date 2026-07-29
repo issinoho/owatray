@@ -130,7 +130,23 @@ registration (`Add or Remove Programs`) — these have nothing to do with mail-h
 | `HKLM\Software\Microsoft\Windows\CurrentVersion\App Paths\OWAtray` | `(Default)` | install path to `DrunkenBakery.OWAtray.GUI.exe` |
 | `HKLM\...\Uninstall\OWA Tray Monitor` | `DisplayName`, `UninstallString`, `DisplayIcon`, `DisplayVersion`, `URLInfoAbout`, `Publisher` | standard uninstall-entry metadata |
 
-Both are removed by the uninstaller (`DeleteRegKey`); it does not touch any of the `OWAMapi`/`mailto`
-default-handler keys documented above, so uninstalling while OWAtray is still the active mail handler
-leaves Windows pointed at a now-missing `.exe` until the user manually switches the default mail handler
-elsewhere.
+Both are removed by the uninstaller (`DeleteRegKey`).
+
+The uninstaller also cleans up the default-handler registration from the section above, since none of
+that is scoped to the app's own `Software\Microsoft\...\App Paths`/`Uninstall` keys and would otherwise
+be left dangling once the files it points at are gone:
+
+1. If `DrunkenBakery.OWAtray.ShellIntegration.exe` is still present, it's run once more with the
+   `restore` argument (elevated via `runas`, same as "Switch off shell integration" in the GUI) to put
+   back whichever mail handler was active before OWAtray registered itself.
+2. `RestoreKey()` (run in step 1) only restores those five association values — it deliberately leaves
+   the `OWAMapi` client registration tree itself in place, so toggling shell integration off and back on
+   doesn't need to fully re-register. Since there's no "back on" coming at uninstall time, the
+   uninstaller additionally deletes that tree directly: `HKLM\SOFTWARE\Clients\Mail\OWAMapi` (recursive),
+   `HKCR\OWA.Url.Mailto` (recursive), and the `OWA` value under
+   `HKLM\SOFTWARE\RegisteredApplications`.
+
+Step 1 needs elevation (`RequestExecutionLevel user` means neither the installer nor the generated
+uninstaller auto-elevates) — if the user declines the UAC prompt, or the process otherwise can't reach
+`HKEY_LOCAL_MACHINE`, both step 1 and step 2's `HKLM` deletions silently no-op rather than failing the
+uninstall.
