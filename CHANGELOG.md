@@ -4,6 +4,17 @@ This starts at [v3.5.1](https://github.com/issinoho/owatray/releases/tag/v3.5.1)
 published from this repository on GitHub. OWAtray is much older than that (see `git log` for the full
 history back to 2009) — nothing before it was tracked in a changelog, so it isn't reconstructed here.
 
+## [v3.5.6](https://github.com/issinoho/owatray/releases/tag/v3.5.6) — 2026-07-29
+
+- Added a [changelog page](https://issinoho.github.io/owatray/changelog.html) to the website, mirroring
+  this file.
+- Fixed a double-slash in the main diagnostic log's displayed path (`${basedir}` already ends in a
+  trailing separator; `NLog.config` was adding another one on top, e.g. `...OWAtray\\logs\log-file.txt`).
+- The on-screen connection log now also shows the native Mapi DLL's separate log location
+  (`%LOCALAPPDATA%\OWAtray\logs\debug.log`), alongside the main one.
+- Moved the "Ready." log entry so it appears after both log-location messages instead of before any
+  booting had actually happened.
+
 ## [v3.5.5](https://github.com/issinoho/owatray/releases/tag/v3.5.5) — 2026-07-29
 
 - The on-screen connection log now shows the diagnostic log file's location once at startup, since most
