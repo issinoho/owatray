@@ -4,6 +4,11 @@ This starts at [v3.5.1](https://github.com/issinoho/owatray/releases/tag/v3.5.1)
 published from this repository on GitHub. OWAtray is much older than that (see `git log` for the full
 history back to 2009) — nothing before it was tracked in a changelog, so it isn't reconstructed here.
 
+## [v3.5.5](https://github.com/issinoho/owatray/releases/tag/v3.5.5) — 2026-07-29
+
+- The on-screen connection log now shows the diagnostic log file's location once at startup, since most
+  of what the new deep diagnostic logging (added in v3.5.4) captures never appears on screen otherwise.
+
 ## [v3.5.4](https://github.com/issinoho/owatray/releases/tag/v3.5.4) — 2026-07-29
 
 - Fixed the in-app Change Log dialog pulling from a dead RSS feed
