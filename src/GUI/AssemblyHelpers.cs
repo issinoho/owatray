@@ -107,7 +107,10 @@ namespace DrunkenBakery.OWAtray.GUI
         {
             get
             {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                // AssemblyInfo.cs only ever sets three version components (e.g. "3.5.1"), so .NET pads
+                // the unused fourth (Revision) with 0. Trim it back to three parts here so the About box
+                // matches the version number used everywhere else (release tags, the NSIS installer).
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
             }
         }
 
