@@ -174,12 +174,6 @@
   <data name="ContactUs_InitializeComponent_Support_Information" xml:space="preserve">
     <value>Informace o podpoře</value>
   </data>
-  <data name="MdaCversions_MdaCversions_Revision" xml:space="preserve">
-    <value>Revize</value>
-  </data>
-  <data name="MdaCversions_InitializeComponent_Installed_MDAC_Versions" xml:space="preserve">
-    <value>Instalováné verze MDAC</value>
-  </data>
   <data name="NeTversions_NeTversions_Revision" xml:space="preserve">
     <value>revize</value>
   </data>
@@ -398,9 +392,6 @@
   </data>
   <data name="Form1_InitializeComponent_Tools" xml:space="preserve">
     <value>Nástroje</value>
-  </data>
-  <data name="Form1_InitializeComponent_MDAC_Versions" xml:space="preserve">
-    <value>MDAC verze</value>
   </data>
   <data name="Form1_InitializeComponent_System_Information" xml:space="preserve">
     <value>Systémové informace</value>

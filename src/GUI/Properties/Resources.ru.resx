@@ -174,18 +174,6 @@
   <data name="ContactUs_InitializeComponent_Support_Information" xml:space="preserve">
     <value>Информация о поддержке</value>
   </data>
-  <data name="MdaCversions_MdaCversions_Major_Version" xml:space="preserve">
-    <value>Основная версия</value>
-  </data>
-  <data name="MdaCversions_MdaCversions_Revision" xml:space="preserve">
-    <value>Ревизия</value>
-  </data>
-  <data name="MdaCversions_InitializeComponent_Installed_MDAC_Versions" xml:space="preserve">
-    <value>Установленная версия MDAC</value>
-  </data>
-  <data name="MdaCversions_InitializeComponent_MDAC_Inspector" xml:space="preserve">
-    <value>MDAC Инспектор</value>
-  </data>
   <data name="NeTversions_NeTversions_Major_Version" xml:space="preserve">
     <value>Основная версия</value>
   </data>
@@ -428,9 +416,6 @@
   </data>
   <data name="Form1_InitializeComponent__NET_Versions" xml:space="preserve">
     <value>Версии .NET</value>
-  </data>
-  <data name="Form1_InitializeComponent_MDAC_Versions" xml:space="preserve">
-    <value>Версии MDAC</value>
   </data>
   <data name="Form1_InitializeComponent_System_Information" xml:space="preserve">
     <value>Информация о системе</value>

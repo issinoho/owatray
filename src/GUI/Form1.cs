@@ -115,11 +115,6 @@ namespace DrunkenBakery.OWAtray.GUI
         private Form frmInfo;
 
         /// <summary>
-        ///     The _frm mdac.
-        /// </summary>
-        private Form frmMdac;
-
-        /// <summary>
         ///     The _frm net.
         /// </summary>
         private Form frmNet;
@@ -1308,25 +1303,6 @@ namespace DrunkenBakery.OWAtray.GUI
                 ? Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_ON
                 : Resources.Form1_alwaysOpenOWAInIEToolStripMenuItem_CheckStateChanged_OFF;
             this.AddLogEntry(string.Format("{0} {1}", Resources.Form1_loginAutomaticallyToolStripMenuItem_CheckStateChanged_Automatic_Login_is_switched, state));
-        }
-
-        /// <summary>
-        ///     The m dac versions tool strip menu item_ click.
-        /// </summary>
-        /// <param name="sender">
-        ///     The sender.
-        /// </param>
-        /// <param name="e">
-        ///     The e.
-        /// </param>
-        private void MDacVersionsToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (this.frmMdac == null)
-            {
-                this.frmMdac = new MdaCversions();
-            }
-
-            this.frmMdac.ShowDialog();
         }
 
         /// <summary>

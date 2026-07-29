@@ -705,15 +705,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MDAC Versions.
-        /// </summary>
-        internal static string Form1_InitializeComponent_MDAC_Versions {
-            get {
-                return ResourceManager.GetString("Form1_InitializeComponent_MDAC_Versions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Notifications.
         /// </summary>
         internal static string Form1_InitializeComponent_Notifications {
@@ -1363,51 +1354,6 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
             get {
                 object obj = ResourceManager.GetObject("mail", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Installed MDAC Versions.
-        /// </summary>
-        internal static string MdaCversions_InitializeComponent_Installed_MDAC_Versions {
-            get {
-                return ResourceManager.GetString("MdaCversions_InitializeComponent_Installed_MDAC_Versions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to MDAC Inspector.
-        /// </summary>
-        internal static string MdaCversions_InitializeComponent_MDAC_Inspector {
-            get {
-                return ResourceManager.GetString("MdaCversions_InitializeComponent_MDAC_Inspector", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to OK.
-        /// </summary>
-        internal static string MdaCversions_InitializeComponent_OK {
-            get {
-                return ResourceManager.GetString("MdaCversions_InitializeComponent_OK", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Major Version.
-        /// </summary>
-        internal static string MdaCversions_MdaCversions_Major_Version {
-            get {
-                return ResourceManager.GetString("MdaCversions_MdaCversions_Major_Version", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Revision.
-        /// </summary>
-        internal static string MdaCversions_MdaCversions_Revision {
-            get {
-                return ResourceManager.GetString("MdaCversions_MdaCversions_Revision", resourceCulture);
             }
         }
         

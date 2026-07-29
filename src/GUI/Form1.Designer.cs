@@ -55,7 +55,6 @@ namespace DrunkenBakery.OWAtray.GUI
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nETVersionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mDACVersionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.systemInformationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notificationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.balloonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -304,7 +303,6 @@ namespace DrunkenBakery.OWAtray.GUI
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.nETVersionsToolStripMenuItem,
-            this.mDACVersionsToolStripMenuItem,
             this.systemInformationToolStripMenuItem});
             this.toolsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("toolsToolStripMenuItem.Image")));
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -318,14 +316,6 @@ namespace DrunkenBakery.OWAtray.GUI
             this.nETVersionsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.nETVersionsToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent__NET_Versions;
             this.nETVersionsToolStripMenuItem.Click += new System.EventHandler(this.NetVersionsToolStripMenuItemClick);
-            // 
-            // mDACVersionsToolStripMenuItem
-            // 
-            this.mDACVersionsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("mDACVersionsToolStripMenuItem.Image")));
-            this.mDACVersionsToolStripMenuItem.Name = "mDACVersionsToolStripMenuItem";
-            this.mDACVersionsToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.mDACVersionsToolStripMenuItem.Text = global::DrunkenBakery.OWAtray.GUI.Properties.Resources.Form1_InitializeComponent_MDAC_Versions;
-            this.mDACVersionsToolStripMenuItem.Click += new System.EventHandler(this.MDacVersionsToolStripMenuItemClick);
             // 
             // systemInformationToolStripMenuItem
             // 
@@ -1158,7 +1148,6 @@ namespace DrunkenBakery.OWAtray.GUI
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem nETVersionsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem mDACVersionsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem systemInformationToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;

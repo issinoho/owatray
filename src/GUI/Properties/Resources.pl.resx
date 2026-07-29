@@ -177,15 +177,6 @@
   <data name="ContactUs_InitializeComponent_Support_Information" xml:space="preserve">
     <value>Informacje Wsparcia</value>
   </data>
-  <data name="MdaCversions_MdaCversions_Major_Version" xml:space="preserve">
-    <value>Wersja</value>
-  </data>
-  <data name="MdaCversions_InitializeComponent_Installed_MDAC_Versions" xml:space="preserve">
-    <value>Zainstalowane wersje MDAC</value>
-  </data>
-  <data name="MdaCversions_InitializeComponent_MDAC_Inspector" xml:space="preserve">
-    <value>Inspektor MDAC</value>
-  </data>
   <data name="NeTversions_NeTversions_Major_Version" xml:space="preserve">
     <value>Wersja</value>
   </data>
@@ -417,9 +408,6 @@
   <data name="Form1_InitializeComponent__NET_Versions" xml:space="preserve">
     <value>Wersja .NET</value>
   </data>
-  <data name="Form1_InitializeComponent_MDAC_Versions" xml:space="preserve">
-    <value>Wersja MDAC</value>
-  </data>
   <data name="Form1_InitializeComponent_System_Information" xml:space="preserve">
     <value>Informacje o Systemie</value>
   </data>
@@ -527,9 +515,6 @@
   </data>
   <data name="Form1_InitializeComponent_Controls" xml:space="preserve">
     <value>Sterowanie</value>
-  </data>
-  <data name="MdaCversions_MdaCversions_Revision" xml:space="preserve">
-    <value>Kompilacja</value>
   </data>
   <data name="NeTversions_NeTversions_Revision" xml:space="preserve">
     <value>Kompilacja</value>

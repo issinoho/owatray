@@ -186,21 +186,6 @@
   <data name="ContactUs_InitializeComponent_Support_Information" xml:space="preserve">
     <value>Informazioni di supporto</value>
   </data>
-  <data name="MdaCversions_MdaCversions_Major_Version" xml:space="preserve">
-    <value>Versione principale</value>
-  </data>
-  <data name="MdaCversions_MdaCversions_Revision" xml:space="preserve">
-    <value>Revisione</value>
-  </data>
-  <data name="MdaCversions_InitializeComponent_Installed_MDAC_Versions" xml:space="preserve">
-    <value>Installata versione MDAC</value>
-  </data>
-  <data name="MdaCversions_InitializeComponent_OK" xml:space="preserve">
-    <value>Corretto</value>
-  </data>
-  <data name="MdaCversions_InitializeComponent_MDAC_Inspector" xml:space="preserve">
-    <value>Ispettore di MDAC</value>
-  </data>
   <data name="NeTversions_NeTversions_Major_Version" xml:space="preserve">
     <value>Versione principale</value>
   </data>
@@ -446,9 +431,6 @@
   </data>
   <data name="Form1_InitializeComponent__NET_Versions" xml:space="preserve">
     <value>Versione di .Net</value>
-  </data>
-  <data name="Form1_InitializeComponent_MDAC_Versions" xml:space="preserve">
-    <value>Versione di MDAC</value>
   </data>
   <data name="Form1_InitializeComponent_System_Information" xml:space="preserve">
     <value>Informazioni di Sistema</value>

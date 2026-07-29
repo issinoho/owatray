@@ -159,9 +159,6 @@
   <data name="ContactUs_InitializeComponent_Contact_Details" xml:space="preserve">
     <value>Kontakt Details</value>
   </data>
-  <data name="MdaCversions_InitializeComponent_Installed_MDAC_Versions" xml:space="preserve">
-    <value>Installierte MDAC Version</value>
-  </data>
   <data name="NeTversions_InitializeComponent_Installed__NET_Versions" xml:space="preserve">
     <value>Installierte .NET Version</value>
   </data>
