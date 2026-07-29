@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Changelog — OWAtray</title>
+<meta name="description" content="Release history for OWAtray, the Windows tray notifier for on-premises Exchange — what changed in each version.">
+<meta property="og:title" content="Changelog — OWAtray">
+<meta property="og:description" content="Release history for OWAtray, the Windows tray notifier for on-premises Exchange.">
+<meta property="og:image" content="owatray-icon.png">
+<meta name="theme-color" content="#17120d">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <img src="owatray-icon.png" alt="">
+      owatray
+    </a>
+    <nav class="nav-links">
+      <a href="index.html#features" class="hide-mobile">Features</a>
+      <a href="index.html#support" class="hide-mobile">Supported</a>
+      <a href="changelog.html" class="hide-mobile">Changelog</a>
+      <a href="https://github.com/issinoho/owatray">GitHub</a>
+      <a class="btn btn-accent" href="https://github.com/issinoho/owatray/releases/latest">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Release history</span>
+        <h1>Changelog</h1>
+        <p class="changelog-intro">
+          Starts at <a href="https://github.com/issinoho/owatray/releases/tag/v3.5.1">v3.5.1</a>, the
+          first release published from this repository on GitHub — see
+          <a href="https://github.com/issinoho/owatray/blob/main/CHANGELOG.md">CHANGELOG.md</a> on GitHub
+          for the same list in source form, or <code>git log</code> for the full project history back to
+          2009.
+        </p>
+      </div>
+
+      <div class="changelog">
+
+        <article class="release">
+          <header class="release-head">
+            <a class="release-version" href="https://github.com/issinoho/owatray/releases/tag/v3.5.5">v3.5.5</a>
+            <span class="release-tag">Latest</span>
+            <time class="release-date" datetime="2026-07-29">29 July 2026</time>
+          </header>
+          <ul class="release-list">
+            <li>The on-screen connection log now shows the diagnostic log file's location once at
+              startup, since most of what the new deep diagnostic logging (added in v3.5.4) captures
+              never appears on screen otherwise.</li>
+          </ul>
+        </article>
+
+        <article class="release">
+          <header class="release-head">
+            <a class="release-version" href="https://github.com/issinoho/owatray/releases/tag/v3.5.4">v3.5.4</a>
+            <time class="release-date" datetime="2026-07-29">29 July 2026</time>
+          </header>
+          <ul class="release-list">
+            <li>Fixed the in-app Change Log dialog pulling from a dead RSS feed
+              (<code>http://www.owatray.com/blog/posts.xml</code>, part of the old, squatted
+              owatray.com) — repointed at the repo's GitHub releases Atom feed, fixed the date field it
+              reads (the new feed only has <code>&lt;updated&gt;</code>, not <code>&lt;published&gt;</code>),
+              and worked around .NET Framework 4.0 not negotiating the TLS 1.2 GitHub requires.</li>
+            <li>Fixed the Support Information dialog's website and support-email links, both pointing at
+              the same dead owatray.com — website now opens the GitHub Pages site, "support" is now a
+              "Report an issue" link to GitHub Issues instead of a <code>mailto:</code> link.</li>
+            <li>Fixed Tools → .NET Versions never detecting .NET 4.5 or later (every version since 4.5 is
+              an in-place update of .NET 4.0, so it doesn't get its own registry key the old detection
+              relied on) — on any current Windows 10/11 machine this dialog previously showed a blank
+              version for "v4".</li>
+            <li>Removed Tools → MDAC Versions — the registry key it read only ever existed through MDAC
+              2.8 (Windows XP/2003); since Vista, MDAC has no separately-tracked version, so the dialog
+              always opened to an empty list with nothing to fix it to.</li>
+            <li>Fixed the About box's "Compiled on"/"Running on" .NET version lines showing the same
+              uninformative CLR image version (always <code>4.0.30319.x</code>) for both — now shows the
+              actual target framework and the actual installed 4.5+ version (e.g. <code>4.8.1</code>),
+              reusing the detection from the .NET Versions fix.</li>
+            <li>Added deep diagnostic file logging across the app: a new file-only
+              <code>LoggerProxy.Debug</code> channel (separate from the on-screen connection log) now
+              covers EWS poll cycles/autodiscovery/connect lifecycle (previously mostly commented out),
+              scenario load/save, app startup/shutdown and unhandled exceptions, and
+              <code>ShellIntegration.exe</code>'s browser/auto-login flow (previously logged nowhere at
+              all, since it runs hidden with no console).</li>
+          </ul>
+        </article>
+
+        <article class="release">
+          <header class="release-head">
+            <a class="release-version" href="https://github.com/issinoho/owatray/releases/tag/v3.5.3">v3.5.3</a>
+            <time class="release-date" datetime="2026-07-29">29 July 2026</time>
+          </header>
+          <ul class="release-list">
+            <li>Fixed the native Mapi DLL writing its debug log and per-send attachment files to a
+              hardcoded, world-writable <code>C:\temp\owamapi\</code> — moved to
+              <code>%LOCALAPPDATA%\OWAtray\{logs,mapi}\</code>, matching how the rest of the app avoids
+              fixed drive paths.</li>
+            <li>Fixed every exported MAPI function except <code>MAPISendMail</code> silently failing to
+              log anything on a machine where <code>MAPISendMail</code> hadn't already run once (only it
+              created the log directory).</li>
+            <li>Fixed a same-second collision in per-send attachment temp folder names that could mix
+              attachments from two different sends together.</li>
+            <li><code>CreateProcess</code>/<code>RegOpenKeyEx</code> failures inside
+              <code>MAPISendMail</code> are now logged instead of silently ignored; two incidental bugs
+              fixed in the same code (<code>RegCloseKey</code> called on an uninitialized handle on
+              failure, and leaked <code>CreateProcess</code> process/thread handles).</li>
+            <li>Logging is now timestamped, thread-safe (concurrent MAPI calls could previously interleave
+              log writes or race-delete the same temp folder), log-rotated (~2MB cap), and old per-send
+              temp folders are swept automatically instead of accumulating forever.</li>
+            <li>Fixed the uninstaller leaving OWAtray registered as the Windows default mail handler
+              (pointing at now-deleted files) if it was uninstalled without first switching off shell
+              integration — it now runs the same restore step as "Switch off shell integration" and
+              removes the <code>OWAMapi</code>/<code>OWA.Url.Mailto</code> registry keys directly.</li>
+            <li>Added <code>MAPI.md</code> and <code>REGISTRY.md</code>, documenting exactly what the
+              native Mapi DLL does and what registry keys OWAtray reads/writes when it becomes the
+              default mail handler.</li>
+          </ul>
+        </article>
+
+        <article class="release">
+          <header class="release-head">
+            <a class="release-version" href="https://github.com/issinoho/owatray/releases/tag/v3.5.2">v3.5.2</a>
+            <time class="release-date" datetime="2026-07-29">29 July 2026</time>
+          </header>
+          <ul class="release-list">
+            <li>Fixed the About box showing "3.5.1.0" instead of "3.5.1" (it printed all four
+              <code>Version</code> components; <code>AssemblyInfo.cs</code> only sets three, so .NET pads
+              the unused fourth with <code>0</code>).</li>
+            <li>Fixed the NSIS installer's <code>PRODUCT_VERSION</code> being stuck at "3.5" instead of
+              the actual release version, so Add/Remove Programs showed a stale version too.</li>
+            <li>Removed Growl and Snarl notification support entirely (both were long-discontinued
+              third-party notification daemons; the native Windows tray balloon — rendered as a modern
+              Action Center toast on Windows 10/11 — covers the same need on its own).</li>
+            <li>Removed dead/legacy external links from the README and website, keeping only verified-live
+              ones; the website's Download button and the README now link to the real GitHub release
+              instead of a placeholder.</li>
+            <li>Added real screenshots of the app to the website and README, recovered from the Internet
+              Archive's copy of the original owatray.com (v3.4.0.0, circa 2014).</li>
+            <li>The built website (<code>docs/</code>) is now attached as a release asset
+              (<code>OWAtray-website.zip</code>) alongside the installer.</li>
+          </ul>
+        </article>
+
+        <article class="release">
+          <header class="release-head">
+            <a class="release-version" href="https://github.com/issinoho/owatray/releases/tag/v3.5.1">v3.5.1</a>
+            <time class="release-date" datetime="2026-07-29">29 July 2026</time>
+          </header>
+          <p class="release-note">
+            First release published from GitHub, and the point this changelog starts. Bundles everything
+            added while getting the existing 3.5.1 codebase (unreleased since a 2017 Bitbucket-era commit)
+            onto GitHub with CI and documentation:
+          </p>
+          <ul class="release-list">
+            <li>Added <code>CLAUDE.md</code> and <code>README.md</code> documenting the codebase, build,
+              and configuration.</li>
+            <li>Added on-premises support for Exchange 2016, 2019, and Server SE (the bundled EWS Managed
+              API predates all three; <code>ExchangeVersionResolver</code> maps them onto the closest
+              wire-compatible protocol version).</li>
+            <li>Added an NUnit unit test suite covering <code>Scenario</code> save/load,
+              <code>AbstractConnection</code> defaults and encrypted password storage,
+              <code>ConnectionFactory</code>, and <code>ExchangeVersionResolver</code> — and fixed two
+              pre-existing bugs found while writing it.</li>
+            <li>Added StyleCop.Analyzers linting across every C# project, and a GitHub Actions workflow
+              that builds the binaries and the NSIS installer on every push.</li>
+            <li>Added a tag-triggered release step to the workflow, publishing the installer to GitHub
+              Releases.</li>
+            <li>Added a landing page under <code>docs/</code>, served via GitHub Pages.</li>
+          </ul>
+        </article>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="owatray-icon.png" alt="">
+        owatray
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/issinoho/owatray">GitHub</a>
+        <a href="https://github.com/issinoho/owatray/blob/main/README.md">Documentation</a>
+        <a href="https://github.com/issinoho/owatray/blob/main/src/GUI/License.txt">License</a>
+        <a href="changelog.html">Changelog</a>
+        <a href="https://github.com/issinoho/owatray/releases">Releases</a>
+      </div>
+    </div>
+    <p class="footer-note">
+      OWAtray is freeware from The Drunken Bakery. Translations by Daniel Sabater, Christian Treudler,
+      pi511, Marc Lairet, Marco Procida, Aleksandr Bembel, Ryszard Ostrowski, Igor Vojnoski and Jiri
+      Kubinek. Not affiliated with or endorsed by Microsoft.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -462,6 +462,7 @@ section {
   margin-bottom: 10px;
 }
 
+.section-head h1,
 .section-head h2 {
   font-size: clamp(1.5rem, 2.8vw, 1.9rem);
   margin: 0 0 12px;
@@ -681,6 +682,111 @@ section {
 .legacy-list strong {
   color: var(--text);
   font-weight: 600;
+}
+
+/* ---------- Changelog ---------- */
+
+.section-head p.changelog-intro {
+  color: var(--text-muted);
+  margin: 0 0 40px;
+  max-width: 640px;
+}
+
+.changelog {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.release {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  padding: 22px 24px 24px;
+}
+
+.release-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.release-version {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.release-version:hover {
+  color: var(--accent-strong);
+  text-decoration: underline;
+}
+
+.release-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.release-date {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.release-note {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin: -6px 0 16px;
+}
+
+.release-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.release-list li {
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  padding-left: 16px;
+  position: relative;
+}
+
+.release-list li::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.release-list strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.release-list code {
+  font-size: 0.87em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
 }
 
 /* ---------- Screenshots ---------- */
