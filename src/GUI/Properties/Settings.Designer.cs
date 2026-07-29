@@ -77,7 +77,7 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.owatray.com/blog/posts.xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/issinoho/owatray/releases.atom")]
         public string RSSFeed {
             get {
                 return ((string)(this["RSSFeed"]));
