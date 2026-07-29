@@ -683,51 +683,58 @@ section {
   font-weight: 600;
 }
 
-/* ---------- Screenshots placeholder ---------- */
+/* ---------- Screenshots ---------- */
 
-.screens-window {
-  border: 1px solid var(--border);
+.screenshot-frame {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.screenshot-main {
+  display: block;
+  width: 100%;
+  height: auto;
   border-radius: var(--radius);
-  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.5);
 }
 
-.screens-window .termcard-bar {
-  justify-content: space-between;
+@media (prefers-color-scheme: light) {
+  .screenshot-main {
+    box-shadow: 0 20px 45px -28px rgba(60, 45, 10, 0.25);
+  }
 }
 
-.screens-window .termcard-bar .title {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  color: var(--text-faint);
+/* Positioned to land roughly where a real tray notification pops up relative to the window above it. */
+.screenshot-toast {
+  position: absolute;
+  right: 6%;
+  bottom: -34px;
+  width: 34%;
+  min-width: 160px;
+  max-width: 240px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.55);
 }
 
-.screens-body {
-  padding: 70px 24px;
+.screenshot-caption {
+  margin: 56px 0 0;
   text-align: center;
   color: var(--text-faint);
-  background:
-    repeating-linear-gradient(45deg, var(--bg-elevated) 0 10px, var(--bg-card) 10px 20px);
-}
-
-.screens-body .inner {
-  background: var(--bg);
-  border: 1px dashed var(--border);
-  border-radius: var(--radius-sm);
-  padding: 28px 32px;
-  display: inline-block;
-}
-
-.screens-body svg {
-  width: 28px;
-  height: 28px;
-  margin-bottom: 12px;
-  color: var(--text-faint);
-}
-
-.screens-body p {
-  margin: 0;
-  font-size: 0.88rem;
   font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .screenshot-toast {
+    position: static;
+    display: block;
+    width: 60%;
+    min-width: 0;
+    margin: 16px auto 0;
+  }
 }
 
 /* ---------- Download / CTA ---------- */
