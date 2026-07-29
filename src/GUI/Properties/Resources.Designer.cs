@@ -487,7 +487,16 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
                 return ResourceManager.GetString("Form1_Form1_FormClosed_Terminating", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Diagnostic log.
+        /// </summary>
+        internal static string Form1_Timer1Tick_Diagnostic_log {
+            get {
+                return ResourceManager.GetString("Form1_Timer1Tick_Diagnostic_log", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Ready.
         /// </summary>

@@ -436,6 +436,9 @@
   <data name="Form1_Form1_FormClosed_Terminating" xml:space="preserve">
     <value>Terminating</value>
   </data>
+  <data name="Form1_Timer1Tick_Diagnostic_log" xml:space="preserve">
+    <value>Diagnostic log</value>
+  </data>
   <data name="Form1_InitEventView_Time" xml:space="preserve">
     <value>Time</value>
   </data>

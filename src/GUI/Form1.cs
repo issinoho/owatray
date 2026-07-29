@@ -2182,6 +2182,11 @@ namespace DrunkenBakery.OWAtray.GUI
                 this.BootScenario();
                 this.BootIcons();
 
+                // Point the user at the diagnostic log file - most of what it captures (poll cycles,
+                // autodiscovery, the shell/auto-login flow) never appears here on screen.
+                this.AddLogEntry(
+                    string.Format("{0}: {1}", Resources.Form1_Timer1Tick_Diagnostic_log, LoggerProxy.Filename));
+
                 // Connect if autostart is good to go
                 if (Settings.Default.Autostart)
                 {
