@@ -77,7 +77,7 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Compiled on .NET.
+        ///   Looks up a localized string similar to Compiled on .NET v.
         /// </summary>
         internal static string AboutBox1_AboutBox1_Compiled_on__NET {
             get {

@@ -124,7 +124,7 @@
     <value>Wersja</value>
   </data>
   <data name="AboutBox1_AboutBox1_Compiled_on__NET" xml:space="preserve">
-    <value>Skompilowano w .NET</value>
+    <value>Skompilowano w .NET v</value>
   </data>
   <data name="AboutBox1_AboutBox1_Running_on__NET_v" xml:space="preserve">
     <value>Działa na .NET wer</value>

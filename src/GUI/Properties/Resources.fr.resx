@@ -121,7 +121,7 @@
     <value>A propos de</value>
   </data>
   <data name="AboutBox1_AboutBox1_Compiled_on__NET" xml:space="preserve">
-    <value>Compilé en .NET</value>
+    <value>Compilé en .NET v</value>
   </data>
   <data name="AboutBox1_AboutBox1_Running_on__NET_v" xml:space="preserve">
     <value>Fonctionne en .NET v</value>

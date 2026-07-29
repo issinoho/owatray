@@ -39,9 +39,9 @@ namespace DrunkenBakery.OWAtray.GUI
             this.labelCompanyName.Text = AssemblyHelpers.AssemblyCompany;
             this.textBoxDescription.Text = AssemblyHelpers.AssemblyDescription + Environment.NewLine
                                            + Environment.NewLine + Resources.AboutBox1_AboutBox1_Compiled_on__NET
-                                           + AssemblyHelpers.DotNetRuntimeVersion + Environment.NewLine
-                                           + Resources.AboutBox1_AboutBox1_Running_on__NET_v + Environment.Version
-                                           + Environment.NewLine;
+                                           + AssemblyHelpers.TargetDotNetFrameworkVersion + Environment.NewLine
+                                           + Resources.AboutBox1_AboutBox1_Running_on__NET_v
+                                           + AssemblyHelpers.InstalledDotNetFrameworkVersion + Environment.NewLine;
 
             foreach (string myRef in AssemblyHelpers.DependentAssemblies())
             {

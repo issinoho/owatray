@@ -124,7 +124,7 @@
     <value>Verze</value>
   </data>
   <data name="AboutBox1_AboutBox1_Compiled_on__NET" xml:space="preserve">
-    <value>Zkompilováno na .NET</value>
+    <value>Zkompilováno na .NET v</value>
   </data>
   <data name="AboutBox1_AboutBox1_Running_on__NET_v" xml:space="preserve">
     <value>Běží na .NET v</value>

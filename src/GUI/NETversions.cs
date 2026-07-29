@@ -127,82 +127,12 @@ namespace DrunkenBakery.OWAtray.GUI
 
                 object releaseValue = profileKey.GetValue("Release");
                 string displayName = releaseValue != null
-                    ? "v4 " + profile + " (" + GetFriendly45PlusVersion((int)releaseValue) + ")"
+                    ? "v4 " + profile + " (" + AssemblyHelpers.GetFriendly45PlusVersion((int)releaseValue) + ")"
                     : "v4 " + profile;
 
                 var version = profileKey.GetValue("Version") as string ?? string.Empty;
                 this.AddEntry(displayName, version);
             }
-        }
-
-        /// <summary>
-        /// Maps a .NET 4.5+ "Release" registry value to the friendly version it corresponds to, per
-        /// https://learn.microsoft.com/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed.
-        /// </summary>
-        /// <param name="releaseKey">
-        /// The release key.
-        /// </param>
-        /// <returns>
-        /// The friendly version string.
-        /// </returns>
-        private static string GetFriendly45PlusVersion(int releaseKey)
-        {
-            if (releaseKey >= 533320)
-            {
-                return "4.8.1";
-            }
-
-            if (releaseKey >= 528040)
-            {
-                return "4.8";
-            }
-
-            if (releaseKey >= 461808)
-            {
-                return "4.7.2";
-            }
-
-            if (releaseKey >= 461308)
-            {
-                return "4.7.1";
-            }
-
-            if (releaseKey >= 460798)
-            {
-                return "4.7";
-            }
-
-            if (releaseKey >= 394802)
-            {
-                return "4.6.2";
-            }
-
-            if (releaseKey >= 394254)
-            {
-                return "4.6.1";
-            }
-
-            if (releaseKey >= 393295)
-            {
-                return "4.6";
-            }
-
-            if (releaseKey >= 379893)
-            {
-                return "4.5.2";
-            }
-
-            if (releaseKey >= 378675)
-            {
-                return "4.5.1";
-            }
-
-            if (releaseKey >= 378389)
-            {
-                return "4.5";
-            }
-
-            return "4.0";
         }
 
         /// <summary>

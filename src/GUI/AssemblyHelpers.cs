@@ -16,8 +16,11 @@ namespace DrunkenBakery.OWAtray.GUI
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.Versioning;
 
     using DrunkenBakery.OWAtray.GUI.Properties;
+
+    using Microsoft.Win32;
 
     /// <summary>
     /// The assembly helpers.
@@ -126,6 +129,35 @@ namespace DrunkenBakery.OWAtray.GUI
         }
 
         /// <summary>
+        /// Gets the .NET Framework version actually installed and running (e.g. "4.8.1"). .NET 4.5 and
+        /// every version after it are in-place updates of .NET 4, so neither <see cref="DotNetRuntimeVersion"/>
+        /// (the CLR's own image version, always "v4.0.30319" for anything from 4.0 through 4.8.1) nor
+        /// <see cref="Environment.Version"/> (same problem) can tell them apart - both look identical
+        /// on a machine running 4.0 and one running 4.8.1. The real version is only readable from the
+        /// numeric "Release" value under v4\Full, mapped the same way as the Tools -&gt; .NET Versions
+        /// dialog (see <see cref="GetFriendly45PlusVersion"/>). Falls back to <see cref="DotNetRuntimeVersion"/>
+        /// if that key/value isn't present (i.e. this is somehow running on .NET 4.0 itself).
+        /// </summary>
+        public static string InstalledDotNetFrameworkVersion
+        {
+            get
+            {
+                RegistryKey ndpKey =
+                    Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full", false);
+                if (ndpKey != null)
+                {
+                    object release = ndpKey.GetValue("Release");
+                    if (release != null)
+                    {
+                        return GetFriendly45PlusVersion((int)release);
+                    }
+                }
+
+                return DotNetRuntimeVersion;
+            }
+        }
+
+        /// <summary>
         /// Gets ProductName.
         /// </summary>
         public static string ProductName
@@ -137,6 +169,30 @@ namespace DrunkenBakery.OWAtray.GUI
                 return attributes.Length > 0
                            ? ((AssemblyProductAttribute)attributes[0]).Product
                            : Resources.AssemblyHelpers_ProductName_Unknown;
+            }
+        }
+
+        /// <summary>
+        /// Gets the .NET Framework version this assembly was built to target (e.g. "4.0"), i.e.
+        /// <c>TargetFrameworkVersion</c> from the project file, embedded at build time via
+        /// <see cref="TargetFrameworkAttribute"/>. This is what "compiled for" should mean; it's
+        /// distinct from - and, unlike <see cref="DotNetRuntimeVersion"/>, actually distinguishes -
+        /// which .NET Framework release is installed and running (see
+        /// <see cref="InstalledDotNetFrameworkVersion"/>).
+        /// </summary>
+        public static string TargetDotNetFrameworkVersion
+        {
+            get
+            {
+                object[] attributes =
+                    Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(TargetFrameworkAttribute), false);
+                if (attributes.Length == 0)
+                {
+                    return DotNetRuntimeVersion;
+                }
+
+                var frameworkName = new FrameworkName(((TargetFrameworkAttribute)attributes[0]).FrameworkName);
+                return frameworkName.Version.ToString();
             }
         }
 
@@ -154,6 +210,76 @@ namespace DrunkenBakery.OWAtray.GUI
         {
             AssemblyName[] refs = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
             return refs.OrderBy(x => x.Name).Select(myRef => string.Format("{0} v{1}", myRef.Name, myRef.Version));
+        }
+
+        /// <summary>
+        /// Maps a .NET 4.5+ "Release" registry value to the friendly version it corresponds to, per
+        /// https://learn.microsoft.com/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed.
+        /// </summary>
+        /// <param name="releaseKey">
+        /// The release key.
+        /// </param>
+        /// <returns>
+        /// The friendly version string.
+        /// </returns>
+        public static string GetFriendly45PlusVersion(int releaseKey)
+        {
+            if (releaseKey >= 533320)
+            {
+                return "4.8.1";
+            }
+
+            if (releaseKey >= 528040)
+            {
+                return "4.8";
+            }
+
+            if (releaseKey >= 461808)
+            {
+                return "4.7.2";
+            }
+
+            if (releaseKey >= 461308)
+            {
+                return "4.7.1";
+            }
+
+            if (releaseKey >= 460798)
+            {
+                return "4.7";
+            }
+
+            if (releaseKey >= 394802)
+            {
+                return "4.6.2";
+            }
+
+            if (releaseKey >= 394254)
+            {
+                return "4.6.1";
+            }
+
+            if (releaseKey >= 393295)
+            {
+                return "4.6";
+            }
+
+            if (releaseKey >= 379893)
+            {
+                return "4.5.2";
+            }
+
+            if (releaseKey >= 378675)
+            {
+                return "4.5.1";
+            }
+
+            if (releaseKey >= 378389)
+            {
+                return "4.5";
+            }
+
+            return "4.0";
         }
 
         /// <summary>
