@@ -22,9 +22,13 @@ const CLSID CLSID_CMapiImp = {0x29f458be, 0x8866, 0x11d5,
 
 DWORD tId = 0;
 
+// Used to make each MAPISendMail's temp attachment folder unique - see GetOwatrayLocalAppDataDir /
+// MAPISendMail below.
+static LONG g_sendCounter = 0;
+
 #define   MAPI_MESSAGE_TYPE     0
 #define   MAPI_RECIPIENT_TYPE   1
- 
+
 typedef struct {
   LPVOID    lpMem;
   UCHAR     memType;
@@ -41,7 +45,7 @@ void
 SetPointerArray(LPVOID ptr, BYTE type)
 {
 int i;
-  
+
   for (i=0; i<MAX_POINTERS; i++)
   {
 	if (memArray[i].lpMem == NULL)
@@ -67,6 +71,64 @@ BOOL WINAPI DllMain(HINSTANCE aInstance, DWORD aReason, LPVOID aReserved)
 								  break;
 	}
 	return TRUE;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Logging support. Everything lives under %LOCALAPPDATA%\OWAtray\ rather than a fixed  //
+// drive path, since that's always writable by (and scoped to) the calling user - see   //
+// MAPI.md for why the previous C:\temp\owamapi\ location was a problem.                //
+////////////////////////////////////////////////////////////////////////////////////////
+
+string gettimestring()
+{
+   SYSTEMTIME stime;
+   GetLocalTime(&stime);
+   char buf[40] = {0};
+   sprintf_s(buf,"%02d%02d%04d%02d%02d%02d",
+		stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond);
+   string dt = buf;
+   return dt;
+}
+
+//
+// Returns %LOCALAPPDATA%\OWAtray\<subfolder>, creating both it and the OWAtray folder above it if
+// they don't exist yet. Returns an empty string if LOCALAPPDATA isn't set (callers treat that as
+// "logging/temp storage unavailable" and skip it rather than fail the MAPI call).
+//
+string GetOwatrayLocalAppDataDir(const char *subfolder)
+{
+	char localAppData[MAX_PATH] = {0};
+	if (!GetEnvironmentVariableA("LOCALAPPDATA", localAppData, MAX_PATH))
+		return "";
+
+	string root = string(localAppData) + "\\OWAtray";
+	_mkdir(root.c_str());
+
+	string dir = root + "\\" + subfolder;
+	_mkdir(dir.c_str());
+
+	return dir;
+}
+
+//
+// Appends one timestamped line to %LOCALAPPDATA%\OWAtray\logs\debug.log. Every exported function
+// logs through here instead of opening its own ofstream, so there's a single place that creates the
+// directory and checks the file actually opened - previously only MAPISendMail created the
+// directory first, so every other export's log line was silently dropped on a machine where
+// MAPISendMail hadn't already run at least once.
+//
+void WriteLogLine(const string &message)
+{
+	string logDir = GetOwatrayLocalAppDataDir("logs");
+	if (logDir.empty())
+		return;
+
+	ofstream File((logDir + "\\debug.log").c_str(), ios::app);
+	if (!File.is_open())
+		return;
+
+	File << "\r\n" << gettimestring() << " " << message;
+	File.close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -107,9 +169,7 @@ ULONG FAR PASCAL MAPILogon(ULONG aUIParam, LPTSTR aProfileName,
 
 	//}
 
-	ofstream File("c:\\temp\\owamapi\\debug.log", ios::app);
-	File<< "\r\nMAPILogon";
-	File.close();
+	WriteLogLine("MAPILogon");
 
 	int myHandle = 1;
 	(*aSession) = (LHANDLE) myHandle;
@@ -122,27 +182,14 @@ ULONG FAR PASCAL MAPILogon(ULONG aUIParam, LPTSTR aProfileName,
 ULONG FAR PASCAL MAPILogoff (LHANDLE aSession, ULONG aUIParam,
 											FLAGS aFlags, ULONG aReserved)
 {
-	ofstream File("c:\\temp\\owamapi\\debug.log", ios::app);
-	File<< "\r\nMAPILogoff";
-	File.close();
+	WriteLogLine("MAPILogoff");
 
 	return SUCCESS_SUCCESS;
 }
 
-string gettimestring()
-{
-   SYSTEMTIME stime;
-   GetLocalTime(&stime);
-   char buf[40] = {0};
-   sprintf_s(buf,"%02d%02d%04d%02d%02d%02d",
-		stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond);
-   string dt = buf;
-   return dt;
-}
-
 std::string replaceOnce(
-  std::string result, 
-  const std::string& replaceWhat, 
+  std::string result,
+  const std::string& replaceWhat,
   const std::string& replaceWithWhat)
 {
   const int pos = result.find(replaceWhat);
@@ -158,11 +205,7 @@ ULONG FAR PASCAL MAPISendMail (LHANDLE lhSession, ULONG ulUIParam, MapiMessage *
 	HRESULT hr = 0;
 	BOOL bTempSession = FALSE ;
 
-	// Open log file
-	_mkdir("c:\\temp");
-	_mkdir("c:\\temp\\owamapi");
-	ofstream File("c:\\temp\\owamapi\\debug.log", ios::app);
-	File<< "\r\nMAPISendMail";
+	WriteLogLine("MAPISendMail");
 
 	if (lpMessage->nRecipCount > MAX_RECIPS)
 		return MAPI_E_TOO_MANY_RECIPIENTS ;
@@ -178,7 +221,7 @@ ULONG FAR PASCAL MAPISendMail (LHANDLE lhSession, ULONG ulUIParam, MapiMessage *
 		FLAGS LoginFlag ;
 		if ( (flFlags & MAPI_LOGON_UI) && (flFlags & MAPI_NEW_SESSION) )
 			LoginFlag = MAPI_LOGON_UI | MAPI_NEW_SESSION ;
-		else if (flFlags & MAPI_LOGON_UI) 
+		else if (flFlags & MAPI_LOGON_UI)
 			LoginFlag = MAPI_LOGON_UI ;
 
 		hr = MAPILogon (ulUIParam, (LPTSTR) NULL, (LPTSTR) NULL, LoginFlag, 0, &lhSession) ;
@@ -186,20 +229,29 @@ ULONG FAR PASCAL MAPISendMail (LHANDLE lhSession, ULONG ulUIParam, MapiMessage *
 			return MAPI_E_LOGIN_FAILURE ;
 		bTempSession = TRUE ;
 	}
-	
-	// Create unique temp folder
+
+	// Unique temp folder for this send's attachments. A bare timestamp only has 1-second
+	// resolution and two sends landing in the same second would collide on the same folder and mix
+	// attachments together, so fold in the process ID and a per-process counter too.
 	std::string tpath = "";
-	tpath = tpath.append("c:\\temp\\owamapi\\");
-	tpath = tpath.append(gettimestring());
-	const char * c = tpath.c_str();
-	_mkdir(c);
-	File<< "\r\nMAPISendMail-- Created temp folder (" << tpath << ")";
+	string attachmentsDir = GetOwatrayLocalAppDataDir("mapi");
+	if (!attachmentsDir.empty())
+	{
+		char suffix[64] = {0};
+		sprintf_s(suffix, "%s-%lu-%lu", gettimestring().c_str(),
+			(unsigned long) GetCurrentProcessId(), (unsigned long) InterlockedIncrement(&g_sendCounter));
+		tpath = attachmentsDir + "\\" + suffix;
+		_mkdir(tpath.c_str());
+	}
+
+	WriteLogLine("MAPISendMail-- Created temp folder (" + tpath + ")");
 
 	// Get each file passed by MAPI
 	for (i=0; i<lpMessage->nFileCount; i++)
 	{
 		lpMapiFileDesc attachment = lpMessage->lpFiles++;
-		File<< "\r\nMAPISendMail-- (" << (i+1) << ") " << attachment->lpszFileName << " (" << attachment->lpszPathName << ")";
+		WriteLogLine("MAPISendMail-- (" + std::to_string(i + 1) + ") " + attachment->lpszFileName +
+			" (" + attachment->lpszPathName + ")");
 
 		// Copy to temp folder & rename
 		string source = attachment->lpszPathName;
@@ -209,7 +261,7 @@ ULONG FAR PASCAL MAPISendMail (LHANDLE lhSession, ULONG ulUIParam, MapiMessage *
 		TCHAR tdestination[MAX_MSGINFO_LEN] = {0};
 		MultiByteToWideChar(CP_ACP, 0, destination.c_str(), -1, tdestination, MAX_MSGINFO_LEN);
 
-		File<< "\r\nMAPISendMail-- Copying " << source << " to " << destination;
+		WriteLogLine("MAPISendMail-- Copying " + source + " to " + destination);
 		CopyFile(tsource, tdestination, FALSE);
 	}
 
@@ -228,27 +280,28 @@ ULONG FAR PASCAL MAPISendMail (LHANDLE lhSession, ULONG ulUIParam, MapiMessage *
 	  if (returnStatus == ERROR_SUCCESS)
 	  {
 		  exePath = lszValue;
-		  File<< "\r\nValue of HKLM\\SOFTWARE\\Clients\\Mail\\OWAMapi\\EXE is " << exePath;
+		  WriteLogLine("Value of HKLM\\SOFTWARE\\Clients\\Mail\\OWAMapi\\EXE is " + exePath);
 	  }
 	  returnStatus = RegQueryValueExA(hKey, "Parameters", NULL, &dwType,(BYTE *)lszValue, &dwSize);
 	  if (returnStatus == ERROR_SUCCESS)
 	  {
 		  parameters = lszValue;
-		  File<< "\r\nValue of HKLM\\SOFTWARE\\Clients\\Mail\\OWAMapi\\Parameters is " << parameters;
+		  WriteLogLine("Value of HKLM\\SOFTWARE\\Clients\\Mail\\OWAMapi\\Parameters is " + parameters);
 	  }
+	  RegCloseKey(hKey);
 	}
-	RegCloseKey(hKey);
+	else
+	{
+		WriteLogLine("MAPISendMail-- Could not open HKLM\\SOFTWARE\\Clients\\Mail\\OWAMapi (error " +
+			std::to_string(returnStatus) + ") - is a mail handler registered?");
+	}
 
 	// Substitute temp folder path for %1 parameter
 	parameters = replaceOnce(parameters, "%1", tpath);
-	File<< "\r\nReplaced parameters are " << parameters;
+	WriteLogLine("Replaced parameters are " + parameters);
 
 	// Spawn EXE
 	string cmdLine = exePath + " " + parameters;
-	//char *charPtrString = new char[cmdLine.size()+1];
-	//strcpy(charPtrString, cmdLine.c_str());
-	//system(charPtrString);
-	//delete[] charPtrString;
 
 	STARTUPINFO si = { sizeof(STARTUPINFO) };
 	si.dwFlags = STARTF_USESHOWWINDOW;
@@ -256,15 +309,20 @@ ULONG FAR PASCAL MAPISendMail (LHANDLE lhSession, ULONG ulUIParam, MapiMessage *
 	PROCESS_INFORMATION pi;
 	TCHAR tsource[MAX_MSGINFO_LEN] = {0};
 	MultiByteToWideChar(CP_ACP, 0, cmdLine.c_str(), -1, tsource, MAX_MSGINFO_LEN);
-	CreateProcess(NULL, tsource, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
-
-	// Close log file
-	File.close();
+	if (!CreateProcess(NULL, tsource, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
+	{
+		WriteLogLine("MAPISendMail-- CreateProcess failed (error " + std::to_string(GetLastError()) + ")");
+	}
+	else
+	{
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+	}
 
 	if (bTempSession)
 	MAPILogoff (lhSession, ulUIParam, 0,0) ;
 
-	return hr ; 
+	return hr ;
 }
 
 ULONG FAR PASCAL MAPISendDocuments(ULONG ulUIParam, LPTSTR lpszDelimChar, LPTSTR lpszFilePaths,
@@ -278,9 +336,7 @@ ULONG FAR PASCAL MAPISendDocuments(ULONG ulUIParam, LPTSTR lpszDelimChar, LPTSTR
 
 	MAPILogoff (lhSession, ulUIParam, 0,0) ;
 
-	ofstream File("c:\\temp\\owamapi\\debug.log", ios::app);
-	File<< "\r\nMAPISendDocuments";
-	File.close();
+	WriteLogLine("MAPISendDocuments");
 
 	return SUCCESS_SUCCESS ;
 }
@@ -298,9 +354,7 @@ ULONG FAR PASCAL MAPIFindNext(LHANDLE lhSession, ULONG ulUIParam, LPTSTR lpszMes
   if (!lpszSeedMessageID)
 	lpszSeedMessageID = L"";
 
-	ofstream File("c:\\temp\\owamapi\\debug.log", ios::app);
-	File<< "\r\nMAPIFindNext";
-	File.close();
+	WriteLogLine("MAPIFindNext");
 
   return SUCCESS_SUCCESS ;
 }
@@ -312,9 +366,7 @@ ULONG FAR PASCAL MAPIReadMail(LHANDLE lhSession, ULONG ulUIParam, LPTSTR lpszMes
   if (lhSession == 0)
 	return(MAPI_E_INVALID_SESSION);
 
-	ofstream File("c:\\temp\\owamapi\\debug.log", ios::app);
-	File<< "\r\nMAPIReadMail";
-	File.close();
+	WriteLogLine("MAPIReadMail");
 
   return SUCCESS_SUCCESS ;
 }
@@ -325,9 +377,7 @@ ULONG FAR PASCAL MAPISaveMail(LHANDLE lhSession, ULONG ulUIParam, lpMapiMessage 
   if (lhSession == 0)
 	return(MAPI_E_INVALID_SESSION);
 
-	ofstream File("c:\\temp\\owamapi\\debug.log", ios::app);
-	File<< "\r\nMAPISaveMail";
-	File.close();
+	WriteLogLine("MAPISaveMail");
 
   return MAPI_E_FAILURE;
 }
@@ -338,9 +388,7 @@ ULONG FAR PASCAL MAPIDeleteMail(LHANDLE lhSession, ULONG ulUIParam, LPTSTR lpszM
   if (lhSession == 0)
 	return(MAPI_E_INVALID_SESSION);
 
-	ofstream File("c:\\temp\\owamapi\\debug.log", ios::app);
-	File<< "\r\nMAPIDeleteMail";
-	File.close();
+	WriteLogLine("MAPIDeleteMail");
 
   return SUCCESS_SUCCESS ;
 }
@@ -408,10 +456,10 @@ FreeMAPIFile(lpMapiFileDesc pv)
   if (!pv)
 	return;
 
-  if (pv->lpszPathName != NULL)   
+  if (pv->lpszPathName != NULL)
 	free(pv->lpszPathName);
 
-  if (pv->lpszFileName != NULL)   
+  if (pv->lpszFileName != NULL)
 	free(pv->lpszFileName);
 }
 
@@ -429,19 +477,19 @@ FreeMAPIMessage(lpMapiMessage pv)
 
   if (pv->lpszNoteText)
 	  free(pv->lpszNoteText);
-  
+
   if (pv->lpszMessageType)
 	free(pv->lpszMessageType);
-  
+
   if (pv->lpszDateReceived)
 	free(pv->lpszDateReceived);
-  
+
   if (pv->lpszConversationID)
 	free(pv->lpszConversationID);
-  
+
   if (pv->lpOriginator)
 	FreeMAPIRecipient(pv->lpOriginator);
-  
+
   for (i=0; i<pv->nRecipCount; i++)
   {
 	if (&(pv->lpRecips[i]) != NULL)
@@ -467,7 +515,7 @@ FreeMAPIMessage(lpMapiMessage pv)
   {
 	free(pv->lpFiles);
   }
-  
+
   free(pv);
   pv = NULL;
 }
@@ -478,16 +526,15 @@ FreeMAPIRecipient(lpMapiRecipDesc pv)
   if (!pv)
 	return;
 
-  if (pv->lpszName != NULL)   
+  if (pv->lpszName != NULL)
 	free(pv->lpszName);
 
   if (pv->lpszAddress != NULL)
 	free(pv->lpszAddress);
 
   if (pv->lpEntryID != NULL)
-	free(pv->lpEntryID);  
+	free(pv->lpEntryID);
 }
-
 
 
 

@@ -45,9 +45,8 @@ entirely and forwards only the file attachments:
    or if there's no recipient list and the caller didn't pass `MAPI_DIALOG`.
 2. If the caller didn't already have a session handle, opens one via the `MAPILogon` stub above (always
    succeeds) and remembers to log off again at the end.
-3. Creates a fresh temp folder named for the current timestamp,
-   `C:\temp\owamapi\<ddMMyyyyHHmmss>\`, and copies every attached file (`lpMessage->lpFiles`) into it
-   under its original filename.
+3. Creates a fresh, uniquely-named temp folder under `%LOCALAPPDATA%\OWAtray\mapi\`, and copies every
+   attached file (`lpMessage->lpFiles`) into it under its original filename.
 4. Reads `HKLM\SOFTWARE\Clients\Mail\OWAMapi\EXE` and `...\Parameters`
    (written by `ShellIntegration.exe`'s `InitRegistry` — see `REGISTRY.md`) to find the currently
    registered handler and its command-line template (`"<shell>" mapi %1`).
@@ -65,20 +64,26 @@ attachments gets a blank OWA compose window with nothing pre-filled.
 
 ## Logging and temp files
 
-Every stub above (except `MAPIAddress`/`MAPIDetails`/`MAPIResolveName`/`MAPIFreeBuffer`/
-`GetMapiDllVersion`) unconditionally opens `C:\temp\owamapi\debug.log` in append mode and writes one
-line naming the function that was called. A few things worth knowing if you're debugging or touching
-this code:
+Every export above (except `MAPIAddress`/`MAPIDetails`/`MAPIResolveName`/`MAPIFreeBuffer`/
+`GetMapiDllVersion`) logs one timestamped line through a shared `WriteLogLine()` helper, naming the
+function that was called (`MAPISendMail` logs several extra lines tracing its own progress — the temp
+folder created, each attachment copied, the registry values read, the resolved command line, and whether
+`CreateProcess` succeeded).
 
-- The path is hardcoded to the `C:` drive — there's no per-user or configurable location, unlike the
-  rest of the app (which installs to `$APPDATA` precisely to avoid needing a fixed drive/admin rights).
-- Only `MAPISendMail` actually creates the `C:\temp\owamapi\` directory (`_mkdir`, twice, ignoring
-  failure) before opening its log file / temp folder. Every other export tries to open
-  `C:\temp\owamapi\debug.log` for append without first ensuring the directory exists; `ofstream` doesn't
-  throw on failure to open, so on a machine where that directory was never created (e.g. `MAPISendMail`
-  was never called first) those log lines are silently dropped rather than erroring.
-- Nothing ever deletes the per-send timestamped temp folders created in `MAPISendMail` step 3, or the
-  debug log itself — both accumulate indefinitely under `C:\temp\owamapi\`.
+The log lives at `%LOCALAPPDATA%\OWAtray\logs\debug.log`, and `MAPISendMail`'s per-send attachment temp
+folders live under `%LOCALAPPDATA%\OWAtray\mapi\<timestamp>-<pid>-<counter>\` — both created on demand by
+a shared `GetOwatrayLocalAppDataDir()` helper (which creates the `OWAtray` folder and the requested
+subfolder, `_mkdir`, and returns `""` if `LOCALAPPDATA` isn't set, in which case that call's logging/temp
+storage is silently skipped rather than failing the MAPI call). This used to be a hardcoded
+`C:\temp\owamapi\` — moved under the user's own profile for the same reason the rest of the app avoids
+fixed drive paths (installs to `$APPDATA`, no admin rights required): a predictable, world-writable path
+at the root of `C:` is not simply an inconvenience, it's a foothold for planting a hostile junction/ACL
+there ahead of the app. The per-send temp folder name also used to be just a `ddMMyyyyHHmmss` timestamp
+(1-second resolution — two sends in the same second collided on the same folder and mixed attachments
+together); it now also folds in the process ID and a per-process counter.
+
+Nothing yet deletes old per-send temp folders or rotates the log file — both still accumulate
+indefinitely. That's a deliberate second pass, not done here (see below).
 
 ## Build
 
