@@ -181,8 +181,8 @@ namespace DrunkenBakery.OWAtray.GUI
                     AssemblyHelpers.AssemblyTitle,
                     AssemblyHelpers.UpgradeSettings()));
 
-            // The rest gets kicked off an a timer
-            this.AddLogEntry(string.Format("{0}.", Resources.Form1_Form1_Ready));
+            // The rest gets kicked off an a timer - "Ready." is logged later, in Timer1Tick, once boot
+            // and the diagnostic-log-location messages are out of the way.
             this.timer1.Start();
         }
 
@@ -2182,10 +2182,18 @@ namespace DrunkenBakery.OWAtray.GUI
                 this.BootScenario();
                 this.BootIcons();
 
-                // Point the user at the diagnostic log file - most of what it captures (poll cycles,
-                // autodiscovery, the shell/auto-login flow) never appears here on screen.
+                // Point the user at the diagnostic log files - most of what they capture (poll cycles,
+                // autodiscovery, the shell/auto-login flow, MAPI sends) never appears here on screen.
                 this.AddLogEntry(
                     string.Format("{0}: {1}", Resources.Form1_Timer1Tick_Diagnostic_log, LoggerProxy.Filename));
+
+                var mapiLogPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    @"OWAtray\logs\debug.log");
+                this.AddLogEntry(
+                    string.Format("{0}: {1}", Resources.Form1_Timer1Tick_MAPI_diagnostic_log, mapiLogPath));
+
+                this.AddLogEntry(string.Format("{0}.", Resources.Form1_Form1_Ready));
 
                 // Connect if autostart is good to go
                 if (Settings.Default.Autostart)

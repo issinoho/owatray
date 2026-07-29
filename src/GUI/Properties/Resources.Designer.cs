@@ -498,6 +498,15 @@ namespace DrunkenBakery.OWAtray.GUI.Properties {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to MAPI diagnostic log.
+        /// </summary>
+        internal static string Form1_Timer1Tick_MAPI_diagnostic_log {
+            get {
+                return ResourceManager.GetString("Form1_Timer1Tick_MAPI_diagnostic_log", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Ready.
         /// </summary>
         internal static string Form1_Form1_Ready {

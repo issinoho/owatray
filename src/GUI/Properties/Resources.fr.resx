@@ -294,6 +294,9 @@
   <data name="Form1_Timer1Tick_Diagnostic_log" xml:space="preserve">
     <value>Diagnostic log</value>
   </data>
+  <data name="Form1_Timer1Tick_MAPI_diagnostic_log" xml:space="preserve">
+    <value>MAPI diagnostic log</value>
+  </data>
   <data name="Form1_InitEventView_Time" xml:space="preserve">
     <value>Temps</value>
   </data>
