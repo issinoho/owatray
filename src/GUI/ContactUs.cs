@@ -83,11 +83,11 @@ namespace DrunkenBakery.OWAtray.GUI
         /// </param>
         private void LinkBakeryLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(this.linkBakery.Text);
+            Process.Start((string)this.linkBakery.Tag);
         }
 
         /// <summary>
-        /// The link email_ link clicked.
+        /// The link support_ link clicked.
         /// </summary>
         /// <param name="sender">
         /// The sender.
@@ -95,9 +95,9 @@ namespace DrunkenBakery.OWAtray.GUI
         /// <param name="e">
         /// The e.
         /// </param>
-        private void LinkEmailLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkSupportLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"mailto:" + this.linkEmail.Text);
+            Process.Start((string)this.linkSupport.Tag);
         }
 
         #endregion

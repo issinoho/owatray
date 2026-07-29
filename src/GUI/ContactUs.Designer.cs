@@ -39,7 +39,7 @@ namespace DrunkenBakery.OWAtray.GUI
             this.imLarge = new System.Windows.Forms.ImageList(this.components);
             this.cmdOK = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.linkEmail = new System.Windows.Forms.LinkLabel();
+            this.linkSupport = new System.Windows.Forms.LinkLabel();
             this.button4 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.linkBakery = new System.Windows.Forms.LinkLabel();
@@ -110,7 +110,7 @@ namespace DrunkenBakery.OWAtray.GUI
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.linkEmail);
+            this.groupBox2.Controls.Add(this.linkSupport);
             this.groupBox2.Controls.Add(this.button4);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.linkBakery);
@@ -123,17 +123,18 @@ namespace DrunkenBakery.OWAtray.GUI
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Contact Details";
             // 
-            // linkEmail
+            // linkSupport
             // 
-            this.linkEmail.AutoSize = true;
-            this.linkEmail.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkEmail.Location = new System.Drawing.Point(201, 55);
-            this.linkEmail.Name = "linkEmail";
-            this.linkEmail.Size = new System.Drawing.Size(117, 13);
-            this.linkEmail.TabIndex = 12;
-            this.linkEmail.TabStop = true;
-            this.linkEmail.Text = "support@owatray.com";
-            this.linkEmail.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkEmailLinkClicked);
+            this.linkSupport.AutoSize = true;
+            this.linkSupport.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkSupport.Location = new System.Drawing.Point(201, 55);
+            this.linkSupport.Name = "linkSupport";
+            this.linkSupport.Size = new System.Drawing.Size(117, 13);
+            this.linkSupport.TabIndex = 12;
+            this.linkSupport.TabStop = true;
+            this.linkSupport.Text = "Report an issue";
+            this.linkSupport.Tag = "https://github.com/issinoho/owatray/issues";
+            this.linkSupport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkSupportLinkClicked);
             // 
             // button4
             // 
@@ -164,7 +165,8 @@ namespace DrunkenBakery.OWAtray.GUI
             this.linkBakery.Size = new System.Drawing.Size(130, 13);
             this.linkBakery.TabIndex = 6;
             this.linkBakery.TabStop = true;
-            this.linkBakery.Text = "http://www.owatray.com";
+            this.linkBakery.Text = "Website";
+            this.linkBakery.Tag = "https://issinoho.github.io/owatray/";
             this.linkBakery.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkBakeryLinkClicked);
             // 
             // button3
@@ -219,7 +221,7 @@ namespace DrunkenBakery.OWAtray.GUI
 		private System.Windows.Forms.LinkLabel linkBakery;
 		private System.Windows.Forms.Button button4;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.LinkLabel linkEmail;
+		private System.Windows.Forms.LinkLabel linkSupport;
 		private System.Windows.Forms.ImageList imLarge;
 		private System.Windows.Forms.ListView lvX;
 		private System.Windows.Forms.ColumnHeader Language;
