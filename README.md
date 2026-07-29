@@ -14,6 +14,22 @@ can also register itself as your system's default (Simple MAPI) mail handler, so
 Recipient" style actions from other Windows apps open a compose window in Outlook Web Access instead of
 launching Outlook.
 
+<table>
+<tr><td>
+
+<img src="docs/screenshots/main-window.png" width="560" alt="OWAtray's main window, showing the Basic Settings tab with autodiscovery enabled, an Exchange Version dropdown, and a connection log">
+
+</td><td valign="bottom">
+
+<img src="docs/screenshots/new-mail-notification.png" width="220" alt="A Windows tray notification balloon reading: New Mail — You have 1 unread email in your inbox">
+
+</td></tr>
+</table>
+
+*The main window and a new-mail notification, v3.4.0.0 — recovered from the [Internet
+Archive](https://web.archive.org/web/20180716043552/http://www.owatray.com/_/rsrc/1397319636584/home/MainApp.png)
+copy of the original owatray.com.*
+
 ## Features
 
 - Polls a mailbox over Exchange Web Services (EWS) on a configurable interval and shows the unread
